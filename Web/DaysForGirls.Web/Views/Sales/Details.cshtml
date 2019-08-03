@@ -1,0 +1,27 @@
+﻿@model SaleDetailsViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@Model.Title</h2>
+<h4>Ends On: @Model.EndsOn.DayOfWeek, @Model.EndsOn.Date-@Model.EndsOn.Month-@Model.EndsOn.Year</h4>
+
+<div>
+    @foreach(var product in Model.Products)
+    {
+        <div class="col-md-3">
+            <a href="/Products/Details/@product.Id"><img src="@product.Picture" alt="@Model.Title - @product.Name" /></a>
+            <a href="/Products/Details/@product.Id"><h3>@product.Name</h3></a>
+            <h4>@product.OldPrice</h4>
+            <h4>@product.NewPrice</h4>
+            @if (product.Quantity < 1)
+            {
+                <h3>Sold Out</h3>
+            }
+        </div>
+    }
+</div>

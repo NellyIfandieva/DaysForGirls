@@ -1,0 +1,206 @@
+﻿body {
+    font-family: Arial, Helvetica, sans-serif;
+    color: #cc0052;
+    font-weight: lighter;
+}
+
+
+/*#logo {
+    width: 20%;
+    max-width: 200px;
+}*/
+
+input[type=text], select {
+    width: 30%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+button[type=submit] {
+    width: 30%;
+    background-color: #cc0052;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+hr {
+    color: #cc0052;
+}
+
+nav {
+    background-color: #cc0052;
+    margin-bottom: 0px;
+}
+
+/*nav img{
+    width: 200px;
+}*/
+
+.topnav li{
+    color: aliceblue;
+}
+
+/*.topnav .search-container {
+    float: right;
+}
+
+.topnav input[type=text] {
+    padding: 6px;
+    margin-top: 8px;
+    font-size: 17px;
+    border: none;
+}
+
+.topnav .search-container button {
+    float: right;
+    padding: 6px 10px;
+    margin-top: 8px;
+    margin-right: 16px;
+    background: #ddd;
+    font-size: 17px;
+    border: none;
+    cursor: pointer;
+}
+
+    .topnav .search-container button:hover {
+        background: #ccc;
+    }
+
+@media screen and (max-width: 600px) {
+    .topnav .search-container {
+        float: none;
+    }
+
+        .topnav a, .topnav input[type=text], .topnav .search-container button {
+            float: none;
+            display: block;
+            text-align: left;
+            width: 100%;
+            margin: 0;
+            padding: 14px;
+        }
+
+    .topnav input[type=text] {
+        border: 1px solid #ccc;
+    }*/
+
+    .dropbtn {
+        background-color: #cc0052;
+        color: white;
+        padding: 16px;
+        font-size: 16px;
+        border: none;
+    }
+
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #e6005c;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+    }
+
+        .dropdown-content a {
+            color: #ffcce0;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+            .dropdown-content a:hover {
+                background-color: #800033;
+            }
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+    .dropdown:hover .dropbtn {
+        background-color: #800033;
+    }
+
+    main .text-center {
+        text-align: center;
+    }
+
+    .smallNav {
+        margin-top: 0px;
+        background-color: #cc0052;
+    }
+
+    .centered {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .button {
+        background-color: #cc0052;
+        border: none;
+        color: white;
+        padding: 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+    }
+
+    .buttonEllipse {
+        border-radius: 50%;
+    }
+
+    img .sale-all {
+        width: 200px;
+    }
+
+    #registerAndLogin {
+        float: right;
+    }
+
+        #registerAndLogin li {
+            display: inline-block;
+        }
+
+        #registerAndLogin .nav-link {
+            color: white;
+            padding: 0px 20px 10px 0px;
+            text-decoration: none;
+        }
+
+    #registeredUser {
+        float: right;
+        color: white;
+        padding: 0px 20px 0px 0px;
+        text-decoration: none;
+        /*display: inline-block;*/
+        padding: 20px 10px 20px 0px;
+    }
+    /*.registeredUser a {
+        float: right;
+        color: white;
+        padding: 0px 20px 0px 0px;
+        text-decoration: none;
+    }*/
+
+    #product-images-holder {
+    }
+
+    #product-details-holder {
+    }

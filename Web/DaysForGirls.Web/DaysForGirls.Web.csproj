@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <UserSecretsId>aspnet-DaysForGirls.Web-6A4FE379-6118-450A-8468-48D555B1B0F2</UserSecretsId>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+  </PropertyGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="CloudinaryDotNet" Version="1.8.0" />
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Data\DaysForGirls.Data\DaysForGirls.Data.csproj" />
+    <ProjectReference Include="..\..\Services\DaysForGirls.Services.Models\DaysForGirls.Services.Models.csproj" />
+    <ProjectReference Include="..\..\Services\DaysForGirls.Services\DaysForGirls.Services.csproj" />
+    <ProjectReference Include="..\DaysForGirls.Web.InputModels\DaysForGirls.Web.InputModels.csproj" />
+    <ProjectReference Include="..\DaysForGirls.Web.ViewModels\DaysForGirls.Web.ViewModels.csproj" />
+  </ItemGroup>
+
+</Project>

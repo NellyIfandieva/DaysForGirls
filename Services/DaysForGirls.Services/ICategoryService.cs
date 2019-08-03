@@ -1,0 +1,15 @@
+﻿using DaysForGirls.Services.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DaysForGirls.Services
+{
+    public interface ICategoryService
+    {
+        Task<bool> Create(CategoryServiceModel categoryServiceModel);
+        IQueryable<CategoryServiceModel> DisplayAll();
+    }
+}

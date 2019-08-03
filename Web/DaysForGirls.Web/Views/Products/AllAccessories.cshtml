@@ -1,0 +1,24 @@
+﻿@model IEnumerable<DaysForGirls.Web.ViewModels.AccessoryDisplayAllViewModel>
+
+@{
+    ViewData["Title"] = "AllAccessories";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1 class="text-center">All Accessories</h1>
+<div>
+    @foreach (var accessory in Model)
+    {
+        <div class="col-md-3">
+            <a href="/Products/Details/@accessory.Id"><img src="@accessory.MainPicture" alt="@accessory.Name" width="200" /></a>
+            <a href="/Products/Details/@accessory.Id"><h3>@accessory.Name</h3></a>
+            <h3>@accessory.Price</h3>
+            @if (accessory.Quantity < 1)
+            {
+                <h3>Sold Out</h3>
+            }
+        </div>
+    }
+</div>
+<br />
+<a asp-area="" onclick="history.go(-1);">Go Back</a>

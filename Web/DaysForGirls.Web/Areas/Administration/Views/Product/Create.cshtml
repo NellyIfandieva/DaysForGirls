@@ -1,0 +1,153 @@
+﻿@using DaysForGirls.Web.ViewModels
+@model DaysForGirls.Web.InputModels.ProductCreateInputModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+    <style>
+        input[type=text], select {
+            width: 30%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type=submit] {
+            width: 15%;
+            background-color: #cc0052;
+            color: white;
+            font-size: medium;
+            padding: 15px 20px 15px 20px;
+            margin: 10px 200px 10px 25px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+            input[type=submit]:hover {
+                background-color: #cc0052;
+            }
+
+        #row {
+            margin-left: 250px;
+            margin-right: 250px;
+            position: center;
+            border-radius: 5px;
+            background-color: #f2f2f2;
+            padding: 20px;
+        }
+
+        /*#forgot-or-register {
+            color: #cc0052;
+        }*/
+    </style>
+
+<h2 class="text-center">Create a Product</h2>
+
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" enctype="multipart/form-data" asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class=""></label>
+                <input type="text" asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductType" class=""></label>
+                <select class="form-control" asp-for="ProductType">
+                    <option selected disabled>...Select Product Type...</option>
+                    @foreach (var type in (IEnumerable<ProductCreateProductTypeViewModel>)this.ViewData["productTypes"])
+                    {
+                        <option value="@type.Name">@type.Name</option>
+                    }
+                </select>
+                <span asp-validation-for="ProductType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Category" class=""></label>
+                <select class="form-control" asp-for="Category">
+                    <option selected disabled>...Select Category...</option>
+                    @foreach (var category in (IEnumerable<ProductCreateCategoryViewModel>)this.ViewData["categories"])
+                    {
+                        <option value="@category.Name">@category.Name</option>
+                    }
+                </select>
+                <span asp-validation-for="Category" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MainPicture" class=""></label>
+                <input type="file" asp-for="MainPicture" class="form-control" placeholder="Upload Main Picture" />
+                <span asp-validation-for="MainPicture" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Pictures" class=""></label>
+                @for (int i = 1; i <= 4; i++)
+                {
+                    <div>
+                        <input type="file" asp-for="Pictures" class="form-control" placeholder="Upload Picture" />
+                    </div>
+                }
+                <span asp-validation-for="Pictures" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input type="text" asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Colour" class="control-label"></label>
+                <input type="text" asp-for="Colour" class="form-control" />
+                <span asp-validation-for="Colour" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Size" class="control-label"></label>
+                <input type="text" asp-for="Size" class="form-control" />
+                <span asp-validation-for="Size" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Price" class="control-label"></label>
+                <input type="number" step="any" asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Manufacturer" class="control-label"></label>
+                <select class="form-control" asp-for="Manufacturer">
+                    <option selected disabled>...Select Manufacturer...</option>
+                    @foreach (var manufacturer in (IEnumerable<ProductCreateManufacturerViewModel>)this.ViewData["manufacturers"])
+                    {
+                        <option value="@manufacturer.Name">@manufacturer.Name</option>
+                    }
+                </select>
+                <span asp-validation-for="Manufacturer" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Quantity" class="control-label"></label>
+                <select class="form-control" asp-for="Quantity">
+                    <option selected disabled>...Select Available Quantity</option>
+                    @for (int i = 1; i <= 10; i++)
+                    {
+                        <option value="@i">@i</option>
+                    }
+                </select>
+                <span asp-validation-for="Quantity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

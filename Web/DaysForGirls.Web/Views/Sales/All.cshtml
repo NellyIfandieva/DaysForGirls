@@ -1,0 +1,60 @@
+﻿@model List<DaysForGirls.Web.ViewModels.SaleDisplayAllViewModel>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+
+@{
+    ViewData["Title"] = "All";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div>
+    <h1 class="text-center">Enjoy Our Latest Sales</h1>
+</div>
+
+<div class="container-fluid">
+
+    @for (int i = 0; i < Model.Count() - 1; i+= 2)
+    {
+        if(i % 2 == 0)
+        {
+            <div class="w3-container">
+                <div class="container">
+                    <a><img src="@Model[i].Picture" alt="@Model[i].Title" style="width:40%;"></a>
+                    <div class="text-block">
+                        <h4>@Model[i].Title</h4>
+                        <p>@Model[i].EndsOn.DayOfWeek @Model[i].EndsOn.Day-@Model[i].EndsOn.Month-@Model[i].EndsOn.Year</p>
+                    </div>
+                </div>
+                <div class="container">
+                    <a><img src="@Model[i + 1].Picture" alt="@Model[i + 1].Title" style="width:40%;"></a>
+                    <div class="text-block">
+                        <h4>@Model[i + 1].Title</h4>
+                        <p>@Model[i + 1].EndsOn.DayOfWeek @Model[i + 1].EndsOn.Day-@Model[i + 1].EndsOn.Month-@Model[i + 1].EndsOn.Year</p>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+
+    @*@foreach(SaleDisplayAllViewModel sale in Model)
+        {
+            @Html.PartialAsync("AllActiveSales", sale);
+        }*@
+    @*@for (int i = 0; i < Model.Count(); i++)
+        {
+            if (i <= 2)
+            {
+                <div>
+                    <a href="/Sales/Details/@Model[i].Id"><img class="sale-all" src="@Model[i].Picture" alt="@Model[i].Title" /></a>
+                    <div class="centered">@Model[i].Title</div>
+                    <h3>Ends On: @Model[i].EndsOn.DayOfWeek - @Model[i].EndsOn.Day-@Model[i].EndsOn.Month-@Model[i].EndsOn.Year</h3>
+                </div>
+            }
+            else
+            {
+                <a><img class="sale-all" src="@Model[i].Picture" alt="@Model[i].Title" /></a>
+                <div class="centered">@Model[i].Title</div>
+                <h3>Ends On: @Model[i].EndsOn.DayOfWeek - @Model[i].EndsOn.Day-@Model[i].EndsOn.Month-@Model[i].EndsOn.Year</h3>
+            }
+        }*@
+</div>

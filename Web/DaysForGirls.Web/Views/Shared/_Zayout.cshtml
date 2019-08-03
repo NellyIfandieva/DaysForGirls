@@ -1,0 +1,162 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - DaysForGirls</title>
+    @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />*@
+    <link rel="stylesheet" href="~/css/style.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+
+    <header>
+        <nav class="topnav">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/Images/Logo.jpg" /></a>
+                @*<div class="search-container">
+                    <form action="/action_page.php">
+                        <input type="text" placeholder="Search.." name="search">
+                        <button type="submit"><i class="fa fa-search"></i></button>
+                    </form>
+                </div>*@
+                @if (this.User.Identity.IsAuthenticated)
+                {
+                    if (this.User.IsInRole("Admin"))
+                    {
+                        <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                            @*<partial name="_LoginPartial" />*@
+                            @*<ul class="navbar-nav flex-grow-1">*@
+                            <div class="dropdown">
+                                <a href="/Administration/Product/All"><button class="dropbtn">Product</button></a>
+                                <div class="dropdown-content">
+                                    <a href="/Administration/Product/Create">Create</a>
+                                    <a href="/Administration/Product/Edit">Edit</a>
+                                    <a href="/Administration/Product/Delete">Delete</a>
+                                </div>
+                            </div>
+                            <div class="dropdown">
+                                <a href="/Administration/ProductType/All"><button class="dropbtn">Product Type</button></a>
+                                <div class="dropdown-content">
+                                    <a href="/Administration/ProductType/Create">Create</a>
+                                    <a href="/Administration/ProductType/Edit">Edit</a>
+                                    <a href="/Administration/ProductType/Delete">Delete</a>
+                                </div>
+                            </div>
+                            <div class="dropdown">
+                                <a href="/Administration/Category/All"><button class="dropbtn">Category</button></a>
+                                <div class="dropdown-content">
+                                    <a href="/Administration/Category/Create">Create</a>
+                                    <a href="/Administration/Category/Edit">Edit</a>
+                                    <a href="/Administration/Category/Delete">Delete</a>
+                                </div>
+                            </div>
+                            <div class="dropdown">
+                                <a href="/Administration/Manufacturer/All"><button class="dropbtn">Manufacturer</button></a>
+                                <div class="dropdown-content">
+                                    <a href="/Administration/Manufacturer/Create">Create</a>
+                                    <a href="/Administration/Manufacturer/Edit">Edit</a>
+                                    <a href="/Administration/Manufacturer/Delete">Delete</a>
+                                </div>
+                            </div>
+                            <div class="dropdown">
+                                <a href="/Administration/Sale/All"><button class="dropbtn">Sale</button></a>
+                                <div class="dropdown-content">
+                                    <a href="/Administration/Sale/Create">Create</a>
+                                    <a href="/Administration/Sale/Edit">Edit</a>
+                                    <a href="/Administration/Sale/AddExistingProduct">Add Existing Product</a>
+                                    <a href="/Administration/Sale/AddNewProduct">Add New Product</a>
+                                    <a href="/Administration/Sale/Delete">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <a id="registeredUser" href="/Identity/Account/Manage/Index" @*asp-area="Identity" asp-page="/Account/Manage/Index"*@ title="Manage"><button class="dropbtn">Hello, @User.Identity.Name!</button></a>
+                    <a id="registeredUser" href="/Identity/Account/Logout" @*asp-area="Identity" asp-page="/Account/Logout"*@><button class="dropbtn">Logout</button></a>
+
+
+                    @*<div class="dropdown registeredUser">
+                <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"><button class="dropbtn">Hello, @User.Identity.Name!</button></a>
+            </div>
+            <div class="dropdown registeredUser">
+                <a asp-area="Identity" asp-page="/Account/Logout"><button class="dropbtn">Logout</button></a>
+            </div>*@
+
+                    @*</div>*@
+                }
+                else
+                {
+                    <div id="registerAndLogin" @*class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse"*@>
+                        @*<partial name="_LoginPartial" />*@
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item">
+                                <a class="nav-link @*text-dark*@" asp-area="Identity" asp-page="/Account/Register">Register</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @*text-dark*@" asp-area="Identity" asp-page="/Account/Login">Login</a>
+                            </li>
+                        </ul>
+                    </div>
+                }
+            </div>
+        </nav>
+    </header>
+    <br />
+    <div class="smallNav">
+        <div class="dropdown">
+            <a href="/Weddings/All"><button class="dropbtn">Wedding</button></a>
+            <div class="dropdown-content">
+                <a href="/Weddings/Dresses">Dresses</a>
+                <a href="/Weddings/Suits">Suits</a>
+                <a href="/Weddings/Accessories">Accessories</a>
+            </div>
+        </div>
+        <div class="dropdown">
+            <a href="/Prom/All"><button class="dropbtn">Prom</button></a>
+            <div class="dropdown-content">
+                <a href="/Prom/Dresses">Dresses</a>
+                <a href="/Prom/Suits">Suits</a>
+                <a href="/Prom/Accessories">Accessories</a>
+            </div>
+        </div>
+        <div class="dropdown">
+            <a href="/SpecialOccasions/All"><button class="dropbtn">Other Special Occasions</button></a>
+            <div class="dropdown-content">
+                <a href="/SpecialOccasions/Dresses">Dresses</a>
+                <a href="/SpecialOccasions/Suits">Suits</a>
+                <a href="/SpecialOccasions/Accessories">Accessories</a>
+            </div>
+        </div>
+        @*<div class="container">
+            <ul class="navbar-nav flex-grow-1">
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Weddings" asp-action="All">Wedding</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Prom" asp-action="All">Prom</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Other" asp-action="All">Other Special Occasions</a>
+                </li>
+            </ul>
+        </div>*@
+    </div>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; @DateTime.UtcNow.DayOfWeek - @DateTime.UtcNow.Day-@DateTime.UtcNow.Month-@DateTime.UtcNow.Year - DaysForGirls Ltd. - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

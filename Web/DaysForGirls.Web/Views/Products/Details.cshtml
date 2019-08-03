@@ -1,0 +1,62 @@
+﻿@model DaysForGirls.Web.ViewModels.ProductDetailsViewModel
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    #product-images-holder, #product-details-holder {
+        float: left;
+        width: 49%;
+}
+</style>
+
+<div>
+    <h4>@Model.Category > @Model.ProductType</h4>
+</div>
+
+<div>
+    <div id="product-images-holder">
+        <img src="@Model.MainPicture" alt="@Model.Name" />
+
+        @foreach (var pic in Model.Pictures)
+        {
+            <img src="@pic.ImageUrl" alt="@Model.Name" />
+        }
+
+        @if (Model.Reviews.Count() < 1)
+        {
+            <p>Be the first to review @Model.Name</p>
+            //TODO insert form
+        }
+        else
+        {
+            <div>
+                @foreach (var review in Model.Reviews)
+                {
+                    <div>
+                        <h4>@review.Author says: @review.Title</h4>
+                        <p>@review.Text</p>
+                    </div>
+                }
+            </div>
+        }
+        <div>
+            @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+            <a asp-action="Index">Back to List</a>
+        </div>
+    </div>
+    <div id="product-details-holder">
+        <div>
+            <h1 class="text-center" style="margin-bottom: 5px;">@Model.Name</h1>
+            <h3 class="text-center">By @Model.Manufacturer</h3>
+        </div>
+
+        <h3 class="text-center">Price: &euro; @Model.Price.ToString("f2")</h3>
+        <hr style="border-color: #cc0052;"/>
+        <p>Description: @Model.Description</p>
+        <p>Color: @Model.Colour</p>
+        <p>Size: @Model.Size</p>
+        <p>Available Quantity: @Model.AvailableQuantity</p>
+    </div>
