@@ -1,0 +1,30 @@
+﻿@model IEnumerable<DaysForGirls.Web.ViewModels.ProductDisplayAllViewModel>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+
+@{
+    ViewData["Title"] = "All";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .editAndDelete{
+        display: inline-block;
+        float: left;
+    }
+</style>
+
+<h1>All Products</h1>
+
+<div>
+    @foreach (var product in Model)
+    {
+        <a href="/Administration/Product/Details/@product.Id"><img src="@product.MainPicture" alt="@product.Name" /></a>
+        <a href="/Administration/Product/Details/@product.Id"><h4>@product.Name</h4></a>
+        <h4>@product.Price</h4>
+        <div class="editAndDelete">
+            <a asp-area="Administration" asp-controller="Product" asp-action="Edit/@product.Id"><h4>Edit</h4></a>
+            <a asp-area="Administration" asp-controller="Product" asp-action="Delete/@product.Id"><h4>Delete</h4></a>
+        </div>
+    }
+</div>

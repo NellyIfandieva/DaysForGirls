@@ -12,7 +12,7 @@ namespace DaysForGirls.Services.Models
 
         public string Text { get; set; }
 
-        //public ProductServiceModel Product { get; set; }
+        public string CreatedOn { get; set; }
 
         public DaysForGirlsUserServiceModel Author { get; set; }
     }

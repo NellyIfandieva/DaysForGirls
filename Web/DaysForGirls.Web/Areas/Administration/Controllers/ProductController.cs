@@ -163,7 +163,83 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
             //when i'm done re-doing the service (and IService)
             //productServiceModel = await this.productService.Create(productServiceModel);
 
-            return Redirect("/Products/All");
+            return Redirect("/Administration/Product/All");
+        }
+
+        [HttpGet("/Administration/Product/All")]
+        public async Task<IActionResult> All()
+        {
+            var allProducts = await this.productService
+                .DisplayAll()
+                .Select(product => new ProductDisplayAllViewModel
+                {
+                    Id = product.Id,
+                    Name = product.Name,
+                    Category = product.Category.Name,
+                    ProductType = product.ProductType.Name,
+                    Price = product.Price,
+                    MainPicture = product.MainPicture.PictureUrl,
+                    Quantity = product.Quantity.AvailableItems
+                })
+                .ToListAsync();
+
+            return View(allProducts);
+        }
+
+        [HttpGet("/Administration/Product/Details/{id}")]
+        public async Task<IActionResult> Details(int id)
+        {
+            var productInDb = await this.productService
+                .GetDetailsOfProductByIdAsync(id);
+
+            ProductDetailsViewModel productToDisplay = new ProductDetailsViewModel
+            {
+                Id = productInDb.Id,
+                Name = productInDb.Name,
+                Category = productInDb.Category.Name,
+                ProductType = productInDb.ProductType.Name,
+                Colour = productInDb.Colour,
+                Size = productInDb.Size,
+                Description = productInDb.Description,
+                Manufacturer = productInDb.Manufacturer.Name,
+                Price = productInDb.Price,
+                AvailableQuantity = productInDb.Quantity.AvailableItems,
+                MainPicture = productInDb.MainPicture.PictureUrl
+            };
+
+            List<PictureDisplayAllViewModel> pictures = new List<PictureDisplayAllViewModel>();
+
+            foreach(var pic in productInDb.Pictures)
+            {
+                PictureDisplayAllViewModel pDAVM = new PictureDisplayAllViewModel
+                {
+                    ImageUrl = pic.PictureUrl
+                };
+
+                pictures.Add(pDAVM);
+            }
+
+            productToDisplay.Pictures = pictures;
+
+            List<CustomerReviewAllViewModel> reviews = new List<CustomerReviewAllViewModel>();
+
+            foreach(var rev in productInDb.Reviews)
+            {
+                CustomerReviewAllViewModel cRAVM = new CustomerReviewAllViewModel
+                {
+                    Id = rev.Id,
+                    Title = rev.Title,
+                    Text = rev.Text,
+                    DateCreated = rev.CreatedOn.ToString(),
+                    Author = rev.Author.FirstName + " " + rev.Author.LastName
+                };
+
+                reviews.Add(cRAVM);
+            }
+
+            productToDisplay.Reviews = reviews;
+
+            return View(productToDisplay);
         }
     }
 }

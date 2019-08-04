@@ -85,6 +85,7 @@ namespace DaysForGirls.Web.Controllers
                         Id = cR.Id,
                         Title = cR.Title,
                         Text = cR.Text,
+                        DateCreated = cR.CreatedOn.ToString(),
                         Author = cR.Author.FirstName + " " + cR.Author.LastName
                     };
 
@@ -94,26 +95,7 @@ namespace DaysForGirls.Web.Controllers
 
             productDetails.Reviews = cRAVMs;
 
-            //await Task.Delay(0);
             return View(productDetails);
         }
-
-        //public async Task<IActionResult> AllAccessories()
-        //{
-        //    var allAccessories = this.productService
-        //        .DisplayAll()
-        //        .Select(a => new AccessoryDisplayAllViewModel
-        //        {
-        //            Id = a.Id,
-        //            Name = a.Name,
-        //            Category = a.Category.Name,
-        //            Price = a.Price,
-        //            MainPicture = a.MainPicture.PictureUrl,
-        //            Quantity = a.Quantity.AvailableItems
-        //        })
-        //        .ToListAsync();
-
-        //    return View(allAccessories);
-        //}
     }
 }

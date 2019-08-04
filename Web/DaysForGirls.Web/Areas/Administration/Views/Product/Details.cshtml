@@ -9,7 +9,7 @@
     #product-images-holder, #product-details-holder {
         float: left;
         width: 49%;
-}
+    }
 </style>
 
 <div>
@@ -18,7 +18,7 @@
 
 <div>
     <div id="product-images-holder">
-        <img src="@Model.MainPicture" alt="@Model.Name" width="500";/>
+        <img src="@Model.MainPicture" alt="@Model.Name" />
 
         @foreach (var pic in Model.Pictures)
         {
@@ -27,7 +27,7 @@
 
         @if (Model.Reviews.Count() < 1)
         {
-            <a href="/CustomerReview/Create"><button style="margin-top:5px; background-color: aqua"><p>Be the first to review @Model.Name</button></a>
+            <p>Be the first to review @Model.Name</p>
             //TODO insert form
         }
         else
@@ -49,14 +49,14 @@
     </div>
     <div id="product-details-holder">
         <div>
-            <h1 style="margin-bottom: 5px;">@Model.Name</h1>
-            <h3>By @Model.Manufacturer</h3>
+            <h1 class="text-center" style="margin-bottom: 5px;">@Model.Name</h1>
+            <h3 class="text-center">By @Model.Manufacturer</h3>
         </div>
 
-        <h3>Price: &euro; @Model.Price.ToString("f2")</h3>
-        <hr style="border-color: #cc0052;"/>
-        <p><span style="font-weight:bold">Description:</span> @Model.Description</p>
-        <p><span style="font-weight:bold">Colour:</span> @Model.Colour</p>
-        <p><span style="font-weight:bold">Size:</span> @Model.Size</p>
-        <p><span style="font-weight:bold">Available Quantity:</span> @Model.AvailableQuantity</p>
+        <h3 class="text-center">Price: &euro; @Model.Price.ToString("f2")</h3>
+        <hr style="border-color: #cc0052;" />
+        <p>Description: @Model.Description</p>
+        <p>Color: @Model.Colour</p>
+        <p>Size: @Model.Size</p>
+        <p>Available Quantity: @Model.AvailableQuantity</p>
     </div>
