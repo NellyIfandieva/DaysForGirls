@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DaysForGirls.Web.Areas.Administration.Controllers
 {
-    public class AccessoryController : Controller
+    public class AccessoryController : AdminController
     {
         private readonly IAccessoryService accessoryService;
         private readonly ICategoryService categoryService;
