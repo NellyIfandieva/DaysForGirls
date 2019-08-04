@@ -20,7 +20,7 @@ namespace DaysForGirls.Web.Areas.Identity.Pages.Account
         public async Task<IActionResult> OnGet()
         {
             await this.signInManager.SignOutAsync();
-            return Redirect("/Home/Index");
+            return Redirect("/");
             //return Redirect("/Identity/Account/Login");
         }
     }

@@ -14,9 +14,6 @@ namespace DaysForGirls.Web.InputModels
         public string Text { get; set; }
 
         [Required]
-        public string Product { get; set; }
-
-        [Required]
         public string AuthorsUsername { get; set; }
     }
 }

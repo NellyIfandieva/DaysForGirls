@@ -629,5 +629,20 @@ namespace DaysForGirls.Services
 
             return allOtherAccessories;
         }
+
+        public async Task<bool> AddReviewToProductByProductIdAsync(int productId, int reviewId)
+        {
+            var product = this.db.Products
+                .SingleOrDefault(p => p.Id == productId);
+
+            var review = this.db.CustomerReviews
+                .SingleOrDefault(r => r.Id == reviewId);
+
+            product.Reviews.Add(review);
+            this.db.Products.Update(product);
+            int result = await this.db.SaveChangesAsync();
+
+            return result == 1;
+        }
     }
 }

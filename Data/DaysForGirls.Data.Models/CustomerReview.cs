@@ -18,17 +18,12 @@ namespace DaysForGirls.Data.Models
         [Required]
         public string Text { get; set; }
 
-        public int ProductId { get; set; }
-        public Product Product { get; set; }
-
         public string AuthorId { get; set; }
         public DaysForGirlsUser Author { get; set; }
 
         [Required]
         [DataType(DataType.Date)]
-        [Display(Name = "On: ")]
+        [Display(Name = "Created On")]
         public DateTime CreatedOn { get; set; }
-
-        public bool IsDeleted => this.Product.IsDeleted == true || this.Author.IsDeleted == true;
     }
 }

@@ -1,10 +1,46 @@
-﻿using System;
+﻿using DaysForGirls.Data;
+using DaysForGirls.Data.Models;
+using DaysForGirls.Services.Models;
+using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DaysForGirls.Services
 {
     public class CustomerReviewService : ICustomerReviewService
     {
+        private readonly UserManager<DaysForGirlsUser> userManager;
+        private readonly DaysForGirlsDbContext db;
+        private readonly IProductService productService;
+
+        public CustomerReviewService(
+            UserManager<DaysForGirlsUser> userManager,
+            DaysForGirlsDbContext db,
+            IProductService productService)
+        {
+            this.userManager = userManager;
+            this.db = db;
+            this.productService = productService;
+        }
+
+        public async Task<bool> CreateAsync(CustomerReviewServiceModel model, int productId)
+        {
+
+            CustomerReview productReview = new CustomerReview
+            {
+                Title = model.Title,
+                Text = model.Text,
+                AuthorId = model.Author.Id
+            };
+
+            this.db.CustomerReviews.Add(productReview);
+            model.Id = productReview.Id;
+            bool reviewIsAddedToProduct = await this.productService.AddReviewToProductByProductIdAsync(productId, model.Id);
+
+            return true;
+        }
     }
 }

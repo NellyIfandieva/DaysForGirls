@@ -1,4 +1,5 @@
-﻿@model DaysForGirls.Web.ViewModels.ProductDetailsViewModel
+﻿@using DaysForGirls.Web.InputModels
+@model DaysForGirls.Web.ViewModels.ProductDetailsViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -27,8 +28,9 @@
 
         @if (Model.Reviews.Count() < 1)
         {
-            <a href="/CustomerReview/Create"><button style="margin-top:5px; background-color: aqua"><p>Be the first to review @Model.Name</button></a>
-            //TODO insert form
+    <div>
+        <a class="text-center" href="/CustomerReviews/Create/@Model.Id"><button style="width:150px; margin-top:10px; margin-bottom: 10px; background-color: #cc0052; color: white"><p>Be the first to review @Model.Name</button></a>
+    </div>
         }
         else
         {
