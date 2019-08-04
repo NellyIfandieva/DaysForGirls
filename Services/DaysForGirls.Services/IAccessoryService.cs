@@ -9,10 +9,10 @@ namespace DaysForGirls.Services
 {
     public interface IAccessoryService
     {
-        Task<int> Create(AccessoryServiceModel accessoryServiceModel);
+        //Task<int> Create(AccessoryServiceModel accessoryServiceModel);
 
-        IQueryable<AccessoryServiceModel> AllAccessories();
+        //IQueryable<AccessoryServiceModel> AllAccessories();
 
-        IQueryable<AccessoryServiceModel> AllWeddingAccessories();
+        //IQueryable<AccessoryServiceModel> AllWeddingAccessories();
     }
 }

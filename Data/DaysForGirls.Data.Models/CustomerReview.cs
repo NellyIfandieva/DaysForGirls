@@ -7,6 +7,11 @@ namespace DaysForGirls.Data.Models
 {
     public class CustomerReview : BaseModel<int>
     {
+        public CustomerReview()
+        {
+            this.CreatedOn = DateTime.UtcNow;
+        }
+
         [Required]
         public string Title { get; set; }
 
@@ -18,6 +23,11 @@ namespace DaysForGirls.Data.Models
 
         public string AuthorId { get; set; }
         public DaysForGirlsUser Author { get; set; }
+
+        [Required]
+        [DataType(DataType.Date)]
+        [Display(Name = "On: ")]
+        public DateTime CreatedOn { get; set; }
 
         public bool IsDeleted => this.Product.IsDeleted == true || this.Author.IsDeleted == true;
     }

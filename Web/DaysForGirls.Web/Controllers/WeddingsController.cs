@@ -12,14 +12,11 @@ namespace DaysForGirls.Web.Controllers
     public class WeddingsController : Controller
     {
         private readonly IProductService productService;
-        private readonly IAccessoryService accessoryService;
 
         public WeddingsController(
-            IProductService productService,
-            IAccessoryService accessoryService)
+            IProductService productService)
         {
             this.productService = productService;
-            this.accessoryService = accessoryService;
         }
 
         [HttpGet("/Weddings/All")]
@@ -85,16 +82,16 @@ namespace DaysForGirls.Web.Controllers
         [HttpGet("/Weddings/Accessories")]
         public async Task<IActionResult> Accessories()
         {
-            var allWeddingAccessories = await this.accessoryService
+            var allWeddingAccessories = await this.productService
                 .AllWeddingAccessories()
                 .ToListAsync();
 
-            List<AccessoryDisplayAllViewModel> allAccessoriesToDisplay =
-                new List<AccessoryDisplayAllViewModel>();
+            List<ProductDisplayAllViewModel> allAccessoriesToDisplay =
+                new List<ProductDisplayAllViewModel>();
 
             foreach(var accessory in allWeddingAccessories)
             {
-                AccessoryDisplayAllViewModel a = new AccessoryDisplayAllViewModel
+                ProductDisplayAllViewModel a = new ProductDisplayAllViewModel
                 {
                     Id = accessory.Id,
                     Name = accessory.Name,

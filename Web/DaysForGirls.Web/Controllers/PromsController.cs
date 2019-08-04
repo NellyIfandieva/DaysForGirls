@@ -61,7 +61,7 @@ namespace DaysForGirls.Web.Controllers
         [HttpGet("/Proms/Suits")]
         public async Task<IActionResult> Suits()
         {
-            var allPromSuits = this.productService
+            var allPromSuits = await this.productService
                 .AllPromSuits()
                 .Select(d => new ProductDisplayAllViewModel
                 {
@@ -81,7 +81,7 @@ namespace DaysForGirls.Web.Controllers
         [HttpGet("/Proms/Accessories")]
         public async Task<IActionResult> Accessories()
         {
-            var allPromAccessories = this.productService
+            var allPromAccessories = await this.productService
                 .AllPromAccessories()
                 .Select(d => new ProductDisplayAllViewModel
                 {

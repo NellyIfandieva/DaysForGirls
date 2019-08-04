@@ -13,98 +13,101 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
 {
     public class AccessoryController : AdminController
     {
-        private readonly IAccessoryService accessoryService;
-        private readonly ICategoryService categoryService;
-        private readonly IManufacturerService manufacturerService;
-        private readonly ICloudinaryService cloudinaryService;
+        //private readonly IAccessoryService accessoryService;
+        //private readonly ICategoryService categoryService;
+        //private readonly IManufacturerService manufacturerService;
+        //private readonly ICloudinaryService cloudinaryService;
 
-        public AccessoryController(
-            IAccessoryService accessoryService,
-            ICategoryService categoryService,
-            IManufacturerService manufacturerService,
-            ICloudinaryService cloudinaryService)
-        {
-            this.accessoryService = accessoryService;
-            this.categoryService = categoryService;
-            this.manufacturerService = manufacturerService;
-            this.cloudinaryService = cloudinaryService;
-        }
-        public async Task<IActionResult> Create()
-        {
-            var allCategories = await this.categoryService
-               .DisplayAll()
-               .ToListAsync();
+        //public AccessoryController(
+        //    IAccessoryService accessoryService,
+        //    ICategoryService categoryService,
+        //    IManufacturerService manufacturerService,
+        //    ICloudinaryService cloudinaryService)
+        //{
+        //    this.accessoryService = accessoryService;
+        //    this.categoryService = categoryService;
+        //    this.manufacturerService = manufacturerService;
+        //    this.cloudinaryService = cloudinaryService;
+        //}
 
-            this.ViewData["categories"] = allCategories
-                .Select(c => new ProductCreateCategoryViewModel
-                {
-                    Name = c.Name
-                })
-                .OrderBy(cat => cat.Name)
-                .ToList();
+        //[HttpGet("/Administration/Accessory/Create")]
+        //public async Task<IActionResult> Create()
+        //{
+        //    var allCategories = await this.categoryService
+        //       .DisplayAll()
+        //       .ToListAsync();
 
-            var allManufacturers = await this.manufacturerService
-                .DisplayAll()
-                .ToListAsync();
+        //    this.ViewData["categories"] = allCategories
+        //        .Select(c => new ProductCreateCategoryViewModel
+        //        {
+        //            Name = c.Name
+        //        })
+        //        .OrderBy(cat => cat.Name)
+        //        .ToList();
 
-            this.ViewData["manufacturers"] = allManufacturers
-                .Select(m => new ProductCreateManufacturerViewModel
-                {
-                    Name = m.Name
-                })
-                .OrderBy(man => man.Name)
-                .ToList();
+        //    var allManufacturers = await this.manufacturerService
+        //        .DisplayAll()
+        //        .ToListAsync();
 
-            await Task.Delay(0);
+        //    this.ViewData["manufacturers"] = allManufacturers
+        //        .Select(m => new ProductCreateManufacturerViewModel
+        //        {
+        //            Name = m.Name
+        //        })
+        //        .OrderBy(man => man.Name)
+        //        .ToList();
 
-            return View();
-        }
+        //    await Task.Delay(0);
 
-        public async Task<IActionResult> Create(AccessoryCreateInputModel model)
-        {
+        //    return View();
+        //}
 
-            //TODO Re-do the productType, category and Manuf
-            //Add picture to pSM
-            //TODO ModelState Validation
+        //[HttpPost("/Administration/Accessory/Create")]
+        //public async Task<IActionResult> Create(AccessoryCreateInputModel model)
+        //{
 
-            var category = new CategoryServiceModel
-            {
-                Name = model.Category
-            };
+        //    //TODO Re-do the productType, category and Manuf
+        //    //Add picture to pSM
+        //    //TODO ModelState Validation
 
-            var manufacturer = new ManufacturerServiceModel
-            {
-                Name = model.Manufacturer
-            };
+        //    var category = new CategoryServiceModel
+        //    {
+        //        Name = model.Category
+        //    };
 
-            string mainImageUrl = await this.cloudinaryService
-                .UploadPictureForProductAsync(model.MainPicture, model.Name + "_Main");
+        //    var manufacturer = new ManufacturerServiceModel
+        //    {
+        //        Name = model.Manufacturer
+        //    };
 
-            AccessoryServiceModel accessoryServiceModel = new AccessoryServiceModel
-            {
-                Name = model.Name,
-                Category = category,
-                Description = model.Description,
-                MainPicture = new PictureServiceModel
-                {
-                    PictureUrl = mainImageUrl
-                },
-                Colour = model.Colour,
-                Price = model.Price,
-                Manufacturer = manufacturer,
-                Quantity = new QuantityServiceModel
-                {
-                    AvailableItems = model.Quantity
-                }
-            };
+        //    string mainImageUrl = await this.cloudinaryService
+        //        .UploadPictureForProductAsync(model.MainPicture, model.Name + "_Main");
 
-            int accessoryId = await this.accessoryService.Create(accessoryServiceModel);
+        //    AccessoryServiceModel accessoryServiceModel = new AccessoryServiceModel
+        //    {
+        //        Name = model.Name,
+        //        Category = category,
+        //        Description = model.Description,
+        //        MainPicture = new PictureServiceModel
+        //        {
+        //            PictureUrl = mainImageUrl
+        //        },
+        //        Colour = model.Colour,
+        //        Price = model.Price,
+        //        Manufacturer = manufacturer,
+        //        Quantity = new QuantityServiceModel
+        //        {
+        //            AvailableItems = model.Quantity
+        //        }
+        //    };
 
-            //bool isUpdated = await this.pictureService.UpdatePictureInfoAsync(pictureInDbId, productId);
-            //when i'm done re-doing the service (and IService)
-            //productServiceModel = await this.productService.Create(productServiceModel);
+        //    int accessoryId = await this.accessoryService.Create(accessoryServiceModel);
 
-            return Redirect("/Products/AllAccessories");
-        }
+        //    //bool isUpdated = await this.pictureService.UpdatePictureInfoAsync(pictureInDbId, productId);
+        //    //when i'm done re-doing the service (and IService)
+        //    //productServiceModel = await this.productService.Create(productServiceModel);
+
+        //    return Redirect("/Products/AllAccessories");
+        //}
     }
 }

@@ -20,7 +20,7 @@ namespace DaysForGirls.Services
 
         IQueryable<ProductServiceModel> AllWeddingSuits();
 
-        IQueryable<AccessoryServiceModel> AllWeddingAccessories();
+        IQueryable<ProductServiceModel> AllWeddingAccessories();
 
         IQueryable<ProductServiceModel> AllPromProducts();
 
@@ -28,7 +28,7 @@ namespace DaysForGirls.Services
 
         IQueryable<ProductServiceModel> AllPromSuits();
 
-        IQueryable<AccessoryServiceModel> AllPromAccessories();
+        IQueryable<ProductServiceModel> AllPromAccessories();
 
         IQueryable<ProductServiceModel> AllOtherProducts();
 
@@ -36,6 +36,6 @@ namespace DaysForGirls.Services
 
         IQueryable<ProductServiceModel> AllOtherSuits();
 
-        IQueryable<AccessoryServiceModel> AllOtherAccessories();
+        IQueryable<ProductServiceModel> AllOtherAccessories();
     }
 }

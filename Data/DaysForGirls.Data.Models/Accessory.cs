@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DaysForGirls.Data.Models
 {
-    public class Accessory : BaseModel<int>
+    public class Accessory// : BaseModel<int>
     {
         private const string MinPrice = "0.00";
         private const string MaxPrice = "10000";

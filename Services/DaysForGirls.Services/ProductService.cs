@@ -164,7 +164,7 @@ namespace DaysForGirls.Services
 
             productToReturn.Reviews = cRSMs;
 
-            //await Task.Delay(0);
+            await Task.Delay(0);
             return productToReturn;
         }
 
@@ -318,11 +318,12 @@ namespace DaysForGirls.Services
             return allWeddingSuits;
         }
 
-        public IQueryable<AccessoryServiceModel> AllWeddingAccessories()
+        public IQueryable<ProductServiceModel> AllWeddingAccessories()
         {
-            var allWeddingAccessories = this.db.Accessories
-                .Where(a => a.Category.Name == "Wedding")
-                .Select(a => new AccessoryServiceModel
+            var allWeddingAccessories = this.db.Products
+                .Where(a => a.Category.Name == "Wedding"
+                && a.ProductType.Name == "Accessory")
+                .Select(a => new ProductServiceModel
                 {
                     Id = a.Id,
                     Name = a.Name,
@@ -457,11 +458,12 @@ namespace DaysForGirls.Services
             return allPromSuits;
         }
 
-        public IQueryable<AccessoryServiceModel> AllPromAccessories()
+        public IQueryable<ProductServiceModel> AllPromAccessories()
         {
-            var allPromAccessories = this.db.Accessories
-                .Where(p => p.Category.Name == "Prom")
-                .Select(a => new AccessoryServiceModel
+            var allPromAccessories = this.db.Products
+                .Where(p => p.Category.Name == "Prom"
+                && p.ProductType.Name == "Accessory")
+                .Select(a => new ProductServiceModel
                 {
                     Id = a.Id,
                     Name = a.Name,
@@ -595,11 +597,12 @@ namespace DaysForGirls.Services
             return allOtherSuits;
         }
 
-        public IQueryable<AccessoryServiceModel> AllOtherAccessories()
+        public IQueryable<ProductServiceModel> AllOtherAccessories()
         {
-            var allOtherAccessories = this.db.Accessories
-                .Where(a => a.Category.Name == "Other")
-                .Select(a => new AccessoryServiceModel
+            var allOtherAccessories = this.db.Products
+                .Where(a => a.Category.Name == "Other"
+                && a.ProductType.Name == "Accessory")
+                .Select(a => new ProductServiceModel
                 {
                     Id = a.Id,
                     Name = a.Name,

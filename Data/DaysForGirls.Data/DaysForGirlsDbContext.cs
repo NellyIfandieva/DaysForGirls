@@ -7,8 +7,8 @@ namespace DaysForGirls.Data
 {
     public class DaysForGirlsDbContext : IdentityDbContext<DaysForGirlsUser, IdentityRole, string>
     {
-        public DbSet<Accessory> Accessories { get; set; }
-        public DbSet<AccessoryCart> AccessoryCarts { get; set; }
+        //public DbSet<Accessory> Accessories { get; set; }
+        //public DbSet<AccessoryCart> AccessoryCarts { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<CustomerReview> CustomerReviews { get; set; }
         public DbSet<Manufacturer> Manufacturers { get; set; }

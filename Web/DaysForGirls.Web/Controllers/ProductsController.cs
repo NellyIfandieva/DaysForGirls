@@ -12,14 +12,11 @@ namespace DaysForGirls.Web.Controllers
     public class ProductsController : Controller
     {
         private readonly IProductService productService;
-        private readonly IAccessoryService accessoryService;
 
         public ProductsController(
-            IProductService productService,
-            IAccessoryService accessoryService)
+            IProductService productService)
         {
             this.productService = productService;
-            this.accessoryService = accessoryService;
         }
 
         [HttpGet("/Products/All")]
@@ -101,22 +98,22 @@ namespace DaysForGirls.Web.Controllers
             return View(productDetails);
         }
 
-        public async Task<IActionResult> AllAccessories()
-        {
-            var allAccessories = this.accessoryService
-                .AllAccessories()
-                .Select(a => new AccessoryDisplayAllViewModel
-                {
-                    Id = a.Id,
-                    Name = a.Name,
-                    Category = a.Category.Name,
-                    Price = a.Price,
-                    MainPicture = a.MainPicture.PictureUrl,
-                    Quantity = a.Quantity.AvailableItems
-                })
-                .ToListAsync();
+        //public async Task<IActionResult> AllAccessories()
+        //{
+        //    var allAccessories = this.productService
+        //        .DisplayAll()
+        //        .Select(a => new AccessoryDisplayAllViewModel
+        //        {
+        //            Id = a.Id,
+        //            Name = a.Name,
+        //            Category = a.Category.Name,
+        //            Price = a.Price,
+        //            MainPicture = a.MainPicture.PictureUrl,
+        //            Quantity = a.Quantity.AvailableItems
+        //        })
+        //        .ToListAsync();
 
-            return View(allAccessories);
-        }
+        //    return View(allAccessories);
+        //}
     }
 }
