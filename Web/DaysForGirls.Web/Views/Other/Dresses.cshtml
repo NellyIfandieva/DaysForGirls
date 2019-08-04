@@ -1,0 +1,25 @@
+﻿@model IEnumerable<DaysForGirls.Web.ViewModels.ProductDisplayAllViewModel>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+
+@{
+    ViewData["Title"] = "Dresses";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1 class="text-center">Find a Dress for Any Special Occasion</h1>
+
+<div class="container-fluid">
+    @foreach (var dress in Model)
+    {
+        <div class="col-md-3">
+            <a asp-controller="" asp-action="Details/@dress.Id"><img src="@dress.MainPicture" alt="@dress.Name" /></a>
+            <h3>@dress.Name</h3>
+            <h3>&euro;@dress.Price</h3>
+            @if (dress.Quantity < 1)
+            {
+                <h3>Sold Out</h3>
+            }
+        </div>
+    }
+</div>

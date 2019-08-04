@@ -1,0 +1,23 @@
+﻿@model IEnumerable<DaysForGirls.Web.ViewModels.ProductDisplayAllViewModel>
+
+@{
+    ViewData["Title"] = "Suits";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1 class="text-center">Look Like a Gentleman Whatever the Occasion</h1>
+
+<div class="container-fluid">
+    @foreach (var suit in Model)
+    {
+        <div class="col-md-3">
+            <a asp-controller="" asp-action="Details/@suit.Id"><img src="@suit.MainPicture" alt="@suit.Name" /></a>
+            <h3>@suit.Name</h3>
+            <h3>&euro;@suit.Price</h3>
+            @if (suit.Quantity < 1)
+            {
+                <h3>Sold Out</h3>
+            }
+        </div>
+    }
+</div>
