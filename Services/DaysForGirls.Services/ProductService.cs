@@ -642,7 +642,7 @@ namespace DaysForGirls.Services
             this.db.Products.Update(product);
             int result = await this.db.SaveChangesAsync();
 
-            return result == 1;
+            return result > 0;
         }
     }
 }

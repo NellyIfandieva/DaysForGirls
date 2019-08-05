@@ -28,19 +28,22 @@ namespace DaysForGirls.Services
 
         public async Task<bool> CreateAsync(CustomerReviewServiceModel model, int productId)
         {
+            DaysForGirlsUser currentUser = await this.userManager.FindByNameAsync(model.Author.UserName);
 
             CustomerReview productReview = new CustomerReview
             {
                 Title = model.Title,
                 Text = model.Text,
-                AuthorId = model.Author.Id
+                AuthorId = currentUser.Id,
+                ProductId = model.Product.Id
             };
 
             this.db.CustomerReviews.Add(productReview);
-            model.Id = productReview.Id;
-            bool reviewIsAddedToProduct = await this.productService.AddReviewToProductByProductIdAsync(productId, model.Id);
+            await this.db.SaveChangesAsync();
 
-            return true;
+            bool reviewIsAddedToProduct = await this.productService.AddReviewToProductByProductIdAsync(productId, productReview.Id);
+
+            return reviewIsAddedToProduct;
         }
     }
 }

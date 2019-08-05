@@ -21,6 +21,9 @@ namespace DaysForGirls.Data.Models
         public string AuthorId { get; set; }
         public DaysForGirlsUser Author { get; set; }
 
+        public int ProductId { get; set; }
+        public Product Product { get; set; }
+
         [Required]
         [DataType(DataType.Date)]
         [Display(Name = "Created On")]
