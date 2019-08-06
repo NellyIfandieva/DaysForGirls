@@ -68,29 +68,49 @@ namespace DaysForGirls.Services
             var saleWithDetails = this.db.Sales
                 .SingleOrDefault(sale => sale.Id == id);
 
+            var productsInSale = this.db.Products
+                .Where(p => p.SaleId == id)
+                .Select(p => new ProductServiceModel
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Category = new CategoryServiceModel
+                    {
+                        Name = p.Category.Name
+                    },
+                    ProductType = new ProductTypeServiceModel
+                    {
+                        Name = p.ProductType.Name
+                    },
+                    Pictures = p.Pictures
+                        .Select(pU => new PictureServiceModel
+                        {
+                            Id = pU.Id,
+                            PictureUrl = pU.PictureUrl,
+                            ProductId = p.Id
+                        }).ToList(),
+                    Description = p.Description,
+                    Colour = p.Colour,
+                    Size = p.Size,
+                    Price = p.Price,
+                    Manufacturer = new ManufacturerServiceModel
+                    {
+                        Name = p.Manufacturer.Name
+                    },
+                    Quantity = new QuantityServiceModel
+                    {
+                        AvailableItems = p.Quantity.AvailableItems
+                    }
+                })
+                .ToList();
+
             SaleServiceModel saleToReturn = new SaleServiceModel
             {
                 Id = saleWithDetails.Id,
                 Title = saleWithDetails.Title,
                 EndsOn = saleWithDetails.EndsOn,
                 Picture = saleWithDetails.Picture,
-                Products = saleWithDetails.Products
-                    .Select(product => new ProductServiceModel
-                    {
-                        Id = product.Id,
-                        Name = product.Name,
-                        Price = product.Price,
-                        Quantity = new QuantityServiceModel
-                        {
-                            AvailableItems = product.Quantity.AvailableItems
-                        },
-                        Pictures = product.Pictures
-                            .Select(pp => new PictureServiceModel
-                            {
-                                PictureUrl = pp.PictureUrl
-                            }).ToList()
-
-                    }).ToList()
+                Products = productsInSale
             };
 
             await Task.Delay(0);
@@ -102,6 +122,11 @@ namespace DaysForGirls.Services
         {
             Product product = this.db.Products
                 .SingleOrDefault(p => p.Id == productId);
+
+            var productPictures = this.db.Pictures
+                .Where(pI => pI.ProductId == productId).ToList();
+
+            product.Pictures = productPictures;
 
             Sale sale = this.db.Sales
                 .SingleOrDefault(s => s.Id == saleId);

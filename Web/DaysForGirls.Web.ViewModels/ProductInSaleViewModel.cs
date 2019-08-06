@@ -10,7 +10,7 @@ namespace DaysForGirls.Web.ViewModels
 
         public string Name { get; set; }
 
-        public string Picture { get; set; }
+        public List<PictureDisplayAllViewModel> Pictures { get; set; }
 
         public decimal OldPrice { get; set; }
 

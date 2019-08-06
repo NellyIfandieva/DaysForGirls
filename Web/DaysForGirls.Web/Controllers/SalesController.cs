@@ -52,7 +52,14 @@ namespace DaysForGirls.Web.Controllers
                     {
                         Id = product.Id,
                         Name = product.Name,
-                        //Pictures = product.Pictures
+                        Pictures = product.Pictures
+                            .Select(pi => new PictureDisplayAllViewModel
+                            {
+                                Id = pi.Id,
+                                ImageUrl = pi.PictureUrl,
+                                ProductId = product.Id
+                            })
+                            .ToList(),
                         OldPrice = product.Price
                     }).ToList()
             };
