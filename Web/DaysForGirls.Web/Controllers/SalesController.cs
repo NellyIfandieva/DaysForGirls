@@ -37,33 +37,34 @@ namespace DaysForGirls.Web.Controllers
         }
 
         [HttpGet("/Sales/Details/{id}")]
-        public async Task<IActionResult> Details([FromQuery]int id)
+        public async Task<IActionResult> Details(int id)
         {
-            SaleServiceModel saleWithDetails = await this.saleService
-                .GetSaleByIdAsync(id);
+            var sale = await this.saleService.GetSaleByIdAsync(id);
 
-            SaleDetailsViewModel saleToDisplay = new SaleDetailsViewModel
+            var saleToDisplay = new SaleDetailsViewModel
             {
-                Id = saleWithDetails.Id,
-                Title = saleWithDetails.Title,
-                EndsOn = saleWithDetails.EndsOn,
-                Products = saleWithDetails.Products
-                    .Select(product => new ProductInSaleViewModel
+                Id = sale.Id,
+                Title = sale.Title,
+                EndsOn = sale.EndsOn,
+                IsValid = sale.IsActive,
+                Products = sale.Products
+                    .Select(p => new ProductInSaleViewModel
                     {
-                        Id = product.Id,
-                        Name = product.Name,
-                        Pictures = product.Pictures
-                            .Select(pi => new PictureDisplayAllViewModel
+                        Id = p.Id,
+                        Name = p.Name,
+                        Pictures = p.Pictures
+                            .Select(pic => new PictureDisplayAllViewModel
                             {
-                                Id = pi.Id,
-                                ImageUrl = pi.PictureUrl,
-                                ProductId = product.Id
-                            })
-                            .ToList(),
-                        OldPrice = product.Price
+                                Id = pic.Id,
+                                ImageUrl = pic.PictureUrl,
+                                ProductId = p.Id
+                            }).ToList(),
+                        OldPrice = p.Price,
+                        Quantity = p.Quantity.AvailableItems
                     }).ToList()
             };
 
+            await Task.Delay(0);
             return View(saleToDisplay);
         }
     }

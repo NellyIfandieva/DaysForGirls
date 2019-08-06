@@ -75,6 +75,44 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
             return View(allSales);
         }
 
+        [HttpGet()]
+        public async Task<IActionResult> Details(int id)
+        {
+            var sale = await this.saleService.GetSaleByIdAsync(id);
+
+            var saleToDisplay = new SaleDetailsViewModel
+            {
+                Id = sale.Id,
+                Title = sale.Title,
+                EndsOn = sale.EndsOn,
+                IsValid = sale.IsActive,
+                Products = sale.Products
+                    .Select(p => new ProductInSaleViewModel
+                    {
+                        Id = p.Id,
+                        Name = p.Name,
+                        Pictures = p.Pictures
+                            .Select(pic => new PictureDisplayAllViewModel
+                            {
+                                Id = pic.Id,
+                                ImageUrl = pic.PictureUrl,
+                                ProductId = p.Id
+                            }).ToList(),
+                        OldPrice = p.Price,
+                        Quantity = p.Quantity.AvailableItems
+                    }).ToList()
+            };
+
+            await Task.Delay(0);
+            return View(saleToDisplay);
+        }
+
+        public async Task<IActionResult> Edit(int saleId)
+        {
+            throw new NotImplementedException();
+            //return Redirect("/Administration/Sale/Details/{saleId}");
+        }
+
         [HttpGet("/Administration/Sale/AddExistingProduct")]
         public async Task<IActionResult> AddExistingProduct()
         {
@@ -142,13 +180,6 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
             bool isAdded = await this.saleService.AddProductToSale(saleId, productId);
 
             return Redirect("/Sales/Details/");
-        }
-
-        [HttpGet()]
-        public async Task<IActionResult> Details(int id)
-        {
-            await Task.Delay(0);
-            return View();
         }
     }
 }

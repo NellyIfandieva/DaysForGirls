@@ -12,6 +12,8 @@ namespace DaysForGirls.Web.ViewModels
 
         public DateTime EndsOn { get; set; }
 
+        public bool IsValid { get; set; }
+
         public List<ProductInSaleViewModel> Products { get; set; }
     }
 }

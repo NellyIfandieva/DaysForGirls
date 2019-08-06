@@ -1,0 +1,21 @@
+﻿@model DaysForGirls.Web.ViewModels.SaleDetailsViewModel
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@Model.Title - Ends on: @Model.EndsOn.ToString() - Active: @Model.IsValid</h2>
+
+<div>
+    @foreach(var product in Model.Products)
+    {
+        <div>
+            <a href="/Products/Details/@product.Id"><img src="@product.Pictures[0]"/></a>
+        </div>
+    }
+    <div>
+        <a href="/Sale/Edit/@Model.Id">Edit Sale</a>
+        <a href="/Sale/Delete/@Model.Id" style="padding-left:7px">Delete Sale</a>
+    </div>
+</div>
