@@ -32,6 +32,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         [HttpGet("/Administration/Sale/Create")]
         public async Task<IActionResult> Create()
         {
+            await Task.Delay(0);
             return View();
         }
 
@@ -77,19 +78,23 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         [HttpGet("/Administration/Sale/AddExistingProduct")]
         public async Task<IActionResult> AddExistingProduct()
         {
+            await Task.Delay(0);
             return View();
         }
 
         [HttpPost()]
         public async Task<IActionResult> AddExistingProduct(int saleId, int productId)
         {
-            SaleServiceModel sale = this.saleService
-                .GetSaleWithDetailsById(saleId);
+            SaleServiceModel sale = await this.saleService
+                .GetSaleByIdAsync(saleId);
 
             ProductServiceModel product = await this.productService
                 .GetDetailsOfProductByIdAsync(productId);
 
             sale.Products.Add(product);
+            
+            //TODO back to service to update the sale
+            //then savechagesasync();
 
             return Redirect("/Sales/All");
         }
@@ -97,6 +102,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         [HttpGet("/Administration/Sale/AddNewProduct")]
         public async Task<IActionResult> AddNewProduct()
         {
+            await Task.Delay(0);
             return View();
         }
 
@@ -141,7 +147,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         [HttpGet()]
         public async Task<IActionResult> Details(int id)
         {
-            //TODO Implement
+            await Task.Delay(0);
             return View();
         }
     }

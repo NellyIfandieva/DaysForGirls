@@ -81,7 +81,10 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         [HttpPost("/Administration/Product/Create")]
         public async Task<IActionResult> Create(ProductCreateInputModel model)
         {
-
+            if(ModelState.IsValid == false)
+            {
+                return this.View(model);
+            }
             //TODO Re-do the productType, category and Manuf
             //Add picture to pSM
             //TODO ModelState Validation
@@ -102,13 +105,16 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
             };
 
             List<string> imageUrls = new List<string>();
+            List<PictureServiceModel> pictureServiceModels = new List<PictureServiceModel>();
 
-            int imageNameExtension = 2;
+            int imageNameExtension = 1;
 
-            string mainImageUrl = await this.cloudinaryService
-                .UploadPictureForProductAsync(model.MainPicture, model.Name + "_Main");
+            //string mainImageUrl = await this.cloudinaryService
+            //    .UploadPictureForProductAsync(model.MainPicture, model.Name + "_Main");
+            //PictureServiceModel picServModel = new PictureServiceModel { PictureUrl = mainImageUrl };
+            //pictureServiceModels.Add(picServModel);
 
-            imageUrls.Add(mainImageUrl);
+            //imageUrls.Add(mainImageUrl);
 
             foreach(var iFormFile in model.Pictures)
             {
@@ -116,6 +122,9 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                 iFormFile, model.Name + "_" + imageNameExtension++);
 
                 imageUrls.Add(imageUrl);
+
+                //PictureServiceModel pictureServiceModel = new PictureServiceModel { PictureUrl = imageUrl};
+                //pictureServiceModels.Add(pictureServiceModel);
             }
 
             ProductServiceModel productServiceModel = new ProductServiceModel
@@ -134,56 +143,64 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                 }
             };
 
-            //int pictureId = 0;
+            //productServiceModel.MainPicture = new PictureServiceModel
+            //{
+            //    PictureUrl = imageUrls[0]
+            //};
 
-            productServiceModel.MainPicture = new PictureServiceModel
-            {
-                PictureUrl = imageUrls[0]
-            };
+            //List<PictureServiceModel> pCMs = new List<PictureServiceModel>();
 
-            List<PictureServiceModel> pCMs = new List<PictureServiceModel>();
-
-            for(int i = 1; i < imageUrls.Count; i++)
+            for(int i = 0; i < imageUrls.Count; i++)
             {
                 PictureServiceModel pSM = new PictureServiceModel
                 {
                     PictureUrl = imageUrls[i]
                 };
 
-                //pictureId = await this.pictureService.Create(pSM);
-
-                pCMs.Add(pSM);
+                pictureServiceModels.Add(pSM);
             }
 
-            productServiceModel.Pictures = pCMs;
+            productServiceModel.Pictures = pictureServiceModels;
 
             int productId = await this.productService.Create(productServiceModel);
 
             //bool isUpdated = await this.pictureService.UpdatePictureInfoAsync(pictureInDbId, productId);
             //when i'm done re-doing the service (and IService)
             //productServiceModel = await this.productService.Create(productServiceModel);
-
-            return Redirect("/Administration/Product/All");
+            //bool picturesAddedToDb = await this.pictureService.Create(pictureServiceModels, productId);
+            return Redirect("/Products/All");
         }
 
         [HttpGet("/Administration/Product/All")]
         public async Task<IActionResult> All()
         {
             var allProducts = await this.productService
-                .DisplayAll()
-                .Select(product => new ProductDisplayAllViewModel
+                .DisplayAll().ToListAsync();
+
+            List<ProductDisplayAllViewModel> productsToReturn = new List<ProductDisplayAllViewModel>();
+
+            foreach(var product in allProducts)
+            {
+                ProductDisplayAllViewModel pDAVM = new ProductDisplayAllViewModel
                 {
                     Id = product.Id,
                     Name = product.Name,
                     Category = product.Category.Name,
                     ProductType = product.ProductType.Name,
                     Price = product.Price,
-                    MainPicture = product.MainPicture.PictureUrl,
                     Quantity = product.Quantity.AvailableItems
-                })
-                .ToListAsync();
+                };
+                List<string> productPictures = new List<string>();
+                foreach(var pic in product.Pictures)
+                {
+                    string Url = pic.PictureUrl;
+                    productPictures.Add(Url);
+                }
+                pDAVM.Pictures = productPictures;
+                productsToReturn.Add(pDAVM);
+            }
 
-            return View(allProducts);
+            return View(productsToReturn);
         }
 
         [HttpGet("/Administration/Product/Details/{id}")]
@@ -203,8 +220,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                 Description = productInDb.Description,
                 Manufacturer = productInDb.Manufacturer.Name,
                 Price = productInDb.Price,
-                AvailableQuantity = productInDb.Quantity.AvailableItems,
-                MainPicture = productInDb.MainPicture.PictureUrl
+                AvailableQuantity = productInDb.Quantity.AvailableItems
             };
 
             List<PictureDisplayAllViewModel> pictures = new List<PictureDisplayAllViewModel>();
@@ -231,7 +247,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                     Title = rev.Title,
                     Text = rev.Text,
                     DateCreated = rev.CreatedOn.ToString(),
-                    Author = rev.Author.FirstName + " " + rev.Author.LastName
+                    Author = rev.Author.Username
                 };
 
                 reviews.Add(cRAVM);

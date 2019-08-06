@@ -15,8 +15,7 @@ namespace DaysForGirls.Services
 
         IQueryable<SaleServiceModel> DisplayAll();
 
-        //TODO re-do to return a ProductServiceModel
-        SaleServiceModel GetSaleWithDetailsById(int id);
+        Task<SaleServiceModel> GetSaleByIdAsync(int id);
 
         Task<bool> AddProductToSale(int saleId, int productId);
     }

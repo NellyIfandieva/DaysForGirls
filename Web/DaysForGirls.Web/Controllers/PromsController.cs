@@ -22,18 +22,34 @@ namespace DaysForGirls.Web.Controllers
         public async Task<IActionResult> All()
         {
             var allPromProducts = await this.productService
-                .AllPromProducts()
-                .Select(p => new ProductDisplayAllViewModel
+                .AllPromProducts().ToListAsync();
+
+            List<ProductDisplayAllViewModel> productsToReturn = 
+                new List<ProductDisplayAllViewModel>();
+
+            foreach(var product in allPromProducts)
+            {
+                var pDAVM = new ProductDisplayAllViewModel
                 {
-                    Id = p.Id,
-                    Name = p.Name,
-                    Category = p.Category.Name,
-                    ProductType = p.ProductType.Name,
-                    Price = p.Price,
-                    MainPicture = p.MainPicture.PictureUrl,
-                    Quantity = p.Quantity.AvailableItems
-                })
-                .ToListAsync();
+                    Id = product.Id,
+                    Name = product.Name,
+                    Category = product.Category.Name,
+                    ProductType = product.ProductType.Name,
+                    Price = product.Price,
+                    Quantity = product.Quantity.AvailableItems
+                };
+
+                List<string> productPictures = new List<string>();
+
+                foreach (var pic in product.Pictures)
+                {
+                    string url = pic.PictureUrl;
+                    productPictures.Add(url);
+                }
+
+                pDAVM.Pictures = productPictures;
+                productsToReturn.Add(pDAVM);
+            }
 
             return View(allPromProducts);
         }
@@ -42,59 +58,108 @@ namespace DaysForGirls.Web.Controllers
         public async Task<IActionResult> Dresses()
         {
             var allPromDresses = await this.productService
-                .AllPromDresses()
-                .Select(d => new ProductDisplayAllViewModel
-                {
-                    Id = d.Id,
-                    Name = d.Name,
-                    Category = d.Category.Name,
-                    ProductType = d.ProductType.Name,
-                    Price = d.Price,
-                    MainPicture = d.MainPicture.PictureUrl,
-                    Quantity = d.Quantity.AvailableItems
-                })
-                .ToListAsync();
+                .AllPromDresses().ToListAsync();
 
-            return View(allPromDresses);
+            List<ProductDisplayAllViewModel> productsToReturn =
+                new List<ProductDisplayAllViewModel>();
+
+            foreach (var product in allPromDresses)
+            {
+                var pDAVM = new ProductDisplayAllViewModel
+                {
+                    Id = product.Id,
+                    Name = product.Name,
+                    Category = product.Category.Name,
+                    ProductType = product.ProductType.Name,
+                    Price = product.Price,
+                    Quantity = product.Quantity.AvailableItems
+                };
+
+                List<string> productPictures = new List<string>();
+
+                foreach (var pic in product.Pictures)
+                {
+                    string url = pic.PictureUrl;
+                    productPictures.Add(url);
+                }
+
+                pDAVM.Pictures = productPictures;
+                productsToReturn.Add(pDAVM);
+            }
+
+            return View(productsToReturn);
         }
 
         [HttpGet("/Proms/Suits")]
         public async Task<IActionResult> Suits()
         {
             var allPromSuits = await this.productService
-                .AllPromSuits()
-                .Select(d => new ProductDisplayAllViewModel
-                {
-                    Id = d.Id,
-                    Name = d.Name,
-                    Price = d.Price,
-                    Category = d.Category.Name,
-                    ProductType = d.ProductType.Name,
-                    MainPicture = d.MainPicture.PictureUrl,
-                    Quantity = d.Quantity.AvailableItems
-                })
-                .ToListAsync();
+                .AllPromSuits().ToListAsync();
 
-            return View(allPromSuits);
+            List<ProductDisplayAllViewModel> productsToReturn =
+                new List<ProductDisplayAllViewModel>();
+
+            foreach (var product in allPromSuits)
+            {
+                var pDAVM = new ProductDisplayAllViewModel
+                {
+                    Id = product.Id,
+                    Name = product.Name,
+                    Category = product.Category.Name,
+                    ProductType = product.ProductType.Name,
+                    Price = product.Price,
+                    Quantity = product.Quantity.AvailableItems
+                };
+
+                List<string> productPictures = new List<string>();
+
+                foreach (var pic in product.Pictures)
+                {
+                    string url = pic.PictureUrl;
+                    productPictures.Add(url);
+                }
+
+                pDAVM.Pictures = productPictures;
+                productsToReturn.Add(pDAVM);
+            }
+
+            return View(productsToReturn);
         }
 
         [HttpGet("/Proms/Accessories")]
         public async Task<IActionResult> Accessories()
         {
             var allPromAccessories = await this.productService
-                .AllPromAccessories()
-                .Select(d => new ProductDisplayAllViewModel
-                {
-                    Id = d.Id,
-                    Name = d.Name,
-                    Price = d.Price,
-                    Category = d.Category.Name,
-                    MainPicture = d.MainPicture.PictureUrl,
-                    Quantity = d.Quantity.AvailableItems
-                })
-                .ToListAsync();
+                .AllPromAccessories().ToListAsync();
 
-            return View(allPromAccessories);
+            List<ProductDisplayAllViewModel> productsToReturn =
+                new List<ProductDisplayAllViewModel>();
+
+            foreach (var product in allPromAccessories)
+            {
+                var pDAVM = new ProductDisplayAllViewModel
+                {
+                    Id = product.Id,
+                    Name = product.Name,
+                    Category = product.Category.Name,
+                    ProductType = product.ProductType.Name,
+                    Price = product.Price,
+                    Quantity = product.Quantity.AvailableItems
+                };
+
+                List<string> productPictures = new List<string>();
+
+                foreach (var pic in product.Pictures)
+                {
+                    string url = pic.PictureUrl;
+                    productPictures.Add(url);
+                }
+
+                pDAVM.Pictures = productPictures;
+                productsToReturn.Add(pDAVM);
+            }
+
+            return View(productsToReturn);
         }
     }
 }

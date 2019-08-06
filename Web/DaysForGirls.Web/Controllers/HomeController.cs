@@ -22,6 +22,7 @@ namespace DaysForGirls.Web.Controllers
         [HttpGet("/")]
         public async Task<IActionResult> Index()
         {
+            await Task.Delay(0);
             return Redirect("/Sales/All");
         }
 

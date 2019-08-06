@@ -39,5 +39,7 @@ namespace DaysForGirls.Services
         IQueryable<ProductServiceModel> AllOtherAccessories();
 
         Task<bool> AddReviewToProductByProductIdAsync(int productId, int reviewId);
+
+        IQueryable<ProductServiceModel> GetAllProductsByCategoryAndType(string productType, string category);
     }
 }

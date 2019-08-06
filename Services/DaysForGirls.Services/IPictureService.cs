@@ -8,7 +8,9 @@ namespace DaysForGirls.Services
 {
     public interface IPictureService
     {
-        Task<int> Create(PictureServiceModel model);
+        Task<bool> Create(List<PictureServiceModel> pictureServiceModels, int ProductId);
         Task<bool> UpdatePictureInfoAsync(int pictureId, int productId);
+
+        Task<PictureServiceModel> GetPictureByIdAsync(int id);
     }
 }

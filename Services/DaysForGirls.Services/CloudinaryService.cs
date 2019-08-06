@@ -17,7 +17,9 @@ namespace DaysForGirls.Services
             this.cloudnaryUtility = cloudnaryUtility;
         }
 
-        public async Task<string> UploadPictureForProductAsync(IFormFile image, string fileName)
+        public async Task<string> UploadPictureForProductAsync(
+            IFormFile image, 
+            string fileName)
         {
             byte[] destinationData;
 

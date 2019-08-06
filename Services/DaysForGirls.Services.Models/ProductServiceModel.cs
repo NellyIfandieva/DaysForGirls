@@ -21,8 +21,6 @@ namespace DaysForGirls.Services.Models
         [Required]
         public string Description { get; set; }
 
-        public PictureServiceModel MainPicture { get; set; }
-
         public List<PictureServiceModel> Pictures { get; set; }
 
         [Required]

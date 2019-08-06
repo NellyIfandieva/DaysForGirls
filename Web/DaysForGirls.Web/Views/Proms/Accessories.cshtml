@@ -20,7 +20,7 @@
                     <div @*class="product col-md-2"*@>
                         <div @*class="image-holder d-flex justify-content-center"*@>
                             <a href="/Products/Details/@Model[j].Id">
-                                <img class="image-thumbnail product-image" src="@Model[j].MainPicture" alt="@Model[j].Name">
+                                <img class="image-thumbnail product-image" src="@Model[j].Pictures[0]" alt="@Model[j].Name">
                             </a>
                         </div>
                         <h5 class="text-primary text-center mt-3">@Model[j].Name</h5>

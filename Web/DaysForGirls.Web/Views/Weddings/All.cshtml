@@ -49,7 +49,7 @@ else if ((string)this.ViewData["productType"] == "Suit")
                         <div @*class="product col-md-2"*@>
                             <div @*class="image-holder d-flex justify-content-center"*@>
                                 <a href="/Products/Details/@Model[j].Id">
-                                    <img class="image-thumbnail product-image" src="@Model[j].MainPicture" alt="@Model[j].Name" width="150">
+                                    <img class="image-thumbnail product-image" src="@Model[j].Pictures[0]" alt="@Model[j].Name" width="150">
                                 </a>
                                 <h5 class="text-primary text-center mt-3">@Model[j].Name</h5>
                                 <h5 class="text-primary text-center mt-3">Price: &euro;@Model[j].Price.ToString("F2")</h5>

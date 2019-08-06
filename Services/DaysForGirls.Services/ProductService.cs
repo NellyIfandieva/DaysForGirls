@@ -27,7 +27,7 @@ namespace DaysForGirls.Services
         */
         public async Task<int> Create(ProductServiceModel productServiceModel)
         {
-            ProductType productTypeInDb = this.db.ProductTypes
+            ProductType productTypeInDb = db.ProductTypes
                 .SingleOrDefault(pT => pT.Name == productServiceModel.ProductType.Name);
 
             Category categoryInDb = this.db.Categories
@@ -48,7 +48,6 @@ namespace DaysForGirls.Services
                 Name = productServiceModel.Name,
                 ProductType = productTypeInDb,
                 Category = categoryInDb,
-                MainPicture = productServiceModel.MainPicture.PictureUrl,
                 Description = productServiceModel.Description,
                 Colour = productServiceModel.Colour,
                 Size = productServiceModel.Size,
@@ -57,7 +56,7 @@ namespace DaysForGirls.Services
                 QuantityId = productQuantity.Id
             };
 
-            foreach(var picture in productServiceModel.Pictures)
+            foreach (PictureServiceModel picture in productServiceModel.Pictures)
             {
                 Picture productPicture = new Picture
                 {
@@ -69,15 +68,39 @@ namespace DaysForGirls.Services
             this.db.Products.Add(product);
             int result = await db.SaveChangesAsync();
 
-            //productServiceModel.Id = product.Id;
+            int productId = product.Id;
 
-            return product.Id;
+            return productId;
         }
 
-        public async Task<ProductServiceModel> GetDetailsOfProductByIdAsync(int Id)
+        public async Task<ProductServiceModel> GetDetailsOfProductByIdAsync(int productId)
         {
             var productInDb = this.db.Products
-                .SingleOrDefault(p => p.Id == Id);
+                .SingleOrDefault(p => p.Id == productId);
+
+            var productPictures = this.db.Pictures
+                .Where(p => p.ProductId == productId)
+                .Select(p => new PictureServiceModel
+                {
+                    Id = p.Id,
+                    PictureUrl = p.PictureUrl,
+                    ProductId = p.ProductId
+                })
+                .ToList();
+
+            var productCustomerReviews = this.db.CustomerReviews
+                .Where(c => c.ProductId == productId)
+                .Select(c => new CustomerReviewServiceModel
+                {
+                    Id = c.Id,
+                    Title = c.Title,
+                    Text = c.Text,
+                    Author = new DaysForGirlsUserServiceModel
+                    {
+                        UserName = c.Author.UserName
+                    }
+                })
+                .ToList();
 
             var productTypeOfProduct = this.db.ProductTypes
                 .SingleOrDefault(pT => pT.Id == productInDb.ProductTypeId);
@@ -109,10 +132,6 @@ namespace DaysForGirls.Services
                     Name = productInDb.Category.Name
                 },
                 Description = productInDb.Description,
-                MainPicture = new PictureServiceModel
-                {
-                    PictureUrl = productInDb.MainPicture
-                },
                 Colour = productInDb.Colour,
                 Size = productInDb.Size,
                 Price = productInDb.Price,
@@ -123,46 +142,10 @@ namespace DaysForGirls.Services
                 Quantity = new QuantityServiceModel
                 {
                     AvailableItems = productInDb.Quantity.AvailableItems
-                }
+                },
+                Pictures = productPictures,
+                Reviews = productCustomerReviews
             };
-
-            List<PictureServiceModel> pCMs = new List<PictureServiceModel>();
-
-            foreach(var pic in productInDb.Pictures)
-            {
-                PictureServiceModel pCM = new PictureServiceModel
-                {
-                    PictureUrl = pic.PictureUrl
-                };
-
-                pCMs.Add(pCM);
-            }
-
-            productToReturn.Pictures = pCMs;
-
-            List<CustomerReviewServiceModel> cRSMs = new List<CustomerReviewServiceModel>();
-
-            if (productInDb.Reviews.Count() > 0)
-            {
-                foreach(var rev in productInDb.Reviews)
-                {
-                    CustomerReviewServiceModel cRSM = new CustomerReviewServiceModel
-                    {
-                        Id = rev.Id,
-                        Title = rev.Title,
-                        Text = rev.Text,
-                        Author = new DaysForGirlsUserServiceModel
-                        {
-                            FirstName = rev.Author.FirstName,
-                            LastName = rev.Author.LastName
-                        }
-                    };
-
-                    cRSMs.Add(cRSM);
-                }
-            }
-
-            productToReturn.Reviews = cRSMs;
 
             await Task.Delay(0);
             return productToReturn;
@@ -171,8 +154,7 @@ namespace DaysForGirls.Services
         public IQueryable<ProductServiceModel> DisplayAll()
         {
             var allProducts = this.db.Products
-                .Where(p => p.IsDeleted == false
-                && p.Quantity.AvailableItems > 0)
+                .Where(p => p.IsDeleted == false)
                 .Select(p => new ProductServiceModel
                  {
                      Id = p.Id,
@@ -186,14 +168,15 @@ namespace DaysForGirls.Services
                      {
                          Name = p.ProductType.Name
                      },
-                     MainPicture = new PictureServiceModel
-                     {
-                         PictureUrl = p.MainPicture
-                     },
                      Quantity = new QuantityServiceModel
                      {
                          AvailableItems = p.Quantity.AvailableItems
-                     }
+                     },
+                     Pictures = p.Pictures
+                        .Select(pU => new PictureServiceModel
+                        {
+                            PictureUrl = pU.PictureUrl
+                        }).ToList()
                  });
 
             return allProducts;
@@ -209,7 +192,7 @@ namespace DaysForGirls.Services
             this.db.Update(productToDelete);
             int result = await this.db.SaveChangesAsync();
 
-            return result == 1;
+            return result > 0;
         }
 
         public IQueryable<ProductServiceModel> AllWeddingProducts()
@@ -229,14 +212,15 @@ namespace DaysForGirls.Services
                         Name = p.ProductType.Name
                     },
                     Price = p.Price,
-                    MainPicture = new PictureServiceModel
-                    {
-                        PictureUrl = p.MainPicture
-                    },
                     Quantity = new QuantityServiceModel
                     {
                         AvailableItems = p.Quantity.AvailableItems
-                    }
+                    },
+                    Pictures = p.Pictures
+                        .Select(pU => new PictureServiceModel
+                        {
+                            PictureUrl = pU.PictureUrl
+                        }).ToList()
                 });
 
             return allWeddingProducts;
@@ -260,10 +244,6 @@ namespace DaysForGirls.Services
                         Name = p.Category.Name
                     },
                     Description = p.Description,
-                    MainPicture = new PictureServiceModel
-                    {
-                        PictureUrl = p.MainPicture
-                    },
                     Colour = p.Colour,
                     Size = p.Size,
                     Price = p.Price,
@@ -274,7 +254,12 @@ namespace DaysForGirls.Services
                     Quantity = new QuantityServiceModel
                     {
                         AvailableItems = p.Quantity.AvailableItems
-                    }
+                    },
+                    Pictures = p.Pictures
+                        .Select(pU => new PictureServiceModel
+                        {
+                            PictureUrl = pU.PictureUrl
+                        }).ToList()
                 });
 
             return allWeddingDresses;
@@ -298,10 +283,6 @@ namespace DaysForGirls.Services
                         Name = suit.Category.Name
                     },
                     Description = suit.Description,
-                    MainPicture = new PictureServiceModel
-                    {
-                        PictureUrl = suit.MainPicture
-                    },
                     Colour = suit.Colour,
                     Size = suit.Size,
                     Price = suit.Price,
@@ -312,7 +293,12 @@ namespace DaysForGirls.Services
                     Quantity = new QuantityServiceModel
                     {
                         AvailableItems = suit.Quantity.AvailableItems
-                    }
+                    },
+                    Pictures = suit.Pictures
+                        .Select(pU => new PictureServiceModel
+                        {
+                            PictureUrl = pU.PictureUrl
+                        }).ToList()
                 });
 
             return allWeddingSuits;
@@ -332,10 +318,6 @@ namespace DaysForGirls.Services
                         Name = a.Category.Name
                     },
                     Description = a.Description,
-                    MainPicture = new PictureServiceModel
-                    {
-                        PictureUrl = a.MainPicture
-                    },
                     Colour = a.Colour,
                     Price = a.Price,
                     Manufacturer = new ManufacturerServiceModel
@@ -346,6 +328,11 @@ namespace DaysForGirls.Services
                     {
                         AvailableItems = a.Quantity.AvailableItems
                     },
+                    Pictures = a.Pictures
+                        .Select(pU => new PictureServiceModel
+                        {
+                            PictureUrl = pU.PictureUrl
+                        }).ToList(),
                     Reviews = a.Reviews
                         .Select(accR => new CustomerReviewServiceModel
                         {
@@ -354,8 +341,7 @@ namespace DaysForGirls.Services
                             Text = accR.Text,
                             Author = new DaysForGirlsUserServiceModel
                             {
-                                FirstName = accR.Author.FirstName,
-                                LastName = accR.Author.LastName
+                                Username = accR.Author.UserName
                             }
                         }).ToList()
                 });
@@ -380,14 +366,26 @@ namespace DaysForGirls.Services
                         Name = p.ProductType.Name
                     },
                     Price = p.Price,
-                    MainPicture = new PictureServiceModel
-                    {
-                        PictureUrl = p.MainPicture
-                    },
                     Quantity = new QuantityServiceModel
                     {
                         AvailableItems = p.Quantity.AvailableItems
-                    }
+                    },
+                    Pictures = p.Pictures
+                        .Select(pU => new PictureServiceModel
+                        {
+                            PictureUrl = pU.PictureUrl
+                        }).ToList(),
+                    Reviews = p.Reviews
+                        .Select(accR => new CustomerReviewServiceModel
+                        {
+                            Id = accR.Id,
+                            Title = accR.Title,
+                            Text = accR.Text,
+                            Author = new DaysForGirlsUserServiceModel
+                            {
+                                Username = accR.Author.UserName
+                            }
+                        }).ToList()
                 });
 
             return allPromProducts;
@@ -411,10 +409,6 @@ namespace DaysForGirls.Services
                         Name = p.Category.Name
                     },
                     Description = p.Description,
-                    MainPicture = new PictureServiceModel
-                    {
-                        PictureUrl = p.MainPicture
-                    },
                     Colour = p.Colour,
                     Size = p.Size,
                     Price = p.Price,
@@ -425,7 +419,23 @@ namespace DaysForGirls.Services
                     Quantity = new QuantityServiceModel
                     {
                         AvailableItems = p.Quantity.AvailableItems
-                    }
+                    },
+                    Reviews = p.Reviews
+                        .Select(accR => new CustomerReviewServiceModel
+                        {
+                            Id = accR.Id,
+                            Title = accR.Title,
+                            Text = accR.Text,
+                            Author = new DaysForGirlsUserServiceModel
+                            {
+                                Username = accR.Author.UserName
+                            }
+                        }).ToList(),
+                    Pictures = p.Pictures
+                        .Select(pU => new PictureServiceModel
+                        {
+                            PictureUrl = pU.PictureUrl
+                        }).ToList()
                 });
 
             return allPromDresses;
@@ -444,10 +454,6 @@ namespace DaysForGirls.Services
                     ProductType = new ProductTypeServiceModel
                     {
                         Name = p.ProductType.Name
-                    },
-                    MainPicture = new PictureServiceModel
-                    {
-                        PictureUrl = p.MainPicture
                     },
                     Quantity = new QuantityServiceModel
                     {
@@ -472,10 +478,6 @@ namespace DaysForGirls.Services
                         Name = a.Category.Name
                     },
                     Description = a.Description,
-                    MainPicture = new PictureServiceModel
-                    {
-                        PictureUrl = a.MainPicture
-                    },
                     Colour = a.Colour,
                     Price = a.Price,
                     Manufacturer = new ManufacturerServiceModel
@@ -485,7 +487,23 @@ namespace DaysForGirls.Services
                     Quantity = new QuantityServiceModel
                     {
                         AvailableItems = a.Quantity.AvailableItems
-                    }
+                    },
+                    Reviews = a.Reviews
+                        .Select(accR => new CustomerReviewServiceModel
+                        {
+                            Id = accR.Id,
+                            Title = accR.Title,
+                            Text = accR.Text,
+                            Author = new DaysForGirlsUserServiceModel
+                            {
+                                Username = accR.Author.UserName
+                            }
+                        }).ToList(),
+                    Pictures = a.Pictures
+                        .Select(pU => new PictureServiceModel
+                        {
+                            PictureUrl = pU.PictureUrl
+                        }).ToList()
                 });
 
             return allPromAccessories;
@@ -508,14 +526,26 @@ namespace DaysForGirls.Services
                         Name = p.ProductType.Name
                     },
                     Price = p.Price,
-                    MainPicture = new PictureServiceModel
-                    {
-                        PictureUrl = p.MainPicture
-                    },
                     Quantity = new QuantityServiceModel
                     {
                         AvailableItems = p.Quantity.AvailableItems
-                    }
+                    },
+                    Reviews = p.Reviews
+                        .Select(accR => new CustomerReviewServiceModel
+                        {
+                            Id = accR.Id,
+                            Title = accR.Title,
+                            Text = accR.Text,
+                            Author = new DaysForGirlsUserServiceModel
+                            {
+                                Username = accR.Author.UserName
+                            }
+                        }).ToList(),
+                    Pictures = p.Pictures
+                        .Select(pU => new PictureServiceModel
+                        {
+                            PictureUrl = pU.PictureUrl
+                        }).ToList()
                 });
 
             return allOtherProducts;
@@ -539,10 +569,6 @@ namespace DaysForGirls.Services
                         Name = p.Category.Name
                     },
                     Description = p.Description,
-                    MainPicture = new PictureServiceModel
-                    {
-                        PictureUrl = p.MainPicture
-                    },
                     Colour = p.Colour,
                     Size = p.Size,
                     Price = p.Price,
@@ -553,7 +579,23 @@ namespace DaysForGirls.Services
                     Quantity = new QuantityServiceModel
                     {
                         AvailableItems = p.Quantity.AvailableItems
-                    }
+                    },
+                    Reviews = p.Reviews
+                        .Select(accR => new CustomerReviewServiceModel
+                        {
+                            Id = accR.Id,
+                            Title = accR.Title,
+                            Text = accR.Text,
+                            Author = new DaysForGirlsUserServiceModel
+                            {
+                                Username = accR.Author.UserName
+                            }
+                        }).ToList(),
+                    Pictures = p.Pictures
+                        .Select(pU => new PictureServiceModel
+                        {
+                            PictureUrl = pU.PictureUrl
+                        }).ToList()
                 });
 
             return allOtherDresses;
@@ -577,10 +619,6 @@ namespace DaysForGirls.Services
                         Name = p.Category.Name
                     },
                     Description = p.Description,
-                    MainPicture = new PictureServiceModel
-                    {
-                        PictureUrl = p.MainPicture
-                    },
                     Colour = p.Colour,
                     Size = p.Size,
                     Price = p.Price,
@@ -591,7 +629,23 @@ namespace DaysForGirls.Services
                     Quantity = new QuantityServiceModel
                     {
                         AvailableItems = p.Quantity.AvailableItems
-                    }
+                    },
+                    Reviews = p.Reviews
+                        .Select(accR => new CustomerReviewServiceModel
+                        {
+                            Id = accR.Id,
+                            Title = accR.Title,
+                            Text = accR.Text,
+                            Author = new DaysForGirlsUserServiceModel
+                            {
+                                Username = accR.Author.UserName
+                            }
+                        }).ToList(),
+                    Pictures = p.Pictures
+                        .Select(pU => new PictureServiceModel
+                        {
+                            PictureUrl = pU.PictureUrl
+                        }).ToList()
                 });
 
             return allOtherSuits;
@@ -611,10 +665,6 @@ namespace DaysForGirls.Services
                         Name = a.Category.Name
                     },
                     Description = a.Description,
-                    MainPicture = new PictureServiceModel
-                    {
-                        PictureUrl = a.MainPicture
-                    },
                     Colour = a.Colour,
                     Price = a.Price,
                     Manufacturer = new ManufacturerServiceModel
@@ -624,7 +674,23 @@ namespace DaysForGirls.Services
                     Quantity = new QuantityServiceModel
                     {
                         AvailableItems = a.Quantity.AvailableItems
-                    }
+                    },
+                    Reviews = a.Reviews
+                        .Select(accR => new CustomerReviewServiceModel
+                        {
+                            Id = accR.Id,
+                            Title = accR.Title,
+                            Text = accR.Text,
+                            Author = new DaysForGirlsUserServiceModel
+                            {
+                                Username = accR.Author.UserName
+                            }
+                        }).ToList(),
+                    Pictures = a.Pictures
+                        .Select(pU => new PictureServiceModel
+                        {
+                            PictureUrl = pU.PictureUrl
+                        }).ToList()
                 });
 
             return allOtherAccessories;
@@ -643,6 +709,58 @@ namespace DaysForGirls.Services
             int result = await this.db.SaveChangesAsync();
 
             return result > 0;
+        }
+
+        public IQueryable<ProductServiceModel> GetAllProductsByCategoryAndType(string productType, string category)
+        {
+            var allProductsOfCategoryAndType = this.db.Products
+                .Where(p => p.Category.Name == category
+                && p.ProductType.Name == productType
+                && p.IsDeleted == false)
+                .Select(p => new ProductServiceModel
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Category = new CategoryServiceModel
+                    {
+                        Name = p.Category.Name
+                    },
+                    ProductType = new ProductTypeServiceModel
+                    {
+                        Name = p.ProductType.Name
+                    },
+                    Description = p.Description,
+                    Pictures = p.Pictures
+                        .Select(pp => new PictureServiceModel
+                        {
+                            Id = pp.Id,
+                            PictureUrl = pp.PictureUrl
+                        }).ToList(),
+                    Colour = p.Colour,
+                    Size = p.Size,
+                    Price = p.Price,
+                    Manufacturer = new ManufacturerServiceModel
+                    {
+                        Name = p.Manufacturer.Name
+                    },
+                    Quantity = new QuantityServiceModel
+                    {
+                        AvailableItems = p.Quantity.AvailableItems
+                    },
+                    Reviews = p.Reviews
+                        .Select(pR => new CustomerReviewServiceModel
+                        {
+                            Id = pR.Id,
+                            Title = pR.Title,
+                            Text = pR.Text,
+                            Author = new DaysForGirlsUserServiceModel
+                            {
+                                Username = pR.Author.UserName
+                            }
+                        }).ToList()
+                });
+
+            return allProductsOfCategoryAndType;
         }
     }
 }

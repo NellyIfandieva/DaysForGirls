@@ -27,9 +27,6 @@ namespace DaysForGirls.Data.Models
         [Required]
         public string Description { get; set; }
 
-        [Required]
-        public string MainPicture { get; set; }
-
         public ICollection<Picture> Pictures { get; set; }
 
         [Required]

@@ -12,7 +12,7 @@
     @foreach (var product in Model)
     {
         <div class="col-md-3">
-            <a href="/Products/Details/@product.Id"><img src="@product.MainPicture" alt="@product.Name" width="200" /></a>
+            <a href="/Products/Details/@product.Id"><img src="@product.Pictures[0]" alt="@product.Name" width="200" /></a>
             <a href="/Products/Details/@product.Id"><h3>@product.Name</h3></a>
             <h3>@product.Price</h3>
             @if(product.Quantity < 1)

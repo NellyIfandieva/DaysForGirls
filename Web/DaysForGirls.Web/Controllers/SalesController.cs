@@ -39,8 +39,8 @@ namespace DaysForGirls.Web.Controllers
         [HttpGet("/Sales/Details/{id}")]
         public async Task<IActionResult> Details([FromQuery]int id)
         {
-            SaleServiceModel saleWithDetails = this.saleService
-                .GetSaleWithDetailsById(id);
+            SaleServiceModel saleWithDetails = await this.saleService
+                .GetSaleByIdAsync(id);
 
             SaleDetailsViewModel saleToDisplay = new SaleDetailsViewModel
             {
@@ -52,7 +52,7 @@ namespace DaysForGirls.Web.Controllers
                     {
                         Id = product.Id,
                         Name = product.Name,
-                        Picture = product.MainPicture.PictureUrl,
+                        //Pictures = product.Pictures
                         OldPrice = product.Price
                     }).ToList()
             };

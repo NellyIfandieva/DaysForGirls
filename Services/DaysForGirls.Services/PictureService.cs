@@ -17,21 +17,43 @@ namespace DaysForGirls.Services
         {
             this.db = db;
         }
-        public async Task<int> Create(PictureServiceModel model)
-        {
-            Picture picture = new Picture
-            {
-                PictureUrl = model.PictureUrl
-            };
 
-            this.db.Pictures.Add(picture);
+        public async Task<bool> Create(List<PictureServiceModel> pictureServiceModels, int productId)
+        {
+            List<Picture> allPicturesToAddToDb = new List<Picture>();
+
+            foreach(var pSm in pictureServiceModels)
+            {
+                Picture picture = new Picture
+                {
+                    PictureUrl = pSm.PictureUrl,
+                    ProductId = productId
+                };
+
+                allPicturesToAddToDb.Add(picture);
+            }
+            
+
+            this.db.Pictures.AddRange(allPicturesToAddToDb);
             int result = await this.db.SaveChangesAsync();
 
-            if(result != 1)
+            return result > 0;
+        }
+
+        public async Task<PictureServiceModel> GetPictureByIdAsync(int id)
+        {
+            var picture = this.db.Pictures
+                .SingleOrDefault(p => p.Id == id);
+
+            PictureServiceModel pictureToReturn = new PictureServiceModel
             {
-                return 0;
-            }
-            return picture.Id;
+                Id = picture.Id,
+                PictureUrl = picture.PictureUrl,
+                ProductId = picture.ProductId
+            };
+
+            await Task.Delay(0);
+            return pictureToReturn;
         }
 
         public async Task<bool> UpdatePictureInfoAsync(int pictureId, int productId)

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DaysForGirls.Services.Models
+namespace DaysForGirls.Web.ViewModels
 {
-    public class PictureServiceModel
+    public class PictureDetailsViewModel
     {
         public int Id { get; set; }
 

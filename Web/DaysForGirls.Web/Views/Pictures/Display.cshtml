@@ -1,0 +1,16 @@
+﻿@model DaysForGirls.Web.ViewModels.PictureDetailsViewModel
+
+@{
+    ViewData["Title"] = "Display";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    img{
+        width: 100%;
+    }
+</style>
+
+<div>
+    <img src="@Model.PictureUrl" alt="@this.ViewData["productName"]"/>
+</div>

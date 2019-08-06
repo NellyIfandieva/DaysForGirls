@@ -28,6 +28,6 @@ namespace DaysForGirls.Services.Models
 
         public OrderStatusServiceModel OrderStatus { get; set; }
 
-        public bool IsDeleted => this.User.IsDeleted = true;
+        //public bool IsDeleted => this.User.IsDeleted = true;
     }
 }

@@ -63,7 +63,7 @@ namespace DaysForGirls.Services
             return allSales;
         }
 
-        public SaleServiceModel GetSaleWithDetailsById(int id)
+        public async Task<SaleServiceModel> GetSaleByIdAsync(int id)
         {
             var saleWithDetails = this.db.Sales
                 .SingleOrDefault(sale => sale.Id == id);
@@ -80,16 +80,20 @@ namespace DaysForGirls.Services
                         Id = product.Id,
                         Name = product.Name,
                         Price = product.Price,
-                        MainPicture = new PictureServiceModel
-                        {
-                            PictureUrl = product.MainPicture
-                        },
                         Quantity = new QuantityServiceModel
                         {
                             AvailableItems = product.Quantity.AvailableItems
-                        }
+                        },
+                        Pictures = product.Pictures
+                            .Select(pp => new PictureServiceModel
+                            {
+                                PictureUrl = pp.PictureUrl
+                            }).ToList()
+
                     }).ToList()
             };
+
+            await Task.Delay(0);
             
             return saleToReturn;
         }

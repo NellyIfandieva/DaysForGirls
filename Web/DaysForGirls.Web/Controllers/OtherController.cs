@@ -21,37 +21,70 @@ namespace DaysForGirls.Web.Controllers
         public async Task<IActionResult> All()
         {
             var allSpecialOccasionsProducts = await this.productService
-                .AllOtherProducts()
-                .Select(p => new ProductDisplayAllViewModel
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    Category = p.Category.Name,
-                    ProductType = p.ProductType.Name,
-                    Price = p.Price,
-                    MainPicture = p.MainPicture.PictureUrl,
-                    Quantity = p.Quantity.AvailableItems
-                })
-                .ToListAsync();
+                .AllOtherProducts().ToListAsync();
 
-            return View(allSpecialOccasionsProducts);
+            List<ProductDisplayAllViewModel> productsToReturn = 
+                new List<ProductDisplayAllViewModel>();
+
+            foreach(var product in allSpecialOccasionsProducts)
+            {
+                var pDAVM = new ProductDisplayAllViewModel
+                {
+                    Id = product.Id,
+                    Name = product.Name,
+                    Category = product.Category.Name,
+                    ProductType = product.ProductType.Name,
+                    Price = product.Price,
+                    Quantity = product.Quantity.AvailableItems
+                };
+
+                List<string> productPictures = new List<string>();
+
+                foreach(var pic in product.Pictures)
+                {
+                    string url = pic.PictureUrl;
+                    productPictures.Add(url);
+                }
+
+                pDAVM.Pictures = productPictures;
+                productsToReturn.Add(pDAVM);
+            }
+
+            return View(productsToReturn);
         }
 
         public async Task<IActionResult> Dresses()
         {
             var allOtherDresses = await this.productService
-                .AllOtherDresses()
-                .Select(d => new ProductDisplayAllViewModel
+                .AllOtherDresses().ToListAsync();
+
+            List<ProductDisplayAllViewModel> productsToReturn =
+                new List<ProductDisplayAllViewModel>();
+
+            foreach(var dress in allOtherDresses)
+            {
+                var pDAVM = new ProductDisplayAllViewModel
                 {
-                    Id = d.Id,
-                    Name = d.Name,
-                    Category = d.Category.Name,
-                    ProductType = d.ProductType.Name,
-                    Price = d.Price,
-                    MainPicture = d.MainPicture.PictureUrl,
-                    Quantity = d.Quantity.AvailableItems
-                })
-                .ToListAsync();
+                    Id = dress.Id,
+                    Name = dress.Name,
+                    Category = dress.Category.Name,
+                    ProductType = dress.ProductType.Name,
+                    Price = dress.Price,
+                    Quantity = dress.Quantity.AvailableItems
+                };
+
+                List<string> productPictures = new List<string>();
+
+                foreach(var pic in dress.Pictures)
+                {
+                    string url = pic.PictureUrl;
+                    productPictures.Add(url);
+                }
+
+                pDAVM.Pictures = productPictures;
+
+                productsToReturn.Add(pDAVM);
+            }
 
             return View(allOtherDresses);
         }
@@ -59,39 +92,71 @@ namespace DaysForGirls.Web.Controllers
         public async Task<IActionResult> Suits()
         {
             var allOtherSuits = await this.productService
-                .AllOtherSuits()
-                .Select(s => new ProductDisplayAllViewModel
-                {
-                    Id = s.Id,
-                    Name = s.Name,
-                    Category = s.Category.Name,
-                    ProductType = s.ProductType.Name,
-                    Price = s.Price,
-                    MainPicture = s.MainPicture.PictureUrl,
-                    Quantity = s.Quantity.AvailableItems
-                })
-                .ToListAsync();
+                .AllOtherSuits().ToListAsync();
 
-            return View(allOtherSuits);
+            List<ProductDisplayAllViewModel> productsToReturn = 
+                new List<ProductDisplayAllViewModel>();
+
+            foreach(var suit in allOtherSuits)
+            {
+                var pDAVM = new ProductDisplayAllViewModel
+                {
+                    Id = suit.Id,
+                    Name = suit.Name,
+                    Category = suit.Category.Name,
+                    ProductType = suit.ProductType.Name,
+                    Price = suit.Price,
+                    Quantity = suit.Quantity.AvailableItems
+                };
+
+                List<string> productPictures = new List<string>();
+
+                foreach(var pic in suit.Pictures)
+                {
+                    string url = pic.PictureUrl;
+                    productPictures.Add(url);
+                }
+
+                pDAVM.Pictures = productPictures;
+                productsToReturn.Add(pDAVM);
+            }
+
+            return View(productsToReturn);
         }
 
         public async Task<IActionResult> Accessories()
         {
             var allOtherAccessories = await this.productService
-                .AllOtherAccessories()
-                .Select(a => new ProductDisplayAllViewModel
-                {
-                    Id = a.Id,
-                    Name = a.Name,
-                    Category = a.Category.Name,
-                    ProductType = a.ProductType.Name,
-                    Price = a.Price,
-                    MainPicture = a.MainPicture.PictureUrl,
-                    Quantity = a.Quantity.AvailableItems
-                })
-                .ToListAsync();
+                .AllOtherAccessories().ToListAsync();
 
-            return View(allOtherAccessories);
+            List<ProductDisplayAllViewModel> productsToReturn =
+                new List<ProductDisplayAllViewModel>();
+
+            foreach (var accessory in allOtherAccessories)
+            {
+                var pDAVM = new ProductDisplayAllViewModel
+                {
+                    Id = accessory.Id,
+                    Name = accessory.Name,
+                    Category = accessory.Category.Name,
+                    ProductType = accessory.ProductType.Name,
+                    Price = accessory.Price,
+                    Quantity = accessory.Quantity.AvailableItems
+                };
+
+                List<string> productPictures = new List<string>();
+
+                foreach (var pic in accessory.Pictures)
+                {
+                    string url = pic.PictureUrl;
+                    productPictures.Add(url);
+                }
+
+                pDAVM.Pictures = productPictures;
+                productsToReturn.Add(pDAVM);
+            }
+
+            return View(productsToReturn);
         }
     }
 }

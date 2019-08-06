@@ -23,20 +23,36 @@ namespace DaysForGirls.Web.Controllers
         public async Task<IActionResult> All()
         {
             var allProducts = await this.productService
-                .DisplayAll()
-                .Select(product => new ProductDisplayAllViewModel
+                .DisplayAll().ToListAsync();
+
+            List<ProductDisplayAllViewModel> productsToReturn = 
+                new List<ProductDisplayAllViewModel>();
+
+            foreach(var product in allProducts)
+            {
+                var pDAVM = new ProductDisplayAllViewModel
                 {
                     Id = product.Id,
                     Name = product.Name,
                     Category = product.Category.Name,
                     ProductType = product.ProductType.Name,
                     Price = product.Price,
-                    MainPicture = product.MainPicture.PictureUrl,
                     Quantity = product.Quantity.AvailableItems
-                })
-                .ToListAsync();
+                };
 
-            return View(allProducts);
+                List<string> productPictures = new List<string>();
+
+                foreach(var pic in product.Pictures)
+                {
+                    string url = pic.PictureUrl;
+                    productPictures.Add(url);
+                }
+
+                pDAVM.Pictures = productPictures;
+                productsToReturn.Add(pDAVM);
+            }
+
+            return View(productsToReturn);
         }
 
         [HttpGet("/Products/Details/{Id}")]
@@ -56,44 +72,31 @@ namespace DaysForGirls.Web.Controllers
                 Description = productWithDetails.Description,
                 Manufacturer = productWithDetails.Manufacturer.Name,
                 Price = productWithDetails.Price,
-                AvailableQuantity = productWithDetails.Quantity.AvailableItems,
-                MainPicture = productWithDetails.MainPicture.PictureUrl
+                AvailableQuantity = productWithDetails.Quantity.AvailableItems
             };
 
-            List<PictureDisplayAllViewModel> picDAVMs = new List<PictureDisplayAllViewModel>();
-
-            foreach(var pic in productWithDetails.Pictures)
-            {
-                PictureDisplayAllViewModel pDAVM = new PictureDisplayAllViewModel
+            var pictures = productWithDetails.Pictures
+                .Select(p => new PictureDisplayAllViewModel
                 {
-                    ImageUrl = pic.PictureUrl
-                };
+                    Id = p.Id,
+                    ImageUrl = p.PictureUrl,
+                    ProductId = p.ProductId
+                }).ToList();
 
-                picDAVMs.Add(pDAVM);
-            }
+            productDetails.Pictures = pictures;
 
-            productDetails.Pictures = picDAVMs;
-
-            List<CustomerReviewAllViewModel> cRAVMs = new List<CustomerReviewAllViewModel>();
-
-            if(productWithDetails.Reviews.Count() > 0)
-            {
-                foreach (var cR in productWithDetails.Reviews)
+            var reviews = productWithDetails.Reviews
+                .Select(r => new CustomerReviewAllViewModel
                 {
-                    CustomerReviewAllViewModel cRAVM = new CustomerReviewAllViewModel
-                    {
-                        Id = cR.Id,
-                        Title = cR.Title,
-                        Text = cR.Text,
-                        DateCreated = cR.CreatedOn.ToString(),
-                        Author = cR.Author.FirstName + " " + cR.Author.LastName
-                    };
+                    Id = r.Id,
+                    Title = r.Title,
+                    Text = r.Text,
+                    Author = r.Author.UserName,
+                    DateCreated = r.CreatedOn
+                })
+                .ToList();
 
-                    cRAVMs.Add(cRAVM);
-                }
-            }
-
-            productDetails.Reviews = cRAVMs;
+            productDetails.Reviews = reviews;
 
             return View(productDetails);
         }

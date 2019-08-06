@@ -28,10 +28,7 @@ namespace DaysForGirls.Web.InputModels
         [Required]
         public string Description { get; set; }
 
-        [Required]
-        public IFormFile MainPicture { get; set; }
-
-        [Required]
+       [Required]
         public ICollection<IFormFile> Pictures { get; set; }
 
         [Required]

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<DaysForGirls.Web.ViewModels.ProductDisplayAllViewModel>
+﻿@model List<ProductDisplayAllViewModel>
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 
@@ -11,15 +11,15 @@
     <h1 class="text-center">Enjoy All Our Wedding Suits</h1>
 
     <div class="container-fluid">
-        @foreach (var suit in Model)
+        @for (int i = 0; i < Model.Count(); i++)
         {
         <div class="col-md-3">
-            <a asp-controller="" asp-action="Details/@suit.Id"><img src="@suit.MainPicture" alt="@suit.Name" /></a>
-            <h3>@suit.Name</h3>
-            <h3>&euro;@suit.Price</h3>
-            @if (suit.Quantity < 1)
+            <a asp-controller="" asp-action="Details/@Model[i].Id"><img src="@Model[i].Pictures[0]" alt="@Model[i].Name" /></a>
+            <h3>@Model[i].Name</h3>
+            <h3>&euro;@Model[i].Price</h3>
+            @if (Model[i].Quantity < 1)
                 {
-            <h3>Sold Out</h3>
+                    <h3>Sold Out</h3>
                 }
         </div>
         }

@@ -30,6 +30,8 @@ namespace DaysForGirls.Web.Controllers
         public async Task<IActionResult> Create(int productId)
         {
             this.ViewData["productId"] = productId;
+
+            await Task.Delay(0);
             return View();
         }
 
