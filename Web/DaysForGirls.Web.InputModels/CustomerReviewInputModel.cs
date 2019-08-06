@@ -8,7 +8,7 @@ namespace DaysForGirls.Web.InputModels
     public class CustomerReviewInputModel
     {
         private const int MinProductIdValue = 1;
-        private const int MaxProductIdValue = Int32.MaxValue;
+        private const int MaxProductIdValue = int.MaxValue;
 
         [Required]
         public string Title { get; set; }
@@ -19,7 +19,7 @@ namespace DaysForGirls.Web.InputModels
         [Range(MinProductIdValue, MaxProductIdValue)]
         public int ProductId { get; set; }
 
-        [Required]
-        public string AuthorsUsername { get; set; }
+        //[Required]
+        //public string AuthorsUsername { get; set; }
     }
 }

@@ -95,6 +95,7 @@ namespace DaysForGirls.Services
                     Id = c.Id,
                     Title = c.Title,
                     Text = c.Text,
+                    CreatedOn = c.CreatedOn.ToString(),
                     Author = new DaysForGirlsUserServiceModel
                     {
                         UserName = c.Author.UserName

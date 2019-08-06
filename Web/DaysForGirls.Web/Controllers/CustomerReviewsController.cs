@@ -36,7 +36,7 @@ namespace DaysForGirls.Web.Controllers
         }
 
         [Authorize]
-        [HttpPost]
+        [HttpPost("/CustomerReviews/Create/{productId}")]
         public async Task<IActionResult> Create(CustomerReviewInputModel model)
         {
             if(this.User.Identity.IsAuthenticated == false)
@@ -54,7 +54,7 @@ namespace DaysForGirls.Web.Controllers
                 Text = model.Text,
                 Author = new DaysForGirlsUserServiceModel
                 {
-                    UserName = username
+                    Username = username
                 },
                 Product = new ProductServiceModel
                 {
