@@ -79,8 +79,8 @@ namespace DaysForGirls.Services
 
         public async Task<ProductServiceModel> GetProductDetailsById(int productId)
         {
-            var productInDb = await this.db.Products
-                .SingleOrDefaultAsync(p => p.Id == productId);
+            var productInDb = this.db.Products
+                .SingleOrDefault(p => p.Id == productId);
 
             var productPictures = this.db.Pictures
                 .Where(p => p.ProductId == productInDb.Id)
@@ -107,17 +107,17 @@ namespace DaysForGirls.Services
                 })
                 .ToList();
 
-            var productTypeOfProduct = await this.db.ProductTypes
-                .SingleOrDefaultAsync(pT => pT.Id == productInDb.ProductTypeId);
+            var productTypeOfProduct = this.db.ProductTypes
+                .SingleOrDefault(pT => pT.Id == productInDb.ProductTypeId);
 
-            var categoryOfProduct = await this.db.Categories
-                .SingleOrDefaultAsync(c => c.Id == productInDb.CategoryId);
+            var categoryOfProduct = this.db.Categories
+                .SingleOrDefault(c => c.Id == productInDb.CategoryId);
 
-            var manufacturerOfProduct = await this.db.Manufacturers
-                .SingleOrDefaultAsync(m => m.Id == productInDb.ManufacturerId);
+            var manufacturerOfProduct = this.db.Manufacturers
+                .SingleOrDefault(m => m.Id == productInDb.ManufacturerId);
 
-            var quantityOfProduct = await this.db.Quantities
-                .SingleOrDefaultAsync(q => q.Id == productInDb.QuantityId);
+            var quantityOfProduct = this.db.Quantities
+                .SingleOrDefault(q => q.Id == productInDb.QuantityId);
 
             productInDb.Category = categoryOfProduct;
             productInDb.ProductType = productTypeOfProduct;

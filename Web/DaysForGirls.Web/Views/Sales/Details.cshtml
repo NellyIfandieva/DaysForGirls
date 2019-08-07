@@ -7,8 +7,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>@Model.Title</h2>
-<h4>Ends On: @Model.EndsOn.DayOfWeek, @Model.EndsOn.Date-@Model.EndsOn.Month-@Model.EndsOn.Year</h4>
+<h2 class="text-center">@Model.Title</h2>
+<h4 class="text-center">Ends On: @Model.EndsOn.DayOfWeek, @Model.EndsOn.Day-@Model.EndsOn.Month-@Model.EndsOn.Year</h4>
 
 <div>
     @foreach(var product in Model.Products)
