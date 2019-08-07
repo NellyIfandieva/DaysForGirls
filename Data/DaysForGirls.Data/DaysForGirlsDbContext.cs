@@ -7,8 +7,6 @@ namespace DaysForGirls.Data
 {
     public class DaysForGirlsDbContext : IdentityDbContext<DaysForGirlsUser, IdentityRole, string>
     {
-        //public DbSet<Accessory> Accessories { get; set; }
-        //public DbSet<AccessoryCart> AccessoryCarts { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<CustomerReview> CustomerReviews { get; set; }
         public DbSet<Manufacturer> Manufacturers { get; set; }
@@ -17,12 +15,12 @@ namespace DaysForGirls.Data
         public DbSet<Picture> Pictures { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductCart> ProductsCarts { get; set; }
-        //public DbSet<ProductOrder> ProductsOrders { get; set; }
-        //public DbSet<ProductSale> ProductsSales { get; set; }
+        public DbSet<ProductOrder> ProductsOrders { get; set; }
+        public DbSet<ProductSale> ProductsSales { get; set; }
         public DbSet<ProductType> ProductTypes { get; set; }
         public DbSet<Quantity> Quantities { get; set; }
         public DbSet<Sale> Sales { get; set; }
-        //public DbSet<ShoppingCart> ShoppingCarts { get; set; }
+        public DbSet<ShoppingCart> ShoppingCarts { get; set; }
         public DbSet<ShoppingCartItem> ShoppingCartItems { get; set; }
 
         public DaysForGirlsDbContext(DbContextOptions options) : base(options)

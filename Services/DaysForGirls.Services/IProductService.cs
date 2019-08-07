@@ -10,36 +10,47 @@ namespace DaysForGirls.Services
 
         IQueryable<ProductServiceModel> DisplayAll();
 
-        Task<ProductServiceModel> GetDetailsOfProductByIdAsync(int Id);
+        Task<ProductServiceModel> GetProductDetailsById(int Id);
 
-        Task<bool> GetProductToDeleteById(int id);
+        Task<bool> DeleteProductById(int id);
 
-        IQueryable<ProductServiceModel> AllWeddingProducts();
+        IQueryable<ProductServiceModel> GetAllProductsOfCategory(string categoryName);
 
-        IQueryable<ProductServiceModel> AllWeddingDresses();
+        IQueryable<ProductServiceModel> GetAllProductsOfTypeAndCategory(
+            string productTypeName, string categoryName);
 
-        IQueryable<ProductServiceModel> AllWeddingSuits();
+        //IQueryable<ProductServiceModel> AllWeddingProducts();
 
-        IQueryable<ProductServiceModel> AllWeddingAccessories();
+        //IQueryable<ProductServiceModel> AllWeddingDresses();
 
-        IQueryable<ProductServiceModel> AllPromProducts();
+        //IQueryable<ProductServiceModel> AllWeddingSuits();
 
-        IQueryable<ProductServiceModel> AllPromDresses();
+        //IQueryable<ProductServiceModel> AllWeddingAccessories();
 
-        IQueryable<ProductServiceModel> AllPromSuits();
+        //IQueryable<ProductServiceModel> AllPromProducts();
 
-        IQueryable<ProductServiceModel> AllPromAccessories();
+        //IQueryable<ProductServiceModel> AllPromDresses();
 
-        IQueryable<ProductServiceModel> AllOtherProducts();
+        //IQueryable<ProductServiceModel> AllPromSuits();
 
-        IQueryable<ProductServiceModel> AllOtherDresses();
+        //IQueryable<ProductServiceModel> AllPromAccessories();
 
-        IQueryable<ProductServiceModel> AllOtherSuits();
+        //IQueryable<ProductServiceModel> AllOtherProducts();
 
-        IQueryable<ProductServiceModel> AllOtherAccessories();
+        //IQueryable<ProductServiceModel> AllOtherDresses();
+
+        //IQueryable<ProductServiceModel> AllOtherSuits();
+
+        //IQueryable<ProductServiceModel> AllOtherAccessories();
 
         Task<bool> AddReviewToProductByProductIdAsync(int productId, int reviewId);
 
-        IQueryable<ProductServiceModel> GetAllProductsByCategoryAndType(string productType, string category);
+        Task<bool> Edit(int productId, ProductServiceModel model);
+
+        //IQueryable<ProductServiceModel> GetAllProductsByCategoryAndType(string productType, string category);
+
+        Task<int> DeletePictureWithUrl(string pictureUrl);
+
+        Task<bool> UploadNewPictureToProduct(int productId, string imageUrl);
     }
 }

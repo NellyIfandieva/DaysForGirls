@@ -19,5 +19,9 @@ namespace DaysForGirls.Web.ViewModels
         public List<string> Pictures { get; set; }
 
         public int Quantity { get; set; }
+
+        public bool IsDeleted { get; set; }
+
+        public bool IsInSale { get; set; }
     }
 }

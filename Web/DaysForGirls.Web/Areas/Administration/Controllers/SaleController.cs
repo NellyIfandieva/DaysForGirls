@@ -127,7 +127,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                 .GetSaleByIdAsync(saleId);
 
             ProductServiceModel product = await this.productService
-                .GetDetailsOfProductByIdAsync(productId);
+                .GetProductDetailsById(productId);
 
             sale.Products.Add(product);
             

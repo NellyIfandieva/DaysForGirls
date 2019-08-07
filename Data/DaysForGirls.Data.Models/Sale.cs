@@ -9,7 +9,7 @@ namespace DaysForGirls.Data.Models
     {
         public Sale()
         {
-            this.Products = new HashSet<Product>();
+            this.Products = new HashSet<ProductSale>();
         }
 
         [Required]
@@ -25,6 +25,6 @@ namespace DaysForGirls.Data.Models
         [Required]
         public string Picture { get; set; }
 
-        public ICollection<Product> Products { get; set; }
+        public ICollection<ProductSale> Products { get; set; }
     }
 }

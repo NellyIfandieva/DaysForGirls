@@ -24,7 +24,7 @@ namespace DaysForGirls.Web.Controllers
 
         public async Task<bool> Add(ShoppingCartInputModel model)
         {
-            var productToAdd = this.productService.GetDetailsOfProductByIdAsync(model.ProductId);
+            var productToAdd = this.productService.GetProductDetailsById(model.ProductId);
 
             if (productToAdd == null)
             {

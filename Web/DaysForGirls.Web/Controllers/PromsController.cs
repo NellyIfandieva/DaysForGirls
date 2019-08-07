@@ -22,7 +22,7 @@ namespace DaysForGirls.Web.Controllers
         public async Task<IActionResult> All()
         {
             var allPromProducts = await this.productService
-                .AllPromProducts().ToListAsync();
+                .GetAllProductsOfCategory("Prom").ToListAsync();
 
             List<ProductDisplayAllViewModel> productsToReturn = 
                 new List<ProductDisplayAllViewModel>();
@@ -58,7 +58,7 @@ namespace DaysForGirls.Web.Controllers
         public async Task<IActionResult> Dresses()
         {
             var allPromDresses = await this.productService
-                .AllPromDresses().ToListAsync();
+                .GetAllProductsOfTypeAndCategory("Dress", "Prom").ToListAsync();
 
             List<ProductDisplayAllViewModel> productsToReturn =
                 new List<ProductDisplayAllViewModel>();
@@ -94,7 +94,7 @@ namespace DaysForGirls.Web.Controllers
         public async Task<IActionResult> Suits()
         {
             var allPromSuits = await this.productService
-                .AllPromSuits().ToListAsync();
+                .GetAllProductsOfTypeAndCategory("Suit", "Prom").ToListAsync();
 
             List<ProductDisplayAllViewModel> productsToReturn =
                 new List<ProductDisplayAllViewModel>();
@@ -130,7 +130,7 @@ namespace DaysForGirls.Web.Controllers
         public async Task<IActionResult> Accessories()
         {
             var allPromAccessories = await this.productService
-                .AllPromAccessories().ToListAsync();
+                .GetAllProductsOfTypeAndCategory("Accessory", "Prom").ToListAsync();
 
             List<ProductDisplayAllViewModel> productsToReturn =
                 new List<ProductDisplayAllViewModel>();

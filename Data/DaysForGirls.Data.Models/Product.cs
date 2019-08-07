@@ -13,6 +13,7 @@ namespace DaysForGirls.Data.Models
             this.Carts = new HashSet<ProductCart>();
             this.Reviews = new HashSet<CustomerReview>();
             this.Pictures = new HashSet<Picture>();
+            this.Sales = new HashSet<ProductSale>();
         }
 
         [Required]
@@ -48,8 +49,9 @@ namespace DaysForGirls.Data.Models
 
         public ICollection<ProductCart> Carts { get; set; }
 
-        public int SaleId { get; set; }
-        public Sale Sale { get; set; }
+        public ICollection<ProductSale> Sales { get; set; }
+
+        public bool IsInSale { get; set; }
 
         public string OrderId { get; set; }
         public Order Order { get; set; }

@@ -168,7 +168,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
             //when i'm done re-doing the service (and IService)
             //productServiceModel = await this.productService.Create(productServiceModel);
             //bool picturesAddedToDb = await this.pictureService.Create(pictureServiceModels, productId);
-            return Redirect("/Products/All");
+            return Redirect("/Administration/Product/All");
         }
 
         [HttpGet("/Administration/Product/All")]
@@ -188,8 +188,11 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                     Category = product.Category.Name,
                     ProductType = product.ProductType.Name,
                     Price = product.Price,
-                    Quantity = product.Quantity.AvailableItems
+                    Quantity = product.Quantity.AvailableItems,
+                    IsDeleted = product.IsDeleted,
+                    IsInSale = product.IsInSale
                 };
+
                 List<string> productPictures = new List<string>();
                 foreach(var pic in product.Pictures)
                 {
@@ -206,8 +209,8 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         [HttpGet("/Administration/Product/Details/{id}")]
         public async Task<IActionResult> Details(int id)
         {
-            var productInDb = await this.productService
-                .GetDetailsOfProductByIdAsync(id);
+            ProductServiceModel productInDb = await this.productService
+                .GetProductDetailsById(id);
 
             ProductDetailsViewModel productToDisplay = new ProductDetailsViewModel
             {
@@ -256,6 +259,168 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
             productToDisplay.Reviews = reviews;
 
             return View(productToDisplay);
+        }
+
+        [HttpGet("/Administration/Product/Edit/{productId}")]
+        public async Task<IActionResult> Edit(int productId)
+        {
+            var productWithId = 
+                await this.productService.GetProductDetailsById(productId);
+
+            var currentProductPictures = await this.pictureService
+                .GetPicturesOfProductByProductId(productId).ToListAsync();
+
+            var currentProductPicturesToStrings = new List<string>();
+
+            foreach(var pic in currentProductPictures)
+            {
+                string url = pic.PictureUrl;
+                currentProductPicturesToStrings.Add(pic.PictureUrl);
+            }
+
+            var productToEdit = new ProductEditInputModel
+            {
+                Id = productWithId.Id,
+                Name = productWithId.Name,
+                Description = productWithId.Description,
+                Colour = productWithId.Colour,
+                Size = productWithId.Size,
+                CurrentPictures = currentProductPicturesToStrings,
+                Price = productWithId.Price,
+                Quantity = productWithId.Quantity.AvailableItems
+            };
+
+            if (productToEdit == null)
+            {
+                // TODO: Error Handling
+                return this.Redirect("/");
+            }
+
+            var allProductTypes = 
+                await this.productTypeService.DisplayAll()
+                .ToListAsync();
+
+            this.ViewData["types"] = allProductTypes
+                .Select(productType => new ProductCreateProductTypeViewModel
+                {
+                    Name = productType.Name
+                }).ToList();
+
+            var allCategories = await this.categoryService.DisplayAll()
+                .ToListAsync();
+
+            this.ViewData["categories"] = allCategories
+                .Select(category => new ProductCreateCategoryViewModel
+                {
+                    Name = category.Name
+                }).ToList();
+
+            var allManufacturers = await this.manufacturerService.DisplayAll()
+                .ToListAsync();
+
+            this.ViewData["manufacturers"] = allManufacturers
+                .Select(manufacturer => new ProductCreateManufacturerViewModel
+                {
+                    Name = manufacturer.Name
+                })
+                .ToList();
+
+            return this.View(productToEdit);
+        }
+
+        [HttpPost("/Administration/Product/Edit/{productId}")]
+        public async Task<IActionResult> Edit(int productId, ProductEditInputModel model)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                var productTypes = await this.productTypeService.DisplayAll().ToListAsync();
+
+                this.ViewData["types"] = productTypes.Select(pT => new ProductCreateProductTypeViewModel
+                {
+                    Name = pT.Name
+                }).ToList(); ;
+
+                var categories = await this.categoryService.DisplayAll().ToListAsync();
+
+                this.ViewData["categories"] = categories.Select(c => new ProductCreateCategoryViewModel
+                {
+                    Name = c.Name
+                });
+
+                var manufacturers = await this.manufacturerService.DisplayAll().ToListAsync();
+
+                this.ViewData["manufacturers"] = manufacturers.Select(m => new ProductCreateManufacturerViewModel
+                {
+                    Name = m.Name
+                });
+
+                return this.View(model);
+            }
+
+            var productWithEdits = new ProductServiceModel
+            {
+                Id = productId,
+                Name = model.Name,
+                Category = new CategoryServiceModel
+                {
+                    Name = model.Category
+                },
+                ProductType = new ProductTypeServiceModel
+                {
+                    Name = model.ProductType
+                },
+                Description = model.Description,
+                Colour = model.Colour,
+                Size = model.Size,
+                Price = model.Price,
+                Manufacturer = new ManufacturerServiceModel
+                {
+                    Name = model.Manufacturer
+                },
+                Quantity = new QuantityServiceModel
+                {
+                    AvailableItems = model.Quantity
+                }
+            };
+
+            bool productIsEditedInDb = await this.productService.Edit(productId, productWithEdits);
+
+            return this.Redirect("/");
+        }
+
+        public async Task<IActionResult> DeletePicture(string pictureUrl)
+        {
+            int productId = await this.productService
+                .DeletePictureWithUrl(pictureUrl);
+
+            if(productId > 0)
+            {
+                return View("Administration/Product/Edit/{productId}");
+            }
+
+            return View("Administration/Product/All");
+        }
+
+        public async Task<IActionResult> UploadNewPicture(ProductEditInputModel model)
+        {
+            int productId = model.Id;
+
+            Guid name = new Guid();
+
+            string imageUrl = await this.cloudinaryService.UploadPictureForProductAsync(
+                model.NewPicture, name.ToString());
+
+            bool imageIsAdded = await this.productService.UploadNewPictureToProduct(productId, imageUrl);
+
+            return Redirect("/Administration/Product/Edit/{productId}");
+        }
+
+        [HttpGet("/Administration/Product/Delete/{productId}")]
+        public async Task<IActionResult> Delete(int productId)
+        {
+            bool isDeleted = await this.productService.DeleteProductById(productId);
+
+            return Redirect("/Administration/Product/All");
         }
     }
 }

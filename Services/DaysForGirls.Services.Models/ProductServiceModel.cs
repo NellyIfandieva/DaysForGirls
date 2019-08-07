@@ -40,6 +40,10 @@ namespace DaysForGirls.Services.Models
 
         public List<CustomerReviewServiceModel> Reviews { get; set; }
 
+        public bool IsDeleted { get; set; }
+
+        public bool IsInSale { get; set; }
+
         //public List<ProductCart> Carts { get; set; }
 
         //public OrderServiceModel Order { get; set; }

@@ -1,0 +1,32 @@
+﻿@model IEnumerable<DaysForGirls.Web.ViewModels.ProductDisplayAllViewModel>
+
+@{
+    ViewData["Title"] = "All";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>All Products - Admin View</h1>
+
+<div>
+    @foreach(var product in Model)
+    {
+        <div>
+            <a href="/Administration/Product/Details/@product.Id"><img src="@product.Pictures[0]"/></a>
+            @if (product.IsDeleted)
+            {
+                <h4 style="color: crimson; font-weight: bolder">DELETED</h4>
+            }
+            <div>
+                <a href="/Administration/Product/Details/@product.Id"><h4><span style="font-weight: bold">Name:</span> @product.Name</h4></a>
+                <a href="/Administration/Category/Details/@product.Category"><h4><span style="font-weight: bold">Category:</span> @product.Category</h4></a>
+                <a href="/Administration/ProductType/Details/@product.ProductType"><h4><span style="font-weight: bold">Product Type:</span>  @product.ProductType</h4></a>
+            </div>
+            <div>
+                <a href="/Administration/Product/Edit/@product.Id">Edit Product</a>
+                <a href="/Administration/Product/Delete/@product.Id" style="padding-left: 7px">Delete Product</a>
+            </div>
+        </div>
+    }
+</div>
+
+

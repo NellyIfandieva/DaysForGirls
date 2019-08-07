@@ -1,6 +1,7 @@
 ﻿using DaysForGirls.Data;
 using DaysForGirls.Data.Models;
 using DaysForGirls.Services.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,6 +54,33 @@ namespace DaysForGirls.Services
             };
 
             await Task.Delay(0);
+            return pictureToReturn;
+        }
+
+        public IQueryable<PictureServiceModel> GetPicturesOfProductByProductId(int productId)
+        {
+            var pictures = this.db.Pictures
+                .Where(p => p.ProductId == productId)
+                .Select(p => new PictureServiceModel
+                {
+                    PictureUrl = p.PictureUrl
+                });
+
+            return pictures;
+        }
+
+        public async Task<PictureServiceModel> GetPictureByUrl(string pictureUrl)
+        {
+            var picture = await this.db.Pictures
+                .SingleOrDefaultAsync(p => p.PictureUrl == pictureUrl);
+
+            var pictureToReturn = new PictureServiceModel
+            {
+                Id = picture.Id,
+                PictureUrl = picture.PictureUrl,
+                ProductId = picture.ProductId
+            };
+
             return pictureToReturn;
         }
 
