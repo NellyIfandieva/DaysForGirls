@@ -56,7 +56,17 @@ namespace DaysForGirls.Services
                     Title = s.Title,
                     EndsOn = s.EndsOn,
                     Picture = s.Picture,
-                    IsActive = s.IsActive
+                    IsActive = s.IsActive,
+                    Products = s.Products
+                        .Where(sI => sI.SaleId == s.Id)
+                        .Select(pr => new ProductSaleServiceModel
+                        {
+                            Id = pr.Id,
+                            Product = new ProductServiceModel
+                            {
+                                Id = pr.Product.Id
+                            }
+                        }).ToList()
                 });
 
             return allSales;
@@ -69,36 +79,50 @@ namespace DaysForGirls.Services
 
             var productsInSale = this.db.ProductsSales
                 .Where(p => p.SaleId == id)
-                .Select(pS => new ProductServiceModel
+                .Select(pS => new ProductSaleServiceModel
                 {
-                    Id = pS.ProductId,
-                    Name = pS.Product.Name,
-                    Category = new CategoryServiceModel
+                    Id = pS.Id,
+                    Product = new ProductServiceModel
                     {
-                        Name = pS.Product.Category.Name
-                    },
-                    ProductType = new ProductTypeServiceModel
-                    {
-                        Name = pS.Product.ProductType.Name
-                    },
-                    Pictures = pS.Product.Pictures
-                        .Select(pU => new PictureServiceModel
+                        Name = pS.Product.Name,
+                        Category = new CategoryServiceModel
                         {
-                            Id = pU.Id,
-                            PictureUrl = pU.PictureUrl,
-                            ProductId = pU.Product.Id
-                        }).ToList(),
-                    Description = pS.Product.Description,
-                    Colour = pS.Product.Colour,
-                    Size = pS.Product.Size,
-                    Price = pS.Product.Price,
-                    Manufacturer = new ManufacturerServiceModel
-                    {
-                        Name = pS.Product.Manufacturer.Name
-                    },
-                    Quantity = new QuantityServiceModel
-                    {
-                        AvailableItems = pS.Product.Quantity.AvailableItems
+                            Name = pS.Product.Category.Name
+                        },
+                        ProductType = new ProductTypeServiceModel
+                        {
+                            Name = pS.Product.ProductType.Name
+                        },
+                        Pictures = pS.Product.Pictures
+                            .Select(p => new PictureServiceModel
+                            {
+                                Id = p.Id,
+                                PictureUrl = p.PictureUrl
+                            }).ToList(),
+                        Description = pS.Product.Description,
+                        Colour = pS.Product.Colour,
+                        Size = pS.Product.Size,
+                        Price = pS.Product.Price,
+                        Manufacturer = new ManufacturerServiceModel
+                        {
+                            Name = pS.Product.Manufacturer.Name
+                        },
+                        Quantity = new QuantityServiceModel
+                        {
+                            AvailableItems = pS.Product.Quantity.AvailableItems
+                        },
+                        Reviews = pS.Product.Reviews
+                            .Select(pR => new CustomerReviewServiceModel
+                            {
+                                Id = pR.Id,
+                                Title = pR.Title,
+                                Text = pR.Text,
+                                CreatedOn = pR.CreatedOn.ToString(),
+                                Author = new DaysForGirlsUserServiceModel
+                                {
+                                    Username = pR.Author.UserName
+                                }
+                            }).ToList()
                     }
                 })
                 .ToList();
@@ -119,29 +143,20 @@ namespace DaysForGirls.Services
 
         public async Task<bool> AddProductToSale(int saleId, int productId)
         {
-            Product product = this.db.Products
-                .SingleOrDefault(p => p.Id == productId);
-
-            var productPictures = this.db.Pictures
-                .Where(pI => pI.ProductId == productId).ToList();
-
-            product.Pictures = productPictures;
-
             Sale sale = this.db.Sales
                 .SingleOrDefault(s => s.Id == saleId);
 
-            ProductSale productSale = new ProductSale();
-            productSale.Product = product;
-            productSale.Sale = sale;
+            ProductSale productSale = new ProductSale
+            {
+                Sale = sale,
+                ProductId = productId
+            };
 
             sale.Products.Add(productSale);
 
-            product.Sales.Add(productSale);
-            product.IsInSale = true;
-
-            this.db.ProductsSales.Add(productSale);
+            //this.db.ProductsSales.Add(productSale);
             this.db.Sales.Update(sale);
-            this.db.Products.Update(product);
+            //this.db.Products.Update(product);
 
             int result = await this.db.SaveChangesAsync();
 

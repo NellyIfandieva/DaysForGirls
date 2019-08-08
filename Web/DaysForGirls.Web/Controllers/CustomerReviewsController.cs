@@ -30,7 +30,7 @@ namespace DaysForGirls.Web.Controllers
         public async Task<IActionResult> Create(int productId)
         {
             this.ViewData["productId"] = productId;
-
+            
             await Task.Delay(0);
             return View();
         }
@@ -64,7 +64,7 @@ namespace DaysForGirls.Web.Controllers
 
             bool isCreated = await this.customerReviewService.CreateAsync(newCustomerReview, model.ProductId);
             string id = productId.ToString();
-            return Redirect("/Products/All");
+            return Redirect("/Products/Details/{productId}");
         }
     }
 }

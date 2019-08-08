@@ -16,6 +16,6 @@ namespace DaysForGirls.Services.Models
 
         public bool IsActive { get; set; }
 
-        public List<ProductServiceModel> Products { get; set; }
+        public List<ProductSaleServiceModel> Products { get; set; }
     }
 }

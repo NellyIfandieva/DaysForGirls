@@ -49,6 +49,7 @@
                 </div>
                 <div>
                     <a class="text-center" href="/CustomerReviews/Create/@Model.Id"><button style="width:150px; margin-top:10px; margin-bottom: 10px; background-color: #cc0052; color: white"><p>Add your review for @Model.Name</button></a>
+                    <input type="hidden" id="returnUrl" name="returnUrl" value="/Products/Details/@Model.Id"/>
                 </div>
             }
             <div>

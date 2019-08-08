@@ -51,16 +51,16 @@ namespace DaysForGirls.Web.Controllers
                     .Select(p => new ProductInSaleViewModel
                     {
                         Id = p.Id,
-                        Name = p.Name,
-                        Pictures = p.Pictures
+                        Name = p.Product.Name,
+                        Pictures = p.Product.Pictures
                             .Select(pic => new PictureDisplayAllViewModel
                             {
                                 Id = pic.Id,
                                 ImageUrl = pic.PictureUrl,
                                 ProductId = p.Id
                             }).ToList(),
-                        OldPrice = p.Price,
-                        Quantity = p.Quantity.AvailableItems
+                        OldPrice = p.Product.Price,
+                        Quantity = p.Product.Quantity.AvailableItems
                     }).ToList()
             };
 

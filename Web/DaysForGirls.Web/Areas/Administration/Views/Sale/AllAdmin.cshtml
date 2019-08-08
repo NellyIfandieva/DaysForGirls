@@ -1,4 +1,4 @@
-﻿@model IEnumerable<DaysForGirls.Web.ViewModels.SalesAllDisplayViewModelAdmin>
+﻿@model List<DaysForGirls.Web.ViewModels.SalesAllDisplayViewModelAdmin>
 
 @{
     ViewData["Title"] = "AllAdmin";
@@ -13,11 +13,17 @@
         <div>
             <a href="/Administration/Sale/Details/@sale.Id"><img src="@sale.Picture" alt="@sale.Title"/></a>
             <h3>@sale.Title - Ends on: @sale.EndsOn.ToString() - Is Active: @sale.IsActive</h3>
-            @if(sale)
-            {
-
-            }
-            <a href="/Administration/Sale/AddExistingProduct/@sale.Id"><button>Add Product To Sale</button></a>
+            <div>
+                @if (sale.Products.Count() <= 0)
+                {
+                    <p>No products in this sale yet</p>
+                }
+                else
+                {
+                    <p>This sale offers @sale.Products.Count() products</p>
+                }
+                <a href="/Administration/Sale/AddProductToSale/@sale.Id"><button>Add product to sale</button></a>
+            </div>
         </div>
     }
 </div>

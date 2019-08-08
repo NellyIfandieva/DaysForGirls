@@ -23,36 +23,32 @@ namespace DaysForGirls.Web.Controllers
         public async Task<IActionResult> All()
         {
             var allProducts = await this.productService
-                .DisplayAll().ToListAsync();
-
-            List<ProductDisplayAllViewModel> productsToReturn = 
-                new List<ProductDisplayAllViewModel>();
-
-            foreach(var product in allProducts)
-            {
-                var pDAVM = new ProductDisplayAllViewModel
+                .DisplayAll()
+                .Select(p => new ProductDisplayAllViewModel
                 {
-                    Id = product.Id,
-                    Name = product.Name,
-                    Category = product.Category.Name,
-                    ProductType = product.ProductType.Name,
-                    Price = product.Price,
-                    Quantity = product.Quantity.AvailableItems
-                };
+                    Id = p.Id,
+                    Name = p.Name,
+                    Category = p.Category.Name,
+                    ProductType = p.ProductType.Name,
+                    Price = p.Price,
+                    Quantity = p.Quantity.AvailableItems,
+                    Pictures = p.Pictures
+                        .Select(pic => pic.PictureUrl)
+                        .ToList()
+                }).ToListAsync();
 
-                List<string> productPictures = new List<string>();
+                //List<string> productPictures = new List<string>();
 
-                foreach(var pic in product.Pictures)
-                {
-                    string url = pic.PictureUrl;
-                    productPictures.Add(url);
-                }
+                //foreach(var pic in product.Pictures)
+                //{
+                //    string url = pic.PictureUrl;
+                //    productPictures.Add(url);
+                //}
 
-                pDAVM.Pictures = productPictures;
-                productsToReturn.Add(pDAVM);
-            }
+                //pDAVM.Pictures = productPictures;
+                //productsToReturn.Add(pDAVM);
 
-            return View(productsToReturn);
+            return View(allProducts);
         }
 
         [HttpGet("/Products/Details/{Id}")]
@@ -83,7 +79,12 @@ namespace DaysForGirls.Web.Controllers
                     ProductId = p.ProductId
                 }).ToList();
 
-            productDetails.Pictures = pictures;
+            productDetails.Pictures = pictures
+                .Select(p => new PictureDisplayAllViewModel
+                {
+                    Id = p.Id,
+                    ImageUrl = p.ImageUrl
+                }).ToList();
 
             var reviews = productWithDetails.Reviews
                 .Select(r => new CustomerReviewAllViewModel

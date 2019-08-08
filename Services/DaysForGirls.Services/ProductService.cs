@@ -58,20 +58,19 @@ namespace DaysForGirls.Services
                 Price = productServiceModel.Price,
                 Manufacturer = manufacturerInDb,
                 QuantityId = productQuantity.Id,
-                Carts = new HashSet<ProductCart>(),
-                Reviews = new HashSet<CustomerReview>(),
-                Pictures = new HashSet<Picture>(),
-                Sales = new HashSet<ProductSale>()
+                Carts = new List<ProductCart>(),
+                Reviews = new List<CustomerReview>(),
+                Pictures = new List<Picture>(),
+                Sales = new List<ProductSale>()
             };
 
-            foreach (PictureServiceModel picture in productServiceModel.Pictures)
-            {
-                Picture productPicture = new Picture
+            var pictures = productServiceModel.Pictures
+                .Select(p => new Picture
                 {
-                    PictureUrl = picture.PictureUrl
-                };
-                product.Pictures.Add(productPicture);
-            }
+                    PictureUrl = p.PictureUrl
+                }).ToList();
+
+            product.Pictures = pictures;
 
             this.db.Products.Add(product);
             int result = await db.SaveChangesAsync();
@@ -86,30 +85,34 @@ namespace DaysForGirls.Services
             var productInDb = this.db.Products
                 .SingleOrDefault(p => p.Id == productId);
 
-            var productPictures = this.db.Pictures
-                .Where(p => p.ProductId == productInDb.Id)
-                .Select(p => new PictureServiceModel
-                {
-                    Id = p.Id,
-                    PictureUrl = p.PictureUrl,
-                    ProductId = p.ProductId
-                })
-                .ToList();
+            var productPictures = productInDb.Pictures;
 
-            var productCustomerReviews = this.db.CustomerReviews
-                .Where(c => c.ProductId == productInDb.Id)
-                .Select(c => new CustomerReviewServiceModel
-                {
-                    Id = c.Id,
-                    Title = c.Title,
-                    Text = c.Text,
-                    CreatedOn = c.CreatedOn.ToString(),
-                    Author = new DaysForGirlsUserServiceModel
-                    {
-                        UserName = c.Author.UserName
-                    }
-                })
-                .ToList();
+            var productReviews = productInDb.Reviews;
+
+            //var productPictures = this.db.Pictures
+            //    .Where(p => p.ProductId == productInDb.Id)
+            //    .Select(p => new PictureServiceModel
+            //    {
+            //        Id = p.Id,
+            //        PictureUrl = p.PictureUrl,
+            //        ProductId = p.ProductId
+            //    })
+            //    .ToList();
+
+            //var productCustomerReviews = this.db.CustomerReviews
+            //    .Where(c => c.ProductId == productInDb.Id)
+            //    .Select(c => new CustomerReviewServiceModel
+            //    {
+            //        Id = c.Id,
+            //        Title = c.Title,
+            //        Text = c.Text,
+            //        CreatedOn = c.CreatedOn.ToString(),
+            //        Author = new DaysForGirlsUserServiceModel
+            //        {
+            //            UserName = c.Author.UserName
+            //        }
+            //    })
+            //    .ToList();
 
             var productTypeOfProduct = this.db.ProductTypes
                 .SingleOrDefault(pT => pT.Id == productInDb.ProductTypeId);
@@ -152,10 +155,25 @@ namespace DaysForGirls.Services
                 {
                     AvailableItems = productInDb.Quantity.AvailableItems
                 },
-                Pictures = productPictures,
-                Reviews = productCustomerReviews
+                Pictures = productPictures
+                    .Select(pic => new PictureServiceModel
+                    {
+
+                    }).ToList(),
+                Reviews = productReviews
+                    .Select(r => new CustomerReviewServiceModel
+                    {
+                        Id = r.Id,
+                        Title = r.Title,
+                        Text = r.Text,
+                        Author = new DaysForGirlsUserServiceModel
+                        {
+                            Username = r.Author.UserName
+                        }
+                    }).ToList()
             };
 
+            await Task.Delay(0);
             return productToReturn;
         }
 
@@ -182,9 +200,11 @@ namespace DaysForGirls.Services
                      Pictures = p.Pictures
                         .Select(pU => new PictureServiceModel
                         {
+                            Id = pU.Id,
                             PictureUrl = pU.PictureUrl
                         }).ToList(),
-                     IsDeleted = p.IsDeleted
+                     IsDeleted = p.IsDeleted,
+                     IsInSale = p.IsInSale
                  });
 
             return allProducts;
@@ -197,10 +217,15 @@ namespace DaysForGirls.Services
 
             productToDelete.IsDeleted = true;
 
-            this.db.Update(productToDelete);
-            int result = await this.db.SaveChangesAsync();
+            var picturesOfProduct = this.db.Pictures
+                .Where(p => p.ProductId == productToDelete.Id)
+                .ForEachAsync(p => p.IsDeleted = true);
 
-            return result > 0;
+            this.db.UpdateRange(productToDelete, picturesOfProduct);
+            int result = await this.db.SaveChangesAsync();
+            bool productAndItsPicturesAreDeleted = result > 0;
+
+            return productAndItsPicturesAreDeleted;
         }
 
         public IQueryable<ProductServiceModel> GetAllProductsOfCategory(string categoryName)
@@ -306,507 +331,6 @@ namespace DaysForGirls.Services
             return allProductsOfCategoryAndType;
         }
 
-        //public IQueryable<ProductServiceModel> AllWeddingProducts()
-        //{
-        //    var allWeddingProducts = this.db.Products
-        //        .Where(p => p.Category.Name == "Wedding")
-        //        .Select(p => new ProductServiceModel
-        //        {
-        //            Id = p.Id,
-        //            Name = p.Name,
-        //            Category = new CategoryServiceModel
-        //            {
-        //                Name = p.Category.Name
-        //            },
-        //            ProductType = new ProductTypeServiceModel
-        //            {
-        //                Name = p.ProductType.Name
-        //            },
-        //            Price = p.Price,
-        //            Quantity = new QuantityServiceModel
-        //            {
-        //                AvailableItems = p.Quantity.AvailableItems
-        //            },
-        //            Pictures = p.Pictures
-        //                .Select(pU => new PictureServiceModel
-        //                {
-        //                    PictureUrl = pU.PictureUrl
-        //                }).ToList()
-        //        });
-
-        //    return allWeddingProducts;
-        //}
-
-        //public IQueryable<ProductServiceModel> AllWeddingDresses()
-        //{
-        //    var allWeddingDresses = this.db.Products
-        //        .Where(p => p.Category.Name == "Wedding"
-        //        && p.ProductType.Name == "Dress")
-        //        .Select(p => new ProductServiceModel
-        //        {
-        //            Id = p.Id,
-        //            Name = p.Name,
-        //            ProductType = new ProductTypeServiceModel
-        //            {
-        //                Name = p.ProductType.Name
-        //            },
-        //            Category = new CategoryServiceModel
-        //            {
-        //                Name = p.Category.Name
-        //            },
-        //            Description = p.Description,
-        //            Colour = p.Colour,
-        //            Size = p.Size,
-        //            Price = p.Price,
-        //            Manufacturer = new ManufacturerServiceModel
-        //            {
-        //                Name = p.Manufacturer.Name
-        //            },
-        //            Quantity = new QuantityServiceModel
-        //            {
-        //                AvailableItems = p.Quantity.AvailableItems
-        //            },
-        //            Pictures = p.Pictures
-        //                .Select(pU => new PictureServiceModel
-        //                {
-        //                    PictureUrl = pU.PictureUrl
-        //                }).ToList()
-        //        });
-
-        //    return allWeddingDresses;
-        //}
-
-        //public IQueryable<ProductServiceModel> AllWeddingSuits()
-        //{
-        //    var allWeddingSuits = this.db.Products
-        //        .Where(p => p.Category.Name == "Wedding"
-        //        && p.ProductType.Name == "Suit")
-        //        .Select(suit => new ProductServiceModel
-        //        {
-        //            Id = suit.Id,
-        //            Name = suit.Name,
-        //            ProductType = new ProductTypeServiceModel
-        //            {
-        //                Name = suit.ProductType.Name
-        //            },
-        //            Category = new CategoryServiceModel
-        //            {
-        //                Name = suit.Category.Name
-        //            },
-        //            Description = suit.Description,
-        //            Colour = suit.Colour,
-        //            Size = suit.Size,
-        //            Price = suit.Price,
-        //            Manufacturer = new ManufacturerServiceModel
-        //            {
-        //                Name = suit.Manufacturer.Name
-        //            },
-        //            Quantity = new QuantityServiceModel
-        //            {
-        //                AvailableItems = suit.Quantity.AvailableItems
-        //            },
-        //            Pictures = suit.Pictures
-        //                .Select(pU => new PictureServiceModel
-        //                {
-        //                    PictureUrl = pU.PictureUrl
-        //                }).ToList()
-        //        });
-
-        //    return allWeddingSuits;
-        //}
-
-        //public IQueryable<ProductServiceModel> AllWeddingAccessories()
-        //{
-        //    var allWeddingAccessories = this.db.Products
-        //        .Where(a => a.Category.Name == "Wedding"
-        //        && a.ProductType.Name == "Accessory")
-        //        .Select(a => new ProductServiceModel
-        //        {
-        //            Id = a.Id,
-        //            Name = a.Name,
-        //            Category = new CategoryServiceModel
-        //            {
-        //                Name = a.Category.Name
-        //            },
-        //            Description = a.Description,
-        //            Colour = a.Colour,
-        //            Price = a.Price,
-        //            Manufacturer = new ManufacturerServiceModel
-        //            {
-        //                Name = a.Manufacturer.Name
-        //            },
-        //            Quantity = new QuantityServiceModel
-        //            {
-        //                AvailableItems = a.Quantity.AvailableItems
-        //            },
-        //            Pictures = a.Pictures
-        //                .Select(pU => new PictureServiceModel
-        //                {
-        //                    PictureUrl = pU.PictureUrl
-        //                }).ToList(),
-        //            Reviews = a.Reviews
-        //                .Select(accR => new CustomerReviewServiceModel
-        //                {
-        //                    Id = accR.Id,
-        //                    Title = accR.Title,
-        //                    Text = accR.Text,
-        //                    Author = new DaysForGirlsUserServiceModel
-        //                    {
-        //                        Username = accR.Author.UserName
-        //                    }
-        //                }).ToList()
-        //        });
-
-        //    return allWeddingAccessories;
-        //}
-
-        //public IQueryable<ProductServiceModel> AllPromProducts()
-        //{
-        //    var allPromProducts = this.db.Products
-        //        .Where(p => p.Category.Name == "Prom")
-        //        .Select(p => new ProductServiceModel
-        //        {
-        //            Id = p.Id,
-        //            Name = p.Name,
-        //            Category = new CategoryServiceModel
-        //            {
-        //                Name = p.Category.Name
-        //            },
-        //            ProductType = new ProductTypeServiceModel
-        //            {
-        //                Name = p.ProductType.Name
-        //            },
-        //            Price = p.Price,
-        //            Quantity = new QuantityServiceModel
-        //            {
-        //                AvailableItems = p.Quantity.AvailableItems
-        //            },
-        //            Pictures = p.Pictures
-        //                .Select(pU => new PictureServiceModel
-        //                {
-        //                    PictureUrl = pU.PictureUrl
-        //                }).ToList(),
-        //            Reviews = p.Reviews
-        //                .Select(accR => new CustomerReviewServiceModel
-        //                {
-        //                    Id = accR.Id,
-        //                    Title = accR.Title,
-        //                    Text = accR.Text,
-        //                    Author = new DaysForGirlsUserServiceModel
-        //                    {
-        //                        Username = accR.Author.UserName
-        //                    }
-        //                }).ToList()
-        //        });
-
-        //    return allPromProducts;
-        //}
-
-        //public IQueryable<ProductServiceModel> AllPromDresses()
-        //{
-        //    var allPromDresses = this.db.Products
-        //        .Where(p => p.Category.Name == "Prom"
-        //        && p.ProductType.Name == "Dress")
-        //        .Select(p => new ProductServiceModel
-        //        {
-        //            Id = p.Id,
-        //            Name = p.Name,
-        //            ProductType = new ProductTypeServiceModel
-        //            {
-        //                Name = p.ProductType.Name
-        //            },
-        //            Category = new CategoryServiceModel
-        //            {
-        //                Name = p.Category.Name
-        //            },
-        //            Description = p.Description,
-        //            Colour = p.Colour,
-        //            Size = p.Size,
-        //            Price = p.Price,
-        //            Manufacturer = new ManufacturerServiceModel
-        //            {
-        //                Name = p.Manufacturer.Name
-        //            },
-        //            Quantity = new QuantityServiceModel
-        //            {
-        //                AvailableItems = p.Quantity.AvailableItems
-        //            },
-        //            Reviews = p.Reviews
-        //                .Select(accR => new CustomerReviewServiceModel
-        //                {
-        //                    Id = accR.Id,
-        //                    Title = accR.Title,
-        //                    Text = accR.Text,
-        //                    Author = new DaysForGirlsUserServiceModel
-        //                    {
-        //                        Username = accR.Author.UserName
-        //                    }
-        //                }).ToList(),
-        //            Pictures = p.Pictures
-        //                .Select(pU => new PictureServiceModel
-        //                {
-        //                    PictureUrl = pU.PictureUrl
-        //                }).ToList()
-        //        });
-
-        //    return allPromDresses;
-        //}
-
-        //public IQueryable<ProductServiceModel> AllPromSuits()
-        //{
-        //    var allPromSuits = this.db.Products
-        //        .Where(p => p.Category.Name == "Prom"
-        //        && p.ProductType.Name == "Suit")
-        //        .Select(p => new ProductServiceModel
-        //        {
-        //            Id = p.Id,
-        //            Name = p.Name,
-        //            Price = p.Price,
-        //            ProductType = new ProductTypeServiceModel
-        //            {
-        //                Name = p.ProductType.Name
-        //            },
-        //            Quantity = new QuantityServiceModel
-        //            {
-        //                AvailableItems = p.Quantity.AvailableItems
-        //            }
-        //        });
-
-        //    return allPromSuits;
-        //}
-
-        //public IQueryable<ProductServiceModel> AllPromAccessories()
-        //{
-        //    var allPromAccessories = this.db.Products
-        //        .Where(p => p.Category.Name == "Prom"
-        //        && p.ProductType.Name == "Accessory")
-        //        .Select(a => new ProductServiceModel
-        //        {
-        //            Id = a.Id,
-        //            Name = a.Name,
-        //            Category = new CategoryServiceModel
-        //            {
-        //                Name = a.Category.Name
-        //            },
-        //            Description = a.Description,
-        //            Colour = a.Colour,
-        //            Price = a.Price,
-        //            Manufacturer = new ManufacturerServiceModel
-        //            {
-        //                Name = a.Manufacturer.Name
-        //            },
-        //            Quantity = new QuantityServiceModel
-        //            {
-        //                AvailableItems = a.Quantity.AvailableItems
-        //            },
-        //            Reviews = a.Reviews
-        //                .Select(accR => new CustomerReviewServiceModel
-        //                {
-        //                    Id = accR.Id,
-        //                    Title = accR.Title,
-        //                    Text = accR.Text,
-        //                    Author = new DaysForGirlsUserServiceModel
-        //                    {
-        //                        Username = accR.Author.UserName
-        //                    }
-        //                }).ToList(),
-        //            Pictures = a.Pictures
-        //                .Select(pU => new PictureServiceModel
-        //                {
-        //                    PictureUrl = pU.PictureUrl
-        //                }).ToList()
-        //        });
-
-        //    return allPromAccessories;
-        //}
-
-        //public IQueryable<ProductServiceModel> AllOtherProducts()
-        //{
-        //    var allOtherProducts = this.db.Products
-        //        .Where(p => p.Category.Name == "Other")
-        //        .Select(p => new ProductServiceModel
-        //        {
-        //            Id = p.Id,
-        //            Name = p.Name,
-        //            Category = new CategoryServiceModel
-        //            {
-        //                Name = p.Category.Name
-        //            },
-        //            ProductType = new ProductTypeServiceModel
-        //            {
-        //                Name = p.ProductType.Name
-        //            },
-        //            Price = p.Price,
-        //            Quantity = new QuantityServiceModel
-        //            {
-        //                AvailableItems = p.Quantity.AvailableItems
-        //            },
-        //            Reviews = p.Reviews
-        //                .Select(accR => new CustomerReviewServiceModel
-        //                {
-        //                    Id = accR.Id,
-        //                    Title = accR.Title,
-        //                    Text = accR.Text,
-        //                    Author = new DaysForGirlsUserServiceModel
-        //                    {
-        //                        Username = accR.Author.UserName
-        //                    }
-        //                }).ToList(),
-        //            Pictures = p.Pictures
-        //                .Select(pU => new PictureServiceModel
-        //                {
-        //                    PictureUrl = pU.PictureUrl
-        //                }).ToList()
-        //        });
-
-        //    return allOtherProducts;
-        //}
-
-        //public IQueryable<ProductServiceModel> AllOtherDresses()
-        //{
-        //    var allOtherDresses = this.db.Products
-        //        .Where(p => p.Category.Name == "Other"
-        //        && p.ProductType.Name == "Dress")
-        //        .Select(p => new ProductServiceModel
-        //        {
-        //            Id = p.Id,
-        //            Name = p.Name,
-        //            ProductType = new ProductTypeServiceModel
-        //            {
-        //                Name = p.ProductType.Name
-        //            },
-        //            Category = new CategoryServiceModel
-        //            {
-        //                Name = p.Category.Name
-        //            },
-        //            Description = p.Description,
-        //            Colour = p.Colour,
-        //            Size = p.Size,
-        //            Price = p.Price,
-        //            Manufacturer = new ManufacturerServiceModel
-        //            {
-        //                Name = p.Manufacturer.Name
-        //            },
-        //            Quantity = new QuantityServiceModel
-        //            {
-        //                AvailableItems = p.Quantity.AvailableItems
-        //            },
-        //            Reviews = p.Reviews
-        //                .Select(accR => new CustomerReviewServiceModel
-        //                {
-        //                    Id = accR.Id,
-        //                    Title = accR.Title,
-        //                    Text = accR.Text,
-        //                    Author = new DaysForGirlsUserServiceModel
-        //                    {
-        //                        Username = accR.Author.UserName
-        //                    }
-        //                }).ToList(),
-        //            Pictures = p.Pictures
-        //                .Select(pU => new PictureServiceModel
-        //                {
-        //                    PictureUrl = pU.PictureUrl
-        //                }).ToList()
-        //        });
-
-        //    return allOtherDresses;
-        //}
-
-        //public IQueryable<ProductServiceModel> AllOtherSuits()
-        //{
-        //    var allOtherSuits = this.db.Products
-        //        .Where(p => p.Category.Name == "Other"
-        //        && p.ProductType.Name == "Suit")
-        //        .Select(p => new ProductServiceModel
-        //        {
-        //            Id = p.Id,
-        //            Name = p.Name,
-        //            ProductType = new ProductTypeServiceModel
-        //            {
-        //                Name = p.ProductType.Name
-        //            },
-        //            Category = new CategoryServiceModel
-        //            {
-        //                Name = p.Category.Name
-        //            },
-        //            Description = p.Description,
-        //            Colour = p.Colour,
-        //            Size = p.Size,
-        //            Price = p.Price,
-        //            Manufacturer = new ManufacturerServiceModel
-        //            {
-        //                Name = p.Manufacturer.Name
-        //            },
-        //            Quantity = new QuantityServiceModel
-        //            {
-        //                AvailableItems = p.Quantity.AvailableItems
-        //            },
-        //            Reviews = p.Reviews
-        //                .Select(accR => new CustomerReviewServiceModel
-        //                {
-        //                    Id = accR.Id,
-        //                    Title = accR.Title,
-        //                    Text = accR.Text,
-        //                    Author = new DaysForGirlsUserServiceModel
-        //                    {
-        //                        Username = accR.Author.UserName
-        //                    }
-        //                }).ToList(),
-        //            Pictures = p.Pictures
-        //                .Select(pU => new PictureServiceModel
-        //                {
-        //                    PictureUrl = pU.PictureUrl
-        //                }).ToList()
-        //        });
-
-        //    return allOtherSuits;
-        //}
-
-        //public IQueryable<ProductServiceModel> AllOtherAccessories()
-        //{
-        //    var allOtherAccessories = this.db.Products
-        //        .Where(a => a.Category.Name == "Other"
-        //        && a.ProductType.Name == "Accessory")
-        //        .Select(a => new ProductServiceModel
-        //        {
-        //            Id = a.Id,
-        //            Name = a.Name,
-        //            Category = new CategoryServiceModel
-        //            {
-        //                Name = a.Category.Name
-        //            },
-        //            Description = a.Description,
-        //            Colour = a.Colour,
-        //            Price = a.Price,
-        //            Manufacturer = new ManufacturerServiceModel
-        //            {
-        //                Name = a.Manufacturer.Name
-        //            },
-        //            Quantity = new QuantityServiceModel
-        //            {
-        //                AvailableItems = a.Quantity.AvailableItems
-        //            },
-        //            Reviews = a.Reviews
-        //                .Select(accR => new CustomerReviewServiceModel
-        //                {
-        //                    Id = accR.Id,
-        //                    Title = accR.Title,
-        //                    Text = accR.Text,
-        //                    Author = new DaysForGirlsUserServiceModel
-        //                    {
-        //                        Username = accR.Author.UserName
-        //                    }
-        //                }).ToList(),
-        //            Pictures = a.Pictures
-        //                .Select(pU => new PictureServiceModel
-        //                {
-        //                    PictureUrl = pU.PictureUrl
-        //                }).ToList()
-        //        });
-
-        //    return allOtherAccessories;
-        //}
-
         public async Task<bool> AddReviewToProductByProductIdAsync(int productId, int reviewId)
         {
             var product = this.db.Products
@@ -864,28 +388,24 @@ namespace DaysForGirls.Services
             return editsApplied;
         }
 
-        public async Task<int> DeletePictureWithUrl(string pictureUrl)
+        public async Task<bool> DeletePictureWithUrl(string pictureUrl)
         {
-            PictureServiceModel picture = await this.pictureService.GetPictureByUrl(pictureUrl);
+            Picture pictureToDelete = this.db.Pictures
+                .SingleOrDefault(pic => pic.PictureUrl == pictureUrl);
 
             var product = await this.db.Products
-                .SingleOrDefaultAsync(p => p.Id == picture.ProductId);
-
-            Picture pictureToDelete = product.Pictures
-                .SingleOrDefault(pic => pic.Id == picture.Id);
+                .SingleOrDefaultAsync(p => p.Id == pictureToDelete.ProductId);
 
             product.Pictures.Remove(pictureToDelete);
-            this.db.Products.Update(product);
+
+            pictureToDelete.IsDeleted = true;
+
+            this.db.UpdateRange(pictureToDelete, product);
+
             int result = await this.db.SaveChangesAsync();
             bool pictureIsDeleted = result > 0;
-            int productId = 0;
 
-            if(pictureIsDeleted)
-            {
-                productId = product.Id;
-            }
-
-            return productId;
+            return pictureIsDeleted;
         }
 
         public async Task<bool> UploadNewPictureToProduct(int productId, string imageUrl)
@@ -905,6 +425,25 @@ namespace DaysForGirls.Services
             bool pictureIsAdded = result > 0;
 
             return pictureIsAdded;
+        }
+
+        public async Task<bool> AddProductToSale(int productId, int saleId)
+        {
+            var productSale = this.db.ProductsSales
+                .SingleOrDefault(pS => pS.ProductId == productId
+                && pS.SaleId == saleId);
+
+            var product = this.db.Products
+                .SingleOrDefault(p => p.Id == productId);
+
+            product.Sales.Add(productSale);
+            product.IsInSale = true;
+
+            this.db.Products.Update(product);
+            int result = await this.db.SaveChangesAsync();
+            bool productIsAddedToSale = result > 0;
+
+            return productIsAddedToSale;
         }
     }
 }

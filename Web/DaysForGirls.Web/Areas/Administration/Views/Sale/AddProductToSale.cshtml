@@ -1,0 +1,156 @@
+﻿@using DaysForGirls.Web.ViewModels
+@model DaysForGirls.Web.InputModels.SaleAddProductInputModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+
+@{
+    ViewData["Title"] = "AddProduct";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    input[type=text], select {
+        width: 30%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    input[type=number], select {
+        width: 30%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    input[type=file], select {
+        width: 30%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    input[type=submit] {
+        width: 15%;
+        background-color: #cc0052;
+        color: white;
+        font-size: medium;
+        padding: 15px 20px 15px 20px;
+        margin: 10px 200px 10px 25px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+        input[type=submit]:hover {
+            background-color: #cc0052;
+        }
+
+    #row {
+        margin-left: 250px;
+        margin-right: 250px;
+        position: center;
+        border-radius: 5px;
+        background-color: #f2f2f2;
+        padding: 20px;
+    }
+
+    img{
+        width: 20%;
+    }
+</style>
+
+<h2 class="text-center">Add a Product To Sale</h2>
+
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" enctype="multipart/form-data" asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ProductId" class=""></label>
+                <select class="form-control" asp-for="ProductId">
+                    <option selected disabled>...Select Product By Name...</option>
+                    @foreach (var product in (IEnumerable<SaleAddProductViewModel>)this.ViewData["allProducts"])
+                    {
+                        <option value="@product.Name">@product.Name</option>
+                    }
+                </select>
+                <span asp-validation-for="ProductId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductId" class=""></label>
+                <select class="form-control" asp-for="ProductId">
+                    <option selected disabled>...Select Product By Picture...</option>
+                    @foreach (var product in (IEnumerable<SaleAddProductViewModel>)this.ViewData["allProducts"])
+                    {
+                        <option value="@product.Picture"><img src="@product.Picture" /></option>
+                    }
+                </select>
+                <span asp-validation-for="ProductId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductId" class=""></label>
+                <select class="form-control" asp-for="ProductId">
+                    <option selected disabled>...Select Product By Category...</option>
+                    @foreach (var product in (IEnumerable<SaleAddProductViewModel>)this.ViewData["allProducts"])
+                    {
+                        <option value="@product.Category">@product.Category</option>
+                    }
+                </select>
+                <span asp-validation-for="ProductId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductId" class=""></label>
+                <select class="form-control" asp-for="ProductId">
+                    <option selected disabled>...Select Product By Product Type...</option>
+                    @foreach (var product in (IEnumerable<SaleAddProductViewModel>)this.ViewData["allProducts"])
+                    {
+                        <option value="@product.ProductType">@product.ProductType</option>
+                    }
+                </select>
+                <span asp-validation-for="ProductId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductId" class=""></label>
+                <select class="form-control" asp-for="ProductId">
+                    <option selected disabled>...Select Product By Manufacturer...</option>
+                    @foreach (var product in (IEnumerable<SaleAddProductViewModel>)this.ViewData["allProducts"])
+                    {
+                        <option value="@product.Manufacturer">@product.Manufacturer</option>
+                    }
+                </select>
+                <span asp-validation-for="ProductId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductId" class=""></label>
+                <select class="form-control" asp-for="ProductId">
+                    <option selected disabled>...Select Product By Price...</option>
+                    @foreach (var product in (IEnumerable<SaleAddProductViewModel>)this.ViewData["allProducts"])
+                    {
+                        <option value="@product.Price">@product.Price</option>
+                    }
+                </select>
+                <span asp-validation-for="ProductId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Add Product" class="btn btn-primary" />
+                <input type="hidden" id="saleId" name="saleId" value="@Model.SaleId"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -15,5 +15,7 @@ namespace DaysForGirls.Web.ViewModels
         public string Picture { get; set; }
 
         public bool IsActive { get; set; }
+
+        public List<ProductDisplayAllViewModel> Products { get; set; }
     }
 }

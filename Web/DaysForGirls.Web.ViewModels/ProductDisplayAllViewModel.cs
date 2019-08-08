@@ -16,6 +16,8 @@ namespace DaysForGirls.Web.ViewModels
 
         public decimal Price { get; set; }
 
+        public string Picture { get; set; }
+
         public List<string> Pictures { get; set; }
 
         public int Quantity { get; set; }

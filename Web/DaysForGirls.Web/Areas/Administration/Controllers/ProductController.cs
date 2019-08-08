@@ -188,35 +188,21 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         public async Task<IActionResult> All()
         {
             var allProducts = await this.productService
-                .DisplayAll().ToListAsync();
-
-            List<ProductDisplayAllViewModel> productsToReturn = new List<ProductDisplayAllViewModel>();
-
-            foreach(var product in allProducts)
-            {
-                ProductDisplayAllViewModel pDAVM = new ProductDisplayAllViewModel
+                .DisplayAll()
+                .Select(product => new ProductDisplayAllViewModel
                 {
                     Id = product.Id,
                     Name = product.Name,
                     Category = product.Category.Name,
                     ProductType = product.ProductType.Name,
+                    Picture = product.Pictures[0].PictureUrl,
                     Price = product.Price,
                     Quantity = product.Quantity.AvailableItems,
                     IsDeleted = product.IsDeleted,
                     IsInSale = product.IsInSale
-                };
+                }).ToListAsync();
 
-                List<string> productPictures = new List<string>();
-                foreach(var pic in product.Pictures)
-                {
-                    string Url = pic.PictureUrl;
-                    productPictures.Add(Url);
-                }
-                pDAVM.Pictures = productPictures;
-                productsToReturn.Add(pDAVM);
-            }
-
-            return View(productsToReturn);
+            return View(allProducts);
         }
 
         [HttpGet("/Administration/Product/Details/{id}")]
@@ -234,42 +220,26 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                 Colour = productInDb.Colour,
                 Size = productInDb.Size,
                 Description = productInDb.Description,
+                Pictures = productInDb.Pictures
+                    .Select(p => new PictureDisplayAllViewModel
+                    {
+                        Id = p.Id,
+                        ImageUrl = p.PictureUrl
+                    }).ToList(),
                 Manufacturer = productInDb.Manufacturer.Name,
                 Price = productInDb.Price,
-                AvailableQuantity = productInDb.Quantity.AvailableItems
+                AvailableQuantity = productInDb.Quantity.AvailableItems,
+                Reviews = productInDb.Reviews
+                    .Select(pR => new CustomerReviewAllViewModel
+                    {
+                        Id = pR.Id,
+                        Title = pR.Title,
+                        Text = pR.Text,
+                        DateCreated = pR.CreatedOn,
+                        Author = pR.Author.Username
+                    })
+                    .ToList()
             };
-
-            List<PictureDisplayAllViewModel> pictures = new List<PictureDisplayAllViewModel>();
-
-            foreach(var pic in productInDb.Pictures)
-            {
-                PictureDisplayAllViewModel pDAVM = new PictureDisplayAllViewModel
-                {
-                    ImageUrl = pic.PictureUrl
-                };
-
-                pictures.Add(pDAVM);
-            }
-
-            productToDisplay.Pictures = pictures;
-
-            List<CustomerReviewAllViewModel> reviews = new List<CustomerReviewAllViewModel>();
-
-            foreach(var rev in productInDb.Reviews)
-            {
-                CustomerReviewAllViewModel cRAVM = new CustomerReviewAllViewModel
-                {
-                    Id = rev.Id,
-                    Title = rev.Title,
-                    Text = rev.Text,
-                    DateCreated = rev.CreatedOn.ToString(),
-                    Author = rev.Author.Username
-                };
-
-                reviews.Add(cRAVM);
-            }
-
-            productToDisplay.Reviews = reviews;
 
             return View(productToDisplay);
         }
@@ -403,10 +373,10 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
 
         public async Task<IActionResult> DeletePicture(string pictureUrl)
         {
-            int productId = await this.productService
+            bool pictureIsDeleted = await this.productService
                 .DeletePictureWithUrl(pictureUrl);
 
-            if(productId > 0)
+            if(pictureIsDeleted)
             {
                 return View("Administration/Product/Edit/{productId}");
             }

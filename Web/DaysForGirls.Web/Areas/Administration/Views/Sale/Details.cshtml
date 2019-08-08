@@ -14,8 +14,9 @@
             <a href="/Products/Details/@product.Id"><img src="@product.Pictures[0]"/></a>
         </div>
     }
-    <div>
-        <a href="/Sale/Edit/@Model.Id">Edit Sale</a>
-        <a href="/Sale/Delete/@Model.Id" style="padding-left:7px">Delete Sale</a>
-    </div>
+<div>
+    <a href="/Administration/Sale/AddProductToSale/@Model.Id">Add Product</a>
+    <a href="/Administration/Sale/Edit/@Model.Id">Edit Sale</a>
+    <a href="/Administration/Sale/Delete/@Model.Id" style="padding-left:7px">Delete Sale</a>
+</div>
 </div>

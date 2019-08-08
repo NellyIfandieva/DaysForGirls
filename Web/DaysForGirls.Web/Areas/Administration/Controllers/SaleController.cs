@@ -60,7 +60,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         [HttpGet("/Administration/Sale/All")]
         public async Task<IActionResult> AllAdmin()
         {
-            var allSales = await this.saleService
+            var allSales = this.saleService
                 .DisplayAllAdmin()
                 .Select(s => new SalesAllDisplayViewModelAdmin
                 {
@@ -68,9 +68,14 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                     Title = s.Title,
                     EndsOn = s.EndsOn,
                     Picture = s.Picture,
-                    IsActive = s.IsActive
+                    IsActive = s.IsActive,
+                    Products = s.Products
+                        .Select(p => new ProductDisplayAllViewModel
+                        {
+                            Id = p.Product.Id
+                        }).ToList()
                 })
-                .ToListAsync();
+                .ToList();
 
             return View(allSales);
         }
@@ -89,17 +94,17 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                 Products = sale.Products
                     .Select(p => new ProductInSaleViewModel
                     {
-                        Id = p.Id,
-                        Name = p.Name,
-                        Pictures = p.Pictures
+                        Id = p.Product.Id,
+                        Name = p.Product.Name,
+                        Pictures = p.Product.Pictures
                             .Select(pic => new PictureDisplayAllViewModel
                             {
                                 Id = pic.Id,
                                 ImageUrl = pic.PictureUrl,
                                 ProductId = p.Id
                             }).ToList(),
-                        OldPrice = p.Price,
-                        Quantity = p.Quantity.AvailableItems
+                        OldPrice = p.Product.Price,
+                        Quantity = p.Product.Quantity.AvailableItems
                     }).ToList()
             };
 
@@ -113,13 +118,13 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
             //return Redirect("/Administration/Sale/Details/{saleId}");
         }
 
-        [HttpGet("/Administration/Sale/AddExistingProduct")]
-        public async Task<IActionResult> AddExistingProduct(int saleId)
+        [HttpGet("/Administration/Sale/AddProductToSale/{saleId}")]
+        public async Task<IActionResult> AddProductToSale(int saleId)
         {
-            var allProducts = await this.productService
-                .DisplayAll().ToListAsync();
+            var allProducts = this.productService
+                .DisplayAll().ToList();
 
-            this.ViewData["products"] = allProducts
+            this.ViewData["allProducts"] = allProducts
                 .Select(p => new SaleAddProductViewModel
                 {
                     Id = p.Id,
@@ -128,72 +133,121 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                     ProductType = p.ProductType.Name,
                     Picture = p.Pictures[0].PictureUrl,
                     Price = p.Price,
+                    Manufacturer = p.Manufacturer.Name,
                     Quantity = p.Quantity.AvailableItems
-                }).ToList();
+                })
+                .OrderBy(p => p.Name);
 
             return View();
         }
 
         [HttpPost()]
-        public async Task<IActionResult> AddExistingProduct(int saleId, int productId)
+        public async Task<IActionResult> AddProductToSale(SaleAddProductInputModel model)
         {
-            SaleServiceModel sale = await this.saleService
-                .GetSaleByIdAsync(saleId);
+            var saleToAddTo = await this.saleService.GetSaleByIdAsync(model.SaleId);
 
-            ProductServiceModel product = await this.productService
-                .GetProductDetailsById(productId);
+            var productToAdd = await this.productService.GetProductDetailsById(model.ProductId);
 
-            sale.Products.Add(product);
-            
-            //TODO back to service to update the sale
-            //then savechagesasync();
-
-            return Redirect("/Sales/All");
-        }
-
-        [HttpGet("/Administration/Sale/AddNewProduct")]
-        public async Task<IActionResult> AddNewProduct()
-        {
-            await Task.Delay(0);
-            return View();
-        }
-
-        [HttpPost("/Administration/Sale/AddNewProduct")]
-        public async Task<IActionResult> AddNewProduct(int saleId, ProductCreateInputModel model)
-        {
-            ProductServiceModel product = new ProductServiceModel
+            ProductSaleServiceModel productSale = new ProductSaleServiceModel
             {
-                Name = model.Name,
-                Category = new CategoryServiceModel
-                {
-                    Name = model.Category
-                },
-                ProductType = new ProductTypeServiceModel
-                {
-                    Name = model.ProductType
-                },
-                //MainPicture = new PictureServiceModel
-                //{
-                //    PictureUrl = model.MainPicture
-                //},
-                //Pictures = new 
-                Price = model.Price,
-                Colour = model.Colour,
-                Size = model.Size,
-                Manufacturer = new ManufacturerServiceModel
-                {
-                    Name = model.Manufacturer
-                },
-                Quantity = new QuantityServiceModel
-                {
-                    AvailableItems = model.Quantity
-                }
+                Product = productToAdd,
+                Sale = saleToAddTo
             };
+            
+            saleToAddTo.Products.Add(productSale);
 
-            int productId = await this.productService.Create(product);
-            bool isAdded = await this.saleService.AddProductToSale(saleId, productId);
+            bool saleAddedProduct = await this.saleService.AddProductToSale(model.SaleId, model.ProductId);
+            bool productAddedSale = await this.productService.AddProductToSale(model.ProductId, model.SaleId);
 
-            return Redirect("/Sales/Details/");
+            return Redirect("/Administration/Sale/Details/{saleId}");
         }
+
+        //[HttpGet("/Administration/Sale/AddExistingProduct")]
+        //public async Task<IActionResult> AddExistingProduct(int saleId)
+        //{
+        //    var allProducts = await this.productService
+        //        .DisplayAll().ToListAsync();
+
+        //    this.ViewData["products"] = allProducts
+        //        .Select(p => new SaleAddProductViewModel
+        //        {
+        //            Id = p.Id,
+        //            Name = p.Name,
+        //            Category = p.Category.Name,
+        //            ProductType = p.ProductType.Name,
+        //            Picture = p.Pictures.ElementAt(0).PictureUrl,
+        //            Price = p.Price,
+        //            Quantity = p.Quantity.AvailableItems
+        //        }).ToList();
+
+        //    return View();
+        //}
+
+        //[HttpPost()]
+        //public async Task<IActionResult> AddExistingProduct(int saleId, int productId)
+        //{
+        //    SaleServiceModel sale = await this.saleService
+        //        .GetSaleByIdAsync(saleId);
+
+        //    ProductServiceModel product = await this.productService
+        //        .GetProductDetailsById(productId);
+
+        //    ProductSaleServiceModel productToAdd = new ProductSaleServiceModel
+        //    {
+        //        Product = product
+        //    };
+
+        //    sale.Products.Add(productToAdd);
+            
+        //    //TODO back to service to update the sale
+        //    //then savechagesasync();
+
+        //    return Redirect("/Sales/All");
+        //}
+
+        //[HttpGet("/Administration/Sale/AddNewProduct")]
+        //public async Task<IActionResult> AddNewProduct()
+        //{
+        //    await Task.Delay(0);
+        //    return View();
+        //}
+
+        //[HttpPost("/Administration/Sale/AddNewProduct")]
+        //public async Task<IActionResult> AddNewProduct(int saleId, ProductCreateInputModel model)
+        //{
+        //    ProductServiceModel product = new ProductServiceModel
+        //    {
+        //        Name = model.Name,
+        //        Category = new CategoryServiceModel
+        //        {
+        //            Name = model.Category
+        //        },
+        //        ProductType = new ProductTypeServiceModel
+        //        {
+        //            Name = model.ProductType
+        //        },
+        //        //MainPicture = new PictureServiceModel
+        //        //{
+        //        //    PictureUrl = model.MainPicture
+        //        //},
+        //        //Pictures = new 
+        //        Price = model.Price,
+        //        Colour = model.Colour,
+        //        Size = model.Size,
+        //        Manufacturer = new ManufacturerServiceModel
+        //        {
+        //            Name = model.Manufacturer
+        //        },
+        //        Quantity = new QuantityServiceModel
+        //        {
+        //            AvailableItems = model.Quantity
+        //        }
+        //    };
+
+        //    int productId = await this.productService.Create(product);
+        //    bool isAdded = await this.saleService.AddProductToSale(saleId, productId);
+
+        //    return Redirect("/Sales/Details/");
+        //}
     }
 }
