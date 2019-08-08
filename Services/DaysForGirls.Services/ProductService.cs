@@ -445,5 +445,23 @@ namespace DaysForGirls.Services
 
             return productIsAddedToSale;
         }
+
+        public async Task<bool> UpdateProductQuantity(int productId)
+        {
+            var product = this.db.Products
+                .SingleOrDefault(p => p.Id == productId);
+
+            if(product != null)
+            {
+                product.Quantity.AvailableItems--;
+            }
+
+            this.db.Update(product);
+            int result = await this.db.SaveChangesAsync();
+
+            bool productQuantityIsUpdated = result > 0;
+
+            return productQuantityIsUpdated;
+        }
     }
 }

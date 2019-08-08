@@ -68,7 +68,16 @@
             <p><span style="font-weight:bold">Description:</span> @Model.Description</p>
             <p><span style="font-weight:bold">Colour:</span> @Model.Colour</p>
             <p><span style="font-weight:bold">Size:</span> @Model.Size</p>
-            <p><span style="font-weight:bold">Available Quantity:</span> @Model.AvailableQuantity</p>
+            @if (Model.AvailableQuantity > 0)
+            {
+                <p><span style="font-weight:bold">Available Quantity:</span> @Model.AvailableQuantity</p>
+            }
+            else
+            {
+                <p>SOLD OUT</p>
+            }
+
+            <a href="/ShoppingCartsController/AddProduct/@Model.Id"><button>Add Product To Cart</button></a>
         </div>
 
 </div>

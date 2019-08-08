@@ -7,6 +7,6 @@ namespace DaysForGirls.Services
 {
     public interface IShoppingCartService
     {
-        Task<bool> Add(ShoppingCartItemServiceModel model);
+        Task<bool> CreateCart(string userId, ShoppingCartItemServiceModel model);
     }
 }

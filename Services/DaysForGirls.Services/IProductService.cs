@@ -19,6 +19,8 @@ namespace DaysForGirls.Services
         IQueryable<ProductServiceModel> GetAllProductsOfTypeAndCategory(
             string productTypeName, string categoryName);
 
+        Task<bool> UpdateProductQuantity(int productId);
+
         //IQueryable<ProductServiceModel> AllWeddingProducts();
 
         //IQueryable<ProductServiceModel> AllWeddingDresses();
