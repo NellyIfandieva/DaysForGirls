@@ -187,7 +187,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         [HttpGet("/Administration/Product/All")]
         public async Task<IActionResult> All()
         {
-            var allProducts = await this.productService
+            var allProducts = this.productService
                 .DisplayAll()
                 .Select(product => new ProductDisplayAllViewModel
                 {
