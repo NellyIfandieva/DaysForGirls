@@ -6,13 +6,6 @@ namespace DaysForGirls.Data.Models
 {
     public class DaysForGirlsUser : IdentityUser
     {
-        public DaysForGirlsUser()
-        {
-            this.ShoppingCarts = new HashSet<ShoppingCart>();
-            this.Orders = new HashSet<Order>();
-            this.ProductReviews = new HashSet<CustomerReview>();
-        }
-
         [Required]
         public string FirstName { get; set; }
 

@@ -7,11 +7,6 @@ namespace DaysForGirls.Data.Models
 {
     public class CustomerReview : BaseModel<int>
     {
-        public CustomerReview()
-        {
-            this.CreatedOn = DateTime.UtcNow;
-        }
-
         [Required]
         public string Title { get; set; }
 

@@ -13,6 +13,11 @@
         <div>
             <a href="/Administration/Sale/Details/@sale.Id"><img src="@sale.Picture" alt="@sale.Title"/></a>
             <h3>@sale.Title - Ends on: @sale.EndsOn.ToString() - Is Active: @sale.IsActive</h3>
+            @if(sale)
+            {
+
+            }
+            <a href="/Administration/Sale/AddExistingProduct/@sale.Id"><button>Add Product To Sale</button></a>
         </div>
     }
 </div>

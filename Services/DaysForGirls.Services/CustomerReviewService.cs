@@ -36,7 +36,8 @@ namespace DaysForGirls.Services
                 Title = model.Title,
                 Text = model.Text,
                 AuthorId = currentUser.Id,
-                ProductId = model.Product.Id
+                ProductId = model.Product.Id,
+                CreatedOn = DateTime.UtcNow
             };
 
             this.db.CustomerReviews.Add(productReview);

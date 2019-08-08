@@ -1,17 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace DaysForGirls.Data.Models
 {
     public class Sale : BaseModel<int>
     {
-        public Sale()
-        {
-            this.Products = new HashSet<ProductSale>();
-        }
-
         [Required]
         public string Title { get; set; }
 

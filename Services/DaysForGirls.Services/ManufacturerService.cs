@@ -22,7 +22,8 @@ namespace DaysForGirls.Services
         {
             Manufacturer manufacturer = new Manufacturer
             {
-                Name = manufacturerServiceModel.Name
+                Name = manufacturerServiceModel.Name,
+                Products = new HashSet<Product>()
             };
 
             this.db.Manufacturers.Add(manufacturer);

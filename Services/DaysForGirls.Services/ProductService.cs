@@ -57,7 +57,11 @@ namespace DaysForGirls.Services
                 Size = productServiceModel.Size,
                 Price = productServiceModel.Price,
                 Manufacturer = manufacturerInDb,
-                QuantityId = productQuantity.Id
+                QuantityId = productQuantity.Id,
+                Carts = new HashSet<ProductCart>(),
+                Reviews = new HashSet<CustomerReview>(),
+                Pictures = new HashSet<Picture>(),
+                Sales = new HashSet<ProductSale>()
             };
 
             foreach (PictureServiceModel picture in productServiceModel.Pictures)

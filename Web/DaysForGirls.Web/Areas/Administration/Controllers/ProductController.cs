@@ -19,6 +19,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         private readonly IManufacturerService manufacturerService;
         private readonly ICloudinaryService cloudinaryService;
         private readonly IPictureService pictureService;
+        private readonly ISaleService saleService;
 
         public ProductController(
             IProductService productService,
@@ -26,7 +27,8 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
             ICategoryService categoryService,
             IManufacturerService manufacturerService,
             ICloudinaryService cloudinaryService,
-            IPictureService pictureService)
+            IPictureService pictureService,
+            ISaleService saleService)
         {
             this.productService = productService;
             this.productTypeService = productTypeService;
@@ -34,6 +36,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
             this.manufacturerService = manufacturerService;
             this.cloudinaryService = cloudinaryService;
             this.pictureService = pictureService;
+            this.saleService = saleService;
         }
 
         [HttpGet("/Administration/Product/Create")]
@@ -64,8 +67,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                 .ToList();
 
             var allManufacturers = await this.manufacturerService
-                .DisplayAll()
-                .ToListAsync();
+                .DisplayAll().ToListAsync();
 
             this.ViewData["manufacturers"] = allManufacturers
                 .Select(m => new ProductCreateManufacturerViewModel
@@ -73,6 +75,17 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                     Name = m.Name
                 })
                 .OrderBy(man => man.Name)
+                .ToList();
+
+            var allActiveSales = await this.saleService
+                .DisplayAll().ToListAsync();
+
+            this.ViewData["sales"] = allActiveSales
+                .Select(s => new ProductCreateSaleViewModel
+                {
+                    Title = s.Title
+                })
+                .OrderBy(s => s.Title)
                 .ToList();
 
             return View();

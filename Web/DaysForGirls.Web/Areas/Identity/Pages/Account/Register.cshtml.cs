@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using DaysForGirls.Data.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
@@ -101,6 +98,9 @@ namespace DaysForGirls.Web.Areas.Identity.Pages.Account
                     Email = Input.Email,
                     PhoneNumber = Input.PhoneNumber,
                     Address = Input.Address,
+                    ShoppingCarts = new HashSet<ShoppingCart>(),
+                    Orders = new HashSet<Order>(),
+                    ProductReviews = new HashSet<CustomerReview>()
                 };
 
                 var result = await this.userManager.CreateAsync(user, Input.Password);

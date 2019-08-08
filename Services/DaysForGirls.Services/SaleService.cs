@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using DaysForGirls.Data;
 using DaysForGirls.Data.Models;
@@ -24,7 +22,8 @@ namespace DaysForGirls.Services
             {
                 Title = saleServiceModel.Title,
                 EndsOn = saleServiceModel.EndsOn,
-                Picture = saleServiceModel.Picture
+                Picture = saleServiceModel.Picture,
+                Products = new HashSet<ProductSale>()
             };
 
             this.db.Sales.Add(sale);

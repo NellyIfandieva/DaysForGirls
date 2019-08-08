@@ -114,9 +114,23 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         }
 
         [HttpGet("/Administration/Sale/AddExistingProduct")]
-        public async Task<IActionResult> AddExistingProduct()
+        public async Task<IActionResult> AddExistingProduct(int saleId)
         {
-            await Task.Delay(0);
+            var allProducts = await this.productService
+                .DisplayAll().ToListAsync();
+
+            this.ViewData["products"] = allProducts
+                .Select(p => new SaleAddProductViewModel
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Category = p.Category.Name,
+                    ProductType = p.ProductType.Name,
+                    Picture = p.Pictures[0].PictureUrl,
+                    Price = p.Price,
+                    Quantity = p.Quantity.AvailableItems
+                }).ToList();
+
             return View();
         }
 
