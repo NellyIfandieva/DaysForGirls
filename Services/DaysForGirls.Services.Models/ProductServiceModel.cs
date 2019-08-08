@@ -11,14 +11,12 @@ namespace DaysForGirls.Services.Models
 
         public int Id { get; set; }
 
-        [Required]
         public string Name { get; set; }
 
         public ProductTypeServiceModel ProductType { get; set; }
 
         public CategoryServiceModel Category { get; set; }
 
-        [Required]
         public string Description { get; set; }
 
         public List<PictureServiceModel> Pictures { get; set; }
@@ -26,17 +24,13 @@ namespace DaysForGirls.Services.Models
         [Required]
         public string Colour { get; set; }
 
-        [Required]
         public string Size { get; set; }
 
-        [Range(typeof(decimal), MinPrice, MaxPrice)]
         public decimal Price { get; set; }
 
         public ManufacturerServiceModel Manufacturer { get; set; }
 
         public QuantityServiceModel Quantity { get; set; }
-
-        //public bool IsAvailable => this.Quantity.AvailableItems > 0;
 
         public List<CustomerReviewServiceModel> Reviews { get; set; }
 

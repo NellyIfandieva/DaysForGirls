@@ -6,13 +6,13 @@ namespace DaysForGirls.Services
 {
     public interface IProductService
     {
-        Task<int> Create(ProductServiceModel productServiceModel);
+        //Task<int> Create(ProductServiceModel productServiceModel);
 
         IQueryable<ProductServiceModel> DisplayAll();
 
         Task<ProductServiceModel> GetProductDetailsById(int Id);
 
-        Task<bool> DeleteProductById(int id);
+        //Task<bool> DeleteProductById(int id);
 
         IQueryable<ProductServiceModel> GetAllProductsOfCategory(string categoryName);
 
@@ -47,14 +47,14 @@ namespace DaysForGirls.Services
 
         Task<bool> AddReviewToProductByProductIdAsync(int productId, int reviewId);
 
-        Task<bool> Edit(int productId, ProductServiceModel model);
+        //Task<bool> Edit(int productId, ProductServiceModel model);
 
-        Task<bool> AddProductToSale(int productId, int saleId);
+        //Task<bool> AddProductToSale(int productId, int saleId);
 
         //IQueryable<ProductServiceModel> GetAllProductsByCategoryAndType(string productType, string category);
 
-        Task<bool> DeletePictureWithUrl(string pictureUrl);
+        //Task<bool> DeletePictureWithUrl(string pictureUrl);
 
-        Task<bool> UploadNewPictureToProduct(int productId, string imageUrl);
+        //Task<bool> UploadNewPictureToProduct(int productId, string imageUrl);
     }
 }

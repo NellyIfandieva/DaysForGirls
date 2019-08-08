@@ -12,72 +12,15 @@ namespace DaysForGirls.Services
     public class ProductService : IProductService
     {
         private readonly DaysForGirlsDbContext db;
-        private readonly IQuantityService quantityService;
+        private readonly IAdminService adminService;
         private readonly IPictureService pictureService;
 
         public ProductService(
             DaysForGirlsDbContext db,
-            IQuantityService quantityService,
             IPictureService pictureService)
         {
             this.db = db;
-            this.quantityService = quantityService;
             this.pictureService = pictureService;
-        }
-
-        /* instead of bool this method should actually return
-        * Task<ProductServiceModel> with the
-        * serviceModel Id already inserted
-        */
-        public async Task<int> Create(ProductServiceModel productServiceModel)
-        {
-            ProductType productTypeInDb = db.ProductTypes
-                .SingleOrDefault(pT => pT.Name == productServiceModel.ProductType.Name);
-
-            Category categoryInDb = this.db.Categories
-                .SingleOrDefault(cat => cat.Name == productServiceModel.Category.Name);
-
-            Manufacturer manufacturerInDb = this.db.Manufacturers
-                .SingleOrDefault(man => man.Name == productServiceModel.Manufacturer.Name);
-
-            QuantityServiceModel productQuantity = new QuantityServiceModel
-            {
-                AvailableItems = productServiceModel.Quantity.AvailableItems
-            };
-
-            productQuantity = await this.quantityService.Create(productQuantity);
-
-            Product product = new Product
-            {
-                Name = productServiceModel.Name,
-                ProductType = productTypeInDb,
-                Category = categoryInDb,
-                Description = productServiceModel.Description,
-                Colour = productServiceModel.Colour,
-                Size = productServiceModel.Size,
-                Price = productServiceModel.Price,
-                Manufacturer = manufacturerInDb,
-                QuantityId = productQuantity.Id,
-                Carts = new List<ProductCart>(),
-                Reviews = new List<CustomerReview>(),
-                Pictures = new List<Picture>(),
-                Sales = new List<ProductSale>()
-            };
-
-            var pictures = productServiceModel.Pictures
-                .Select(p => new Picture
-                {
-                    PictureUrl = p.PictureUrl
-                }).ToList();
-
-            product.Pictures = pictures;
-
-            this.db.Products.Add(product);
-            int result = await db.SaveChangesAsync();
-
-            int productId = product.Id;
-
-            return productId;
         }
 
         public async Task<ProductServiceModel> GetProductDetailsById(int productId)
@@ -210,23 +153,23 @@ namespace DaysForGirls.Services
             return allProducts;
         }
 
-        public async Task<bool> DeleteProductById(int id)
-        {
-            var productToDelete = await this.db.Products
-                .SingleOrDefaultAsync(product => product.Id == id);
+        //public async Task<bool> DeleteProductById(int id)
+        //{
+        //    var productToDelete = await this.db.Products
+        //        .SingleOrDefaultAsync(product => product.Id == id);
 
-            productToDelete.IsDeleted = true;
+        //    productToDelete.IsDeleted = true;
 
-            var picturesOfProduct = this.db.Pictures
-                .Where(p => p.ProductId == productToDelete.Id)
-                .ForEachAsync(p => p.IsDeleted = true);
+        //    var picturesOfProduct = this.db.Pictures
+        //        .Where(p => p.ProductId == productToDelete.Id)
+        //        .ForEachAsync(p => p.IsDeleted = true);
 
-            this.db.UpdateRange(productToDelete, picturesOfProduct);
-            int result = await this.db.SaveChangesAsync();
-            bool productAndItsPicturesAreDeleted = result > 0;
+        //    this.db.UpdateRange(productToDelete, picturesOfProduct);
+        //    int result = await this.db.SaveChangesAsync();
+        //    bool productAndItsPicturesAreDeleted = result > 0;
 
-            return productAndItsPicturesAreDeleted;
-        }
+        //    return productAndItsPicturesAreDeleted;
+        //}
 
         public IQueryable<ProductServiceModel> GetAllProductsOfCategory(string categoryName)
         {
@@ -346,47 +289,47 @@ namespace DaysForGirls.Services
             return result > 0;
         }
 
-        public async Task<bool> Edit(int productId, ProductServiceModel model)
-        {
-            ProductType productTypeOfProduct = await this.db.ProductTypes
-                .SingleOrDefaultAsync(pT => pT.Name == model.ProductType.Name);
+        //public async Task<bool> Edit(int productId, ProductServiceModel model)
+        //{
+        //    ProductType productTypeOfProduct = await this.db.ProductTypes
+        //        .SingleOrDefaultAsync(pT => pT.Name == model.ProductType.Name);
 
-            Category categoryOfProduct = await this.db.Categories
-                .SingleOrDefaultAsync(c => c.Name == model.Category.Name);
+        //    Category categoryOfProduct = await this.db.Categories
+        //        .SingleOrDefaultAsync(c => c.Name == model.Category.Name);
 
-            Manufacturer manufacturerOfProduct = await this.db.Manufacturers
-                .SingleOrDefaultAsync(m => m.Name == model.Manufacturer.Name);
+        //    Manufacturer manufacturerOfProduct = await this.db.Manufacturers
+        //        .SingleOrDefaultAsync(m => m.Name == model.Manufacturer.Name);
 
-            //if (productTypeFromDb == null)
-            //{
-            //    throw new ArgumentNullException(nameof(productTypeFromDb));
-            //}
+        //    //if (productTypeFromDb == null)
+        //    //{
+        //    //    throw new ArgumentNullException(nameof(productTypeFromDb));
+        //    //}
 
-            Product productInDb = await this.db.Products
-                .SingleOrDefaultAsync(p => p.Id == productId);
+        //    Product productInDb = await this.db.Products
+        //        .SingleOrDefaultAsync(p => p.Id == productId);
 
-            //if (productFromDb == null)
-            //{
-            //    throw new ArgumentNullException(nameof(productFromDb));
-            //}
+        //    //if (productFromDb == null)
+        //    //{
+        //    //    throw new ArgumentNullException(nameof(productFromDb));
+        //    //}
 
-            productInDb.Name = model.Name;
-            productInDb.ProductType = productTypeOfProduct;
-            productInDb.Category = categoryOfProduct;
-            productInDb.Description = model.Description;
-            productInDb.Colour = model.Colour;
-            productInDb.Size = model.Size;
-            productInDb.Price = model.Price;
-            productInDb.Manufacturer = manufacturerOfProduct;
-            productInDb.QuantityId = model.Quantity.Id;
+        //    productInDb.Name = model.Name;
+        //    productInDb.ProductType = productTypeOfProduct;
+        //    productInDb.Category = categoryOfProduct;
+        //    productInDb.Description = model.Description;
+        //    productInDb.Colour = model.Colour;
+        //    productInDb.Size = model.Size;
+        //    productInDb.Price = model.Price;
+        //    productInDb.Manufacturer = manufacturerOfProduct;
+        //    productInDb.QuantityId = model.Quantity.Id;
 
-            this.db.Products.Update(productInDb);
-            int result = await db.SaveChangesAsync();
+        //    this.db.Products.Update(productInDb);
+        //    int result = await db.SaveChangesAsync();
 
-            bool editsApplied = result > 0;
+        //    bool editsApplied = result > 0;
 
-            return editsApplied;
-        }
+        //    return editsApplied;
+        //}
 
         public async Task<bool> DeletePictureWithUrl(string pictureUrl)
         {
@@ -408,43 +351,43 @@ namespace DaysForGirls.Services
             return pictureIsDeleted;
         }
 
-        public async Task<bool> UploadNewPictureToProduct(int productId, string imageUrl)
-        {
-            var productInDb = await this.db.Products.
-                SingleOrDefaultAsync(p => p.Id == productId);
+        //public async Task<bool> UploadNewPictureToProduct(int productId, string imageUrl)
+        //{
+        //var productInDb = await this.db.Products.
+        //    SingleOrDefaultAsync(p => p.Id == productId);
 
-            Picture newPicture = new Picture
-            {
-                PictureUrl = imageUrl
-            };
+        //Picture newPicture = new Picture
+        //{
+        //    PictureUrl = imageUrl
+        //};
 
-            productInDb.Pictures.Add(newPicture);
-            this.db.Update(productInDb);
-            int result = await this.db.SaveChangesAsync();
+        //productInDb.Pictures.Add(newPicture);
+        //    this.db.Update(productInDb);
+        //    int result = await this.db.SaveChangesAsync();
 
-            bool pictureIsAdded = result > 0;
+        //bool pictureIsAdded = result > 0;
 
-            return pictureIsAdded;
-        }
+        //    return pictureIsAdded;
+        //}
 
-        public async Task<bool> AddProductToSale(int productId, int saleId)
-        {
-            var productSale = this.db.ProductsSales
-                .SingleOrDefault(pS => pS.ProductId == productId
-                && pS.SaleId == saleId);
+        //public async Task<bool> AddProductToSale(int productId, int saleId)
+        //{
+        //    var productSale = this.db.ProductsSales
+        //        .SingleOrDefault(pS => pS.ProductId == productId
+        //        && pS.SaleId == saleId);
 
-            var product = this.db.Products
-                .SingleOrDefault(p => p.Id == productId);
+        //    var product = this.db.Products
+        //        .SingleOrDefault(p => p.Id == productId);
 
-            product.Sales.Add(productSale);
-            product.IsInSale = true;
+        //    product.Sales.Add(productSale);
+        //    product.IsInSale = true;
 
-            this.db.Products.Update(product);
-            int result = await this.db.SaveChangesAsync();
-            bool productIsAddedToSale = result > 0;
+        //    this.db.Products.Update(product);
+        //    int result = await this.db.SaveChangesAsync();
+        //    bool productIsAddedToSale = result > 0;
 
-            return productIsAddedToSale;
-        }
+        //    return productIsAddedToSale;
+        //}
 
         public async Task<bool> UpdateProductQuantity(int productId)
         {

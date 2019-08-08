@@ -59,7 +59,7 @@ namespace DaysForGirls.Web
             //services.AddTransient<SignInManager<IdentityUser>>();
             //services.AddTransient<UserManager<IdentityUser>>();
 
-            //services.AddTransient<IAccessoryService, AccessoryService>();
+            services.AddTransient<IAdminService, AdminService>();
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<ICloudinaryService, CloudinaryService>();
             services.AddTransient<ICustomerReviewService, CustomerReviewService>();

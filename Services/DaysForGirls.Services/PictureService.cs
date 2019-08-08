@@ -97,5 +97,49 @@ namespace DaysForGirls.Services
 
             return result == 1;
         }
+
+        public async Task<bool> DeletePicturesOfDeletedProductAsync(int productId)
+        {
+            var picturesToDelete = await this.db.Pictures
+                .Where(p => p.ProductId == productId)
+                .ToListAsync();
+
+            foreach(var picture in picturesToDelete)
+            {
+                picture.IsDeleted = true;
+            }
+
+            this.db.UpdateRange(picturesToDelete);
+            int result = await this.db.SaveChangesAsync();
+
+            bool picturesAreDeleted = result > 0;
+
+            return picturesAreDeleted;
+        }
+
+        public Task<bool> DeletePicturesOfDeletedProduct(int productId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<bool> DeletePictureWithUrlAsync(string pictureUrl)
+        {
+            Picture pictureToDelete = await this.db.Pictures
+                .SingleOrDefaultAsync(pic => pic.PictureUrl == pictureUrl);
+
+            var product = await this.db.Products
+                .SingleOrDefaultAsync(p => p.Id == pictureToDelete.Product.Id);
+
+            product.Pictures.Remove(pictureToDelete);
+
+            pictureToDelete.IsDeleted = true;
+
+            this.db.UpdateRange(pictureToDelete, product);
+
+            int result = await this.db.SaveChangesAsync();
+            bool pictureIsDeleted = result > 0;
+
+            return pictureIsDeleted;
+        }
     }
 }

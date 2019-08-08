@@ -13,7 +13,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
 {
     public class ProductController : AdminController
     {
-        private readonly IProductService productService;
+        private readonly IAdminService adminService;
         private readonly IProductTypeService productTypeService;
         private readonly ICategoryService categoryService;
         private readonly IManufacturerService manufacturerService;
@@ -22,7 +22,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         private readonly ISaleService saleService;
 
         public ProductController(
-            IProductService productService,
+            IAdminService adminService,
             IProductTypeService productTypeService,
             ICategoryService categoryService,
             IManufacturerService manufacturerService,
@@ -30,7 +30,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
             IPictureService pictureService,
             ISaleService saleService)
         {
-            this.productService = productService;
+            this.adminService = adminService;
             this.productTypeService = productTypeService;
             this.categoryService = categoryService;
             this.manufacturerService = manufacturerService;
@@ -98,9 +98,6 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
             {
                 return this.View(model);
             }
-            //TODO Re-do the productType, category and Manuf
-            //Add picture to pSM
-            //TODO ModelState Validation
 
             var productType = new ProductTypeServiceModel
             {
@@ -118,16 +115,8 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
             };
 
             List<string> imageUrls = new List<string>();
-            List<PictureServiceModel> pictureServiceModels = new List<PictureServiceModel>();
 
             int imageNameExtension = 1;
-
-            //string mainImageUrl = await this.cloudinaryService
-            //    .UploadPictureForProductAsync(model.MainPicture, model.Name + "_Main");
-            //PictureServiceModel picServModel = new PictureServiceModel { PictureUrl = mainImageUrl };
-            //pictureServiceModels.Add(picServModel);
-
-            //imageUrls.Add(mainImageUrl);
 
             foreach(var iFormFile in model.Pictures)
             {
@@ -135,9 +124,6 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                 iFormFile, model.Name + "_" + imageNameExtension++);
 
                 imageUrls.Add(imageUrl);
-
-                //PictureServiceModel pictureServiceModel = new PictureServiceModel { PictureUrl = imageUrl};
-                //pictureServiceModels.Add(pictureServiceModel);
             }
 
             ProductServiceModel productServiceModel = new ProductServiceModel
@@ -156,48 +142,30 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                 }
             };
 
-            //productServiceModel.MainPicture = new PictureServiceModel
-            //{
-            //    PictureUrl = imageUrls[0]
-            //};
-
-            //List<PictureServiceModel> pCMs = new List<PictureServiceModel>();
-
-            for(int i = 0; i < imageUrls.Count; i++)
+            productServiceModel.Pictures = imageUrls.Select(image => new PictureServiceModel
             {
-                PictureServiceModel pSM = new PictureServiceModel
-                {
-                    PictureUrl = imageUrls[i]
-                };
+                PictureUrl = image
+            })
+            .ToList();
 
-                pictureServiceModels.Add(pSM);
-            }
+            int productId = await this.adminService.CreateAsync(productServiceModel);
 
-            productServiceModel.Pictures = pictureServiceModels;
-
-            int productId = await this.productService.Create(productServiceModel);
-
-            //bool isUpdated = await this.pictureService.UpdatePictureInfoAsync(pictureInDbId, productId);
-            //when i'm done re-doing the service (and IService)
-            //productServiceModel = await this.productService.Create(productServiceModel);
-            //bool picturesAddedToDb = await this.pictureService.Create(pictureServiceModels, productId);
             return Redirect("/Administration/Product/All");
         }
 
         [HttpGet("/Administration/Product/All")]
         public async Task<IActionResult> All()
         {
-            var allProducts = this.productService
+            var allProducts = this.adminService
                 .DisplayAll()
-                .Select(product => new ProductDisplayAllViewModel
+                .Select(product => new AdminDisplayAllViewModel
                 {
                     Id = product.Id,
                     Name = product.Name,
                     Category = product.Category.Name,
-                    ProductType = product.ProductType.Name,
-                    Picture = product.Pictures[0].PictureUrl,
+                    Picture = product.Picture.PictureUrl,
                     Price = product.Price,
-                    Quantity = product.Quantity.AvailableItems,
+                    Manufacturer = product.Manufacturer.Name,
                     IsDeleted = product.IsDeleted,
                     IsInSale = product.IsInSale
                 }).ToListAsync();
@@ -208,8 +176,8 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         [HttpGet("/Administration/Product/Details/{id}")]
         public async Task<IActionResult> Details(int id)
         {
-            ProductServiceModel productInDb = await this.productService
-                .GetProductDetailsById(id);
+            ProductServiceModel productInDb = await this.adminService
+                .GetProductByIdAsync(id);
 
             ProductDetailsViewModel productToDisplay = new ProductDetailsViewModel
             {
@@ -248,7 +216,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         public async Task<IActionResult> Edit(int productId)
         {
             var productWithId = 
-                await this.productService.GetProductDetailsById(productId);
+                await this.adminService.GetProductByIdAsync(productId);
 
             var currentProductPictures = await this.pictureService
                 .GetPicturesOfProductByProductId(productId).ToListAsync();
@@ -366,17 +334,17 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                 }
             };
 
-            bool productIsEditedInDb = await this.productService.Edit(productId, productWithEdits);
+            bool productIsEditedInDb = await this.adminService.EditAsync(productId, productWithEdits);
 
             return this.Redirect("/");
         }
 
         public async Task<IActionResult> DeletePicture(string pictureUrl)
         {
-            bool pictureIsDeleted = await this.productService
-                .DeletePictureWithUrl(pictureUrl);
+            bool pictureIsDeleted = await this.pictureService
+                .DeletePictureWithUrlAsync(pictureUrl);
 
-            if(pictureIsDeleted)
+            if(pictureIsDeleted == false)
             {
                 return View("Administration/Product/Edit/{productId}");
             }
@@ -393,7 +361,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
             string imageUrl = await this.cloudinaryService.UploadPictureForProductAsync(
                 model.NewPicture, name.ToString());
 
-            bool imageIsAdded = await this.productService.UploadNewPictureToProduct(productId, imageUrl);
+            bool imageIsAdded = await this.adminService.UploadNewPictureToProductAsync(productId, imageUrl);
 
             return Redirect("/Administration/Product/Edit/{productId}");
         }
@@ -401,7 +369,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         [HttpGet("/Administration/Product/Delete/{productId}")]
         public async Task<IActionResult> Delete(int productId)
         {
-            bool isDeleted = await this.productService.DeleteProductById(productId);
+            bool isDeleted = await this.adminService.DeleteProductByIdAsync(productId);
 
             return Redirect("/Administration/Product/All");
         }
