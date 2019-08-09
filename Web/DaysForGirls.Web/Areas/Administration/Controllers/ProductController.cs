@@ -168,8 +168,9 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                     Manufacturer = product.Manufacturer.Name,
                     IsDeleted = product.IsDeleted,
                     IsInSale = product.IsInSale
-                }).ToListAsync();
+                }).ToList();
 
+            await Task.Delay(0);
             return View(allProducts);
         }
 
@@ -204,7 +205,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                         Title = pR.Title,
                         Text = pR.Text,
                         DateCreated = pR.CreatedOn,
-                        Author = pR.Author.Username
+                        Author = pR.AuthorUsername
                     })
                     .ToList()
             };

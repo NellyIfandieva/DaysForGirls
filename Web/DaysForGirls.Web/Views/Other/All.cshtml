@@ -7,32 +7,28 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+    <style>
+        #product-pres {
+            margin-top: 10px;
+            margin-left: 95px;
+            display: inline-block;
+            float: left;
+        }
+
+            #product-pres img {
+                width: 30%;
+            }
+    </style>
+
 <h1 class="text-center">Clothing and Accessories for Special Occasions </h1>
 
-<div @*id="products" class="mt-3"*@>
-    @for (int i = 0; i < Model.Count(); i += 4)
+<div>
+    @foreach (var product in Model)
     {
-        <div @*class="products-row row d-flex justify-content-around my-5"*@>
-            @for (int j = i; j < i + 4; j++)
-            {
-                if (j < Model.Count())
-                {
-                    <div @*class="product col-md-2"*@>
-                        <div @*class="image-holder d-flex justify-content-center"*@>
-                            <a href="/Products/Details/@Model[j].Id">
-                                <img class="image-thumbnail product-image" src="@Model[j].Pictures[0]" alt="@Model[j].Name">
-                            </a>
-                        </div>
-                        <h5 class="text-primary text-center mt-3">@Model[j].Name</h5>
-                        <h5 class="text-primary text-center mt-3">Price: &euro;@Model[j].Price.ToString("F2")</h5>
-                    </div>
-                }
-                else
-                {
-                    <div class="product col-md-2 empty">
-                    </div>
-                }
-            }
+        <div id="product-pres">
+            <a href="/Products/Details/@product.Id"><img src="@product.Pictures[0]" alt="@product.Name" /></a>
+            <p class="text-primary text-center mt-3">@product.Name</p>
+            <p class="text-primary text-center mt-3">Price: &euro;@product.Price.ToString("F2")</p>
         </div>
     }
 </div>

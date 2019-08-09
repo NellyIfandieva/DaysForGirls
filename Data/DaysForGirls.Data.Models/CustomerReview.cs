@@ -13,15 +13,15 @@ namespace DaysForGirls.Data.Models
         [Required]
         public string Text { get; set; }
 
+        [Required]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+        [Display(Name = "Created On")]
+        public DateTime CreatedOn { get; set; }
+
         public string AuthorId { get; set; }
         public DaysForGirlsUser Author { get; set; }
 
         public int ProductId { get; set; }
         public Product Product { get; set; }
-
-        [Required]
-        [DataType(DataType.Date)]
-        [Display(Name = "Created On")]
-        public DateTime CreatedOn { get; set; }
     }
 }

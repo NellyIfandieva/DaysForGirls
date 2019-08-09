@@ -92,7 +92,7 @@ namespace DaysForGirls.Web.Controllers
                     Id = r.Id,
                     Title = r.Title,
                     Text = r.Text,
-                    Author = r.Author.UserName,
+                    Author = r.AuthorUsername,
                     DateCreated = r.CreatedOn
                 })
                 .ToList();

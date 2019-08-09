@@ -29,13 +29,13 @@ namespace DaysForGirls.Services
         public async Task<bool> CreateAsync(CustomerReviewServiceModel model, int productId)
         {
             DaysForGirlsUser currentUser = 
-                await this.userManager.FindByNameAsync(model.Author.Username);
+                await this.userManager.FindByNameAsync(model.AuthorUsername);
 
             CustomerReview productReview = new CustomerReview
             {
                 Title = model.Title,
                 Text = model.Text,
-                AuthorId = currentUser.Id,
+                Author = currentUser,
                 ProductId = model.Product.Id,
                 CreatedOn = DateTime.UtcNow
             };

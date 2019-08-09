@@ -109,10 +109,8 @@ namespace DaysForGirls.Services
                         Id = r.Id,
                         Title = r.Title,
                         Text = r.Text,
-                        Author = new DaysForGirlsUserServiceModel
-                        {
-                            Username = r.Author.UserName
-                        }
+                        CreatedOn = r.CreatedOn.ToString("dddd dd MMMM yyyy"),
+                        AuthorUsername = r.Author.UserName
                     }).ToList()
             };
 
@@ -146,8 +144,7 @@ namespace DaysForGirls.Services
                             Id = pU.Id,
                             PictureUrl = pU.PictureUrl
                         }).ToList(),
-                     IsDeleted = p.IsDeleted,
-                     IsInSale = p.IsInSale
+                     IsDeleted = p.IsDeleted
                  });
 
             return allProducts;
@@ -212,10 +209,7 @@ namespace DaysForGirls.Services
                             Id = pR.Id,
                             Title = pR.Title,
                             Text = pR.Text,
-                            Author = new DaysForGirlsUserServiceModel
-                            {
-                                Username = pR.Author.UserName
-                            }
+                            AuthorUsername = pR.Author.UserName
                         }).ToList()
                 });
 
@@ -264,10 +258,8 @@ namespace DaysForGirls.Services
                             Id = pR.Id,
                             Title = pR.Title,
                             Text = pR.Text,
-                            Author = new DaysForGirlsUserServiceModel
-                            {
-                                Username = pR.Author.UserName
-                            }
+                            CreatedOn = pR.CreatedOn.ToString("dddd dd MMMM yyyy"),
+                            AuthorUsername = pR.Author.UserName
                         }).ToList()
                 });
 

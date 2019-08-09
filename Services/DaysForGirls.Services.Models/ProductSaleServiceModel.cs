@@ -8,8 +8,10 @@ namespace DaysForGirls.Services.Models
     {
         public int Id { get; set; }
 
+        public int ProductId { get; set; }
         public ProductServiceModel Product { get; set; }
 
+        public int SaleId { get; set; }
         public SaleServiceModel Sale { get; set; }
     }
 }

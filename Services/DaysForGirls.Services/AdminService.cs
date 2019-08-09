@@ -1,6 +1,7 @@
 ﻿using DaysForGirls.Data;
 using DaysForGirls.Data.Models;
 using DaysForGirls.Services.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -93,8 +94,42 @@ namespace DaysForGirls.Services
 
         public async Task<ProductServiceModel> GetProductByIdAsync(int productId)
         {
-            var product = this.db.Products
-                .SingleOrDefault(p => p.Id == productId);
+            var product = await this.db.Products
+                .Include(p => p.Category)
+                .Include(p => p.ProductType)
+                .Include(p => p.Manufacturer)
+                .Include(p => p.Quantity)
+                .SingleOrDefaultAsync(p => p.Id == productId);
+
+            var productPictures = await this.db.Pictures
+                .Where(pic => pic.ProductId == product.Id)
+                    .Select(pic => new PictureServiceModel
+                    {
+                        Id = pic.Id,
+                        PictureUrl = pic.PictureUrl
+                    }).ToListAsync();
+
+            var productReviews = await this.db.CustomerReviews
+                .Where(cR => cR.ProductId == product.Id)
+                .Select(pR => new CustomerReviewServiceModel
+                {
+                    Id = pR.Id,
+                    Title = pR.Title,
+                    Text = pR.Text,
+                    CreatedOn = pR.CreatedOn.ToString("dddd, dd MMMM yyyy"),
+                    AuthorUsername = pR.Author.UserName
+                }).ToListAsync();
+
+            var productSales = await this.db.ProductsSales
+                .Where(s => s.ProductId == product.Id)
+                .Select(s => new ProductSaleServiceModel
+                {
+                    Id = s.Id,
+                    SaleId = s.SaleId
+                }).ToListAsync();
+
+            var productCategory = await this.db.Categories
+                .SingleOrDefaultAsync(c => c.Id == product.CategoryId);
 
             ProductServiceModel productToReturn = new ProductServiceModel
             {
@@ -102,19 +137,14 @@ namespace DaysForGirls.Services
                 Name = product.Name,
                 ProductType = new ProductTypeServiceModel
                 {
-                    Name = product.Name
+                    Name = product.ProductType.Name
                 },
                 Category = new CategoryServiceModel
                 {
-                    Name = product.Name
+                    Name = product.Category.Name
                 },
                 Description = product.Description,
-                Pictures = product.Pictures
-                    .Select(pic => new PictureServiceModel
-                    {
-                        Id = pic.Id,
-                        PictureUrl = pic.PictureUrl
-                    }).ToList(),
+                Pictures = productPictures,
                 Colour = product.Colour,
                 Size = product.Size,
                 Price = product.Price,
@@ -126,21 +156,9 @@ namespace DaysForGirls.Services
                 {
                     AvailableItems = product.Quantity.AvailableItems
                 },
-                Reviews = product.Reviews
-                    .Select(pR => new CustomerReviewServiceModel
-                    {
-                        Id = pR.Id,
-                        Title = pR.Title,
-                        Text = pR.Text,
-                        CreatedOn = pR.CreatedOn.ToString(),
-                        Author = new DaysForGirlsUserServiceModel
-                        {
-                            Username = pR.Author.FullName
-                        }
-                    })
-                    .ToList(),
+                Reviews = productReviews,
                 IsDeleted = product.IsDeleted,
-                IsInSale = product.IsInSale
+                Sales = productSales
             };
 
             await Task.Delay(0);

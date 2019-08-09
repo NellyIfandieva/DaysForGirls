@@ -1,4 +1,4 @@
-﻿@model IEnumerable<DaysForGirls.Web.ViewModels.ProductDisplayAllViewModel>
+﻿@model List<DaysForGirls.Web.ViewModels.AdminDisplayAllViewModel>
 
 @{
     ViewData["Title"] = "All";
@@ -6,8 +6,14 @@
 }
 
 <style>
-    img{
-        width: 20%;
+    #product-holder{
+        margin-top: 10px;
+        margin-left: 95px;
+        display: inline-block;
+        float: left;
+    }
+    #product-holder img{
+        width: 30%;
     }
 </style>
 
@@ -16,16 +22,19 @@
 <div>
     @foreach(var product in Model)
     {
-        <div>
-            <a href="/Administration/Product/Details/@product.Id"><img src="@product.Pictures[0]" alt="@product.Name"/></a>
+        <div id="product-holder">
+            <a href="/Administration/Product/Details/@product.Id"><img src="@product.Picture" alt="@product.Name" /></a>
             @if (product.IsDeleted)
             {
                 <h4 style="color: crimson; font-weight: bolder">DELETED</h4>
             }
+            @if (product.IsInSale)
+            {
+                <h4 style="color: crimson; font-weight: bolder">In Sale</h4>
+            }
             <div>
-                <a href="/Administration/Product/Details/@product.Id"><h4><span style="font-weight: bold">Name:</span> @product.Name</h4></a>
-                <a href="/Administration/Category/Details/@product.Category"><h4><span style="font-weight: bold">Category:</span> @product.Category</h4></a>
-                <a href="/Administration/ProductType/Details/@product.ProductType"><h4><span style="font-weight: bold">Product Type:</span>  @product.ProductType</h4></a>
+                <a href="/Administration/Product/Details/@product.Id"><h4>@product.Name by @product.Manufacturer</h4></a>
+                <a href="/Administration/Category/Details/@product.Category"><h4>@product.Category , &euro;@product.Price</h4></a>
             </div>
             <div>
                 <a href="/Administration/Product/Edit/@product.Id">Edit Product</a>
@@ -35,5 +44,3 @@
         </div>
     }
 </div>
-
-

@@ -9,6 +9,13 @@ namespace DaysForGirls.Services.Models
         private const string MinPrice = "0.00";
         private const string MaxPrice = "10000.00";
 
+        public ProductServiceModel()
+        {
+            this.Pictures = new List<PictureServiceModel>();
+            this.Reviews = new List<CustomerReviewServiceModel>();
+            this.Sales = new List<ProductSaleServiceModel>();
+        }
+
         public int Id { get; set; }
 
         public string Name { get; set; }
@@ -21,7 +28,6 @@ namespace DaysForGirls.Services.Models
 
         public List<PictureServiceModel> Pictures { get; set; }
 
-        [Required]
         public string Colour { get; set; }
 
         public string Size { get; set; }
@@ -36,7 +42,9 @@ namespace DaysForGirls.Services.Models
 
         public bool IsDeleted { get; set; }
 
-        public bool IsInSale { get; set; }
+        public List<ProductSaleServiceModel> Sales { get; set; }
+
+        public bool IsInSale => this.Sales.Count > 0;
 
         //public List<ProductCart> Carts { get; set; }
 

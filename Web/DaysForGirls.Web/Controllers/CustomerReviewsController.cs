@@ -52,10 +52,7 @@ namespace DaysForGirls.Web.Controllers
             {
                 Title = model.Title,
                 Text = model.Text,
-                Author = new DaysForGirlsUserServiceModel
-                {
-                    Username = username
-                },
+                AuthorUsername = username,
                 Product = new ProductServiceModel
                 {
                     Id = model.ProductId

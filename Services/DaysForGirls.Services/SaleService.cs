@@ -117,11 +117,8 @@ namespace DaysForGirls.Services
                                 Id = pR.Id,
                                 Title = pR.Title,
                                 Text = pR.Text,
-                                CreatedOn = pR.CreatedOn.ToString(),
-                                Author = new DaysForGirlsUserServiceModel
-                                {
-                                    Username = pR.Author.UserName
-                                }
+                                CreatedOn = pR.CreatedOn.ToString("dddd dd MMMM yyyy"),
+                                AuthorUsername = pR.Author.UserName
                             }).ToList()
                     }
                 })
