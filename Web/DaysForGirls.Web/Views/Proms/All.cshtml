@@ -24,7 +24,7 @@
 <div>
     @foreach (var product in Model)
     {
-        <div id="product-pres">
+        <div id="prom-product-pres">
             <a href="/Products/Details/@product.Id"><img src="@product.Picture" alt="@product.Name" /></a>
             <p class="text-primary text-center mt-3">@product.Name</p>
             <p class="text-primary text-center mt-3">Price: &euro;@product.Price</p>

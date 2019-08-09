@@ -6,7 +6,7 @@ namespace DaysForGirls.Services
 {
     public interface IProductService
     {
-        IQueryable<ProductServiceModel> DisplayAll();
+        IQueryable<ProductDisplayAllServiceModel> DisplayAll();
 
         Task<ProductServiceModel> GetProductDetailsById(int Id);
 

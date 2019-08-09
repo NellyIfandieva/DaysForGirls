@@ -14,7 +14,7 @@
         <div class="w3-bar" style="background-color: #cc0052; color: white;">
             <a href="/" class="w3-bar-item w3-button"><img src="~/Images/Logo.jpg" alt="DaysForGirls" style="width:100%;max-width:200px" /></a>
             <input type="text" class="w3-bar-item w3-input w3-center" placeholder="Search..">
-            <a href="#" class="w3-bar-item w3-button w3-pink">Go</a>
+            <a style="margin-top: 8px" href="#" class="w3-bar-item w3-button w3-pink">Go</a>
             @if (this.User.Identity.IsAuthenticated)
             {
                 if (this.User.IsInRole("Admin"))

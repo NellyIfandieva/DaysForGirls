@@ -7,14 +7,14 @@
 }
 
 <style>
-    #prom-product-pres {
+    #other-product-pres {
         margin-top: 10px;
         margin-left: 95px;
         display: inline-block;
         float: left;
     }
 
-        #prom-product-pres img {
+        #other-product-pres img {
             width: 30%;
         }
 </style>
@@ -24,7 +24,7 @@
 <div>
     @foreach (var product in Model)
     {
-        <div id="product-pres">
+        <div id="other-product-pres">
             <a href="/Products/Details/@product.Id"><img src="@product.Picture" alt="@product.Name" /></a>
             <p class="text-primary text-center mt-3">@product.Name</p>
             <p class="text-primary text-center mt-3">Price: &euro;@product.Price</p>

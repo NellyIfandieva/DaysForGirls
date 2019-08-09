@@ -28,25 +28,9 @@ namespace DaysForGirls.Web.Controllers
                 {
                     Id = p.Id,
                     Name = p.Name,
-                    Category = p.Category.Name,
-                    ProductType = p.ProductType.Name,
-                    Price = p.Price,
-                    Quantity = p.Quantity.AvailableItems,
-                    Pictures = p.Pictures
-                        .Select(pic => pic.PictureUrl)
-                        .ToList()
+                    Price = p.Price.ToString("f2"),
+                    Picture = p.Picture.PictureUrl
                 }).ToListAsync();
-
-                //List<string> productPictures = new List<string>();
-
-                //foreach(var pic in product.Pictures)
-                //{
-                //    string url = pic.PictureUrl;
-                //    productPictures.Add(url);
-                //}
-
-                //pDAVM.Pictures = productPictures;
-                //productsToReturn.Add(pDAVM);
 
             return View(allProducts);
         }

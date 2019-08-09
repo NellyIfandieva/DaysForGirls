@@ -118,33 +118,18 @@ namespace DaysForGirls.Services
             return productToReturn;
         }
 
-        public IQueryable<ProductServiceModel> DisplayAll()
+        public IQueryable<ProductDisplayAllServiceModel> DisplayAll()
         {
             var allProducts = this.db.Products
-                .Select(p => new ProductServiceModel
+                .Select(p => new ProductDisplayAllServiceModel
                  {
                      Id = p.Id,
                      Name = p.Name,
                      Price = p.Price,
-                     Category = new CategoryServiceModel
+                     Picture = new PictureServiceModel
                      {
-                         Name = p.Category.Name
-                     },
-                     ProductType = new ProductTypeServiceModel
-                     {
-                         Name = p.ProductType.Name
-                     },
-                     Quantity = new QuantityServiceModel
-                     {
-                         AvailableItems = p.Quantity.AvailableItems
-                     },
-                     Pictures = p.Pictures
-                        .Select(pU => new PictureServiceModel
-                        {
-                            Id = pU.Id,
-                            PictureUrl = pU.PictureUrl
-                        }).ToList(),
-                     IsDeleted = p.IsDeleted
+                        PictureUrl = p.Pictures.ElementAt(0).PictureUrl
+                     }
                  });
 
             return allProducts;
