@@ -1,23 +1,33 @@
-﻿@model List<DaysForGirls.Web.ViewModels.ProductDisplayAllViewModel>
+﻿@model List<DisplayAllOfCategoryAndTypeViewModel>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
-    ViewData["Title"] = "Suits";
+    ViewData["Title"] = "All";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<style>
+    #other-suit-pres {
+        margin-top: 10px;
+        margin-left: 95px;
+        display: inline-block;
+        float: left;
+    }
+
+        #other-suit-pres img {
+            width: 30%;
+        }
+</style>
+
 <h1 class="text-center">Look Like a Gentleman Whatever the Occasion</h1>
 
-<div class="container-fluid">
-    @for (int i = 0; i < Model.Count(); i++)
+<div>
+    @foreach (var product in Model)
     {
-        <div class="col-md-3">
-            <a asp-controller="" asp-action="Details/@Model[i].Id"><img src="@Model[i].Pictures.[0]" alt="@Model[i].Name" /></a>
-            <h3>@Model[i].Name</h3>
-            <h3>&euro;@Model[i].Price</h3>
-            @if (Model[i].Quantity < 1)
-            {
-                <h3>Sold Out</h3>
-            }
+        <div id="other-suit-pres">
+            <a href="/Products/Details/@product.Id"><img src="@product.Picture" alt="@product.Name" /></a>
+            <p class="text-primary text-center mt-3">@product.Name</p>
+            <p class="text-primary text-center mt-3">Price: &euro;@product.Price</p>
         </div>
     }
 </div>

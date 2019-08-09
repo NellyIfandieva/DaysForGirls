@@ -1,26 +1,33 @@
-﻿@model List<ProductDisplayAllViewModel>
+﻿@model List<DisplayAllOfCategoryAndTypeViewModel>
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
-
-
-    @{
-    ViewData["Title"] = "Dresses";
+@{
+    ViewData["Title"] = "All";
     Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    #wedding-suit-pres {
+        margin-top: 10px;
+        margin-left: 95px;
+        display: inline-block;
+        float: left;
     }
 
-    <h1 class="text-center">Enjoy All Our Wedding Suits</h1>
-
-    <div class="container-fluid">
-        @for (int i = 0; i < Model.Count(); i++)
-        {
-        <div class="col-md-3">
-            <a asp-controller="" asp-action="Details/@Model[i].Id"><img src="@Model[i].Pictures[0]" alt="@Model[i].Name" /></a>
-            <h3>@Model[i].Name</h3>
-            <h3>&euro;@Model[i].Price</h3>
-            @if (Model[i].Quantity < 1)
-                {
-                    <h3>Sold Out</h3>
-                }
-        </div>
+        #wedding-suit-pres img {
+            width: 30%;
         }
-    </div>
+</style>
+
+<h1 class="text-center">Be the Groom of Her Dreams</h1>
+
+<div>
+    @foreach (var product in Model)
+    {
+        <div id="wedding-suit-pres">
+            <a href="/Products/Details/@product.Id"><img src="@product.Picture" alt="@product.Name" /></a>
+            <p class="text-primary text-center mt-3">@product.Name</p>
+            <p class="text-primary text-center mt-3">Price: &euro;@product.Price</p>
+        </div>
+    }
+</div>

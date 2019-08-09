@@ -1,4 +1,4 @@
-﻿@model List<ProductDisplayAllViewModel>
+﻿@model List<DisplayAllOfCategoryViewModel>
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
@@ -6,38 +6,28 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@*@ViewData["productType"]  = @Model[0].ProductType
-
-@if ((string)this.ViewData["productType"] == "Dress")
-{
-    <h1 class="text-center">Enjoy our Wedding Dresses</h1>
-}
-else if ((string)this.ViewData["productType"] == "Suit")
-{
-    <h1 class="text-center">Enjoy our Wedding Suits</h1>
-}*@
-
 <style>
-    #product-pres{
+    #prom-product-pres {
         margin-top: 10px;
         margin-left: 95px;
         display: inline-block;
         float: left;
     }
-    #product-pres img{
-        width: 30%;
-    }
+
+        #prom-product-pres img {
+            width: 30%;
+        }
 </style>
 
 <h1 class="text-center">All Wedding Products</h1>
 
-    <div>
-        @foreach(var product in Model)
-        {
-            <div id="product-pres">
-                <a href="/Products/Details/@product.Id"><img src="@product.Pictures[0]" alt="@product.Name"/></a>
-                <p class="text-primary text-center mt-3">@product.Name</p>
-                <p class="text-primary text-center mt-3">Price: &euro;@product.Price.ToString("F2")</p>
-            </div>
-        }
-    </div>    
+<div>
+    @foreach (var product in Model)
+    {
+        <div id="product-pres">
+            <a href="/Products/Details/@product.Id"><img src="@product.Picture" alt="@product.Name" /></a>
+            <p class="text-primary text-center mt-3">@product.Name</p>
+            <p class="text-primary text-center mt-3">Price: &euro;@product.Price</p>
+        </div>
+    }
+</div>

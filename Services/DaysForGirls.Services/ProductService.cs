@@ -150,117 +150,40 @@ namespace DaysForGirls.Services
             return allProducts;
         }
 
-        //public async Task<bool> DeleteProductById(int id)
-        //{
-        //    var productToDelete = await this.db.Products
-        //        .SingleOrDefaultAsync(product => product.Id == id);
-
-        //    productToDelete.IsDeleted = true;
-
-        //    var picturesOfProduct = this.db.Pictures
-        //        .Where(p => p.ProductId == productToDelete.Id)
-        //        .ForEachAsync(p => p.IsDeleted = true);
-
-        //    this.db.UpdateRange(productToDelete, picturesOfProduct);
-        //    int result = await this.db.SaveChangesAsync();
-        //    bool productAndItsPicturesAreDeleted = result > 0;
-
-        //    return productAndItsPicturesAreDeleted;
-        //}
-
-        public IQueryable<ProductServiceModel> GetAllProductsOfCategory(string categoryName)
+        public IQueryable<DisplayAllOfCategoryProductServiceModel> GetAllProductsOfCategory(string categoryName)
         {
             var allProductsOfCategory = this.db.Products
                 .Where(p => p.Category.Name == categoryName
                 && p.IsDeleted == false)
-                .Select(p => new ProductServiceModel
+                .Select(p => new DisplayAllOfCategoryProductServiceModel
                 {
                     Id = p.Id,
                     Name = p.Name,
-                    Category = new CategoryServiceModel
-                    {
-                        Name = p.Category.Name
-                    },
-                    ProductType = new ProductTypeServiceModel
-                    {
-                        Name = p.ProductType.Name
-                    },
-                    Description = p.Description,
-                    Pictures = p.Pictures
-                        .Select(pp => new PictureServiceModel
-                        {
-                            Id = pp.Id,
-                            PictureUrl = pp.PictureUrl
-                        }).ToList(),
-                    Colour = p.Colour,
-                    Size = p.Size,
                     Price = p.Price,
-                    Manufacturer = new ManufacturerServiceModel
+                    Picture = new PictureServiceModel
                     {
-                        Name = p.Manufacturer.Name
-                    },
-                    Quantity = new QuantityServiceModel
-                    {
-                        AvailableItems = p.Quantity.AvailableItems
-                    },
-                    Reviews = p.Reviews
-                        .Select(pR => new CustomerReviewServiceModel
-                        {
-                            Id = pR.Id,
-                            Title = pR.Title,
-                            Text = pR.Text,
-                            AuthorUsername = pR.Author.UserName
-                        }).ToList()
+                        PictureUrl = p.Pictures.ElementAt(0).PictureUrl
+                    }
                 });
 
             return allProductsOfCategory;
         }
 
-        public IQueryable<ProductServiceModel> GetAllProductsOfTypeAndCategory(string productType, string category)
+        public IQueryable<DisplayAllOfCategoryAndTypeServiceModel> GetAllProductsOfTypeAndCategory(string productType, string category)
         {
             var allProductsOfCategoryAndType = this.db.Products
                 .Where(p => p.Category.Name == category
                 && p.ProductType.Name == productType
                 && p.IsDeleted == false)
-                .Select(p => new ProductServiceModel
+                .Select(p => new DisplayAllOfCategoryAndTypeServiceModel
                 {
                     Id = p.Id,
                     Name = p.Name,
-                    Category = new CategoryServiceModel
+                    Picture = new PictureServiceModel
                     {
-                        Name = p.Category.Name
+                        PictureUrl = p.Pictures.ElementAt(0).PictureUrl
                     },
-                    ProductType = new ProductTypeServiceModel
-                    {
-                        Name = p.ProductType.Name
-                    },
-                    Description = p.Description,
-                    Pictures = p.Pictures
-                        .Select(pp => new PictureServiceModel
-                        {
-                            Id = pp.Id,
-                            PictureUrl = pp.PictureUrl
-                        }).ToList(),
-                    Colour = p.Colour,
-                    Size = p.Size,
-                    Price = p.Price,
-                    Manufacturer = new ManufacturerServiceModel
-                    {
-                        Name = p.Manufacturer.Name
-                    },
-                    Quantity = new QuantityServiceModel
-                    {
-                        AvailableItems = p.Quantity.AvailableItems
-                    },
-                    Reviews = p.Reviews
-                        .Select(pR => new CustomerReviewServiceModel
-                        {
-                            Id = pR.Id,
-                            Title = pR.Title,
-                            Text = pR.Text,
-                            CreatedOn = pR.CreatedOn.ToString("dddd dd MMMM yyyy"),
-                            AuthorUsername = pR.Author.UserName
-                        }).ToList()
+                    Price = p.Price
                 });
 
             return allProductsOfCategoryAndType;

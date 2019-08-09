@@ -6,55 +6,17 @@ namespace DaysForGirls.Services
 {
     public interface IProductService
     {
-        //Task<int> Create(ProductServiceModel productServiceModel);
-
         IQueryable<ProductServiceModel> DisplayAll();
 
         Task<ProductServiceModel> GetProductDetailsById(int Id);
 
-        //Task<bool> DeleteProductById(int id);
+        IQueryable<DisplayAllOfCategoryProductServiceModel> GetAllProductsOfCategory(string categoryName);
 
-        IQueryable<ProductServiceModel> GetAllProductsOfCategory(string categoryName);
-
-        IQueryable<ProductServiceModel> GetAllProductsOfTypeAndCategory(
+        IQueryable<DisplayAllOfCategoryAndTypeServiceModel> GetAllProductsOfTypeAndCategory(
             string productTypeName, string categoryName);
 
         Task<bool> UpdateProductQuantity(int productId);
 
-        //IQueryable<ProductServiceModel> AllWeddingProducts();
-
-        //IQueryable<ProductServiceModel> AllWeddingDresses();
-
-        //IQueryable<ProductServiceModel> AllWeddingSuits();
-
-        //IQueryable<ProductServiceModel> AllWeddingAccessories();
-
-        //IQueryable<ProductServiceModel> AllPromProducts();
-
-        //IQueryable<ProductServiceModel> AllPromDresses();
-
-        //IQueryable<ProductServiceModel> AllPromSuits();
-
-        //IQueryable<ProductServiceModel> AllPromAccessories();
-
-        //IQueryable<ProductServiceModel> AllOtherProducts();
-
-        //IQueryable<ProductServiceModel> AllOtherDresses();
-
-        //IQueryable<ProductServiceModel> AllOtherSuits();
-
-        //IQueryable<ProductServiceModel> AllOtherAccessories();
-
         Task<bool> AddReviewToProductByProductIdAsync(int productId, int reviewId);
-
-        //Task<bool> Edit(int productId, ProductServiceModel model);
-
-        //Task<bool> AddProductToSale(int productId, int saleId);
-
-        //IQueryable<ProductServiceModel> GetAllProductsByCategoryAndType(string productType, string category);
-
-        //Task<bool> DeletePictureWithUrl(string pictureUrl);
-
-        //Task<bool> UploadNewPictureToProduct(int productId, string imageUrl);
     }
 }
