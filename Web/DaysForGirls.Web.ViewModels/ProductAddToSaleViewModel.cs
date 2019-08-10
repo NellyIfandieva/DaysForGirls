@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DaysForGirls.Web.ViewModels
 {
-    public class DisplayAllOfCategoryViewModel
+    public class ProductAddToSaleViewModel
     {
         public int Id { get; set; }
 
@@ -13,9 +13,5 @@ namespace DaysForGirls.Web.ViewModels
         public string Picture { get; set; }
 
         public string Price { get; set; }
-
-        public bool IsInSale { get; set; }
-
-        public int SaleId { get; set; }
     }
 }

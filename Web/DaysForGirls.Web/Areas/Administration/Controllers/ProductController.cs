@@ -189,6 +189,9 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                 Colour = productInDb.Colour,
                 Size = productInDb.Size,
                 Description = productInDb.Description,
+                Manufacturer = productInDb.Manufacturer.Name,
+                Price = productInDb.Price,
+                AvailableQuantity = productInDb.Quantity.AvailableItems,
                 Pictures = productInDb.Pictures
                     .Select(p => new PictureDisplayAllViewModel
                     {
@@ -196,9 +199,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                         ImageUrl = p.PictureUrl,
                         ProductId = productInDb.Id
                     }).ToList(),
-                Manufacturer = productInDb.Manufacturer.Name,
-                Price = productInDb.Price,
-                AvailableQuantity = productInDb.Quantity.AvailableItems,
+                
                 Reviews = productInDb.Reviews
                     .Select(pR => new CustomerReviewAllViewModel
                     {

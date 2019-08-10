@@ -9,7 +9,7 @@ namespace DaysForGirls.Services
 {
     public interface ISaleService
     {
-        Task<bool> Create(SaleServiceModel saleServiceModel);
+        Task<int> Create(SaleServiceModel saleServiceModel);
 
         IQueryable<SaleServiceModel> DisplayAllAdmin();
 
@@ -17,6 +17,6 @@ namespace DaysForGirls.Services
 
         Task<SaleServiceModel> GetSaleByIdAsync(int id);
 
-        Task<bool> AddProductToSale(int saleId, int productId);
+        Task<bool> AddProductToSale(SaleServiceModel saleToAddTo);
     }
 }

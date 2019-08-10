@@ -14,7 +14,7 @@
     @foreach(var product in Model.Products)
     {
         <div class="col-md-3">
-            <a href="/Products/Details/@product.Id"><img src="@product.Pictures[0]" alt="@Model.Title - @product.Name" /></a>
+            <a href="/Products/Details/@product.Id"><img src="@product.Picture" alt="@Model.Title - @product.Name" /></a>
             <a href="/Products/Details/@product.Id"><h3>@product.Name</h3></a>
             <h4>@product.OldPrice</h4>
             <h4>@product.NewPrice</h4>

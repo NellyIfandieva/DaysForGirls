@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using DaysForGirls.Data;
 using DaysForGirls.Data.Models;
 using DaysForGirls.Services.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace DaysForGirls.Services
 {
@@ -16,20 +17,25 @@ namespace DaysForGirls.Services
             this.db = db;
         }
 
-        public async Task<bool> Create(SaleServiceModel saleServiceModel)
+        public async Task<int> Create(SaleServiceModel saleServiceModel)
         {
             Sale sale = new Sale
             {
                 Title = saleServiceModel.Title,
                 EndsOn = saleServiceModel.EndsOn,
-                Picture = saleServiceModel.Picture,
-                Products = new HashSet<ProductSale>()
+                Picture = saleServiceModel.Picture
             };
 
             this.db.Sales.Add(sale);
             int result = await db.SaveChangesAsync();
+            int saleId = 0;
 
-            return result == 1;
+            if(result > 0)
+            {
+                saleId = sale.Id;
+            }
+
+            return saleId;
         }
 
         public IQueryable<SaleServiceModel> DisplayAll()
@@ -74,8 +80,8 @@ namespace DaysForGirls.Services
 
         public async Task<SaleServiceModel> GetSaleByIdAsync(int id)
         {
-            var saleWithDetails = this.db.Sales
-                .SingleOrDefault(sale => sale.Id == id);
+            var saleWithDetails = await this.db.Sales
+                .SingleOrDefaultAsync(sale => sale.Id == id);
 
             var productsInSale = this.db.ProductsSales
                 .Where(p => p.SaleId == id)
@@ -132,32 +138,29 @@ namespace DaysForGirls.Services
                 Picture = saleWithDetails.Picture,
                 Products = productsInSale
             };
-
-            await Task.Delay(0);
             
             return saleToReturn;
         }
 
-        public async Task<bool> AddProductToSale(int saleId, int productId)
+        public async Task<bool> AddProductToSale(SaleServiceModel saleToAddTo)
         {
             Sale sale = this.db.Sales
-                .SingleOrDefault(s => s.Id == saleId);
+                .SingleOrDefault(s => s.Id == saleToAddTo.Id);
 
-            ProductSale productSale = new ProductSale
+            ProductSale productToAdd = new ProductSale
             {
-                Sale = sale,
-                ProductId = productId
+                ProductId = saleToAddTo.NewProduct.ProductId,
+                SaleId = sale.Id
             };
 
-            sale.Products.Add(productSale);
+            sale.Products.Add(productToAdd);
 
-            //this.db.ProductsSales.Add(productSale);
             this.db.Sales.Update(sale);
-            //this.db.Products.Update(product);
 
             int result = await this.db.SaveChangesAsync();
 
             bool productAddedToSale = result > 0;
+
             return productAddedToSale;
         }
     }

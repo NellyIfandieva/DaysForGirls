@@ -23,41 +23,30 @@
                         <a href="/Administration/Product/All"><button class="w3-button">Product</button></a>
                             <div class="w3-dropdown-content w3-bar-block w3-card-4">
                                 <a href="/Administration/Product/Create" class="w3-bar-item w3-button">Create</a>
-                                <a href="/Administration/Product/Edit" class="w3-bar-item w3-button">Edit</a>
-                                <a href="/Administration/Product/Delete" class="w3-bar-item w3-button">Delete</a>
                             </div>
                     </div>
                     <div class="w3-dropdown-hover">
                         <button class="w3-button">Product Type</button>
                         <div class="w3-dropdown-content w3-bar-block w3-card-4">
                             <a href="/Administration/ProductType/Create" class="w3-bar-item w3-button">Create</a>
-                            <a href="/Administration/ProductType/Edit" class="w3-bar-item w3-button">Edit</a>
-                            <a href="/Administration/ProductType/Delete" class="w3-bar-item w3-button">Delete</a>
                         </div>
                     </div>
                     <div class="w3-dropdown-hover">
                         <button class="w3-button">Category</button>
                         <div class="w3-dropdown-content w3-bar-block w3-card-4">
                             <a href="/Administration/Category/Create" class="w3-bar-item w3-button">Create</a>
-                            <a href="/Administration/Category/Edit" class="w3-bar-item w3-button">Edit</a>
-                            <a href="/Administration/Category/Delete" class="w3-bar-item w3-button">Delete</a>
                         </div>
                     </div>
                     <div class="w3-dropdown-hover">
                         <button class="w3-button">Manufacturer</button>
                         <div class="w3-dropdown-content w3-bar-block w3-card-4">
                             <a href="/Administration/Manufacturer/Create" class="w3-bar-item w3-button">Create</a>
-                            <a href="/Administration/Manufacturer/Create" class="w3-bar-item w3-button">Edit</a>
-                            <a href="/Administration/Manufacturer/Create" class="w3-bar-item w3-button">Delete</a>
                         </div>
                     </div>
                     <div class="w3-dropdown-hover">
                         <a href="/Administration/Sale/All"><button class="w3-button">Sale</button></a>
                         <div class="w3-dropdown-content w3-bar-block w3-card-4">
                             <a href="/Administration/Sale/Create" class="w3-bar-item w3-button">Create</a>
-                            <a href="/Administration/Product/All" class="w3-bar-item w3-button">Add Existing Product</a>
-                            <a href="/Administration/Product/Create" class="w3-bar-item w3-button">Add New Product</a>
-                            <a href="/Administration/Sale/Delete" class="w3-bar-item w3-button">Delete</a>
                         </div>
                     </div>
                 }
@@ -103,6 +92,9 @@
             @RenderBody()
         </main>
     </div>
+    <footer>
+        <p>&copy; Days For Girl Ltd. @DateTime.UtcNow.DayOfWeek, @DateTime.UtcNow.Day-@DateTime.UtcNow.Month-@DateTime.UtcNow.Year</p>
+    </footer>
 
     <script src="~/lib/jquery/dist/jquery.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>

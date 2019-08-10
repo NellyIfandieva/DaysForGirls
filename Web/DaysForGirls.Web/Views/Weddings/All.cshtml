@@ -24,10 +24,19 @@
 <div>
     @foreach (var product in Model)
     {
-        <div id="wedding-product-pres">
-            <a href="/Products/Details/@product.Id"><img src="@product.Picture" alt="@product.Name" /></a>
+    <div id="wedding-product-pres">
+        <a href="/Products/Details/@product.Id"><img src="@product.Picture" alt="@product.Name" /></a>
+        <div>
             <p class="text-primary text-center mt-3">@product.Name</p>
-            <p class="text-primary text-center mt-3">Price: &euro;@product.Price</p>
+            @if (product.IsInSale)
+            {
+                <a href="/Sales/Details/@product.SaleId"><p>Now In Sale</p></a>
+            }
+            else
+            {
+                <p class="text-primary text-center mt-3">Price: &euro;@product.Price</p>
+            }
         </div>
+    </div>
     }
 </div>

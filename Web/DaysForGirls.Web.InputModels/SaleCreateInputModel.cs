@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace DaysForGirls.Web.InputModels
@@ -10,7 +11,7 @@ namespace DaysForGirls.Web.InputModels
         public string Title { get; set; }
 
         [Required]
-        [DataType(DataType.Date)]
+        [DataType(DataType.DateTime)]
         [Display(Name = "Ends On")]
         public DateTime EndsOn { get; set; }
 

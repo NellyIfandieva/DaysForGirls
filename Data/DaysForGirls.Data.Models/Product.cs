@@ -8,6 +8,14 @@ namespace DaysForGirls.Data.Models
         private const string MinPrice = "0.00";
         private const string MaxPrice = "10000";
 
+        public Product()
+        {
+            this.Pictures = new List<Picture>();
+            this.Carts = new List<ProductCart>();
+            this.Reviews = new List<CustomerReview>();
+            this.Sales = new List<ProductSale>();
+        }
+
         [Required]
         public string Name { get; set; }
 

@@ -64,7 +64,7 @@
         padding: 20px;
     }
 
-    img{
+    img {
         width: 20%;
     }
 </style>
@@ -72,98 +72,104 @@
 <h2 class="text-center">Add a Product To Sale</h2>
 
 <hr />
-
-@foreach(var product in (IEnumerable<SaleAddProductViewModel>)this.ViewData["allProducts"])
-{
-    <div>
-        <img src="@product.Picture" alt="@product.Name"/>
-        <p>@product.Name</p>
-        <p>@product.Price</p>
-        <input type="checkbox" name="@product.Id" value="@product.Name"/>
-        @*@if(name == @)
-        {
-
-        }*@
+<form form method="post" asp-action="AddProductToSale">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="ProductName" class=""></label>
+        <select class="form-control" asp-for="ProductName">
+            <option selected disabled>...Select Product By Name...</option>
+            @foreach (var product in (IEnumerable<ProductAddToSaleViewModel>)this.ViewData["allProducts"])
+            {
+                <option value="@product.Name">@product.Name</option>
+            }
+        </select>
+        <span asp-validation-for="ProductName" class="text-danger"></span>
     </div>
-}
+
+    <div class="form-group">
+        <input type="submit" value="Add Product" class="btn btn-primary" />
+    </div>
+</form>
+
+
 
 @*<div class="row">
-    <div class="col-md-4">
-        <form method="post" enctype="multipart/form-data" asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="ProductId" class=""></label>
-                <select class="form-control" asp-for="ProductId">
-                    <option selected disabled>...Select Product By Name...</option>
-                    @foreach (var product in (IEnumerable<SaleAddProductViewModel>)this.ViewData["allProducts"])
-                    {
-                        <option value="@product.Name">@product.Name</option>
-                    }
-                </select>
-                <span asp-validation-for="ProductId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ProductId" class=""></label>
-                <select class="form-control" asp-for="ProductId">
-                    <option selected disabled>...Select Product By Picture...</option>
-                    @foreach (var product in (IEnumerable<SaleAddProductViewModel>)this.ViewData["allProducts"])
-                    {
-                        <option value="@product.Picture"><img src="@product.Picture" /></option>
-                    }
-                </select>
-                <span asp-validation-for="ProductId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ProductId" class=""></label>
-                <select class="form-control" asp-for="ProductId">
-                    <option selected disabled>...Select Product By Category...</option>
-                    @foreach (var product in (IEnumerable<SaleAddProductViewModel>)this.ViewData["allProducts"])
-                    {
-                        <option value="@product.Category">@product.Category</option>
-                    }
-                </select>
-                <span asp-validation-for="ProductId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ProductId" class=""></label>
-                <select class="form-control" asp-for="ProductId">
-                    <option selected disabled>...Select Product By Product Type...</option>
-                    @foreach (var product in (IEnumerable<SaleAddProductViewModel>)this.ViewData["allProducts"])
-                    {
-                        <option value="@product.ProductType">@product.ProductType</option>
-                    }
-                </select>
-                <span asp-validation-for="ProductId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ProductId" class=""></label>
-                <select class="form-control" asp-for="ProductId">
-                    <option selected disabled>...Select Product By Manufacturer...</option>
-                    @foreach (var product in (IEnumerable<SaleAddProductViewModel>)this.ViewData["allProducts"])
-                    {
-                        <option value="@product.Manufacturer">@product.Manufacturer</option>
-                    }
-                </select>
-                <span asp-validation-for="ProductId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ProductId" class=""></label>
-                <select class="form-control" asp-for="ProductId">
-                    <option selected disabled>...Select Product By Price...</option>
-                    @foreach (var product in (IEnumerable<SaleAddProductViewModel>)this.ViewData["allProducts"])
-                    {
-                        <option value="@product.Price">@product.Price</option>
-                    }
-                </select>
-                <span asp-validation-for="ProductId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Add Product" class="btn btn-primary" />
-                <input type="hidden" id="saleId" name="saleId" value="@Model.SaleId"/>
-            </div>
-        </form>
-    </div>
-</div>*@
+        <div class="col-md-4">
+            <form method="post" enctype="multipart/form-data" asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="ProductId" class=""></label>
+                    <select class="form-control" asp-for="ProductId">
+                        <option selected disabled>...Select Product By Name...</option>
+                        @foreach (var product in (IEnumerable<SaleAddProductViewModel>)this.ViewData["allProducts"])
+                        {
+                            <option value="@product.Name">@product.Name</option>
+                        }
+                    </select>
+                    <span asp-validation-for="ProductId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ProductId" class=""></label>
+                    <select class="form-control" asp-for="ProductId">
+                        <option selected disabled>...Select Product By Picture...</option>
+                        @foreach (var product in (IEnumerable<SaleAddProductViewModel>)this.ViewData["allProducts"])
+                        {
+                            <option value="@product.Picture"><img src="@product.Picture" /></option>
+                        }
+                    </select>
+                    <span asp-validation-for="ProductId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ProductId" class=""></label>
+                    <select class="form-control" asp-for="ProductId">
+                        <option selected disabled>...Select Product By Category...</option>
+                        @foreach (var product in (IEnumerable<SaleAddProductViewModel>)this.ViewData["allProducts"])
+                        {
+                            <option value="@product.Category">@product.Category</option>
+                        }
+                    </select>
+                    <span asp-validation-for="ProductId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ProductId" class=""></label>
+                    <select class="form-control" asp-for="ProductId">
+                        <option selected disabled>...Select Product By Product Type...</option>
+                        @foreach (var product in (IEnumerable<SaleAddProductViewModel>)this.ViewData["allProducts"])
+                        {
+                            <option value="@product.ProductType">@product.ProductType</option>
+                        }
+                    </select>
+                    <span asp-validation-for="ProductId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ProductId" class=""></label>
+                    <select class="form-control" asp-for="ProductId">
+                        <option selected disabled>...Select Product By Manufacturer...</option>
+                        @foreach (var product in (IEnumerable<SaleAddProductViewModel>)this.ViewData["allProducts"])
+                        {
+                            <option value="@product.Manufacturer">@product.Manufacturer</option>
+                        }
+                    </select>
+                    <span asp-validation-for="ProductId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ProductId" class=""></label>
+                    <select class="form-control" asp-for="ProductId">
+                        <option selected disabled>...Select Product By Price...</option>
+                        @foreach (var product in (IEnumerable<SaleAddProductViewModel>)this.ViewData["allProducts"])
+                        {
+                            <option value="@product.Price">@product.Price</option>
+                        }
+                    </select>
+                    <span asp-validation-for="ProductId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Add Product" class="btn btn-primary" />
+                    <input type="hidden" id="saleId" name="saleId" value="@Model.SaleId"/>
+                </div>
+            </form>
+        </div>
+    </div>*@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

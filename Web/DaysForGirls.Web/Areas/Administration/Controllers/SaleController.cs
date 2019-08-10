@@ -35,7 +35,6 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         [HttpGet("/Administration/Sale/Create")]
         public async Task<IActionResult> Create()
         {
-            await Task.Delay(0);
             return View();
         }
 
@@ -45,7 +44,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
             string imageUrl = await this.cloudinaryService
                 .UploadPictureForSaleAsync(model.Picture, model.Title);
 
-            
+
             SaleServiceModel saleServiceModel = new SaleServiceModel
             {
                 Title = model.Title,
@@ -53,9 +52,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                 Picture = imageUrl
             };
 
-            bool isCreated = await this.saleService.Create(saleServiceModel);
-
-            //TODO implement the case isCreated == false
+            int saleId = await this.saleService.Create(saleServiceModel);
 
             return Redirect("/Administration/Sale/All");
         }
@@ -99,13 +96,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                     {
                         Id = p.Product.Id,
                         Name = p.Product.Name,
-                        Pictures = p.Product.Pictures
-                            .Select(pic => new PictureDisplayAllViewModel
-                            {
-                                Id = pic.Id,
-                                ImageUrl = pic.PictureUrl,
-                                ProductId = p.Id
-                            }).ToList(),
+                        Picture = p.Product.Pictures.ElementAt(0).PictureUrl,
                         OldPrice = p.Product.Price,
                         Quantity = p.Product.Quantity.AvailableItems
                     }).ToList()
@@ -124,42 +115,40 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         [HttpGet("/Administration/Sale/AddProductToSale/{saleId}")]
         public async Task<IActionResult> AddProductToSale(int saleId)
         {
-            var allProducts = this.adminService
-                .DisplayAll().ToList();
+                var allProducts = await this.adminService
+                    .DisplayAll()
+                    .Where(p => p.IsInSale == false)
+                    .ToListAsync();
 
-            //this.ViewData["allProducts"] = allProducts
-            //    .Select(p => new SaleAddProductViewModel
-            //    {
-            //        Id = p.Id,
-            //        Name = p.Name,
-            //        Category = p.Category.Name,
-            //        Picture = p.Picture.PictureUrl,
-            //        Price = p.Price,
-            //        Manufacturer = p.Manufacturer.Name
-            //    })
-            //    .OrderBy(p => p.Name);
+            this.ViewData["allProducts"] = allProducts
+                .Select(p => new ProductAddToSaleViewModel
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Picture = p.Picture.PictureUrl,
+                    Price = p.Price.ToString("f2")
+                })
+                .ToList();
 
-            await Task.Delay(0);
             return View();
         }
 
-        [HttpPost()]
+        [HttpPost("/Administration/Sale/AddProductToSale/{saleId}")]
         public async Task<IActionResult> AddProductToSale(SaleAddProductInputModel model)
         {
             var saleToAddTo = await this.saleService.GetSaleByIdAsync(model.SaleId);
 
-            var productToAdd = await this.adminService.GetProductByIdAsync(model.ProductId);
+            var productToAdd = await this.adminService
+                .GetProductByNameAsync(model.ProductName);
 
-            ProductSaleServiceModel productSale = new ProductSaleServiceModel
+            saleToAddTo.NewProduct = new ProductSaleServiceModel
             {
-                Product = productToAdd,
-                Sale = saleToAddTo
+                ProductId = productToAdd.Id,
+                SaleId = model.SaleId
             };
-            
-            saleToAddTo.Products.Add(productSale);
 
-            bool saleAddedProduct = await this.saleService.AddProductToSale(model.SaleId, model.ProductId);
-            bool productAddedSale = await this.adminService.AddProductToSaleAsync(model.ProductId, model.SaleId);
+            bool saleAddedProduct = await this.saleService.AddProductToSale(saleToAddTo);
+            bool productAddedSale = await this.adminService.AddProductToSaleAsync(productToAdd.Id, model.SaleId);
 
             return Redirect("/Administration/Sale/Details/{saleId}");
         }

@@ -126,7 +126,8 @@ namespace DaysForGirls.Services
                     Picture = new PictureServiceModel
                     {
                         PictureUrl = p.Pictures.ElementAt(0).PictureUrl
-                    }
+                    },
+                    IsInSale = p.IsInSale
                 });
 
             return allProductsOfCategory;
