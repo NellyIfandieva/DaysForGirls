@@ -9,6 +9,7 @@ namespace DaysForGirls.Data
     {
         public DbSet<Category> Categories { get; set; }
         public DbSet<CustomerReview> CustomerReviews { get; set; }
+        public DbSet<Logo> Logos { get; set; }
         public DbSet<Manufacturer> Manufacturers { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderStatus> OrderStatuses { get; set; }

@@ -9,7 +9,7 @@ namespace DaysForGirls.Services
 {
     public interface IManufacturerService
     {
-        Task<bool> Create(ManufacturerServiceModel manufacturerServiceModel);
+        Task<int> Create(ManufacturerServiceModel manufacturerServiceModel);
         IQueryable<ManufacturerServiceModel> DisplayAll();
     }
 }

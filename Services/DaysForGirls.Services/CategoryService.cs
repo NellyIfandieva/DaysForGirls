@@ -18,7 +18,7 @@ namespace DaysForGirls.Services
             this.db = db;
         }
 
-        public async Task<bool> Create(CategoryServiceModel categoryServiceModel)
+        public async Task<int> Create(CategoryServiceModel categoryServiceModel)
         {
             Category category = new Category
             {
@@ -29,7 +29,9 @@ namespace DaysForGirls.Services
             this.db.Categories.Add(category);
             int result = await db.SaveChangesAsync();
 
-            return result == 1;
+            int categoryId = category.Id;
+
+            return categoryId;
         }
 
         public IQueryable<CategoryServiceModel> DisplayAll()

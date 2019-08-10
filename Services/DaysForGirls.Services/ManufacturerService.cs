@@ -18,18 +18,24 @@ namespace DaysForGirls.Services
             this.db = db;
         }
 
-        public async Task<bool> Create(ManufacturerServiceModel manufacturerServiceModel)
+        public async Task<int> Create(ManufacturerServiceModel manufacturerServiceModel)
         {
             Manufacturer manufacturer = new Manufacturer
             {
                 Name = manufacturerServiceModel.Name,
-                Products = new HashSet<Product>()
+                Description = manufacturerServiceModel.Description,
+                Logo = new Logo
+                {
+                    LogoUrl = manufacturerServiceModel.Logo.LogoUrl
+                }
             };
 
             this.db.Manufacturers.Add(manufacturer);
             int result = await this.db.SaveChangesAsync();
 
-            return result == 1;
+            int manufacturerId = manufacturer.Id;
+
+            return manufacturerId;
         }
 
         public IQueryable<ManufacturerServiceModel> DisplayAll()

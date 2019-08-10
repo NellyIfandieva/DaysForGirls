@@ -35,7 +35,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                 Description = model.Description
             };
 
-            bool isCreated = await this.categoryService.Create(categoryServiceModel);
+            int newCategoryId = await this.categoryService.Create(categoryServiceModel);
 
             return Redirect("/Administration/Category/All");
         }
@@ -44,22 +44,17 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         {
             var allCategories = await this.categoryService
                 .DisplayAll()
+                .Select(c => new CategoryDisplayAllViewModel
+                {
+                    Id = c.Id,
+                    Name = c.Name,
+                    Description = c.Description,
+                    IsDeleted = c.IsDeleted
+                })
                 .OrderBy(c => c.Name)
                 .ToListAsync();
 
-            var allCategoriesToDisplay = new HashSet<CategoryDisplayAllViewModel>();
-
-            foreach(var category in allCategories)
-            {
-                CategoryDisplayAllViewModel vm = new CategoryDisplayAllViewModel
-                {
-                    Name = category.Name
-                };
-
-                allCategoriesToDisplay.Add(vm);
-            }
-
-            return View(allCategoriesToDisplay);
+            return View(allCategories);
         }
 
         //TODO implement Details

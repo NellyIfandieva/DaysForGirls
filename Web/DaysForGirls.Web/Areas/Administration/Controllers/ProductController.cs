@@ -193,7 +193,8 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                     .Select(p => new PictureDisplayAllViewModel
                     {
                         Id = p.Id,
-                        ImageUrl = p.PictureUrl
+                        ImageUrl = p.PictureUrl,
+                        ProductId = productInDb.Id
                     }).ToList(),
                 Manufacturer = productInDb.Manufacturer.Name,
                 Price = productInDb.Price,
@@ -205,7 +206,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                         Title = pR.Title,
                         Text = pR.Text,
                         DateCreated = pR.CreatedOn,
-                        Author = pR.AuthorUsername
+                        Author = pR.AuthorUsername,
                     })
                     .ToList()
             };

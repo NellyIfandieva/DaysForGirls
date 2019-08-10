@@ -14,10 +14,14 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
     public class ManufacturerController : AdminController
     {
         private readonly IManufacturerService manufacturerService;
+        private readonly ICloudinaryService cloudinaryService;
 
-        public ManufacturerController(IManufacturerService manufacturerService)
+        public ManufacturerController(
+            IManufacturerService manufacturerService,
+            ICloudinaryService cloudinaryService)
         {
             this.manufacturerService = manufacturerService;
+            this.cloudinaryService = cloudinaryService;
         }
 
         [HttpGet("/Administration/Manufacturer/Create")]
@@ -29,12 +33,19 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         [HttpPost("/Administration/Manufacturer/Create")]
         public async Task<IActionResult> Create(ManufacturerCreateInputModel model)
         {
+            string imageUrl = await this.cloudinaryService.UploadPictureForProductAsync(
+                model.Logo, model.Name + "_" + "Logo");
             ManufacturerServiceModel manufacturerServiceModel = new ManufacturerServiceModel
             {
-                Name = model.Name
+                Name = model.Name,
+                Description = model.Description,
+                Logo = new LogoServiceModel
+                {
+                    LogoUrl = imageUrl
+                }
             };
 
-            bool isCreated = await this.manufacturerService.Create(manufacturerServiceModel);
+            int newManufacturerId = await this.manufacturerService.Create(manufacturerServiceModel);
             return Redirect("/Administration/Manufacturer/All");
         }
 
@@ -43,24 +54,18 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         {
             var allManufacturers = await this.manufacturerService
                 .DisplayAll()
+                .Select(m => new ManufacturerDisplayAllViewModel
+                {
+                    Name = m.Name
+                })
                 .OrderBy(m => m.Name)
                 .ToListAsync();
 
-            var allManufacturersToDisplay = new HashSet<ManufacturerDisplayAllViewModel>();
-
-            foreach(var manufacturer in allManufacturers)
-            {
-                ManufacturerDisplayAllViewModel vm = new ManufacturerDisplayAllViewModel
-                {
-                    Name = manufacturer.Name
-                };
-
-                allManufacturersToDisplay.Add(vm);
-            }
-
-            return View(allManufacturersToDisplay);
+            return View(allManufacturers);
         }
 
-        //TODO implement 
+        //TODO implement edit
+
+        //TODO implement delete
     }
 }

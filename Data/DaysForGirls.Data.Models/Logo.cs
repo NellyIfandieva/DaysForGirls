@@ -5,14 +5,13 @@ using System.Text;
 
 namespace DaysForGirls.Data.Models
 {
-    public class Manufacturer : BaseModel<int>
+    public class Logo : BaseModel<int>
     {
         [Required]
-        public string Name { get; set; }
+        public string LogoUrl { get; set; }
 
-        public string Description { get; set; }
-
-        public Logo Logo { get; set; }
+        public int ManufacturerId { get; set; }
+        public Manufacturer Manufacturer { get; set; }
 
         public bool IsDeleted { get; set; }
     }
