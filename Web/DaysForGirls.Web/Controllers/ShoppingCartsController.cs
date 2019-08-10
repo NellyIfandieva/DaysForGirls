@@ -31,7 +31,7 @@ namespace DaysForGirls.Web.Controllers
             }
             string userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            var product = await this.productService.GetProductDetailsById(productId);
+            var product = await this.productService.GetProductByIdAsync(productId);
 
             ShoppingCartItemServiceModel item = new ShoppingCartItemServiceModel
             {

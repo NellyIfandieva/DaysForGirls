@@ -127,18 +127,19 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
             var allProducts = this.adminService
                 .DisplayAll().ToList();
 
-            this.ViewData["allProducts"] = allProducts
-                .Select(p => new SaleAddProductViewModel
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    Category = p.Category.Name,
-                    Picture = p.Picture.PictureUrl,
-                    Price = p.Price,
-                    Manufacturer = p.Manufacturer.Name
-                })
-                .OrderBy(p => p.Name);
+            //this.ViewData["allProducts"] = allProducts
+            //    .Select(p => new SaleAddProductViewModel
+            //    {
+            //        Id = p.Id,
+            //        Name = p.Name,
+            //        Category = p.Category.Name,
+            //        Picture = p.Picture.PictureUrl,
+            //        Price = p.Price,
+            //        Manufacturer = p.Manufacturer.Name
+            //    })
+            //    .OrderBy(p => p.Name);
 
+            await Task.Delay(0);
             return View();
         }
 

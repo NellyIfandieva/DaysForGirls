@@ -43,8 +43,8 @@ namespace DaysForGirls.Services
 
         public async Task<PictureServiceModel> GetPictureByIdAsync(int id)
         {
-            var picture = this.db.Pictures
-                .SingleOrDefault(p => p.Id == id);
+            var picture = await this.db.Pictures
+                .SingleOrDefaultAsync(p => p.Id == id);
 
             PictureServiceModel pictureToReturn = new PictureServiceModel
             {
@@ -53,17 +53,19 @@ namespace DaysForGirls.Services
                 ProductId = picture.ProductId
             };
 
-            await Task.Delay(0);
             return pictureToReturn;
         }
 
         public IQueryable<PictureServiceModel> GetPicturesOfProductByProductId(int productId)
         {
             var pictures = this.db.Pictures
-                .Where(p => p.ProductId == productId)
+                .Where(p => p.ProductId == productId
+                && p.IsDeleted == false)
                 .Select(p => new PictureServiceModel
                 {
-                    PictureUrl = p.PictureUrl
+                    Id = p.Id,
+                    PictureUrl = p.PictureUrl,
+                    ProductId = productId
                 });
 
             return pictures;
@@ -117,29 +119,43 @@ namespace DaysForGirls.Services
             return picturesAreDeleted;
         }
 
-        public Task<bool> DeletePicturesOfDeletedProduct(int productId)
-        {
-            throw new NotImplementedException();
-        }
+        //public await Task<bool> DeletePicturesOfDeletedProduct(int productId)
+        //{
+        //    var picturesToDelete = this.db.Pictures
+        //        .Where(p => p.ProductId == productId)
+        //        .ToListAsync();
 
-        public async Task<bool> DeletePictureWithUrlAsync(string pictureUrl)
-        {
-            Picture pictureToDelete = await this.db.Pictures
-                .SingleOrDefaultAsync(pic => pic.PictureUrl == pictureUrl);
+        //    foreach (var picture in picturesToDelete)
+        //    {
+        //        picture.IsDeleted = true;
+        //    }
 
-            var product = await this.db.Products
-                .SingleOrDefaultAsync(p => p.Id == pictureToDelete.Product.Id);
+        //    this.db.UpdateRange(picturesToDelete);
+        //    int result = await this.db.SaveChangesAsync();
 
-            product.Pictures.Remove(pictureToDelete);
+        //    bool picturesAreDeleted = result > 0;
 
-            pictureToDelete.IsDeleted = true;
+        //    return picturesAreDeleted;
+        //}
 
-            this.db.UpdateRange(pictureToDelete, product);
+        //public async Task<bool> DeletePictureWithUrl(string pictureUrl)
+        //{
+        //    Picture pictureToDelete = this.db.Pictures
+        //        .SingleOrDefault(pic => pic.PictureUrl == pictureUrl);
 
-            int result = await this.db.SaveChangesAsync();
-            bool pictureIsDeleted = result > 0;
+        //    var product = await this.db.Products
+        //        .SingleOrDefaultAsync(p => p.Id == pictureToDelete.Product.Id);
 
-            return pictureIsDeleted;
-        }
+        //    product.Pictures.Remove(pictureToDelete);
+
+        //    pictureToDelete.IsDeleted = true;
+
+        //    this.db.UpdateRange(pictureToDelete, product);
+
+        //    int result = await this.db.SaveChangesAsync();
+        //    bool pictureIsDeleted = result > 0;
+
+        //    return pictureIsDeleted;
+        //}
     }
 }

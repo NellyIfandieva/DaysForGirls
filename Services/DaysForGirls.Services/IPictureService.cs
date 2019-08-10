@@ -19,8 +19,10 @@ namespace DaysForGirls.Services
 
         Task<PictureServiceModel> GetPictureByUrl(string pictureUrl);
 
-        Task<bool> DeletePicturesOfDeletedProduct(int productId);
+        Task<bool> DeletePicturesOfDeletedProductAsync(int productId);
 
-        Task<bool> DeletePictureWithUrlAsync(string pictureUrl);
+        //Task<bool> DeletePicturesOfDeletedProduct(int productId);
+
+        //Task<bool> DeletePictureWithUrl(string pictureUrl);
     }
 }

@@ -23,104 +23,82 @@ namespace DaysForGirls.Services
             this.pictureService = pictureService;
         }
 
-        public async Task<ProductServiceModel> GetProductDetailsById(int productId)
+        public async Task<ProductServiceModel> GetProductByIdAsync(int productId)
         {
-            var productInDb = this.db.Products
-                .SingleOrDefault(p => p.Id == productId);
+            var product = await this.db.Products
+                .Include(p => p.Category)
+                .Include(p => p.ProductType)
+                .Include(p => p.Manufacturer)
+                .Include(p => p.Quantity)
+                .Include(p => p.Pictures)
+                .Include(p => p.Reviews)
+                .Include(p => p.Sales)
+                .SingleOrDefaultAsync(p => p.Id == productId);
 
-            var productPictures = productInDb.Pictures;
+            var productPictures = await this.db.Pictures
+                .Where(pic => pic.ProductId == product.Id)
+                    .Select(pic => new PictureServiceModel
+                    {
+                        Id = pic.Id,
+                        PictureUrl = pic.PictureUrl
+                    }).ToListAsync();
 
-            var productReviews = productInDb.Reviews;
+            var productReviews = await this.db.CustomerReviews
+                .Where(cR => cR.ProductId == product.Id)
+                .Select(pR => new CustomerReviewServiceModel
+                {
+                    Id = pR.Id,
+                    Title = pR.Title,
+                    Text = pR.Text,
+                    CreatedOn = pR.CreatedOn.ToString("dddd, dd MMMM yyyy"),
+                    AuthorUsername = pR.Author.UserName
+                }).ToListAsync();
 
-            //var productPictures = this.db.Pictures
-            //    .Where(p => p.ProductId == productInDb.Id)
-            //    .Select(p => new PictureServiceModel
-            //    {
-            //        Id = p.Id,
-            //        PictureUrl = p.PictureUrl,
-            //        ProductId = p.ProductId
-            //    })
-            //    .ToList();
-
-            //var productCustomerReviews = this.db.CustomerReviews
-            //    .Where(c => c.ProductId == productInDb.Id)
-            //    .Select(c => new CustomerReviewServiceModel
-            //    {
-            //        Id = c.Id,
-            //        Title = c.Title,
-            //        Text = c.Text,
-            //        CreatedOn = c.CreatedOn.ToString(),
-            //        Author = new DaysForGirlsUserServiceModel
-            //        {
-            //            UserName = c.Author.UserName
-            //        }
-            //    })
-            //    .ToList();
-
-            var productTypeOfProduct = this.db.ProductTypes
-                .SingleOrDefault(pT => pT.Id == productInDb.ProductTypeId);
-
-            var categoryOfProduct = this.db.Categories
-                .SingleOrDefault(c => c.Id == productInDb.CategoryId);
-
-            var manufacturerOfProduct = this.db.Manufacturers
-                .SingleOrDefault(m => m.Id == productInDb.ManufacturerId);
-
-            var quantityOfProduct = this.db.Quantities
-                .SingleOrDefault(q => q.Id == productInDb.QuantityId);
-
-            productInDb.Category = categoryOfProduct;
-            productInDb.ProductType = productTypeOfProduct;
-            productInDb.Manufacturer = manufacturerOfProduct;
-            productInDb.Quantity = quantityOfProduct;
+            var productSales = await this.db.ProductsSales
+                .Where(s => s.ProductId == product.Id)
+                .Select(s => new ProductSaleServiceModel
+                {
+                    Id = s.Id,
+                    SaleId = s.SaleId
+                }).ToListAsync();
 
             ProductServiceModel productToReturn = new ProductServiceModel
             {
-                Id = productInDb.Id,
-                Name = productInDb.Name,
+                Id = product.Id,
+                Name = product.Name,
                 ProductType = new ProductTypeServiceModel
                 {
-                    Name = productInDb.ProductType.Name
+                    Name = product.ProductType.Name
                 },
                 Category = new CategoryServiceModel
                 {
-                    Name = productInDb.Category.Name
+                    Name = product.Category.Name
                 },
-                Description = productInDb.Description,
-                Colour = productInDb.Colour,
-                Size = productInDb.Size,
-                Price = productInDb.Price,
+                Description = product.Description,
+                Pictures = productPictures,
+                Colour = product.Colour,
+                Size = product.Size,
+                Price = product.Price,
                 Manufacturer = new ManufacturerServiceModel
                 {
-                    Name = productInDb.Manufacturer.Name
+                    Name = product.Manufacturer.Name
                 },
                 Quantity = new QuantityServiceModel
                 {
-                    AvailableItems = productInDb.Quantity.AvailableItems
+                    AvailableItems = product.Quantity.AvailableItems
                 },
-                Pictures = productPictures
-                    .Select(pic => new PictureServiceModel
-                    {
-
-                    }).ToList(),
-                Reviews = productReviews
-                    .Select(r => new CustomerReviewServiceModel
-                    {
-                        Id = r.Id,
-                        Title = r.Title,
-                        Text = r.Text,
-                        CreatedOn = r.CreatedOn.ToString("dddd dd MMMM yyyy"),
-                        AuthorUsername = r.Author.UserName
-                    }).ToList()
+                Reviews = productReviews,
+                IsDeleted = product.IsDeleted,
+                Sales = productSales
             };
 
-            await Task.Delay(0);
             return productToReturn;
         }
 
         public IQueryable<ProductDisplayAllServiceModel> DisplayAll()
         {
             var allProducts = this.db.Products
+                .Where(p => p.IsDeleted == false)
                 .Select(p => new ProductDisplayAllServiceModel
                  {
                      Id = p.Id,

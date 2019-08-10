@@ -68,6 +68,7 @@ namespace DaysForGirls.Services
         public IQueryable<AdminProductAllServiceModel> DisplayAll()
         {
             var allProducts = this.db.Products
+                .Where(p => p.IsDeleted == false)
                 .Select(p => new AdminProductAllServiceModel
                 {
                     Id = p.Id,
@@ -101,13 +102,16 @@ namespace DaysForGirls.Services
                 .Include(p => p.Quantity)
                 .SingleOrDefaultAsync(p => p.Id == productId);
 
-            var productPictures = await this.db.Pictures
-                .Where(pic => pic.ProductId == product.Id)
-                    .Select(pic => new PictureServiceModel
-                    {
-                        Id = pic.Id,
-                        PictureUrl = pic.PictureUrl
-                    }).ToListAsync();
+            var pics = await this.pictureService
+                .GetPicturesOfProductByProductId(product.Id).ToListAsync();
+
+            //var productPictures = await this.db.Pictures
+            //    .Where(pic => pic.ProductId == product.Id)
+            //        .Select(pic => new PictureServiceModel
+            //        {
+            //            Id = pic.Id,
+            //            PictureUrl = pic.PictureUrl
+            //        }).ToListAsync();
 
             var productReviews = await this.db.CustomerReviews
                 .Where(cR => cR.ProductId == product.Id)
@@ -144,7 +148,7 @@ namespace DaysForGirls.Services
                     Name = product.Category.Name
                 },
                 Description = product.Description,
-                Pictures = productPictures,
+                Pictures = pics,
                 Colour = product.Colour,
                 Size = product.Size,
                 Price = product.Price,
@@ -173,7 +177,7 @@ namespace DaysForGirls.Services
             productToDelete.IsDeleted = true;
 
             bool picturesAreDeleted = await this.pictureService
-                .DeletePicturesOfDeletedProduct(productToDelete.Id);
+                .DeletePicturesOfDeletedProductAsync(productToDelete.Id);
 
             this.db.Update(productToDelete);
             int result = await this.db.SaveChangesAsync();

@@ -8,7 +8,7 @@ namespace DaysForGirls.Services
     {
         IQueryable<ProductDisplayAllServiceModel> DisplayAll();
 
-        Task<ProductServiceModel> GetProductDetailsById(int Id);
+        Task<ProductServiceModel> GetProductByIdAsync(int Id);
 
         IQueryable<DisplayAllOfCategoryProductServiceModel> GetAllProductsOfCategory(string categoryName);
 

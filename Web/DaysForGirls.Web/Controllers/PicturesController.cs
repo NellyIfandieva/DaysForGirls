@@ -34,10 +34,11 @@ namespace DaysForGirls.Web.Controllers
                     PictureUrl = picture.PictureUrl,
                     ProductId = picture.ProductId
                 };
-            var product = await this.productService
-                .GetProductDetailsById(picture.ProductId);
 
-            this.ViewData["productName"] = product.Name;
+            //var product = await this.productService
+            //    .GetProductByIdAsync(picture.ProductId);
+
+            //this.ViewData["productName"] = product.Name;
 
             return View(pictureToDisplay);
         }

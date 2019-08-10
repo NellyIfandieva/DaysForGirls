@@ -337,21 +337,21 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
 
             bool productIsEditedInDb = await this.adminService.EditAsync(productId, productWithEdits);
 
-            return this.Redirect("/");
+            return this.Redirect("/Administration/Product/Details/{productId}");
         }
 
-        public async Task<IActionResult> DeletePicture(string pictureUrl)
-        {
-            bool pictureIsDeleted = await this.pictureService
-                .DeletePictureWithUrlAsync(pictureUrl);
+        //public async Task<IActionResult> DeletePicture(string pictureUrl)
+        //{
+        //    bool pictureIsDeleted = await this.pictureService
+        //        .DeletePictureWithUrl(pictureUrl);
 
-            if(pictureIsDeleted == false)
-            {
-                return View("Administration/Product/Edit/{productId}");
-            }
+        //    if(pictureIsDeleted == false)
+        //    {
+        //        return View("Administration/Product/Edit/{productId}");
+        //    }
 
-            return View("Administration/Product/All");
-        }
+        //    return View("Administration/Product/Details/{productId}");
+        //}
 
         public async Task<IActionResult> UploadNewPicture(ProductEditInputModel model)
         {

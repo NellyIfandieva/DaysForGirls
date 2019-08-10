@@ -39,7 +39,7 @@ namespace DaysForGirls.Web.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var productWithDetails = await this.productService
-                .GetProductDetailsById(id);
+                .GetProductByIdAsync(id);
 
             ProductDetailsViewModel productDetails = new ProductDetailsViewModel
             {

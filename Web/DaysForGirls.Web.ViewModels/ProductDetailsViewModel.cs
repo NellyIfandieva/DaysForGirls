@@ -26,8 +26,6 @@ namespace DaysForGirls.Web.ViewModels
 
         public int AvailableQuantity { get; set; }
 
-        public string MainPicture { get; set; }
-
         public List<PictureDisplayAllViewModel> Pictures { get; set; }
 
         public List<CustomerReviewAllViewModel> Reviews { get; set; }
