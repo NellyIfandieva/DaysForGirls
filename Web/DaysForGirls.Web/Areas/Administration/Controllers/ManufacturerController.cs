@@ -56,7 +56,12 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                 .DisplayAll()
                 .Select(m => new ManufacturerDisplayAllViewModel
                 {
-                    Name = m.Name
+                    Id = m.Id,
+                    Name = m.Name,
+                    Description = m.Description,
+                    Logo = m.Logo.LogoUrl,
+                    IsDeleted = m.IsDeleted,
+                    ProductsCount = m.ProductsCount
                 })
                 .OrderBy(m => m.Name)
                 .ToListAsync();

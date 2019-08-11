@@ -19,5 +19,7 @@ namespace DaysForGirls.Services.Models
         public ProductServiceModel NewProduct { get; set; }
 
         public List<ProductServiceModel> Products { get; set; }
+
+        public int ProductsCount => this.Products.Count;
     }
 }

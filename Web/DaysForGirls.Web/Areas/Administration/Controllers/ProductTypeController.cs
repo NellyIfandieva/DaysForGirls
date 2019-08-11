@@ -48,22 +48,15 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         {
             var allProductTypes = await this.productTypeService
                 .DisplayAll()
+                .Select(pT => new ProductTypeDisplayAllViewModel
+                {
+                    Id = pT.Id,
+                    Name = pT.Name
+                })
                 .OrderBy(pt => pt.Name)
                 .ToListAsync();
 
-            var productTypesToDisplay = new List<ProductTypeDisplayAllViewModel>();
-
-            foreach (var prodType in allProductTypes)
-            {
-                ProductTypeDisplayAllViewModel vm = new ProductTypeDisplayAllViewModel
-                {
-                    Id = prodType.Id,
-                    Name = prodType.Name
-                };
-                productTypesToDisplay.Add(vm);
-            }
-
-            return View(productTypesToDisplay);
+            return View(allProductTypes);
         }
     }
 }

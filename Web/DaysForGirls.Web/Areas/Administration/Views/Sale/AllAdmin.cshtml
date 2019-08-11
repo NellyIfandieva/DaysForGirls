@@ -17,7 +17,7 @@
     @foreach (var sale in Model)
     {
         <div>
-            <a href="/Administration/Sale/Details/@sale.Id"><img src="@sale.Picture" alt="@sale.Title" width="150px"/></a>
+            <a href="/Administration/Sale/Details/@sale.Id"><img src="@sale.Picture" alt="@sale.Title" width="150"/></a>
             <h4>@sale.Title - Ends on: @sale.EndsOn - Is Active: @sale.IsActive</h4>
             <div>
                 @if (sale.ProductsCount <= 0)

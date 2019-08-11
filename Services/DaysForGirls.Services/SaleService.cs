@@ -63,6 +63,7 @@ namespace DaysForGirls.Services
         public IQueryable<SaleServiceModel> DisplayAllAdmin()
         {
             var allSales = this.db.Sales
+                .OrderBy(s => s.EndsOn)
                 .Include(s => s.Products)
                 .Select(s => new SaleServiceModel
                 {
@@ -72,12 +73,12 @@ namespace DaysForGirls.Services
                     Picture = s.Picture,
                     IsActive = s.IsActive,
                     Products = s.Products
-                        .Select(p => new ProductServiceModel
-                        {
-                            Id = p.Id,
-                            Name = p.Name
-                        })
-                        .ToList()
+                    .Where(p => p.SaleId == s.Id)
+                    .Select(p => new ProductServiceModel
+                    {
+                        Id = p.Id
+                    })
+                    .ToList()
                 });
 
             return allSales;

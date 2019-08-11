@@ -1,63 +1,51 @@
-﻿@model List<SaleDisplayAllViewModel>
-@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-
+﻿@model IEnumerable<DaysForGirls.Web.ViewModels.SaleDisplayAllViewModel>
 
 @{
-    ViewData["Title"] = "All Sales";
+    ViewData["Title"] = "All";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <style>
-    #all-sales{
-        margin-top: 30px;
-        padding-left: 100px;
+    #sale-holder{
+        margin-left: 390px;
+        margin-bottom: 30px;
     }
-    #two-sales-container{
-        margin: auto;
-        width: 50%;
-        padding: 10px;
-        display: inline-block;
-        float: left;
+    #saleTitle{
+        text-decoration: none;
+        margin-top: 0px;
+        padding-top: 0px;
     }
+
+    #saleEndsOn{
+        margin-top: 0px;
+        padding-top: 0px;
+    }
+
+    #sale-image{
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 5px;
+    }
+
+    #sale-image:hover {
+      box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+}
 
     h1{
-        margin-top: 20px;
-    }
-
-    /*h4{
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }*/
-    img{
-        width: 70%;
-    }
-
-    .imageAndText{
-        float: left;
+        margin-top: 30px;
+        margin-bottom: 50px;
     }
 
 </style>
 
-<div>
-    <h1 class="text-center">Enjoy Our Latest Sales</h1>
-</div>
+<h1 class="text-center">All Active Sales</h1>
 
-<div id="all-sales">
-    @for (int i = 0; i < Model.Count() - 1; i += 2)
-    {
-        <div id="two-sales-container">
-            @if (i % 2 == 0)
-            {
-                <div class="imageAndText">
-                    <a href="/Sales/Details/@Model[i].Id"><img src="@Model[i].Picture" /></a>
-                    <h4>@Model[i].Title - Ends on: @Model[i].EndsOn</h4>
-                </div>
-                <div class="imageAndText">
-                    <a href="/Sales/Details/@Model[i + 1].Id"><img src="@Model[i + 1].Picture" /></a>
-                    <h4>@Model[i + 1].Title - Ends on: @Model[i + 1].EndsOn </h4>
-                </div>
-            }
-        </div>
-    }
-</div>
+@foreach(var sale in Model)
+{
+    <div id="sale-holder">
+        <a href="/Sales/Details/@sale.Id"><img id="sale-image" src="@sale.Picture" alt="@sale.Title" width="550"/></a>
+        <a id="saleTitle" href="/Sales/Details/@sale.Id"><h3>@sale.Title</h3></a>
+        <p id="saleEndsOn"><strong>Ends on: @sale.EndsOn</strong></p>
+    </div>
+}
+

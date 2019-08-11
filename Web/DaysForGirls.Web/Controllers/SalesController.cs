@@ -29,13 +29,7 @@ namespace DaysForGirls.Web.Controllers
                     Id = sale.Id,
                     Title = sale.Title,
                     Picture = sale.Picture,
-                    EndsOn = sale.EndsOn.ToString("dddd, dd MMMM yyyy")//,
-                    //Products = sale.Products
-                    //    .Select(p => new ProductInSaleViewModel
-                    //    {
-                    //        Id = p.Id,
-                    //        Name = p.Name
-                    //    }).ToList()
+                    EndsOn = sale.EndsOn.ToString("dddd, dd MMMM yyyy")
                 })
                 .ToListAsync();
 

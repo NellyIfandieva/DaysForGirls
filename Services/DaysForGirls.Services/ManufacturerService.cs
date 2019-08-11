@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using DaysForGirls.Data;
 using DaysForGirls.Data.Models;
 using DaysForGirls.Services.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace DaysForGirls.Services
 {
@@ -42,10 +43,24 @@ namespace DaysForGirls.Services
         {
             var allManufacturers = this.db.Manufacturers
                 .Where(mi => mi.IsDeleted == false)
+                .Include(m => m.Products)
                 .Select(m => new ManufacturerServiceModel
                 {
                     Id = m.Id,
-                    Name = m.Name
+                    Name = m.Name,
+                    Description = m.Description,
+                    Logo = new LogoServiceModel
+                    {
+                        LogoUrl = m.Logo.LogoUrl
+                    },
+                    IsDeleted = m.IsDeleted,
+                    Products = m.Products
+                    .Where(p => p.ManufacturerId == m.Id)
+                    .Select(p => new ProductServiceModel
+                    {
+                        Id = p.Id
+                    })
+                    .ToList()
                 });
 
             return allManufacturers;

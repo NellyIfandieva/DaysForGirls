@@ -1,0 +1,63 @@
+﻿@model List<SaleDisplayAllViewModel>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+
+@{
+    ViewData["Title"] = "All Sales";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    #all-sales{
+        margin-top: 30px;
+        padding-left: 100px;
+    }
+    #two-sales-container{
+        margin: auto;
+        width: 50%;
+        padding: 10px;
+        display: inline-block;
+        float: left;
+    }
+
+    h1{
+        margin-top: 20px;
+    }
+
+    /*h4{
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }*/
+    img{
+        width: 70%;
+    }
+
+    .imageAndText{
+        float: left;
+    }
+
+</style>
+
+<div>
+    <h1 class="text-center">Enjoy Our Latest Sales</h1>
+</div>
+
+<div id="all-sales">
+    @for (int i = 0; i < Model.Count() - 1; i += 2)
+    {
+        <div id="two-sales-container">
+            @if (i % 2 == 0)
+            {
+                <div class="imageAndText">
+                    <a href="/Sales/Details/@Model[i].Id"><img src="@Model[i].Picture" /></a>
+                    <h4>@Model[i].Title - Ends on: @Model[i].EndsOn</h4>
+                </div>
+                <div class="imageAndText">
+                    <a href="/Sales/Details/@Model[i + 1].Id"><img src="@Model[i + 1].Picture" /></a>
+                    <h4>@Model[i + 1].Title - Ends on: @Model[i + 1].EndsOn </h4>
+                </div>
+            }
+        </div>
+    }
+</div>

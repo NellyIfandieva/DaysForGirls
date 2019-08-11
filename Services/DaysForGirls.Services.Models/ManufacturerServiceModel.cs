@@ -6,11 +6,6 @@ namespace DaysForGirls.Services.Models
 {
     public class ManufacturerServiceModel
     {
-        public ManufacturerServiceModel()
-        {
-            this.Products = new List<ProductServiceModel>();
-        }
-
         public int Id { get; set; }
 
         public string Name { get; set; }
@@ -22,5 +17,7 @@ namespace DaysForGirls.Services.Models
         public List<ProductServiceModel> Products { get; set; }
 
         public bool IsDeleted { get; set; }
+
+        public int ProductsCount => this.Products.Count;
     }
 }

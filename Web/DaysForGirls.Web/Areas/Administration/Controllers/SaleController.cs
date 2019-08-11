@@ -58,7 +58,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         }
 
         [HttpGet("/Administration/Sale/All")]
-        public async Task<IActionResult> AllAdmin()
+        public async Task<IActionResult> All()//re-add the Admin
         {
             //TODO may need to add more of the products'props
             var allSales = await this.saleService
@@ -70,14 +70,14 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                     EndsOn = s.EndsOn.ToString("dddd, dd MMMM yyyy"),
                     Picture = s.Picture,
                     IsActive = s.IsActive,
-                    ProductsCount = s.Products.Count
+                    ProductsCount = s.ProductsCount
                 })
                 .ToListAsync();
 
             return View(allSales);
         }
 
-        [HttpGet()]
+        [HttpGet("/Administration/Sale/Details/{id}")]
         public async Task<IActionResult> Details(int id)
         {
             var sale = await this.saleService.GetSaleByIdAsync(id);

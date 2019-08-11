@@ -5,11 +5,46 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+    <style>
+        table {
+            border-collapse: collapse;
+            margin-left: 320px;
+            width: 50%;
+        }
+
+        table, th, td {
+            border: 1px solid #ccccb3;
+        }
+
+        th {
+            font-weight: bold;
+            height: 50px;
+        }
+
+        td {
+            text-align: center;
+        }
+
+            td a {
+                margin-right: 3px;
+            }
+
+        tr:hover {background-color: #f5f5f5;}
+
+        #sale-image img {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px;
+            width: 150px;
+        }
+
+            #sale-image img:hover {
+                box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+            }
+    </style>
+
 <h1 class="text-center">All Categories</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>

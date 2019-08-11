@@ -1,0 +1,110 @@
+﻿@model IEnumerable<DaysForGirls.Web.ViewModels.SalesAllDisplayViewModelAdmin>
+
+@{
+    ViewData["Title"] = "All";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    table {
+  border-collapse: collapse;
+  /*margin-left: 150px;*/
+  table-layout: auto;
+  width: 100%;
+}
+
+table, th, td {
+  border: 1px solid #ccccb3;
+}
+
+th{
+    font-weight: bold;
+    height: 50px;
+}
+
+td{
+    text-align: center;
+}
+
+td a{
+    margin-right: 3px;
+}
+
+tr:nth-child(even) {background-color: #ebebe0;}
+
+tr:hover {background-color: #f5f5f5;}
+
+#sale-image img {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 5px;
+  width: 150px;
+}
+
+#sale-image img:hover {
+  box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+}
+</style>
+
+<h1 class="text-center">All Sales in Administration View</h1>
+<div style="overflow-x:auto;">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Id)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Title)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.EndsOn)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Picture)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IsActive)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ProductsCount)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EndsOn)
+                    </td>
+                    <td id="sale-image">
+                        <img src="@item.Picture" alt="@item.Title" width="100" height="100" />
+                        @*@Html.DisplayFor(modelItem => item.Picture)*@
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IsActive)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProductsCount)
+                    </td>
+                    <td>
+                        <a href="/Administration/Edit/@item.Id">Edit</a>
+                        <a href="/Administration/Details/@item.Id">Details</a>
+                        <a href="/Administration/Delete/@item.Id">Delete</a>
+                        @*@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                            @Html.ActionLink("Details", "Details/{Id}", new { /* id=item.PrimaryKey */ }) |
+                            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })*@
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
