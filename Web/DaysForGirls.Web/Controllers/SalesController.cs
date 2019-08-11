@@ -29,7 +29,13 @@ namespace DaysForGirls.Web.Controllers
                     Id = sale.Id,
                     Title = sale.Title,
                     Picture = sale.Picture,
-                    EndsOn = sale.EndsOn
+                    EndsOn = sale.EndsOn.ToString("dddd, dd MMMM yyyy")//,
+                    //Products = sale.Products
+                    //    .Select(p => new ProductInSaleViewModel
+                    //    {
+                    //        Id = p.Id,
+                    //        Name = p.Name
+                    //    }).ToList()
                 })
                 .ToListAsync();
 
@@ -45,20 +51,24 @@ namespace DaysForGirls.Web.Controllers
             {
                 Id = sale.Id,
                 Title = sale.Title,
-                EndsOn = sale.EndsOn,
-                IsValid = sale.IsActive,
+                EndsOn = sale.EndsOn.DayOfWeek
+                    + ", "
+                    + sale.EndsOn.Day
+                    + "-"
+                    + sale.EndsOn.Month
+                    + "-"
+                    + sale.EndsOn.Year,
                 Products = sale.Products
                     .Select(p => new ProductInSaleViewModel
                     {
                         Id = p.Id,
-                        Name = p.Product.Name,
-                        Picture = p.Product.Pictures.ElementAt(0).PictureUrl,
-                        OldPrice = p.Product.Price,
-                        Quantity = p.Product.Quantity.AvailableItems
+                        Name = p.Name,
+                        MainPicture = p.Pictures.ElementAt(0).PictureUrl,
+                        OldPrice = p.Price,
+                        AvailableItems = p.Quantity.AvailableItems
                     }).ToList()
             };
 
-            await Task.Delay(0);
             return View(saleToDisplay);
         }
     }

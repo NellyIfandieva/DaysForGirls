@@ -8,17 +8,17 @@
 }
 
 <h2 class="text-center">@Model.Title</h2>
-<h4 class="text-center">Ends On: @Model.EndsOn.DayOfWeek, @Model.EndsOn.Day-@Model.EndsOn.Month-@Model.EndsOn.Year</h4>
+<h4 class="text-center">Ends On: @Model.EndsOn</h4>
 
 <div>
     @foreach(var product in Model.Products)
     {
         <div class="col-md-3">
-            <a href="/Products/Details/@product.Id"><img src="@product.Picture" alt="@Model.Title - @product.Name" /></a>
-            <a href="/Products/Details/@product.Id"><h3>@product.Name</h3></a>
-            <h4>@product.OldPrice</h4>
-            <h4>@product.NewPrice</h4>
-            @if (product.Quantity < 1)
+            <a href="/Products/Details/@product.Id"><img src="@product.MainPicture" alt="@Model.Title - @product.Name" /></a>
+            <a href="/Products/Details/@product.Id"><h4>@product.Name</h4></a>
+            <p>@product.OldPrice</p>
+            <p>@product.NewPrice</p>
+            @if (product.AvailableItems < 1)
             {
                 <h3>Sold Out</h3>
             }

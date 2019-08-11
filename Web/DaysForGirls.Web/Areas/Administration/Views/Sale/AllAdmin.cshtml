@@ -5,22 +5,28 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@*Id = s.Id,
+                    Title = s.Title,
+                    EndsOn = s.EndsOn,
+                    Picture = s.Picture,
+                    IsActive = s.IsActive*@
+
 <h1>All Sales for Admin</h1>
 
 <div>
-    @foreach(var sale in Model)
+    @foreach (var sale in Model)
     {
         <div>
-            <a href="/Administration/Sale/Details/@sale.Id"><img src="@sale.Picture" alt="@sale.Title"/></a>
-            <h3>@sale.Title - Ends on: @sale.EndsOn.ToString() - Is Active: @sale.IsActive</h3>
+            <a href="/Administration/Sale/Details/@sale.Id"><img src="@sale.Picture" alt="@sale.Title" width="150px"/></a>
+            <h4>@sale.Title - Ends on: @sale.EndsOn - Is Active: @sale.IsActive</h4>
             <div>
-                @if (sale.Products.Count() <= 0)
+                @if (sale.ProductsCount <= 0)
                 {
                     <p>No products in this sale yet</p>
                 }
                 else
                 {
-                    <p>This sale offers @sale.Products.Count() products</p>
+                    <p>This sale offers @sale.ProductsCount products</p>
                 }
                 <a href="/Administration/Sale/AddProductToSale/@sale.Id"><button>Add product to sale</button></a>
             </div>

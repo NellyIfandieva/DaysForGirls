@@ -3,7 +3,7 @@
 
 
 @{
-    ViewData["Title"] = "All";
+    ViewData["Title"] = "All Sales";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -51,11 +51,11 @@
             {
                 <div class="imageAndText">
                     <a href="/Sales/Details/@Model[i].Id"><img src="@Model[i].Picture" /></a>
-                    <h4>@Model[i].Title - Ends on: @Model[i].EndsOn.DayOfWeek, @Model[i + 1].EndsOn.Day-@Model[i + 1].EndsOn.Month-@Model[i + 1].EndsOn.Year</h4>
+                    <h4>@Model[i].Title - Ends on: @Model[i].EndsOn</h4>
                 </div>
                 <div class="imageAndText">
                     <a href="/Sales/Details/@Model[i + 1].Id"><img src="@Model[i + 1].Picture" /></a>
-                    <h4>@Model[i + 1].Title - Ends on: @Model[i + 1].EndsOn.DayOfWeek, @Model[i + 1].EndsOn.Day-@Model[i + 1].EndsOn.Month-@Model[i + 1].EndsOn.Year </h4>
+                    <h4>@Model[i + 1].Title - Ends on: @Model[i + 1].EndsOn </h4>
                 </div>
             }
         </div>

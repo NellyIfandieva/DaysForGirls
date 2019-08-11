@@ -13,7 +13,6 @@ namespace DaysForGirls.Services.Models
         {
             this.Pictures = new List<PictureServiceModel>();
             this.Reviews = new List<CustomerReviewServiceModel>();
-            this.Sales = new List<ProductSaleServiceModel>();
         }
 
         public int Id { get; set; }
@@ -42,9 +41,9 @@ namespace DaysForGirls.Services.Models
 
         public bool IsDeleted { get; set; }
 
-        public List<ProductSaleServiceModel> Sales { get; set; }
+        public int SaleId { get; set; }
 
-        public bool IsInSale => this.Sales.Count > 0;
+        public bool IsInSale => this.SaleId > 0;
 
         //public List<ProductCart> Carts { get; set; }
 

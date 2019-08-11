@@ -10,9 +10,7 @@ namespace DaysForGirls.Web.ViewModels
 
         public string Title { get; set; }
 
-        public DateTime EndsOn { get; set; }
-
-        public bool IsValid { get; set; }
+        public string EndsOn { get; set; }
 
         public List<ProductInSaleViewModel> Products { get; set; }
     }

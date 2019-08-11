@@ -4,18 +4,18 @@ using System.Text;
 
 namespace DaysForGirls.Web.ViewModels
 {
-    public class ProductInSaleViewModel
+    public class ProductInSaleAdminViewModel
     {
         public int Id { get; set; }
 
         public string Name { get; set; }
 
-        public string MainPicture { get; set; }
+        public string Picture { get; set; }
 
         public decimal OldPrice { get; set; }
 
-        public decimal NewPrice => this.OldPrice - (0.3m * this.OldPrice);
+        public decimal NewPrice { get; set; }
 
-        public int AvailableItems { get; set; }
+        public int AvailableQuantity { get; set; }
     }
 }

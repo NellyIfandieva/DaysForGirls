@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DaysForGirls.Web.ViewModels
 {
-    public class SalesAllDisplayViewModelAdmin
+    public class SaleDetailsAdminViewModel
     {
         public int Id { get; set; }
 
@@ -12,10 +12,8 @@ namespace DaysForGirls.Web.ViewModels
 
         public string EndsOn { get; set; }
 
-        public string Picture { get; set; }
-
         public bool IsActive { get; set; }
 
-        public int ProductsCount { get; set; }
+        public List<ProductInSaleAdminViewModel> Products { get; set; }
     }
 }

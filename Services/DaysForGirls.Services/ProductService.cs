@@ -12,7 +12,6 @@ namespace DaysForGirls.Services
     public class ProductService : IProductService
     {
         private readonly DaysForGirlsDbContext db;
-        private readonly IAdminService adminService;
         private readonly IPictureService pictureService;
 
         public ProductService(
@@ -32,7 +31,7 @@ namespace DaysForGirls.Services
                 .Include(p => p.Quantity)
                 .Include(p => p.Pictures)
                 .Include(p => p.Reviews)
-                .Include(p => p.Sales)
+                .Include(p => p.Sale)
                 .SingleOrDefaultAsync(p => p.Id == productId);
 
             var productPictures = await this.db.Pictures
@@ -54,13 +53,13 @@ namespace DaysForGirls.Services
                     AuthorUsername = pR.Author.UserName
                 }).ToListAsync();
 
-            var productSales = await this.db.ProductsSales
-                .Where(s => s.ProductId == product.Id)
-                .Select(s => new ProductSaleServiceModel
-                {
-                    Id = s.Id,
-                    SaleId = s.SaleId
-                }).ToListAsync();
+            //var productSales = await this.db.ProductsSales
+            //    .Where(s => s.ProductId == product.Id)
+            //    .Select(s => new ProductSaleServiceModel
+            //    {
+            //        Id = s.Id,
+            //        SaleId = s.SaleId
+            //    }).ToListAsync();
 
             ProductServiceModel productToReturn = new ProductServiceModel
             {
@@ -89,7 +88,7 @@ namespace DaysForGirls.Services
                 },
                 Reviews = productReviews,
                 IsDeleted = product.IsDeleted,
-                Sales = productSales
+                SaleId = product.SaleId
             };
 
             return productToReturn;
@@ -127,7 +126,8 @@ namespace DaysForGirls.Services
                     {
                         PictureUrl = p.Pictures.ElementAt(0).PictureUrl
                     },
-                    IsInSale = p.IsInSale
+                    IsInSale = p.IsInSale,
+                    SaleId = p.SaleId
                 });
 
             return allProductsOfCategory;

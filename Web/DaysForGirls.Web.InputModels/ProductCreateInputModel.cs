@@ -47,5 +47,7 @@ namespace DaysForGirls.Web.InputModels
 
         [Range(MinNumsAvailable, MaxNumsAvailable)]
         public int Quantity { get; set; }
+
+        public int SaleId { get; set; }
     }
 }

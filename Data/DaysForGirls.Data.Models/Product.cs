@@ -13,7 +13,6 @@ namespace DaysForGirls.Data.Models
             this.Pictures = new List<Picture>();
             this.Carts = new List<ProductCart>();
             this.Reviews = new List<CustomerReview>();
-            this.Sales = new List<ProductSale>();
         }
 
         [Required]
@@ -49,7 +48,8 @@ namespace DaysForGirls.Data.Models
 
         public ICollection<ProductCart> Carts { get; set; }
 
-        public ICollection<ProductSale> Sales { get; set; }
+        public int SaleId { get; set; }
+        public Sale Sale { get; set; }
 
         public bool IsInSale { get; set; }
 

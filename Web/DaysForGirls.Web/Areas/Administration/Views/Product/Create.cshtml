@@ -79,7 +79,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Name" class=""></label>
-                <input type="text" asp-for="Name" class="form-control" />
+                <input type="text" asp-for="Name" class="form-control" placeholder="Enter the Name of the Product" autofocus />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -104,7 +104,7 @@
                 </select>
                 <span asp-validation-for="Category" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            @*<div class="form-group">
                 <label asp-for="Pictures" class=""></label>
                 @for (int i = 1; i <= 5; i++)
                 {
@@ -113,25 +113,30 @@
                     </div>
                 }
                 <span asp-validation-for="Pictures" class="text-danger"></span>
+            </div>*@
+            <div class="form-group">
+                <label asp-for="Pictures"></label>
+                <input type="file" asp-for="Pictures" class="form-control" placeholder="Upload Pictures" multiple />
+                <span asp-validation-for="Pictures" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
-                <input type="text" asp-for="Description" class="form-control" />
+                <input type="text" asp-for="Description" class="form-control" placeholder="Enter the Product Description"/>
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Colour" class="control-label"></label>
-                <input type="text" asp-for="Colour" class="form-control" />
+                <input type="text" asp-for="Colour" class="form-control" placeholder="Enter the Product Colour"/>
                 <span asp-validation-for="Colour" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Size" class="control-label"></label>
-                <input type="text" asp-for="Size" class="form-control" />
+                <input type="text" asp-for="Size" class="form-control" placeholder="Enter the Product Size"/>
                 <span asp-validation-for="Size" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Price" class="control-label"></label>
-                <input type="number" step="any" asp-for="Price" class="form-control" />
+                <input type="number" step="any" asp-for="Price" class="form-control" placeholder="Enter the Product Price"/>
                 <span asp-validation-for="Price" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -157,7 +162,9 @@
                 <span asp-validation-for="Quantity" class="text-danger"></span>
             </div>
             <div>
-
+                <label asp-for="SaleId" class="control-label"></label>
+                <input type="number" asp-for="SaleId" class="form-control" placeholder="Enter a Sale Id" />
+                <span asp-validation-for="SaleId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

@@ -47,7 +47,14 @@ namespace DaysForGirls.Services
                     Id = ss.Id,
                     Title = ss.Title,
                     EndsOn = ss.EndsOn,
-                    Picture = ss.Picture
+                    Picture = ss.Picture,
+                    Products = ss.Products
+                        .Select(p => new ProductServiceModel
+                        {
+                            Id = p.Id,
+                            Name = p.Name
+                        })
+                        .ToList()
                 });
 
             return allSales;
@@ -56,6 +63,7 @@ namespace DaysForGirls.Services
         public IQueryable<SaleServiceModel> DisplayAllAdmin()
         {
             var allSales = this.db.Sales
+                .Include(s => s.Products)
                 .Select(s => new SaleServiceModel
                 {
                     Id = s.Id,
@@ -64,15 +72,12 @@ namespace DaysForGirls.Services
                     Picture = s.Picture,
                     IsActive = s.IsActive,
                     Products = s.Products
-                        .Where(sI => sI.SaleId == s.Id)
-                        .Select(pr => new ProductSaleServiceModel
+                        .Select(p => new ProductServiceModel
                         {
-                            Id = pr.Id,
-                            Product = new ProductServiceModel
-                            {
-                                Id = pr.Product.Id
-                            }
-                        }).ToList()
+                            Id = p.Id,
+                            Name = p.Name
+                        })
+                        .ToList()
                 });
 
             return allSales;
@@ -81,54 +86,52 @@ namespace DaysForGirls.Services
         public async Task<SaleServiceModel> GetSaleByIdAsync(int id)
         {
             var saleWithDetails = await this.db.Sales
+                .Include(s => s.Products)
                 .SingleOrDefaultAsync(sale => sale.Id == id);
 
-            var productsInSale = this.db.ProductsSales
+            var productsInSale = await this.db.Products
                 .Where(p => p.SaleId == id)
-                .Select(pS => new ProductSaleServiceModel
+                .Select(pS => new ProductServiceModel
                 {
                     Id = pS.Id,
-                    Product = new ProductServiceModel
+                    Name = pS.Name,
+                    Category = new CategoryServiceModel
                     {
-                        Name = pS.Product.Name,
-                        Category = new CategoryServiceModel
+                        Name = pS.Category.Name
+                    },
+                    ProductType = new ProductTypeServiceModel
+                    {
+                        Name = pS.ProductType.Name
+                    },
+                    Pictures = pS.Pictures
+                        .Select(p => new PictureServiceModel
                         {
-                            Name = pS.Product.Category.Name
-                        },
-                        ProductType = new ProductTypeServiceModel
+                            Id = p.Id,
+                            PictureUrl = p.PictureUrl
+                        }).ToList(),
+                    Description = pS.Description,
+                    Colour = pS.Colour,
+                    Size = pS.Size,
+                    Price = pS.Price,
+                    Manufacturer = new ManufacturerServiceModel
+                    {
+                        Name = pS.Manufacturer.Name
+                    },
+                    Quantity = new QuantityServiceModel
+                    {
+                        AvailableItems = pS.Quantity.AvailableItems
+                    },
+                    Reviews = pS.Reviews
+                        .Select(pR => new CustomerReviewServiceModel
                         {
-                            Name = pS.Product.ProductType.Name
-                        },
-                        Pictures = pS.Product.Pictures
-                            .Select(p => new PictureServiceModel
-                            {
-                                Id = p.Id,
-                                PictureUrl = p.PictureUrl
-                            }).ToList(),
-                        Description = pS.Product.Description,
-                        Colour = pS.Product.Colour,
-                        Size = pS.Product.Size,
-                        Price = pS.Product.Price,
-                        Manufacturer = new ManufacturerServiceModel
-                        {
-                            Name = pS.Product.Manufacturer.Name
-                        },
-                        Quantity = new QuantityServiceModel
-                        {
-                            AvailableItems = pS.Product.Quantity.AvailableItems
-                        },
-                        Reviews = pS.Product.Reviews
-                            .Select(pR => new CustomerReviewServiceModel
-                            {
-                                Id = pR.Id,
-                                Title = pR.Title,
-                                Text = pR.Text,
-                                CreatedOn = pR.CreatedOn.ToString("dddd dd MMMM yyyy"),
-                                AuthorUsername = pR.Author.UserName
-                            }).ToList()
-                    }
+                            Id = pR.Id,
+                            Title = pR.Title,
+                            Text = pR.Text,
+                            CreatedOn = pR.CreatedOn.ToString("dddd dd MMMM yyyy"),
+                            AuthorUsername = pR.Author.UserName
+                        }).ToList()
                 })
-                .ToList();
+                .ToListAsync();
 
             SaleServiceModel saleToReturn = new SaleServiceModel
             {
@@ -142,18 +145,15 @@ namespace DaysForGirls.Services
             return saleToReturn;
         }
 
-        public async Task<bool> AddProductToSale(SaleServiceModel saleToAddTo)
+        public async Task<bool> AddProductToSale(int saleId, int productId)
         {
             Sale sale = this.db.Sales
-                .SingleOrDefault(s => s.Id == saleToAddTo.Id);
+                .SingleOrDefault(s => s.Id == saleId);
 
-            ProductSale productToAdd = new ProductSale
-            {
-                ProductId = saleToAddTo.NewProduct.ProductId,
-                SaleId = sale.Id
-            };
+            Product toAdd = await this.db.Products
+                .SingleOrDefaultAsync(p => p.Id == productId);
 
-            sale.Products.Add(productToAdd);
+            sale.Products.Add(toAdd);
 
             this.db.Sales.Update(sale);
 

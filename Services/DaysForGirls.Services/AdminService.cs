@@ -56,7 +56,7 @@ namespace DaysForGirls.Services
                 Carts = new List<ProductCart>(),
                 Reviews = new List<CustomerReview>(),
                 Pictures = new List<Picture>(),
-                Sales = new List<ProductSale>()
+                SaleId = productServiceModel.SaleId
             };
 
             if(quantityIsAdded)
@@ -138,13 +138,7 @@ namespace DaysForGirls.Services
                     AuthorUsername = pR.Author.UserName
                 }).ToListAsync();
 
-            var productSales = await this.db.ProductsSales
-                .Where(s => s.ProductId == product.Id)
-                .Select(s => new ProductSaleServiceModel
-                {
-                    Id = s.Id,
-                    SaleId = s.SaleId
-                }).ToListAsync();
+            
 
             //var productCategory = await this.db.Categories
             //    .SingleOrDefaultAsync(c => c.Id == product.CategoryId);
@@ -176,7 +170,7 @@ namespace DaysForGirls.Services
                 },
                 Reviews = productReviews,
                 IsDeleted = product.IsDeleted,
-                Sales = productSales
+                SaleId = product.SaleId
             };
 
             return productToReturn;
@@ -258,15 +252,11 @@ namespace DaysForGirls.Services
         }
 
         public async Task<bool> AddProductToSaleAsync(int productId, int saleId)
-        {
-            var productSale = await this.db.ProductsSales
-                .SingleOrDefaultAsync(pS => pS.ProductId == productId
-                && pS.SaleId == saleId);
-
+        { 
             var product = this.db.Products
                 .SingleOrDefault(p => p.Id == productId);
 
-            product.Sales.Add(productSale);
+            product.SaleId = saleId;
             product.IsInSale = true;
 
             this.db.Products.Update(product);
@@ -318,14 +308,6 @@ namespace DaysForGirls.Services
                     AuthorUsername = pR.Author.UserName
                 }).ToListAsync();
 
-            var productSales = await this.db.ProductsSales
-                .Where(s => s.ProductId == productWithName.Id)
-                .Select(s => new ProductSaleServiceModel
-                {
-                    Id = s.Id,
-                    SaleId = s.SaleId
-                }).ToListAsync();
-
             ProductServiceModel productToReturn = new ProductServiceModel
             {
                 Id = productWithName.Id,
@@ -353,7 +335,7 @@ namespace DaysForGirls.Services
                 },
                 Reviews = productReviews,
                 IsDeleted = productWithName.IsDeleted,
-                Sales = productSales
+                SaleId = productWithName.SaleId
             };
 
             return productToReturn;

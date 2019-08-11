@@ -139,7 +139,8 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                 Quantity = new QuantityServiceModel
                 {
                     AvailableItems = model.Quantity
-                }
+                },
+                SaleId = model.SaleId
             };
 
             productServiceModel.Pictures = imageUrls.Select(image => new PictureServiceModel
@@ -149,6 +150,12 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
             .ToList();
 
             int productId = await this.adminService.CreateAsync(productServiceModel);
+
+            if (model.SaleId > 0)
+            {
+                bool saleIsUpdatedWithProduct = await this.saleService.AddProductToSale(model.SaleId, productId);
+                bool productIsAddedToSale = await this.adminService.AddProductToSaleAsync(productId, model.SaleId);
+            }
 
             return Redirect("/Administration/Product/All");
         }

@@ -60,22 +60,19 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         [HttpGet("/Administration/Sale/All")]
         public async Task<IActionResult> AllAdmin()
         {
-            var allSales = this.saleService
+            //TODO may need to add more of the products'props
+            var allSales = await this.saleService
                 .DisplayAllAdmin()
                 .Select(s => new SalesAllDisplayViewModelAdmin
                 {
                     Id = s.Id,
                     Title = s.Title,
-                    EndsOn = s.EndsOn,
+                    EndsOn = s.EndsOn.ToString("dddd, dd MMMM yyyy"),
                     Picture = s.Picture,
                     IsActive = s.IsActive,
-                    Products = s.Products
-                        .Select(p => new ProductDisplayAllViewModel
-                        {
-                            Id = p.Product.Id
-                        }).ToList()
+                    ProductsCount = s.Products.Count
                 })
-                .ToList();
+                .ToListAsync();
 
             return View(allSales);
         }
@@ -85,24 +82,23 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         {
             var sale = await this.saleService.GetSaleByIdAsync(id);
 
-            var saleToDisplay = new SaleDetailsViewModel
+            var saleToDisplay = new SaleDetailsAdminViewModel
             {
                 Id = sale.Id,
                 Title = sale.Title,
-                EndsOn = sale.EndsOn,
-                IsValid = sale.IsActive,
+                EndsOn = sale.EndsOn.ToString(),
+                IsActive = sale.IsActive,
                 Products = sale.Products
-                    .Select(p => new ProductInSaleViewModel
+                    .Select(p => new ProductInSaleAdminViewModel
                     {
-                        Id = p.Product.Id,
-                        Name = p.Product.Name,
-                        Picture = p.Product.Pictures.ElementAt(0).PictureUrl,
-                        OldPrice = p.Product.Price,
-                        Quantity = p.Product.Quantity.AvailableItems
+                        Id = p.Id,
+                        Name = p.Name,
+                        Picture = p.Pictures.ElementAt(0).PictureUrl,
+                        OldPrice = p.Price,
+                        AvailableQuantity = p.Quantity.AvailableItems
                     }).ToList()
             };
 
-            await Task.Delay(0);
             return View(saleToDisplay);
         }
 
@@ -141,14 +137,10 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
             var productToAdd = await this.adminService
                 .GetProductByNameAsync(model.ProductName);
 
-            saleToAddTo.NewProduct = new ProductSaleServiceModel
-            {
-                ProductId = productToAdd.Id,
-                SaleId = model.SaleId
-            };
+            saleToAddTo.NewProduct = productToAdd;
 
-            bool saleAddedProduct = await this.saleService.AddProductToSale(saleToAddTo);
-            bool productAddedSale = await this.adminService.AddProductToSaleAsync(productToAdd.Id, model.SaleId);
+            bool saleAddedProduct = await this.saleService.AddProductToSale(saleToAddTo.Id, productToAdd.Id);
+            bool productAddedSale = await this.adminService.AddProductToSaleAsync(productToAdd.Id, saleToAddTo.Id);
 
             return Redirect("/Administration/Sale/Details/{saleId}");
         }

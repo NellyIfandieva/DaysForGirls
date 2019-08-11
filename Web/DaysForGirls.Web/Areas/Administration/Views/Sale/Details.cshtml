@@ -1,11 +1,11 @@
-﻿@model DaysForGirls.Web.ViewModels.SaleDetailsViewModel
+﻿@model DaysForGirls.Web.ViewModels.SaleDetailsAdminViewModel
 
 @{
     ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>@Model.Title - Ends on: @Model.EndsOn.ToString() - Active: @Model.IsValid</h2>
+<h2>@Model.Title - Ends on: @Model.EndsOn.ToString() - Active: @Model.IsActive</h2>
 
 <div>
     @foreach(var product in Model.Products)
