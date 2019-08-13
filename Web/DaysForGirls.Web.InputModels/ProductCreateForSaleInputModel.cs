@@ -1,17 +1,21 @@
 ﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text;
 
 namespace DaysForGirls.Web.InputModels
 {
-    public class ProductCreateInputModel
+    public class ProductCreateForSaleInputModel
     {
         private const string MinPrice = "0.00";
         private const string MaxPrice = "10000.00";
         private const int MinNumsAvailable = 0;
         private const int MaxNumsAvailable = 10;
+        private const int MinSaleIdValue = 1;
+        private const int MaxSaleIdValue = Int32.MaxValue;
 
-        public ProductCreateInputModel()
+        public ProductCreateForSaleInputModel()
         {
             this.Pictures = new HashSet<IFormFile>();
         }
@@ -28,10 +32,10 @@ namespace DaysForGirls.Web.InputModels
         [Required(ErrorMessage = "Description is Required")]
         public string Description { get; set; }
 
-        [Required(ErrorMessage = "Pictures is Required")]
+        [Required(ErrorMessage = "Pictures are Required")]
         public ICollection<IFormFile> Pictures { get; set; }
 
-        [Required(ErrorMessage = "Colour Name is Required")]
+        [Required(ErrorMessage = "Colour is Required")]
         public string Colour { get; set; }
 
         [Required(ErrorMessage = "Size is Required")]
@@ -47,6 +51,7 @@ namespace DaysForGirls.Web.InputModels
         [Range(MinNumsAvailable, MaxNumsAvailable)]
         public int Quantity { get; set; }
 
+        //[Range(MinSaleIdValue, MaxSaleIdValue)]
         [Display(Name = "Sale Id")]
         public int SaleId { get; set; }
     }

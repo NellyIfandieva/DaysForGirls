@@ -7,12 +7,13 @@
 
 <style>
     #sale-holder{
-        margin-left: 390px;
-        margin-bottom: 30px;
+        margin-left: 350px;
+        margin-bottom: 50px;
     }
     #saleTitle{
         text-decoration: none;
         margin-top: 0px;
+        margin-bottom: 0px;
         padding-top: 0px;
     }
 
@@ -25,6 +26,7 @@
         border: 1px solid #ddd;
         border-radius: 4px;
         padding: 5px;
+        margin-bottom: 0px;
     }
 
     #sale-image:hover {
@@ -44,8 +46,9 @@
 {
     <div id="sale-holder">
         <a href="/Sales/Details/@sale.Id"><img id="sale-image" src="@sale.Picture" alt="@sale.Title" width="550"/></a>
-        <a id="saleTitle" href="/Sales/Details/@sale.Id"><h3>@sale.Title</h3></a>
-        <p id="saleEndsOn"><strong>Ends on: @sale.EndsOn</strong></p>
+        <div class="text-over-image"></div>
+        @*<a id="saleTitle" href="/Sales/Details/@sale.Id"><h3>@sale.Title</h3></a>*@
+        <p id="saleEndsOn"><span style="font-weight: bold">Ends on:</span> @sale.EndsOn</p>
     </div>
 }
 

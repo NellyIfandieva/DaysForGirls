@@ -33,12 +33,12 @@ namespace DaysForGirls.Services
 
             if(cart == null)
             {
-                DaysForGirlsUser currentUser =
-                await this.userManager.FindByIdAsync(userId);
+                //DaysForGirlsUser currentUser =
+                //await this.userManager.FindByIdAsync(userId);
 
                 cart = new ShoppingCart
                 {
-                    User = currentUser,
+                    UserId = userId,
                     ShoppingCartItems = new List<ShoppingCartItem>()
                 };
             }
@@ -65,11 +65,6 @@ namespace DaysForGirls.Services
             bool itemIsAddedToCart = result > 0;
 
             return itemIsAddedToCart;
-        }
-
-        public Task<bool> CreateItem(ShoppingCartItemServiceModel model)
-        {
-            throw new NotImplementedException();
         }
 
 

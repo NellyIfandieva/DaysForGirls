@@ -21,9 +21,10 @@
                 {
                     <div class="w3-dropdown-hover">
                         <a href="/Administration/Product/All"><button class="w3-button">Product</button></a>
-                            <div class="w3-dropdown-content w3-bar-block w3-card-4">
-                                <a href="/Administration/Product/Create" class="w3-bar-item w3-button">Create</a>
-                            </div>
+                        <div class="w3-dropdown-content w3-bar-block w3-card-4">
+                            <a href="/Administration/Product/Create" class="w3-bar-item w3-button">Create</a>
+                            <a href="/Administration/Product/CreateForSale" class="w3-bar-item w3-button">Create For Sale</a>
+                        </div>
                     </div>
                     <div class="w3-dropdown-hover">
                         <a href="/Administration/ProductType/All"><button class="w3-button">Product Type</button></a>
@@ -77,7 +78,7 @@
                     <a href="/Proms/Suits" class="w3-bar-item w3-button">Suits</a>
                     <a href="/Proms/Accessories" class="w3-bar-item w3-button">Accessories</a>
                 </div>
-</div>
+        </div>
         <div class="w3-dropdown-hover">
             <a href="/Other/All"><button class="w3-button">Other Special Occasions</button></a>
             <div class="w3-dropdown-content w3-bar-block w3-card-4">
@@ -92,10 +93,13 @@
             @RenderBody()
         </main>
     </div>
-    <footer>
-        <p>&copy; Days For Girl Ltd. @DateTime.UtcNow.DayOfWeek, @DateTime.UtcNow.Day-@DateTime.UtcNow.Month-@DateTime.UtcNow.Year</p>
+    <footer id="footer-info=holer">
+        <div>
+            <a href="#">About Days For Girls</a>
+            <a href="#">Contact Us</a>
+        </div>
+        <p id="footer-holder">&copy; Days For Girl Ltd. @DateTime.UtcNow.DayOfWeek, @DateTime.UtcNow.Day-@DateTime.UtcNow.Month-@DateTime.UtcNow.Year</p>
     </footer>
-
     <script src="~/lib/jquery/dist/jquery.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
 

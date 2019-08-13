@@ -146,10 +146,10 @@ namespace DaysForGirls.Services
             return saleToReturn;
         }
 
-        public async Task<bool> AddProductToSale(int saleId, int productId)
+        public async Task<bool> AddProductToSaleAsync(int saleId, int productId)
         {
-            Sale sale = this.db.Sales
-                .SingleOrDefault(s => s.Id == saleId);
+            Sale sale = await this.db.Sales
+                .SingleOrDefaultAsync(s => s.Id == saleId);
 
             Product toAdd = await this.db.Products
                 .SingleOrDefaultAsync(p => p.Id == productId);

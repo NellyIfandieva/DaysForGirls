@@ -98,7 +98,6 @@ namespace DaysForGirls.Web.Areas.Identity.Pages.Account
                     Email = Input.Email,
                     PhoneNumber = Input.PhoneNumber,
                     Address = Input.Address,
-                    ShoppingCarts = new HashSet<ShoppingCart>(),
                     Orders = new HashSet<Order>(),
                     ProductReviews = new HashSet<CustomerReview>()
                 };

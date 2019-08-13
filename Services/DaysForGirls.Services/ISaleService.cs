@@ -17,6 +17,6 @@ namespace DaysForGirls.Services
 
         Task<SaleServiceModel> GetSaleByIdAsync(int id);
 
-        Task<bool> AddProductToSale(int saleId, int productId);
+        Task<bool> AddProductToSaleAsync(int saleId, int productId);
     }
 }

@@ -1,80 +1,88 @@
 ﻿@using DaysForGirls.Web.ViewModels
-@model DaysForGirls.Web.InputModels.ProductCreateInputModel
+@model DaysForGirls.Web.InputModels.ProductCreateForSaleInputModel
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
-
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "CreateForSale";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-    <style>
-        input[type=text], select {
-            width: 30%;
-            padding: 12px 20px;
-            margin: 8px 0;
-            display: inline-block;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
+<style>
+    input[type=text], select {
+        width: 30%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
 
-        input[type=number], select {
-            width: 30%;
-            padding: 12px 20px;
-            margin: 8px 0;
-            display: inline-block;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
+    input[type=number], select {
+        width: 30%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
 
-        input[type=file], select {
-            width: 30%;
-            padding: 12px 20px;
-            margin: 8px 0;
-            display: inline-block;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
+    input[type=file], select {
+        width: 30%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
 
-        input[type=submit] {
-            width: 15%;
+    input[type=submit] {
+        width: 15%;
+        background-color: #cc0052;
+        color: white;
+        font-size: medium;
+        padding: 15px 20px 15px 20px;
+        margin: 10px 200px 10px 25px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+        input[type=submit]:hover {
             background-color: #cc0052;
-            color: white;
-            font-size: medium;
-            padding: 15px 20px 15px 20px;
-            margin: 10px 200px 10px 25px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
         }
 
-            input[type=submit]:hover {
-                background-color: #cc0052;
-            }
+    #row {
+        margin-left: 250px;
+        margin-right: 250px;
+        position: center;
+        border-radius: 5px;
+        background-color: #f2f2f2;
+        padding: 20px;
+    }
 
-        #row {
-            margin-left: 250px;
-            margin-right: 250px;
-            position: center;
-            border-radius: 5px;
-            background-color: #f2f2f2;
-            padding: 20px;
-        }
+    #create-for-sale{
+        margin-left: 350px;
+        position: center;
+    }
 
-        /*#forgot-or-register {
+    #data-holder{
+        width: 1000px;
+    }
+
+    /*#forgot-or-register {
             color: #cc0052;
         }*/
-    </style>
+</style>
 
-<h2 class="text-center">Create a Product</h2>
+<h2 class="text-center">Create a Product for a Sale</h2>
 
 <hr />
 
-<div class="row">
-    <div class="col-md-4">
+<div id="create-for-sale" class="row">
+    <div id="data-holder" class="col-md-6">
         <form method="post" enctype="multipart/form-data" asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -86,7 +94,7 @@
                 <label asp-for="ProductType" class=""></label>
                 <select class="form-control" asp-for="ProductType">
                     <option selected disabled>...Select Product Type...</option>
-                    @foreach (var type in (IEnumerable<ProductCreateProductTypeViewModel>)this.ViewData["productTypes"])
+                    @foreach (var type in (IEnumerable<ProductCreateProductTypeViewModel>)this.ViewData["prTypes"])
                     {
                         <option value="@type.Name">@type.Name</option>
                     }
@@ -97,7 +105,7 @@
                 <label asp-for="Category" class=""></label>
                 <select class="form-control" asp-for="Category">
                     <option selected disabled>...Select Category...</option>
-                    @foreach (var category in (IEnumerable<ProductCreateCategoryViewModel>)this.ViewData["categories"])
+                    @foreach (var category in (IEnumerable<ProductCreateCategoryViewModel>)this.ViewData["cats"])
                     {
                         <option value="@category.Name">@category.Name</option>
                     }
@@ -105,15 +113,15 @@
                 <span asp-validation-for="Category" class="text-danger"></span>
             </div>
             @*<div class="form-group">
-            <label asp-for="Pictures" class=""></label>
-            @for (int i = 1; i <= 5; i++)
-            {
-                <div>
-                    <input type="file" asp-for="Pictures" class="form-control" placeholder="Upload Picture" />
-                </div>
-            }
-            <span asp-validation-for="Pictures" class="text-danger"></span>
-        </div>*@
+                    <label asp-for="Pictures" class=""></label>
+                    @for (int i = 1; i <= 5; i++)
+                    {
+                        <div>
+                            <input type="file" asp-for="Pictures" class="form-control" placeholder="Upload Picture" />
+                        </div>
+                    }
+                    <span asp-validation-for="Pictures" class="text-danger"></span>
+                </div>*@
             <div class="form-group">
                 <label asp-for="Pictures"></label>
                 <input type="file" asp-for="Pictures" class="form-control" placeholder="Upload Pictures" multiple />
@@ -143,7 +151,7 @@
                 <label asp-for="Manufacturer" class="control-label"></label>
                 <select class="form-control" asp-for="Manufacturer">
                     <option selected disabled>...Select Manufacturer...</option>
-                    @foreach (var manufacturer in (IEnumerable<ProductCreateManufacturerViewModel>)this.ViewData["manufacturers"])
+                    @foreach (var manufacturer in (IEnumerable<ProductCreateManufacturerViewModel>)this.ViewData["manufs"])
                     {
                         <option value="@manufacturer.Name">@manufacturer.Name</option>
                     }
@@ -164,17 +172,20 @@
             <div class="form-group">
                 <label asp-for="SaleId" class="control-label"></label>
                 <select class="form-control" asp-for="SaleId">
-                    <option selected disabled>...Select Sale...</option>
+                    <option selected disabled>...Select Manufacturer...</option>
                     @foreach (var sale in (IEnumerable<ProductCreateSaleViewModel>)this.ViewData["sales"])
                     {
-                        <option value="@sale.Id">@sale.Id</option>
+                        <option value="@sale.Id">@sale.Title</option>
                     }
                 </select>
                 <span asp-validation-for="SaleId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Add Product to Sale" class="btn btn-primary"/>
             </div>
+            @*<div class="form-group">
+                <input type="submit" value="Create For Sale" class="btn btn-primary" />
+            </div>*@
         </form>
     </div>
 </div>

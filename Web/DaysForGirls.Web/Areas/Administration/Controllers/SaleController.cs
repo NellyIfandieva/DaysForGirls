@@ -35,6 +35,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         [HttpGet("/Administration/Sale/Create")]
         public async Task<IActionResult> Create()
         {
+            await Task.Delay(0);
             return View();
         }
 
@@ -101,13 +102,14 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
 
             return View(saleToDisplay);
         }
-
+        //TODO make it EditAsync, also in the interface
         public async Task<IActionResult> Edit(int saleId)
         {
             throw new NotImplementedException();
             //return Redirect("/Administration/Sale/Details/{saleId}");
         }
 
+        //TODO make it EditAsync, also in the interface
         [HttpGet("/Administration/Sale/AddProductToSale/{saleId}")]
         public async Task<IActionResult> AddProductToSale(int saleId)
         {
@@ -139,7 +141,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
 
             saleToAddTo.NewProduct = productToAdd;
 
-            bool saleAddedProduct = await this.saleService.AddProductToSale(saleToAddTo.Id, productToAdd.Id);
+            bool saleAddedProduct = await this.saleService.AddProductToSaleAsync(saleToAddTo.Id, productToAdd.Id);
             bool productAddedSale = await this.adminService.AddProductToSaleAsync(productToAdd.Id, saleToAddTo.Id);
 
             return Redirect("/Administration/Sale/Details/{saleId}");

@@ -7,36 +7,42 @@
 }
 
 <style>
-    #wedding-product-pres {
+    #wedding-products-container {
         margin-top: 10px;
         margin-left: 95px;
         display: inline-block;
+    }
+        #wedding-products-container img {
+            width: 30%;
+        }
+
+    .wedding-product-pres{
         float: left;
     }
 
-        #wedding-product-pres img {
-            width: 30%;
-        }
+    p{
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+        
 </style>
 
 <h1 class="text-center">All Wedding Products</h1>
 
-<div>
+<div id="wedding-products-container">
     @foreach (var product in Model)
     {
-    <div id="wedding-product-pres">
+    <div class="wedding-product-pres">
         <a href="/Products/Details/@product.Id"><img src="@product.Picture" alt="@product.Name" /></a>
-        <div>
-            <p class="text-primary text-center mt-3">@product.Name</p>
-            @if (product.IsInSale)
-            {
-                <a href="/Sales/Details/@product.SaleId"><p>Now In Sale</p></a>
-            }
-            else
-            {
-                <p class="text-primary text-center mt-3">Price: &euro;@product.Price</p>
-            }
-        </div>
+        <p class="text-primary mt-3">@product.Name</p>
+        @if (product.IsInSale)
+        {
+            <a href="/Sales/Details/@product.SaleId"><p>Now In Sale</p></a>
+        }
+        else
+        {
+            <p class="text-primary text-center mt-3">Price: &euro;@product.Price</p>
+        }
     </div>
     }
 </div>

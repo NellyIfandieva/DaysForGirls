@@ -43,7 +43,23 @@ nav {
 /*nav img{
     width: 200px;
 }*/
-
+#footer-info-holder {
+    background-color: #e0e0d1;
+    color: #cc0052;
+    text-align: left;
+}
+#footer-info-holder a{
+    text-decoration: none;
+}
+#footer-holder {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: #e0e0d1;
+    color: #cc0052;
+    text-align: center;
+}
 .topnav li{
     color: aliceblue;
 }

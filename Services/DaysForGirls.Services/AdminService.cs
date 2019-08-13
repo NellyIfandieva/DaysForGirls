@@ -55,9 +55,17 @@ namespace DaysForGirls.Services
                 Manufacturer = manufacturerInDb,
                 Carts = new List<ProductCart>(),
                 Reviews = new List<CustomerReview>(),
-                Pictures = new List<Picture>(),
-                SaleId = productServiceModel.SaleId
+                Pictures = new List<Picture>()
             };
+
+            if(productServiceModel.SaleId > 0)
+            {
+                product.SaleId = productServiceModel.SaleId;
+            }
+            else
+            {
+                product.Sale = null;
+            }
 
             if(quantityIsAdded)
             {

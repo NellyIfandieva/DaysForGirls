@@ -8,10 +8,10 @@ namespace DaysForGirls.Data.Models
     {
         public DaysForGirlsUser()
         {
-            this.ShoppingCarts = new List<ShoppingCart>();
             this.Orders = new List<Order>();
             this.ProductReviews = new List<CustomerReview>();
         }
+
         [Required]
         public string FirstName { get; set; }
 
@@ -22,8 +22,6 @@ namespace DaysForGirls.Data.Models
         public string Address { get; set; }
 
         public string FullName => this.FirstName + " " + this.LastName;
-
-        public ICollection<ShoppingCart> ShoppingCarts { get; set; }
 
         public ICollection<Order> Orders { get; set; }
 
