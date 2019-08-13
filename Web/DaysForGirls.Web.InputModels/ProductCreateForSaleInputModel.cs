@@ -53,6 +53,6 @@ namespace DaysForGirls.Web.InputModels
 
         //[Range(MinSaleIdValue, MaxSaleIdValue)]
         [Display(Name = "Sale Id")]
-        public int SaleId { get; set; }
+        public string SaleId { get; set; }
     }
 }

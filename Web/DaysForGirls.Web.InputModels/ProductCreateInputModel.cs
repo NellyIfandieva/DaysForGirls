@@ -48,6 +48,6 @@ namespace DaysForGirls.Web.InputModels
         public int Quantity { get; set; }
 
         [Display(Name = "Sale Id")]
-        public int SaleId { get; set; }
+        public string SaleId { get; set; }
     }
 }

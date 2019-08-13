@@ -48,7 +48,7 @@ namespace DaysForGirls.Data.Models
 
         public ICollection<ProductCart> Carts { get; set; }
 
-        public int SaleId { get; set; }
+        public string SaleId { get; set; }
         public Sale Sale { get; set; }
 
         public bool IsInSale { get; set; }

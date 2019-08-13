@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DaysForGirls.Data.Models
 {
-    public class Sale : BaseModel<int>
+    public class Sale : BaseModel<string>
     {
         public Sale()
         {
@@ -25,5 +25,7 @@ namespace DaysForGirls.Data.Models
         public string Picture { get; set; }
 
         public ICollection<Product> Products { get; set; }
+
+        public bool IsDeleted { get; set; }
     }
 }

@@ -151,10 +151,10 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
 
             int productId = await this.adminService.CreateAsync(productServiceModel);
 
-            if (model.SaleId > 0)
+            if (model.SaleId != null)
             {
                 bool saleAddedProduct = await this.saleService.AddProductToSaleAsync(productServiceModel.SaleId, productId);
-                bool productIsInSale = await this.adminService.AddProductToSaleAsync(productId, productServiceModel.Id);
+                bool productIsInSale = await this.adminService.AddProductToSaleAsync(productId, productServiceModel.SaleId);
             }
 
             return Redirect("/Administration/Product/All");
@@ -272,7 +272,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
 
             int productId = await this.adminService.CreateAsync(productServiceModel);
 
-            if (model.SaleId > 0)
+            if (model.SaleId != null)
             {
                 bool saleIsUpdatedWithProduct = await this.saleService.AddProductToSaleAsync(model.SaleId, productId);
                 bool productIsAddedToSale = await this.adminService.AddProductToSaleAsync(productId, model.SaleId);

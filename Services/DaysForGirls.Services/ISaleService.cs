@@ -9,14 +9,16 @@ namespace DaysForGirls.Services
 {
     public interface ISaleService
     {
-        Task<int> Create(SaleServiceModel saleServiceModel);
+        Task<string> Create(SaleServiceModel saleServiceModel);
 
         IQueryable<SaleServiceModel> DisplayAllAdmin();
 
         IQueryable<SaleServiceModel> DisplayAll();
 
-        Task<SaleServiceModel> GetSaleByIdAsync(int id);
+        Task<SaleServiceModel> GetSaleByIdAsync(string saleId);
 
-        Task<bool> AddProductToSaleAsync(int saleId, int productId);
+        Task<bool> AddProductToSaleAsync(string saleId, int productId);
+
+        Task<bool> DeleteSaleById(string saleId);
     }
 }

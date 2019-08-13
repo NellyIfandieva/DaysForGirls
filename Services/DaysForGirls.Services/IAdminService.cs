@@ -15,13 +15,13 @@ namespace DaysForGirls.Services
 
         //IQueryable<ProductServiceModel> GetAllProductsByIds(List<int> productIds);
 
-        Task<bool> DeleteProductByIdAsync(int id);
+        Task<bool> DeleteProductByIdAsync(int productId);
 
         Task<bool> EditAsync(int productId, ProductServiceModel model);
 
         Task<bool> UploadNewPictureToProductAsync(int productId, string imageUrl);
 
-        Task<bool> AddProductToSaleAsync(int productId, int saleId);
+        Task<bool> AddProductToSaleAsync(int productId, string saleId);
 
         Task<ProductServiceModel> GetProductByNameAsync(string productName);
     }

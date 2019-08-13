@@ -16,6 +16,6 @@ namespace DaysForGirls.Services.Models
 
         public bool IsInSale { get; set; }
 
-        public int SaleId { get; set; }
+        public string SaleId { get; set; }
     }
 }

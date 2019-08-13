@@ -17,7 +17,7 @@ namespace DaysForGirls.Services
             this.db = db;
         }
 
-        public async Task<int> Create(SaleServiceModel saleServiceModel)
+        public async Task<string> Create(SaleServiceModel saleServiceModel)
         {
             Sale sale = new Sale
             {
@@ -28,7 +28,7 @@ namespace DaysForGirls.Services
 
             this.db.Sales.Add(sale);
             int result = await db.SaveChangesAsync();
-            int saleId = 0;
+            string saleId = null;
 
             if(result > 0)
             {
@@ -41,7 +41,8 @@ namespace DaysForGirls.Services
         public IQueryable<SaleServiceModel> DisplayAll()
         {
             var allSales = this.db.Sales
-                .Where(s => s.IsActive == true)
+                .Where(s => s.IsDeleted == false
+                && s.IsActive == true)
                 .Select(ss => new SaleServiceModel
                 {
                     Id = ss.Id,
@@ -65,6 +66,7 @@ namespace DaysForGirls.Services
             var allSales = this.db.Sales
                 .OrderBy(s => s.EndsOn)
                 .Include(s => s.Products)
+                .Where(s => s.IsDeleted == false)
                 .Select(s => new SaleServiceModel
                 {
                     Id = s.Id,
@@ -84,7 +86,7 @@ namespace DaysForGirls.Services
             return allSales;
         }
 
-        public async Task<SaleServiceModel> GetSaleByIdAsync(int id)
+        public async Task<SaleServiceModel> GetSaleByIdAsync(string id)
         {
             var saleWithDetails = await this.db.Sales
                 .Include(s => s.Products)
@@ -146,7 +148,7 @@ namespace DaysForGirls.Services
             return saleToReturn;
         }
 
-        public async Task<bool> AddProductToSaleAsync(int saleId, int productId)
+        public async Task<bool> AddProductToSaleAsync(string saleId, int productId)
         {
             Sale sale = await this.db.Sales
                 .SingleOrDefaultAsync(s => s.Id == saleId);
@@ -163,6 +165,30 @@ namespace DaysForGirls.Services
             bool productAddedToSale = result > 0;
 
             return productAddedToSale;
+        }
+
+        public async Task<bool> DeleteSaleById(string saleId)
+        {
+            Sale saleToDelete = await this.db.Sales
+                .Include(s => s.Products)
+                .SingleOrDefaultAsync(s => s.Id == saleId);
+
+            HashSet<Product> productsOutOfSale = saleToDelete.Products.ToHashSet();
+            
+
+            foreach(var product in productsOutOfSale)
+            {
+                product.IsInSale = false;
+            }
+
+            this.db.UpdateRange(productsOutOfSale);
+            saleToDelete.IsDeleted = true;
+            this.db.Update(saleToDelete);
+            int result = await this.db.SaveChangesAsync();
+
+            bool saleIsDeleted = result > 0;
+
+            return saleIsDeleted;
         }
     }
 }

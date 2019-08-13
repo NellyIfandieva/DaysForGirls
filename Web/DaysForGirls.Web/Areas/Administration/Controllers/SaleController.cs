@@ -53,7 +53,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                 Picture = imageUrl
             };
 
-            int saleId = await this.saleService.Create(saleServiceModel);
+            string saleId = await this.saleService.Create(saleServiceModel);
 
             return Redirect("/Administration/Sale/All");
         }
@@ -61,7 +61,6 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         [HttpGet("/Administration/Sale/All")]
         public async Task<IActionResult> All()//re-add the Admin
         {
-            //TODO may need to add more of the products'props
             var allSales = await this.saleService
                 .DisplayAllAdmin()
                 .Select(s => new SalesAllDisplayViewModelAdmin
@@ -79,7 +78,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         }
 
         [HttpGet("/Administration/Sale/Details/{id}")]
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> Details(string id)
         {
             var sale = await this.saleService.GetSaleByIdAsync(id);
 
@@ -103,15 +102,24 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
             return View(saleToDisplay);
         }
         //TODO make it EditAsync, also in the interface
-        public async Task<IActionResult> Edit(int saleId)
+        [HttpGet("/Sale/Edit/{id}")]
+        public async Task<IActionResult> Edit(string saleId)
         {
-            throw new NotImplementedException();
+            await Task.Delay(0);
+            return View();
             //return Redirect("/Administration/Sale/Details/{saleId}");
         }
 
+        //[HttpPost("/Sale/Edit/{id}")]
+        //public async Task<IActionResult> Edit(int saleId)
+        //{
+        //    throw new NotImplementedException();
+        //    //return Redirect("/Administration/Sale/Details/{saleId}");
+        //}
+
         //TODO make it EditAsync, also in the interface
         [HttpGet("/Administration/Sale/AddProductToSale/{saleId}")]
-        public async Task<IActionResult> AddProductToSale(int saleId)
+        public async Task<IActionResult> AddProductToSale(string saleId)
         {
                 var allProducts = await this.adminService
                     .DisplayAll()
@@ -145,6 +153,13 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
             bool productAddedSale = await this.adminService.AddProductToSaleAsync(productToAdd.Id, saleToAddTo.Id);
 
             return Redirect("/Administration/Sale/Details/{saleId}");
+        }
+
+        public async Task<IActionResult> Delete(string saleId)
+        {
+            bool isDeleted = await this.saleService.DeleteSaleById(saleId);
+
+            return Redirect("/Administration/Sale/All");
         }
     }
 }

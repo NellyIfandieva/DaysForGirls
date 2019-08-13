@@ -6,7 +6,7 @@ namespace DaysForGirls.Web.ViewModels
 {
     public class SaleDetailsViewModel
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         public string Title { get; set; }
 

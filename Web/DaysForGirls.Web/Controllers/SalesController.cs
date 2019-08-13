@@ -37,7 +37,7 @@ namespace DaysForGirls.Web.Controllers
         }
 
         [HttpGet("/Sales/Details/{id}")]
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> Details(string id)
         {
             var sale = await this.saleService.GetSaleByIdAsync(id);
 

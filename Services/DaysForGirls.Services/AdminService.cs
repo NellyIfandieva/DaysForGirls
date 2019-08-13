@@ -58,7 +58,7 @@ namespace DaysForGirls.Services
                 Pictures = new List<Picture>()
             };
 
-            if(productServiceModel.SaleId > 0)
+            if(productServiceModel.SaleId != null)
             {
                 product.SaleId = productServiceModel.SaleId;
             }
@@ -259,7 +259,7 @@ namespace DaysForGirls.Services
             return pictureIsAdded;
         }
 
-        public async Task<bool> AddProductToSaleAsync(int productId, int saleId)
+        public async Task<bool> AddProductToSaleAsync(int productId, string saleId)
         { 
             var product = this.db.Products
                 .SingleOrDefault(p => p.Id == productId);

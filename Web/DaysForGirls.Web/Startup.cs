@@ -86,7 +86,7 @@ namespace DaysForGirls.Web
             {
                 using (var context = serviceScope.ServiceProvider.GetRequiredService<DaysForGirlsDbContext>())
                 {
-                    //context.Database.EnsureDeleted();
+                    context.Database.EnsureDeleted();
                     context.Database.EnsureCreated();
 
                     if (!context.Roles.Any())

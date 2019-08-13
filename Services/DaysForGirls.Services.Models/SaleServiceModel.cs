@@ -6,7 +6,7 @@ namespace DaysForGirls.Services.Models
 {
     public class SaleServiceModel
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         public string Title { get; set; }
 
@@ -21,5 +21,7 @@ namespace DaysForGirls.Services.Models
         public List<ProductServiceModel> Products { get; set; }
 
         public int ProductsCount => this.Products.Count;
+
+        public bool IsDeleted { get; set; }
     }
 }

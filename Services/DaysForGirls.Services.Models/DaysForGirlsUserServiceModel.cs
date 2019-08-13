@@ -8,6 +8,6 @@ namespace DaysForGirls.Services.Models
 {
     public class DaysForGirlsUserServiceModel : IdentityUser
     {
-        public string Id { get; set; }
+        public override string Id { get; set; }
     }
 }

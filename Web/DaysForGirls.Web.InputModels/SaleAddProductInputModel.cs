@@ -14,6 +14,6 @@ namespace DaysForGirls.Web.InputModels
 
         public decimal Price { get; set; }
 
-        public int SaleId { get; set; }
+        public string SaleId { get; set; }
     }
 }

@@ -7,10 +7,24 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2 class="text-center">@Model.Title</h2>
-<h4 class="text-center">Ends On: @Model.EndsOn</h4>
+<style>
+    #sale-products-holder{
+        display: inline-block;
+    }
 
-<div>
+        #sale-products-holder a{
+            text-decoration: none;
+        }
+
+        #sale-products-holder img{
+            width: 200px;
+        }
+</style>
+
+<h2 class="text-center">@Model.Title</h2>
+<h4 class="text-center"><span style="font-weight: bold">Ends On:</span> @Model.EndsOn</h4>
+
+<div id="sale-products-holder">
     @foreach(var product in Model.Products)
     {
         <div class="col-md-3">
