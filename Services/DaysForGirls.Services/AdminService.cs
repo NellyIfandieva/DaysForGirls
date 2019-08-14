@@ -62,10 +62,6 @@ namespace DaysForGirls.Services
             {
                 product.SaleId = productServiceModel.SaleId;
             }
-            else
-            {
-                product.Sale = null;
-            }
 
             if(quantityIsAdded)
             {
@@ -343,7 +339,7 @@ namespace DaysForGirls.Services
                 },
                 Reviews = productReviews,
                 IsDeleted = productWithName.IsDeleted,
-                SaleId = productWithName.SaleId
+                SaleId = productWithName.Sale.Id
             };
 
             return productToReturn;

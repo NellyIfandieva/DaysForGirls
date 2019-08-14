@@ -30,7 +30,7 @@
         <div class="col-md-3">
             <a href="/Products/Details/@product.Id"><img src="@product.MainPicture" alt="@Model.Title - @product.Name" /></a>
             <a href="/Products/Details/@product.Id"><h4>@product.Name</h4></a>
-            <p>@product.OldPrice</p>
+            <p><strike>@product.OldPrice</strike></p>
             <p>@product.NewPrice</p>
             @if (product.AvailableItems < 1)
             {

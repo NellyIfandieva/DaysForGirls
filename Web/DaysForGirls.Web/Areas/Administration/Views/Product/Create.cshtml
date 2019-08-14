@@ -162,15 +162,15 @@
                 <span asp-validation-for="Quantity" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="SaleId" class="control-label"></label>
-                <select class="form-control" asp-for="SaleId">
+                <label asp-for="SaleTitle" class="control-label"></label>
+                <select class="form-control" asp-for="SaleTitle">
                     <option selected disabled>...Select Sale...</option>
                     @foreach (var sale in (IEnumerable<ProductCreateSaleViewModel>)this.ViewData["sales"])
                     {
-                        <option value="@sale.Id">@sale.Id</option>
+                        <option value="@sale.Title">@sale.Title</option>
                     }
                 </select>
-                <span asp-validation-for="SaleId" class="text-danger"></span>
+                <span asp-validation-for="SaleTitle" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

@@ -148,6 +148,68 @@ namespace DaysForGirls.Services
             return saleToReturn;
         }
 
+        public async Task<SaleServiceModel> GetSaleByTitleAsync(string saleTitle)
+        {
+            var saleWithDetails = await this.db.Sales
+                .Include(s => s.Products)
+                .SingleOrDefaultAsync(sale => sale.Title == saleTitle);
+
+            var productsInSale = await this.db.Products
+                .Where(p => p.Sale.Title == saleWithDetails.Title)
+                .Select(pS => new ProductServiceModel
+                {
+                    Id = pS.Id,
+                    Name = pS.Name,
+                    Category = new CategoryServiceModel
+                    {
+                        Name = pS.Category.Name
+                    },
+                    ProductType = new ProductTypeServiceModel
+                    {
+                        Name = pS.ProductType.Name
+                    },
+                    Pictures = pS.Pictures
+                        .Select(p => new PictureServiceModel
+                        {
+                            Id = p.Id,
+                            PictureUrl = p.PictureUrl
+                        }).ToList(),
+                    Description = pS.Description,
+                    Colour = pS.Colour,
+                    Size = pS.Size,
+                    Price = pS.Price,
+                    Manufacturer = new ManufacturerServiceModel
+                    {
+                        Name = pS.Manufacturer.Name
+                    },
+                    Quantity = new QuantityServiceModel
+                    {
+                        AvailableItems = pS.Quantity.AvailableItems
+                    },
+                    Reviews = pS.Reviews
+                        .Select(pR => new CustomerReviewServiceModel
+                        {
+                            Id = pR.Id,
+                            Title = pR.Title,
+                            Text = pR.Text,
+                            CreatedOn = pR.CreatedOn.ToString("dddd dd MMMM yyyy"),
+                            AuthorUsername = pR.Author.UserName
+                        }).ToList()
+                })
+                .ToListAsync();
+
+            SaleServiceModel saleToReturn = new SaleServiceModel
+            {
+                Id = saleWithDetails.Id,
+                Title = saleWithDetails.Title,
+                EndsOn = saleWithDetails.EndsOn,
+                Picture = saleWithDetails.Picture,
+                Products = productsInSale
+            };
+
+            return saleToReturn;
+        }
+
         public async Task<bool> AddProductToSaleAsync(string saleId, int productId)
         {
             Sale sale = await this.db.Sales

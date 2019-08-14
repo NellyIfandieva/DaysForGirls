@@ -17,6 +17,8 @@ namespace DaysForGirls.Services
 
         Task<SaleServiceModel> GetSaleByIdAsync(string saleId);
 
+        Task<SaleServiceModel> GetSaleByTitleAsync(string saleName);
+
         Task<bool> AddProductToSaleAsync(string saleId, int productId);
 
         Task<bool> DeleteSaleById(string saleId);

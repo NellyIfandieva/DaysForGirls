@@ -6,41 +6,80 @@
 }
 
 <style>
+    #all-products{
+        display: inline-block;
+    }
+
+    #all-products .product-holder-container{
+        float: left;
+    }
     #product-holder{
         margin-top: 10px;
         margin-left: 95px;
         display: inline-block;
-        float: left;
+        /*float: left;*/
     }
     #product-holder img{
         width: 30%;
+    }
+
+    .text-over-image{
+        position: relative;
+        text-align: center;
+        color: white;
+    }
+
+    .text-bottom-right{
+        background-color: antiquewhite;
+        color: crimson; 
+        font-weight: bolder;
+        position: absolute;
+        bottom: 8px;
+        right: 16px;
     }
 </style>
 
 <h1 class="text-center">All Products - Admin View</h1>
 
-<div>
+<div id="all-products">
     @foreach(var product in Model)
     {
-        <div id="product-holder">
-            <a href="/Administration/Product/Details/@product.Id"><img src="@product.Picture" alt="@product.Name" /></a>
-            @if (product.IsDeleted)
+        <div id="product-holder" class="product-holder-container">
+            @if (product.IsInSale || product.IsDeleted)
             {
-                <h4 style="color: crimson; font-weight: bolder">DELETED</h4>
+                <div class="text-over-image">
+                    @if (product.IsInSale)
+                    {
+
+                        <img src="@product.Picture" alt="@product.Name" />
+                        <div class="text-bottom-right">Now In Sale</div>
+            
+                    }
+                    else
+                    {
+                            <img src="@product.Picture" alt="@product.Name" />
+                        <div class="text-bottom-right">DELETED</div>
+                    }
+                </div>
             }
-            @if (product.IsInSale)
+            else
             {
-                <h4 style="color: crimson; font-weight: bolder">In Sale</h4>
-            }
+            <div>
+                <a href="/Administration/Product/Details/@product.Id"><img src="@product.Picture" alt="@product.Name" /></a>
+            </div>
             <div>
                 <a href="/Administration/Product/Details/@product.Id"><h4>@product.Name by @product.Manufacturer</h4></a>
                 <a href="/Administration/Category/Details/@product.Category"><h4>@product.Category , &euro;@product.Price</h4></a>
             </div>
-            <div>
-                <a href="/Administration/Product/Edit/@product.Id">Edit Product</a>
+            }
+        <div>
+            <a href="/Administration/Product/Edit/@product.Id">Edit Product</a>
+            @if (product.IsInSale == false)
+            {
                 <a href="/Administration/Sale/AddProductToSale/@product.Id">Add Product To Sale</a>
-                <a href="/Administration/Product/Delete/@product.Id" style="padding-left: 7px">Delete Product</a>
-            </div>
+            }
+            <a href="/Administration/Product/Delete/@product.Id" style="padding-left: 7px">Delete Product</a>
+        </div>
         </div>
     }
 </div>

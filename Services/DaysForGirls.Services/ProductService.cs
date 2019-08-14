@@ -88,7 +88,7 @@ namespace DaysForGirls.Services
                 },
                 Reviews = productReviews,
                 IsDeleted = product.IsDeleted,
-                SaleId = product.SaleId
+                SaleId = product.Sale.Id
             };
 
             return productToReturn;

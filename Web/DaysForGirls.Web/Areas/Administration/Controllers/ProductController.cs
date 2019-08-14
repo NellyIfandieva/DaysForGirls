@@ -113,6 +113,12 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
             {
                 Name = model.Manufacturer
             };
+            string saleId = null;
+            if(model.SaleTitle != null)
+            {
+                var sale = await this.saleService.GetSaleByTitleAsync(model.SaleTitle);
+                saleId = sale.Id;
+            }
 
             List<string> imageUrls = new List<string>();
 
@@ -140,7 +146,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                 {
                     AvailableItems = model.Quantity
                 },
-                SaleId = model.SaleId
+                SaleId = saleId
             };
 
             productServiceModel.Pictures = imageUrls.Select(image => new PictureServiceModel
@@ -151,134 +157,13 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
 
             int productId = await this.adminService.CreateAsync(productServiceModel);
 
-            if (model.SaleId != null)
+            if (model.SaleTitle != null)
             {
                 bool saleAddedProduct = await this.saleService.AddProductToSaleAsync(productServiceModel.SaleId, productId);
                 bool productIsInSale = await this.adminService.AddProductToSaleAsync(productId, productServiceModel.SaleId);
             }
 
             return Redirect("/Administration/Product/All");
-        }
-
-        [HttpGet("/Administration/Product/CreateForSale")]
-        public async Task<IActionResult> CreateForSale()
-        {
-            var allProductTypes = await this.productTypeService
-                .DisplayAll()
-                .ToListAsync();
-
-            this.ViewData["prTypes"] = allProductTypes
-                .Select(pT => new ProductCreateProductTypeViewModel
-                {
-                    Name = pT.Name
-                })
-                .OrderBy(t => t.Name)
-                .ToList();
-
-            var allCategories = await this.categoryService
-                .DisplayAll()
-                .ToListAsync();
-
-            this.ViewData["cats"] = allCategories
-                .Select(c => new ProductCreateCategoryViewModel
-                {
-                    Name = c.Name
-                })
-                .OrderBy(cat => cat.Name)
-                .ToList();
-
-            var allManufacturers = await this.manufacturerService
-                .DisplayAll().ToListAsync();
-
-            this.ViewData["manufs"] = allManufacturers
-                .Select(m => new ProductCreateManufacturerViewModel
-                {
-                    Name = m.Name
-                })
-                .OrderBy(man => man.Name)
-                .ToList();
-
-            var allActiveSales = await this.saleService
-                .DisplayAll().ToListAsync();
-
-            this.ViewData["sales"] = allActiveSales
-                .Select(s => new ProductCreateSaleViewModel
-                {
-                    Title = s.Title
-                })
-                .OrderBy(s => s.Title)
-                .ToList();
-
-            return View();
-        }
-
-        [HttpPost("/Administration/Product/CreateForSale")]
-        public async Task<IActionResult> CreateForSale(ProductCreateForSaleInputModel model)
-        {
-            if (ModelState.IsValid == false)
-            {
-                return this.View(model);
-            }
-
-            var productType = new ProductTypeServiceModel
-            {
-                Name = model.ProductType
-            };
-
-            var category = new CategoryServiceModel
-            {
-                Name = model.Category
-            };
-
-            var manufacturer = new ManufacturerServiceModel
-            {
-                Name = model.Manufacturer
-            };
-
-            List<string> imageUrls = new List<string>();
-
-            int imageNameExtension = 1;
-
-            foreach (var iFormFile in model.Pictures)
-            {
-                string imageUrl = await this.cloudinaryService.UploadPictureForProductAsync(
-                iFormFile, model.Name + "_" + imageNameExtension++);
-
-                imageUrls.Add(imageUrl);
-            }
-
-            ProductServiceModel productServiceModel = new ProductServiceModel
-            {
-                Name = model.Name,
-                ProductType = productType,
-                Category = category,
-                Description = model.Description,
-                Colour = model.Colour,
-                Size = model.Size,
-                Price = model.Price,
-                Manufacturer = manufacturer,
-                Quantity = new QuantityServiceModel
-                {
-                    AvailableItems = model.Quantity
-                },
-                SaleId = model.SaleId
-            };
-
-            productServiceModel.Pictures = imageUrls.Select(image => new PictureServiceModel
-            {
-                PictureUrl = image
-            })
-            .ToList();
-
-            int productId = await this.adminService.CreateAsync(productServiceModel);
-
-            if (model.SaleId != null)
-            {
-                bool saleIsUpdatedWithProduct = await this.saleService.AddProductToSaleAsync(model.SaleId, productId);
-                bool productIsAddedToSale = await this.adminService.AddProductToSaleAsync(productId, model.SaleId);
-            }
-
-            return Redirect("/Administration/Sale/Details/{model.SaleId}");
         }
 
         [HttpGet("/Administration/Product/All")]
