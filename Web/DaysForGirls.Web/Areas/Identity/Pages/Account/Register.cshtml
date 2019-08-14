@@ -4,120 +4,134 @@
     ViewData["Title"] = "Register";
 }
 
-    <style>
-        input[type=text], select {
-            width: 30%;
-            padding: 12px 20px;
-            margin: 8px 0;
-            display: inline-block;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
+<style>
+    input[type=text], select {
+        width: 30%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
 
-        input[type=password], select{
-            width: 30%;
-            padding: 12px 20px;
-            margin: 8px 0;
-            display: inline-block;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
+    input[type=password], select {
+        width: 30%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
 
-        input[type=email], select {
-            width: 30%;
-            padding: 12px 20px;
-            margin: 8px 0;
-            display: inline-block;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
+    input[type=email], select {
+        width: 30%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
 
-        button[type=submit] {
-            width: 30%;
-            background-color: #cc0052;
-            color: white;
-            padding: 14px 20px;
-            margin: 8px 0;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
+    button[type=submit] {
+        width: 30%;
+        background-color: #cc0052;
+        color: white;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
 
-        input[type=submit]:hover {
-            background-color: #cc0052;
-        }
+    input[type=submit]:hover {
+        background-color: #cc0052;
+    }
 
-        .reg {
-            margin-left: 250px;
-            margin-right: 250px;
-            position:center;
-            border-radius: 5px;
-            background-color: #f2f2f2;
-            padding: 20px;
-        }
+    .reg {
+        margin-left: 250px;
+        margin-right: 250px;
+        position: center;
+        border-radius: 5px;
+        background-color: #f2f2f2;
+        padding: 20px;
+    }
 
-        /*#forgot-or-register {
+    h2{
+        margin-top: 60px;
+        margin-left: 90px;
+    }
+    /*#forgot-or-register {
             color: #cc0052;
         }*/
-    </style>
+</style>
 
-<h1 class="text-center">@ViewData["Title"]</h1>
+@if (this.User.Identity.IsAuthenticated == false)
+{
+    <h1 class="text-center">@ViewData["Title"]</h1>
 
-<div class="row">
-    <div class="reg col-md-4">
-        <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <h4>Create a new account.</h4>
-            <hr />
-            <div asp-validation-summary="All" class="text-danger"></div>
-            <div>
-                <div class="form-group">
-                    <label asp-for="Input.Username"></label>
-                    <input asp-for="Input.Username" class="form-control" placeholder="Choose a Username"/>
-                    <span asp-validation-for="Input.Username" class="text-danger"></span>
+    <div class="row">
+        <div class="reg col-md-4">
+            <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                <h4>Create a new account.</h4>
+                <hr />
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div>
+                    <div class="form-group">
+                        <label asp-for="Input.Username"></label>
+                        <input asp-for="Input.Username" class="form-control" placeholder="Choose a Username" />
+                        <span asp-validation-for="Input.Username" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Input.Password"></label>
+                        <input asp-for="Input.Password" class="form-control" placeholder="Choose a Password" />
+                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Input.ConfirmPassword"></label>
+                        <input asp-for="Input.ConfirmPassword" class="form-control" placeholder="Confirm your Password" />
+                        <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Input.FirstName"></label>
+                        <input asp-for="Input.FirstName" class="form-control" placeholder="Your First Name" />
+                        <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Input.LastName"></label>
+                        <input asp-for="Input.LastName" class="form-control" placeholder="Your Last Name" />
+                        <span asp-validation-for="Input.LastName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Input.Email"></label>
+                        <input asp-for="Input.Email" class="form-control" placeholder="Your Email" />
+                        <span asp-validation-for="Input.Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Input.Address"></label>
+                        <input asp-for="Input.Address" class="form-control" placeholder="Your Delivery Address" />
+                        <span asp-validation-for="Input.Address" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Input.PhoneNumber"></label>
+                        <input type="text" asp-for="Input.PhoneNumber" class="form-control" placeholder="Your Phone Number" />
+                        <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label asp-for="Input.Password"></label>
-                    <input asp-for="Input.Password" class="form-control" placeholder="Choose a Password"/>
-                    <span asp-validation-for="Input.Password" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Input.ConfirmPassword"></label>
-                    <input asp-for="Input.ConfirmPassword" class="form-control" placeholder="Confirm your Password"/>
-                    <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Input.FirstName"></label>
-                    <input asp-for="Input.FirstName" class="form-control" placeholder="Your First Name"/>
-                    <span asp-validation-for="Input.FirstName" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Input.LastName"></label>
-                    <input asp-for="Input.LastName" class="form-control" placeholder="Your Last Name"/>
-                    <span asp-validation-for="Input.LastName" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Input.Email"></label>
-                    <input asp-for="Input.Email" class="form-control" placeholder="Your Email"/>
-                    <span asp-validation-for="Input.Email" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Input.Address"></label>
-                    <input asp-for="Input.Address" class="form-control" placeholder="Your Delivery Address"/>
-                    <span asp-validation-for="Input.Address" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Input.PhoneNumber"></label>
-                    <input type="text" asp-for="Input.PhoneNumber" class="form-control" placeholder="Your Phone Number"/>
-                    <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
-                </div>
-            </div>
-            <button type="submit" class="btn btn-primary">Register</button>
-        </form>
+                <button type="submit" class="btn btn-primary">Register</button>
+            </form>
+        </div>
     </div>
-</div>
+}
+else
+{
+    <h2>
+        Keep enjoying<img src="~/Images/Logo.jpg" width="200" />.
+        You're already have an account and are logged in :)
+    </h2>
+}
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
