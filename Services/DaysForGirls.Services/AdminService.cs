@@ -105,7 +105,8 @@ namespace DaysForGirls.Services
                         Name = p.Manufacturer.Name
                     },
                     IsDeleted = p.IsDeleted,
-                    IsInSale = p.IsInSale
+                    IsInSale = p.IsInSale,
+                    SaleId = p.SaleId
                 });
 
             return allProducts;

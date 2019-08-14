@@ -21,5 +21,7 @@ namespace DaysForGirls.Services.Models
         public bool IsDeleted { get; set; }
 
         public bool IsInSale { get; set; }
+
+        public string SaleId { get; set; }
     }
 }

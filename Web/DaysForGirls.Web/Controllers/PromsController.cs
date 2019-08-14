@@ -27,7 +27,10 @@ namespace DaysForGirls.Web.Controllers
                 {
                     Id = p.Id,
                     Name = p.Name,
-                    Picture = p.Picture.PictureUrl
+                    Picture = p.Picture.PictureUrl,
+                    Price = p.Price.ToString("f2"),
+                    IsInSale = p.IsInSale,
+                    SaleId = p.SaleId
                 })
                 .ToListAsync();
 

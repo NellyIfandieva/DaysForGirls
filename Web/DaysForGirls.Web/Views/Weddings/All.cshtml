@@ -8,14 +8,10 @@
 
 <style>
     #wedding-products-container {
-        margin-top: 10px;
+        margin-top: 15px;
         margin-left: 140px;
         display: inline-block;
     }
-        #wedding-products-container img {
-            width: 195px;
-            height: 240px;
-        }
 
     .wedding-product-pres{
         float: left;
@@ -23,6 +19,51 @@
         margin-right: 15px;
         margin-bottom: 15px;
         margin-top: 15px;
+    }
+
+        .wedding-product-pres img{
+            width: 195px;
+            height: 240px;
+        }
+
+        .wedding-product-pres a{
+            text-decoration: none;
+        }
+
+        .text-over-image{
+        position: relative;
+        text-align: center;
+        font-weight: bold;
+    }
+
+    .text-bottom-right{
+        background-color: crimson;
+        color: antiquewhite;
+        width: 60px;
+        position: absolute;
+        bottom: 10px;
+        right: 0px;
+    }
+
+    .product-info-holder{
+        margin-top: 0;
+        padding-top: 0;
+        background-color: #ebebe0;
+    }
+
+    .product-info-holder h4{
+        margin-left: 4px;
+        margin-bottom: 2px;
+        font-weight: 500;
+        font-size: medium;
+    }
+
+    img{
+        margin-bottom: 0;
+    }
+
+    h1{
+        margin-top: 25px;
     }
 
     p{
@@ -37,17 +78,31 @@
 <div id="wedding-products-container">
     @foreach (var product in Model)
     {
-    <div class="wedding-product-pres">
-        <a href="/Products/Details/@product.Id"><img src="@product.Picture" alt="@product.Name" /></a>
-        <p class="text-primary mt-3">@product.Name</p>
-        @if (product.IsInSale)
-        {
-            <a href="/Sales/Details/@product.SaleId"><p>Now In Sale</p></a>
-        }
-        else
-        {
-            <p class="text-primary mt-3">Price: &euro;@product.Price</p>
-        }
-    </div>
+        <div class="wedding-product-pres">
+            @if (product.IsInSale)
+            {
+                <div class="text-over-image">
+                    <img src="@product.Picture" alt="@product.Name" />
+                    <a href="/Sales/Details/@product.SaleId"><div class="text-bottom-right">In Sale</div></a>
+                </div>
+            }
+            else
+            {
+                <div>
+                    <a href="/Products/Details/@product.Id"><img src="@product.Picture" alt="@product.Name" /></a>
+                </div>
+            }
+        <div class="product-info-holder">
+            <a href="/Products/Details/@product.Id"><h4>@product.Name</h4></a>
+            @if (product.IsInSale == false)
+            {
+                <p style="margin-top: 1px">&euro;@product.Price</p>
+            }
+            else
+            {
+                <p style="margin-top: 1px">&euro;<strike>@product.Price</strike></p>
+            }
+        </div>
+        </div>
     }
 </div>

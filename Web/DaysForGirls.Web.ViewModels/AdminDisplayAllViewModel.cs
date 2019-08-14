@@ -21,5 +21,7 @@ namespace DaysForGirls.Web.ViewModels
         public bool IsDeleted { get; set; }
 
         public bool IsInSale { get; set; }
+
+        public string SaleId { get; set; }
     }
 }

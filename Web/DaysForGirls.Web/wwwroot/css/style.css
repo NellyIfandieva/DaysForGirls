@@ -1,6 +1,6 @@
 ﻿body {
     font-family: Arial, Helvetica, sans-serif;
-    color: #cc0052;
+    color: #a3a375;
     font-weight: lighter;
 }
 
@@ -22,7 +22,7 @@ input[type=text], select {
 
 button[type=submit] {
     width: 30%;
-    background-color: #cc0052;
+    background-color: #cc0066;
     color: white;
     padding: 14px 20px;
     margin: 8px 0;
@@ -32,11 +32,11 @@ button[type=submit] {
 }
 
 hr {
-    color: #cc0052;
+    color: #cc0066;
 }
 
 nav {
-    background-color: #cc0052;
+    background-color: #cc0066;
     margin-bottom: 0px;
 }
 
@@ -45,7 +45,7 @@ nav {
 }*/
 #footer-info-holder {
     background-color: #e0e0d1;
-    color: #cc0052;
+    color: #8a8a5c;
     text-align: left;
 }
 #footer-info-holder a{
@@ -57,7 +57,7 @@ nav {
     bottom: 0;
     width: 100%;
     background-color: #e0e0d1;
-    color: #cc0052;
+    color: #a3a375;
     text-align: center;
 }
 .topnav li{
@@ -108,13 +108,13 @@ nav {
         border: 1px solid #ccc;
     }*/
 
-    .dropbtn {
-        background-color: #cc0052;
-        color: white;
-        padding: 16px;
-        font-size: 16px;
-        border: none;
-    }
+.dropbtn {
+    background-color: #cc0066;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+}
 
     .dropdown {
         position: relative;
@@ -131,7 +131,7 @@ nav {
     }
 
         .dropdown-content a {
-            color: #ffcce0;
+            color: #e6005c;
             padding: 12px 16px;
             text-decoration: none;
             display: block;
@@ -155,7 +155,7 @@ nav {
 
     .smallNav {
         margin-top: 0px;
-        background-color: #cc0052;
+        background-color: #cc0066;
     }
 
     .centered {
@@ -166,7 +166,7 @@ nav {
     }
 
     .button {
-        background-color: #cc0052;
+        background-color: #cc0066;
         border: none;
         color: white;
         padding: 20px;

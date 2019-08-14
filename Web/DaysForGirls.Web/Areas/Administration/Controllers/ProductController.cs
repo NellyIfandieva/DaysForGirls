@@ -180,7 +180,8 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                     Price = product.Price,
                     Manufacturer = product.Manufacturer.Name,
                     IsDeleted = product.IsDeleted,
-                    IsInSale = product.IsInSale
+                    IsInSale = product.IsInSale,
+                    SaleId = product.SaleId
                 }).ToList();
 
             await Task.Delay(0);
