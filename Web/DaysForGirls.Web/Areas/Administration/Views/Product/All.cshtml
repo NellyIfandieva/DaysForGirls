@@ -39,6 +39,10 @@
         background-color: #ebebe0;
     }
 
+    .product-info-holder a{
+        text-decoration: none;
+    }
+
     .product-info-holder h4{
         margin-left: 4px;
         margin-bottom: 2px;
@@ -93,7 +97,14 @@
             }
         <div class="product-info-holder">
             <a href="/Administration/Product/Details/@product.Id"><h4>@product.Name</h4></a>
-            <h4 style="margin-top: 1px"> &euro;@product.Price</h4>
+            @if (product.IsInSale)
+            {
+                <h4 style="margin-top: 1px">&euro;<strike>@product.Price</strike> &euro;@product.NewPrice</h4>
+            }
+            else
+            {
+                <h4 style="margin-top: 1px">&euro;@product.Price</h4>
+            }
             <div id="product-function-options">
                 <a href="/Administration/Product/Edit/@product.Id">Edit</a>
                 @if (product.IsInSale == false)

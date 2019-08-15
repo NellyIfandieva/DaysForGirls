@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DaysForGirls.Services;
+using DaysForGirls.Services.Models;
 using DaysForGirls.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,11 +13,14 @@ namespace DaysForGirls.Web.Controllers
     public class ProductsController : Controller
     {
         private readonly IProductService productService;
+        private readonly IAdminService adminService;
 
         public ProductsController(
-            IProductService productService)
+            IProductService productService,
+            IAdminService adminService)
         {
             this.productService = productService;
+            this.adminService = adminService;
         }
 
         [HttpGet("/Products/All")]
@@ -35,11 +39,11 @@ namespace DaysForGirls.Web.Controllers
             return View(allProducts);
         }
 
-        [HttpGet("/Products/Details/{Id}")]
-        public async Task<IActionResult> Details(int id)
+        [HttpGet("/Products/Details/{id}")]
+        public async Task<IActionResult> Details(int productId)
         {
-            var productWithDetails = await this.productService
-                .GetProductByIdAsync(id);
+            ProductServiceModel productWithDetails = await this.productService
+                .GetProductByIdAsync(productId);
 
             ProductDetailsViewModel productDetails = new ProductDetailsViewModel
             {

@@ -6,78 +6,184 @@
 }
 
 <style>
-    #product-image-holder, #product-details-holder {
-        float: left;
-        width: 49%;
+    #entire-product {
+        margin-top: 50px;
     }
-    #product-images-holder{
-        margin-top: 10px;
-        display: inline-block;
-        float: left;
-    }
-    #product-images-holder img{
-        width: 10%;
-    }
-    #product-reviews-holder{
+
+    #product-main-picture-and-info {
         display: block;
     }
 
-    hr{
-        border-color: #cc0052;
+    #product-main-picture {
+        width: 45%;
+        float: left;
+        margin-right: 20px;
+    }
+
+        #product-main-picture img {
+            width: 100%;
+        }
+
+    #product-main-info {
+        width: 45%;
+        float: left;
+        margin-top: 50px;
+        padding-left: 20px;
+    }
+
+        #product-main-info a {
+            text-decoration: none;
+        }
+
+        #product-main-info button {
+            width: 100px;
+            background-color: #cc0066;
+            color: white;
+            font-size: medium;
+            padding: 15px 20px 15px 20px;
+            margin: 40px 200px 10px 190px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+    #product-morePictures-andComments {
+        display: inline-block;
+    }
+
+    #product-morePictures {
+        float: left;
+        width: 50%;
+        display: inline-block;
+    }
+
+    #product-comments {
+        float: left;
+        width: 50%;
+    }
+
+    /*#product-comments a{
+        text-decoration: none;
+    }*/
+
+    ..mySlides {display:none;}
+
+    .product-single-comment {
+        margin-bottom: 5px;
+        margin-left: 10px;
+    }
+
+    #product-comments button {
+        width: 200px;
+        background-color: #cc0066;
+        color: white;
+        font-size: medium;
+        padding: 15px 20px 15px 20px;
+        margin: 10px 200px 10px 190px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    #product-actions {
+        display: inline-block;
+    }
+
+        #product-actions a {
+            float: left;
+            margin-right: 5px;
+        }
+
+    .product-small-pic {
+        /*margin-left: 2px;*/
+        margin-right: 2px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        float: left;
+    }
+
+        .product-small-pic img {
+            float: left;
+            width: 15%;
+        }
+    .w3-content .w3-display-container .w3-button{
+        /*background-color: #a3a375;*/
+        /*color: #cc0066;*/
+    }
+
+    hr {
+        border-top: 2px solid #a3a375;
     }
 </style>
-
-<div>
-    <h4>@Model.Category > @Model.ProductType</h4>
-</div>
-
-<div>
-    <div id="main">
-        <div id="product-image-holder">
-            <a href="/Pictures/Display/@Model.Pictures[0].Id"><img src="@Model.Pictures[0].ImageUrl" alt="@Model.Name" /></a>
-        </div>
-        <div id="product-details-holder">
-            <div>
-                <h1 class="text-center" style="margin-bottom: 5px;">@Model.Name</h1>
-                <h3 class="text-center">By @Model.Manufacturer</h3>
-                <hr style="border-color: #cc0052;" />
+<div id="entire-product">
+    <div id="product-main-picture-and-info">
+        <div id="product-main-picture">
+            <div class="w3-content w3-display-container">
+                @for (int i = 0; i < Model.Pictures.Count(); i++)
+                {
+                    <a href="/Pictures/Display/@Model.Pictures[i].Id"><img class="mySlides" src="@Model.Pictures[i].ImageUrl" style="width:100%"></a>
+                }
+                <button class="w3-button w3-display-left" onclick="plusDivs(-1)">&#10094;</button>
+                <button class="w3-button w3-display-right" onclick="plusDivs(1)">&#10095;</button>
             </div>
-
-            <p><span style="font-weight: bold">Price:</span> &euro; @Model.Price.ToString("f2")</p>
-            <p><span style="font-weight: bold">Description:</span> @Model.Description</p>
-            <p><span style="font-weight: bold">Color:</span> @Model.Colour</p>
-            <p><span style="font-weight: bold">Size:</span> @Model.Size</p>
-            <p><span style="font-weight: bold">Available Quantity:</span> @Model.AvailableQuantity</p>
+        </div>
+        <div id="product-main-info">
+            <h2>@Model.Name by <a href="/Manufacturers/Details/@Model.Manufacturer">@Model.Manufacturer</a></h2>
+            <hr />
+            <p style="font-size: medium"><span style="font-weight: bold">Description:</span> @Model.Description</p>
+            <p style="font-size: medium"><span style="font-weight: bold">Colour:</span> @Model.Colour</p>
+            <p style="font-size: medium"><span style="font-weight: bold">Size:</span> @Model.Size</p>
+            <p style="font-size: medium"><span style="font-weight: bold">Price:</span> @Model.Price</p>
+            <p style="font-size: medium"><span style="font-weight: bold">Available Quantity:</span> @Model.AvailableQuantity</p>
+            <br />
+            <a href="/ShoppingCarts/AddProduct/@Model.Id"><button>Order</button></a>
         </div>
     </div>
-    <div id="subMain">
-        <div id="product-images-holder">
-            @for (int i = 1; i < Model.Pictures.Count(); i++)
+    <div id="product-morePictures-andComments">
+        @*<div id="product-morePictures">
+            <div class="w3-content w3-display-container">
+                @for (int i = 1; i < Model.Pictures.Count(); i++)
+                {
+                    <a href="/Pictures/Display/@Model.Pictures[i].Id"><img class="mySlides" src="@Model.Pictures[i].ImageUrl" style="width:100%"></a>
+                }
+                <button class="w3-button w3-black w3-display-left" onclick="plusDivs(-1)">&#10094;</button>
+                <button class="w3-button w3-black w3-display-right" onclick="plusDivs(1)">&#10095;</button>
+            </div>
+        </div>*@
+        <div id="product-comments">
+            <hr />
+            @foreach (var review in Model.Reviews)
             {
-                <a href="/Pictures/Display/@Model.Pictures[i].Id"><img src="@Model.Pictures[i].ImageUrl" alt="@Model.Name" /></a>
-            }
-        </div>
-        <hr style="border-color: #cc0052;" />
-        <div id="product-reviews-holder">
-            @if (Model.Reviews.Count() > 0)
-            {
-                <div>
-                    @foreach (var review in Model.Reviews)
-                    {
-                        <div>
-                            <h4>On @review.DateCreated @review.Author says: @review.Title</h4>
-                            <hr style="border-color: #cc0052;" />
-                            <p>@review.Text</p>
-                        </div>
-                        <hr style="border-color: #cc0052;" />
-                    }
+                <div class="product-single-comment">
+                    <p style="margin-bottom: 1px">On @review.DateCreated <bold>@review.Author</bold> said: <q>@review.Title</q> @*<a href="/CustomerReviews/Details/@review.Id" style="font-size:small"> Read comment</a>*@</p>
+                    <p style="margin-top: 1px"><q>@review.Text</q></p>
                 </div>
             }
-        </div>
-        <div id="admin">
-            <a href="/Administration/Product/Edit/@Model.Id">Edit Product</a>
-            <a asp-action="Index">Back to List</a>
+            <a href="/CustomerReviews/Create/@Model.Id"><button>Add Review</button></a>
         </div>
     </div>
+    <div id="product-actions">
+        <a href="/Product/Edit/@Model.Id">Edit</a>
+        <a href="/Product/Delete/@Model.Id">Delete</a>
+    </div>
 </div>
-    
+
+<script>
+    var slideIndex = 1;
+    showDivs(slideIndex);
+
+    function plusDivs(n) {
+        showDivs(slideIndex += n);
+    }
+
+    function showDivs(n) {
+        var i;
+        var x = document.getElementsByClassName("mySlides");
+        if (n > x.length) { slideIndex = 1 }
+        if (n < 1) { slideIndex = x.length }
+        for (i = 0; i < x.length; i++) {
+            x[i].style.display = "none";
+        }
+        x[slideIndex - 1].style.display = "block";
+    }
+</script>

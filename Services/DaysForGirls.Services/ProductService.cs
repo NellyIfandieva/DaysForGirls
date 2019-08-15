@@ -29,21 +29,23 @@ namespace DaysForGirls.Services
                 .Include(p => p.ProductType)
                 .Include(p => p.Manufacturer)
                 .Include(p => p.Quantity)
-                .Include(p => p.Pictures)
-                .Include(p => p.Reviews)
-                .Include(p => p.Sale)
                 .SingleOrDefaultAsync(p => p.Id == productId);
 
-            var productPictures = await this.db.Pictures
-                .Where(pic => pic.ProductId == product.Id)
-                    .Select(pic => new PictureServiceModel
-                    {
-                        Id = pic.Id,
-                        PictureUrl = pic.PictureUrl
-                    }).ToListAsync();
+            var pics = await this.pictureService
+                .GetPicturesOfProductByProductId(product.Id).ToListAsync();
+
+            //var productPictures = await this.db.Pictures
+            //    .Where(pic => pic.ProductId == product.Id
+            //    && pic.IsDeleted == false)
+            //        .Select(pic => new PictureServiceModel
+            //        {
+            //            Id = pic.Id,
+            //            PictureUrl = pic.PictureUrl
+            //        }).ToListAsync();
 
             var productReviews = await this.db.CustomerReviews
-                .Where(cR => cR.ProductId == product.Id)
+                .Where(cR => cR.ProductId == product.Id
+                && cR.IsDeleted == false)
                 .Select(pR => new CustomerReviewServiceModel
                 {
                     Id = pR.Id,
@@ -53,28 +55,12 @@ namespace DaysForGirls.Services
                     AuthorUsername = pR.Author.UserName
                 }).ToListAsync();
 
-            //var productSales = await this.db.ProductsSales
-            //    .Where(s => s.ProductId == product.Id)
-            //    .Select(s => new ProductSaleServiceModel
-            //    {
-            //        Id = s.Id,
-            //        SaleId = s.SaleId
-            //    }).ToListAsync();
-
             ProductServiceModel productToReturn = new ProductServiceModel
             {
                 Id = product.Id,
                 Name = product.Name,
-                ProductType = new ProductTypeServiceModel
-                {
-                    Name = product.ProductType.Name
-                },
-                Category = new CategoryServiceModel
-                {
-                    Name = product.Category.Name
-                },
                 Description = product.Description,
-                Pictures = productPictures,
+                Pictures = pics,
                 Colour = product.Colour,
                 Size = product.Size,
                 Price = product.Price,
@@ -87,7 +73,6 @@ namespace DaysForGirls.Services
                     AvailableItems = product.Quantity.AvailableItems
                 },
                 Reviews = productReviews,
-                IsDeleted = product.IsDeleted,
                 SaleId = product.Sale.Id
             };
 

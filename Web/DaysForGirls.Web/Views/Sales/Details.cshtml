@@ -8,34 +8,105 @@
 }
 
 <style>
-    #sale-products-holder{
+
+    .sale-general-info{
         display: inline-block;
+        margin-top: 20px;
+        margin-left: 100px;
+        margin-bottom: 20px;
     }
 
-        #sale-products-holder a{
+        .sale-general-info div{
+            float: left;
+        }
+
+        .sale-general-info img{
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px;
+            width: 300px;
+        }
+
+        .sale-gen-image{
+            margin-right: 20px;
+        }
+
+        .sale-gen-text{
+            margin-top: 30px;
+            margin-left: 100px;
+            text-align: left;
+        }
+        .sale-gen-text h2{
+            margin-bottom: 1px;
+        }
+        .sale-gen-text h4{
+            margin-top: 1px;
+        }
+
+    #sale-products-holder{
+        display: inline-block;
+        margin-top: 30px;
+        margin-left: 180px;
+    }
+
+        #sale-product-pres{
+            float: left;
+            margin-right: 20px;
+            margin-bottom: 20px;
+        }
+
+        #sale-product-pres a{
             text-decoration: none;
         }
 
-        #sale-products-holder img{
+        #sale-product-pres img{
             width: 200px;
+            height: 250px;
         }
+
+        #product-info-holder{
+            background-color: #ebebe0;
+        }
+
+        #product-info-holder h5{
+            margin-top: 2px;
+            margin-bottom: 2px;
+            margin-left: 4px;
+        }
+
+        #product-info-holder p{
+            margin-left: 4px;
+            margin-top: 0;
+            margin-bottom: 2px;
+            font-weight: 500;
+            font-size: medium;
+        }
+        
 </style>
 
-<h2 class="text-center">@Model.Title</h2>
-<h4 class="text-center"><span style="font-weight: bold">Ends On:</span> @Model.EndsOn</h4>
+<div class="sale-general-info">
+    <div class="sale-gen-image">
+        <img src="@Model.Picture" alt="@Model.Title" />
+    </div>
+    <div class="sale-gen-text">
+        <h2>@Model.Title</h2>
+        <h4><span style="font-weight: bold">Ends On:</span> @Model.EndsOn</h4>
+    </div>
+</div>
 
 <div id="sale-products-holder">
     @foreach(var product in Model.Products)
     {
-        <div class="col-md-3">
+        <div id="sale-product-pres">
             <a href="/Products/Details/@product.Id"><img src="@product.MainPicture" alt="@Model.Title - @product.Name" /></a>
-            <a href="/Products/Details/@product.Id"><h4>@product.Name</h4></a>
-            <p><strike>@product.OldPrice</strike></p>
-            <p>@product.NewPrice</p>
-            @if (product.AvailableItems < 1)
-            {
-                <h3>Sold Out</h3>
-            }
+            <div id="product-info-holder">
+                <a href="/Products/Details/@product.Id"><h5>@product.Name</h5></a>
+                <p><strike>@product.OldPrice</strike> @product.NewPrice</p>
+                @if (product.AvailableItems < 1)
+                {
+                    <h3>Sold Out</h3>
+                }
+            </div>
         </div>
     }
 </div>

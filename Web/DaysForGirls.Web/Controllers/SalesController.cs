@@ -45,6 +45,7 @@ namespace DaysForGirls.Web.Controllers
             {
                 Id = sale.Id,
                 Title = sale.Title,
+                Picture = sale.Picture,
                 EndsOn = sale.EndsOn.DayOfWeek
                     + ", "
                     + sale.EndsOn.Day

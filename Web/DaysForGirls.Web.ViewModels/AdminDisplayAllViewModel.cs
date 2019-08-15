@@ -23,5 +23,7 @@ namespace DaysForGirls.Web.ViewModels
         public bool IsInSale { get; set; }
 
         public string SaleId { get; set; }
+
+        public decimal NewPrice => this.Price - (0.3m * this.Price);
     }
 }

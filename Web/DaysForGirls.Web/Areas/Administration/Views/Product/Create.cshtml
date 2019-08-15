@@ -41,7 +41,7 @@
 
         input[type=submit] {
             width: 15%;
-            background-color: #cc0052;
+            background-color: #cc0066;
             color: white;
             font-size: medium;
             padding: 15px 20px 15px 20px;
@@ -116,7 +116,7 @@
         </div>*@
             <div class="form-group">
                 <label asp-for="Pictures"></label>
-                <input type="file" asp-for="Pictures" class="form-control" placeholder="Upload Pictures" multiple />
+                <input multiple type="file" asp-for="Pictures" class="form-control custom-file-input" placeholder="Upload Pictures"/>
                 <span asp-validation-for="Pictures" class="text-danger"></span>
             </div>
             <div class="form-group">

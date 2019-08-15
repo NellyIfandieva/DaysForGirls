@@ -18,6 +18,6 @@ namespace DaysForGirls.Services.Models
 
         public ProductServiceModel Product { get; set; }
 
-        
+        public bool IsDeleted { get; set; }
     }
 }
