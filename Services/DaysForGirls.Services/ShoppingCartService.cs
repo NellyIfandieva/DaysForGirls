@@ -26,7 +26,7 @@ namespace DaysForGirls.Services
             this.userManager = userManager;
         }
 
-        public async Task<bool> CreateCart(string userId, ShoppingCartItemServiceModel model)
+        public async Task<string> CreateCart(string userId, ShoppingCartItemServiceModel model)
         {
             var cart = this.db.ShoppingCarts
                 .SingleOrDefault(u => u.UserId == userId);
@@ -62,9 +62,9 @@ namespace DaysForGirls.Services
 
             int result = await this.db.SaveChangesAsync();
 
-            bool itemIsAddedToCart = result > 0;
+            string shoppinCartId = cart.Id;
 
-            return itemIsAddedToCart;
+            return shoppinCartId;
         }
 
 

@@ -157,5 +157,26 @@ namespace DaysForGirls.Services
 
         //    return pictureIsDeleted;
         //}
+
+
+        //public async Task<bool> DeletePictureWithUrl(string pictureUrl)
+        //{
+        //    Picture pictureToDelete = this.db.Pictures
+        //        .SingleOrDefault(pic => pic.PictureUrl == pictureUrl);
+
+        //    var product = await this.db.Products
+        //        .SingleOrDefaultAsync(p => p.Id == pictureToDelete.ProductId);
+
+        //    product.Pictures.Remove(pictureToDelete);
+
+        //    pictureToDelete.IsDeleted = true;
+
+        //    this.db.UpdateRange(pictureToDelete, product);
+
+        //    int result = await this.db.SaveChangesAsync();
+        //    bool pictureIsDeleted = result > 0;
+
+        //    return pictureIsDeleted;
+        //}
     }
 }

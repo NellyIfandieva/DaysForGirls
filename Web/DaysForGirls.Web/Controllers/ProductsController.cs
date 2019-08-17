@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DaysForGirls.Services;
+﻿using DaysForGirls.Services;
 using DaysForGirls.Services.Models;
 using DaysForGirls.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
+
 
 namespace DaysForGirls.Web.Controllers
 {
@@ -39,55 +38,43 @@ namespace DaysForGirls.Web.Controllers
             return View(allProducts);
         }
 
-        [HttpGet("/Products/Details/{id}")]
+        [HttpGet("/Products/Details/{productId}")]
         public async Task<IActionResult> Details(int productId)
         {
-            ProductServiceModel productWithDetails = await this.productService
+            var productFromDb = await this.adminService
                 .GetProductByIdAsync(productId);
 
-            ProductDetailsViewModel productDetails = new ProductDetailsViewModel
+            var productToDisplay = new ProductDetailsGeneralUserViewModel
             {
-                Id = productWithDetails.Id,
-                Name = productWithDetails.Name,
-                Category = productWithDetails.Category.Name,
-                ProductType = productWithDetails.ProductType.Name,
-                Colour = productWithDetails.Colour,
-                Size = productWithDetails.Size,
-                Description = productWithDetails.Description,
-                Manufacturer = productWithDetails.Manufacturer.Name,
-                Price = productWithDetails.Price,
-                AvailableQuantity = productWithDetails.Quantity.AvailableItems
+                Id = productFromDb.Id,
+                Name = productFromDb.Name,
+                Description = productFromDb.Description,
+                Colour = productFromDb.Colour,
+                Size = productFromDb.Size,
+                Price = productFromDb.Price.ToString("f2"),
+                AvailableItems = productFromDb.Quantity.AvailableItems,
+                Pictures = productFromDb.Pictures
+                    .Select(pic => new PictureDetailsViewModel
+                    {
+                        Id = pic.Id,
+                        PictureUrl = pic.PictureUrl
+                    })
+                    .ToList(),
+                ManufacturerId = productFromDb.Manufacturer.Id,
+                ManufacturerName = productFromDb.Manufacturer.Name,
+                Reviews = productFromDb.Reviews
+                    .Select(r => new CustomerReviewAllViewModel
+                    {
+                        Id = r.Id,
+                        Title = r.Title,
+                        Text = r.Text,
+                        DateCreated = r.CreatedOn,
+                        Author = r.AuthorUsername
+                    })
+                    .ToList()
             };
 
-            var pictures = productWithDetails.Pictures
-                .Select(p => new PictureDisplayAllViewModel
-                {
-                    Id = p.Id,
-                    ImageUrl = p.PictureUrl,
-                    ProductId = p.ProductId
-                }).ToList();
-
-            productDetails.Pictures = pictures
-                .Select(p => new PictureDisplayAllViewModel
-                {
-                    Id = p.Id,
-                    ImageUrl = p.ImageUrl
-                }).ToList();
-
-            var reviews = productWithDetails.Reviews
-                .Select(r => new CustomerReviewAllViewModel
-                {
-                    Id = r.Id,
-                    Title = r.Title,
-                    Text = r.Text,
-                    Author = r.AuthorUsername,
-                    DateCreated = r.CreatedOn
-                })
-                .ToList();
-
-            productDetails.Reviews = reviews;
-
-            return View(productDetails);
+            return View(productToDisplay);
         }
     }
 }

@@ -60,8 +60,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                     Name = m.Name,
                     Description = m.Description,
                     Logo = m.Logo.LogoUrl,
-                    IsDeleted = m.IsDeleted,
-                    ProductsCount = m.ProductsCount
+                    IsDeleted = m.IsDeleted
                 })
                 .OrderBy(m => m.Name)
                 .ToListAsync();

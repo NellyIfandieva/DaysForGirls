@@ -70,7 +70,7 @@ namespace DaysForGirls.Web
             services.AddTransient<IProductTypeService, ProductTypeService>();
             services.AddTransient<IQuantityService, QuantityService>();
             services.AddTransient<ISaleService, SaleService>();
-            //services.AddTransient<IShoppingCartService, ShoppingCartService>();
+            services.AddTransient<IShoppingCartService, ShoppingCartService>();
             
             
 

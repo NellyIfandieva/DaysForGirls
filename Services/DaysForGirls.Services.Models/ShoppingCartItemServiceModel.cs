@@ -6,7 +6,7 @@ namespace DaysForGirls.Services.Models
 {
     public class ShoppingCartItemServiceModel
     {
-        public ProductServiceModel Product { get; set; }
+        public ProductAsShoppingCartItem Product { get; set; }
 
         public int Quantity { get; set; }
 

@@ -1,5 +1,5 @@
 ﻿@using DaysForGirls.Web.InputModels
-@model DaysForGirls.Web.ViewModels.ProductDetailsViewModel
+@model DaysForGirls.Web.ViewModels.ProductDetailsGeneralUserViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -7,77 +7,189 @@
 }
 
 <style>
-    #product-images-holder, #product-details-holder {
+    #entire-product {
+        margin-top: 50px;
+        margin-left: 65px;
+    }
+
+    #product-main-picture-and-info {
+        display: block;
+    }
+
+    #product-main-picture {
+        width: 45%;
         float: left;
-        width: 49%;
-}
+        margin-right: 30px;
+    }
+
+        #product-main-picture img {
+            width: 100%;
+        }
+
+    #product-main-info {
+        background-color: #ebebe0;
+        border-radius: 4px;
+        width: 50%;
+        float: left;
+        padding-top: 50px;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+        #product-main-info a {
+            text-decoration: none;
+        }
+
+        #product-main-info button {
+            width: 100px;
+            background-color: #cc0066;
+            color: white;
+            font-size: medium;
+            padding: 15px 20px 15px 20px;
+            margin: 40px 200px 20px 190px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+    #product-morePictures-andComments {
+        margin-left: 3px;
+    }
+
+    /*#product-morePictures {
+        float: left;
+        width: 50%;
+        display: inline-block;
+    }*/
+
+    #product-comments {
+        float: left;
+        width: 50%;
+        background-color: #ebebe0;
+        border-radius: 4px;
+        margin-left: 1px;
+        margin-right: 10px;
+        margin-top: 20px;
+    }
+
+    .mySlides {
+        display: none;
+    }
+
+    .product-single-comment {
+        margin-bottom: 5px;
+        margin-left: 10px;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    #product-comments button {
+        width: 200px;
+        background-color: #cc0066;
+        color: white;
+        font-size: medium;
+        padding: 15px 20px 15px 20px;
+        margin: 10px 200px 25px 190px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    #product-actions {
+        display: inline-block;
+        margin-left: 50px;
+    }
+
+        #product-actions a {
+            float: left;
+            margin-right: 10px;
+        }
+
+    .product-small-pic {
+        /*margin-left: 2px;*/
+        margin-right: 2px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        float: left;
+    }
+
+        .product-small-pic img {
+            float: left;
+            width: 15%;
+        }
+
+    .w3-content .w3-display-container .w3-button {
+        /*background-color: #a3a375;*/
+        /*color: #cc0066;*/
+    }
+
+    hr {
+        border-top: 1px solid #a3a375;
+    }
 </style>
-
-<div>
-    <h4>@Model.Category > @Model.ProductType</h4>
-</div>
-
-<div>
-    <div id="product-images-holder">
-        <a href="/Pictures/Display/@Model.Pictures[0].Id"><img src="@Model.Pictures[0].ImageUrl" alt="@Model.Name" width="500" /></a>
+<div id="entire-product">
+    <div id="product-main-picture-and-info">
+        <div id="product-main-picture">
+            <div class="w3-content w3-display-container">
+                @for (int i = 0; i < Model.Pictures.Count(); i++)
+                {
+                    <a href="/Pictures/Display/@Model.Pictures[i].Id"><img class="mySlides" src="@Model.Pictures[i].PictureUrl" style="width:100%; border-radius:4px"></a>
+                }
+                <button class="w3-button w3-display-left" onclick="plusDivs(-1)">&#10094;</button>
+                <button class="w3-button w3-display-right" onclick="plusDivs(1)">&#10095;</button>
+            </div>
+        </div>
+        <div id="product-main-info">
+            <h2>@Model.Name by <a href="/Manufacturers/Details/@Model.ManufacturerId">@Model.ManufacturerName</a></h2>
+            <hr />
+            <p style="font-size: medium"><span style="font-weight: bold">Description:</span> @Model.Description</p>
+            <p style="font-size: medium"><span style="font-weight: bold">Colour:</span> @Model.Colour</p>
+            <p style="font-size: medium"><span style="font-weight: bold">Size:</span> @Model.Size</p>
+            <p style="font-size: medium"><span style="font-weight: bold">Price:</span> @Model.Price</p>
+            <p style="font-size: medium"><span style="font-weight: bold">Available Quantity:</span> @Model.AvailableItems</p>
+            <br />
+            <a href="/ShoppingCarts/AddProduct/@Model.Id"><button>Order</button></a>
+        </div>
     </div>
-        <div class="slideshow-container">
-            @for (int i = 1; i < Model.Pictures.Count(); i++)
+    <div id="product-morePictures-andComments">
+        <div id="product-comments">
+            @if (Model.Reviews.Count() > 0)
             {
-                <div style="margin-right: 5px">
-                    <a href="/Pictures/Display/@Model.Pictures[i].Id"><img src="@Model.Pictures[i].ImageUrl" alt="@Model.Name" width="150" /></a>
-                </div>
+                <h5 class="text-center">What people say about @Model.Name</h5>
+                @foreach (var review in Model.Reviews)
+                {
+                    <div class="product-single-comment">
+                        <p style="margin-bottom: 1px">On @review.DateCreated <bold>@review.Author</bold> said: <q>@review.Title</q> @*<a href="/CustomerReviews/Details/@review.Id" style="font-size:small"> Read comment</a>*@</p>
+                        <p style="margin-top: 1px"><q>@review.Text</q></p>
+                        <hr />
+                    </div>
+                }
             }
+            <a href="/CustomerReviews/Create/@Model.Id"><button>Add Review</button></a>
         </div>
-        <div>
-            @if (Model.Reviews.Count() < 1)
-            {
-                <div>
-                    <a class="text-center" href="/CustomerReviews/Create/@Model.Id"><button style="width:150px; margin-top:10px; margin-bottom: 10px; background-color: #cc0052; color: white"><p>Be the first to review @Model.Name</button></a>
-                </div>
-            }
-            else
-            {
-                <div>
-                    @foreach (var review in Model.Reviews)
-                    {
-                        <div>
-                            <h4>On @review.DateCreated.ToString() @review.Author says: @review.Title</h4>
-                            <p>@review.Text</p>
-                        </div>
-                    }
-                </div>
-                <div>
-                    <a class="text-center" href="/CustomerReviews/Create/@Model.Id"><button style="width:150px; margin-top:10px; margin-bottom: 10px; background-color: #cc0052; color: white"><p>Add your review for @Model.Name</button></a>
-                    <input type="hidden" id="returnUrl" name="returnUrl" value="/Products/Details/@Model.Id"/>
-                </div>
-            }
-            <div>
-                @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-                <a asp-action="Index">Back to List</a>
-            </div>
-        </div>
-        <div id="product-details-holder">
-            <div>
-                <h1 style="margin-bottom: 5px;">@Model.Name</h1>
-                <h3>By @Model.Manufacturer</h3>
-            </div>
-
-            <h3>Price: &euro; @Model.Price.ToString("f2")</h3>
-            <hr style="border-color: #cc0052;" />
-            <p><span style="font-weight:bold">Description:</span> @Model.Description</p>
-            <p><span style="font-weight:bold">Colour:</span> @Model.Colour</p>
-            <p><span style="font-weight:bold">Size:</span> @Model.Size</p>
-            @if (Model.AvailableQuantity > 0)
-            {
-                <p><span style="font-weight:bold">Available Quantity:</span> @Model.AvailableQuantity</p>
-            }
-            else
-            {
-                <p>SOLD OUT</p>
-            }
-
-            <a href="/ShoppingCartsController/AddProduct/@Model.Id"><button>Add Product To Cart</button></a>
-        </div>
-
+    </div>
+    <div id="product-actions">
+        <a href="/Product/Edit/@Model.Id">Edit</a>
+        <a href="/Product/Delete/@Model.Id">Delete</a>
+    </div>
 </div>
+
+<script>
+    var slideIndex = 1;
+    showDivs(slideIndex);
+
+    function plusDivs(n) {
+        showDivs(slideIndex += n);
+    }
+
+    function showDivs(n) {
+        var i;
+        var x = document.getElementsByClassName("mySlides");
+        if (n > x.length) { slideIndex = 1 }
+        if (n < 1) { slideIndex = x.length }
+        for (i = 0; i < x.length; i++) {
+            x[i].style.display = "none";
+        }
+        x[slideIndex - 1].style.display = "block";
+    }
+</script>

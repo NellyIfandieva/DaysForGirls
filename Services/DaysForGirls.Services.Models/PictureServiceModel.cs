@@ -11,5 +11,7 @@ namespace DaysForGirls.Services.Models
         public string PictureUrl { get; set; }
 
         public int ProductId { get; set; }
+
+        public bool IsDeleted { get; set; }
     }
 }

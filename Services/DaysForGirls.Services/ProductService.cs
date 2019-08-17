@@ -1,11 +1,9 @@
-﻿
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Threading.Tasks;
-using DaysForGirls.Data;
+﻿using DaysForGirls.Data;
 using DaysForGirls.Data.Models;
 using DaysForGirls.Services.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace DaysForGirls.Services
 {
@@ -13,67 +11,36 @@ namespace DaysForGirls.Services
     {
         private readonly DaysForGirlsDbContext db;
         private readonly IPictureService pictureService;
+        private readonly ICustomerReviewService customerReviewService;
 
         public ProductService(
             DaysForGirlsDbContext db,
-            IPictureService pictureService)
+            IPictureService pictureService,
+            ICustomerReviewService customerReviewService)
         {
             this.db = db;
             this.pictureService = pictureService;
+            this.customerReviewService = customerReviewService;
         }
 
-        public async Task<ProductServiceModel> GetProductByIdAsync(int productId)
+        public async Task<ProductAsShoppingCartItem> GetProductByIdAsync(int productId)
         {
-            var product = await this.db.Products
-                .Include(p => p.Category)
-                .Include(p => p.ProductType)
-                .Include(p => p.Manufacturer)
+            Product product = await this.db.Products
                 .Include(p => p.Quantity)
+                .Include(p => p.Pictures)
+                .Include(p => p.Sale)
                 .SingleOrDefaultAsync(p => p.Id == productId);
 
-            var pics = await this.pictureService
-                .GetPicturesOfProductByProductId(product.Id).ToListAsync();
+            var picture = product.Pictures.ElementAt(0).PictureUrl;
 
-            //var productPictures = await this.db.Pictures
-            //    .Where(pic => pic.ProductId == product.Id
-            //    && pic.IsDeleted == false)
-            //        .Select(pic => new PictureServiceModel
-            //        {
-            //            Id = pic.Id,
-            //            PictureUrl = pic.PictureUrl
-            //        }).ToListAsync();
-
-            var productReviews = await this.db.CustomerReviews
-                .Where(cR => cR.ProductId == product.Id
-                && cR.IsDeleted == false)
-                .Select(pR => new CustomerReviewServiceModel
-                {
-                    Id = pR.Id,
-                    Title = pR.Title,
-                    Text = pR.Text,
-                    CreatedOn = pR.CreatedOn.ToString("dddd, dd MMMM yyyy"),
-                    AuthorUsername = pR.Author.UserName
-                }).ToListAsync();
-
-            ProductServiceModel productToReturn = new ProductServiceModel
+            var productToReturn = new ProductAsShoppingCartItem
             {
                 Id = product.Id,
                 Name = product.Name,
-                Description = product.Description,
-                Pictures = pics,
                 Colour = product.Colour,
                 Size = product.Size,
                 Price = product.Price,
-                Manufacturer = new ManufacturerServiceModel
-                {
-                    Name = product.Manufacturer.Name
-                },
-                Quantity = new QuantityServiceModel
-                {
-                    AvailableItems = product.Quantity.AvailableItems
-                },
-                Reviews = productReviews,
-                SaleId = product.Sale.Id
+                MainPictureUrl = picture
             };
 
             return productToReturn;
@@ -138,61 +105,19 @@ namespace DaysForGirls.Services
             return allProductsOfCategoryAndType;
         }
 
-        public async Task<bool> AddReviewToProductByProductIdAsync(int productId, int reviewId)
-        {
-            var product = this.db.Products
-                .SingleOrDefault(p => p.Id == productId);
-
-            var review = this.db.CustomerReviews
-                .SingleOrDefault(r => r.Id == reviewId);
-
-            product.Reviews.Add(review);
-            this.db.Products.Update(product);
-            int result = await this.db.SaveChangesAsync();
-
-            return result > 0;
-        }
-
-        //public async Task<bool> Edit(int productId, ProductServiceModel model)
+        //public async Task<bool> AddReviewToProductByProductIdAsync(int productId, int reviewId)
         //{
-        //    ProductType productTypeOfProduct = await this.db.ProductTypes
-        //        .SingleOrDefaultAsync(pT => pT.Name == model.ProductType.Name);
+        //    var product = this.db.Products
+        //        .SingleOrDefault(p => p.Id == productId);
 
-        //    Category categoryOfProduct = await this.db.Categories
-        //        .SingleOrDefaultAsync(c => c.Name == model.Category.Name);
+        //    var review = this.db.CustomerReviews
+        //        .SingleOrDefault(r => r.Id == reviewId);
 
-        //    Manufacturer manufacturerOfProduct = await this.db.Manufacturers
-        //        .SingleOrDefaultAsync(m => m.Name == model.Manufacturer.Name);
+        //    product.Reviews.Add(review);
+        //    this.db.Products.Update(product);
+        //    int result = await this.db.SaveChangesAsync();
 
-        //    //if (productTypeFromDb == null)
-        //    //{
-        //    //    throw new ArgumentNullException(nameof(productTypeFromDb));
-        //    //}
-
-        //    Product productInDb = await this.db.Products
-        //        .SingleOrDefaultAsync(p => p.Id == productId);
-
-        //    //if (productFromDb == null)
-        //    //{
-        //    //    throw new ArgumentNullException(nameof(productFromDb));
-        //    //}
-
-        //    productInDb.Name = model.Name;
-        //    productInDb.ProductType = productTypeOfProduct;
-        //    productInDb.Category = categoryOfProduct;
-        //    productInDb.Description = model.Description;
-        //    productInDb.Colour = model.Colour;
-        //    productInDb.Size = model.Size;
-        //    productInDb.Price = model.Price;
-        //    productInDb.Manufacturer = manufacturerOfProduct;
-        //    productInDb.QuantityId = model.Quantity.Id;
-
-        //    this.db.Products.Update(productInDb);
-        //    int result = await db.SaveChangesAsync();
-
-        //    bool editsApplied = result > 0;
-
-        //    return editsApplied;
+        //    return result > 0;
         //}
 
         public async Task<bool> DeletePictureWithUrl(string pictureUrl)
@@ -253,13 +178,22 @@ namespace DaysForGirls.Services
         //    return productIsAddedToSale;
         //}
 
-        public async Task<bool> UpdateProductQuantity(int productId)
+        public async Task<bool> AddProductToShoppingCart(int productId, string shoppingCartId)
         {
-            var product = this.db.Products
-                .SingleOrDefault(p => p.Id == productId);
+            var product = await this.db.Products
+                .SingleOrDefaultAsync(p => p.Id == productId);
 
             if(product != null)
             {
+                var productCart = new ProductCart
+                {
+                    ProductId = product.Id,
+                    Product = product,
+                    ShoppingCartId = shoppingCartId
+                };
+
+                this.db.ProductsCarts.Add(productCart);
+                product.Carts.Add(productCart);
                 product.Quantity.AvailableItems--;
             }
 

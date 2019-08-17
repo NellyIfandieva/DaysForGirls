@@ -53,10 +53,7 @@ namespace DaysForGirls.Web.Controllers
                 Title = model.Title,
                 Text = model.Text,
                 AuthorUsername = username,
-                Product = new ProductServiceModel
-                {
-                    Id = model.ProductId
-                }
+                ProductId = model.ProductId
             };
 
             bool isCreated = await this.customerReviewService.CreateAsync(newCustomerReview, model.ProductId);

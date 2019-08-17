@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="~/css/fontawesome.min.css" />
     <link rel="stylesheet" href="~/css/style.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <script src="https://kit.fontawesome.com/0652279571.js"></script>
 </head>
 <body>
     <header>
@@ -33,15 +34,15 @@
                     </div>
                     <div class="w3-dropdown-hover">
                         <a href="/Administration/Category/All"><button class="w3-button">Category</button></a>
-                            <div class="w3-dropdown-content w3-bar-block w3-card-4">
-                                <a href="/Administration/Category/Create" class="w3-bar-item w3-button">Create</a>
-                            </div>
+                        <div class="w3-dropdown-content w3-bar-block w3-card-4">
+                            <a href="/Administration/Category/Create" class="w3-bar-item w3-button">Create</a>
+                        </div>
                     </div>
                     <div class="w3-dropdown-hover">
                         <a href="/Administration/Manufacturer/All"><button class="w3-button">Manufacturer</button></a>
-                            <div class="w3-dropdown-content w3-bar-block w3-card-4">
-                                <a href="/Administration/Manufacturer/Create" class="w3-bar-item w3-button">Create</a>
-                            </div>
+                        <div class="w3-dropdown-content w3-bar-block w3-card-4">
+                            <a href="/Administration/Manufacturer/Create" class="w3-bar-item w3-button">Create</a>
+                        </div>
                     </div>
                     <div class="w3-dropdown-hover">
                         <a href="/Administration/Sale/All"><button class="w3-button">Sale</button></a>
@@ -50,6 +51,7 @@
                         </div>
                     </div>
                 }
+                <a href="/ShoppingCarts/Display"><button style="background-color: #cc0066; color: white; border: none; margin-top: 8px; margin-left: 38px"><i class="fas fa-cart-plus"></i></button></a>
                 <a class="w3-bar-item w3-button w3-right" href="/Identity/Account/Manage/Index" @*asp-area="Identity" asp-page="/Account/Manage/Index"*@ title="Manage">Hello, @User.Identity.Name!</a>
                 <a class="w3-bar-item w3-button w3-right" href="/Identity/Account/Logout" @*asp-area="Identity" asp-page="/Account/Logout"*@>Logout</a>
             }

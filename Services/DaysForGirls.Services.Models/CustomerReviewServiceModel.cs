@@ -16,7 +16,7 @@ namespace DaysForGirls.Services.Models
 
         public string AuthorUsername { get; set; }
 
-        public ProductServiceModel Product { get; set; }
+        public int ProductId { get; set; }
 
         public bool IsDeleted { get; set; }
     }

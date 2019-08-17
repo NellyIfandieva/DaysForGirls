@@ -8,6 +8,7 @@
 <style>
     #entire-product {
         margin-top: 50px;
+        margin-left: 65px;
     }
 
     #product-main-picture-and-info {
@@ -17,7 +18,7 @@
     #product-main-picture {
         width: 45%;
         float: left;
-        margin-right: 20px;
+        margin-right: 30px;
     }
 
         #product-main-picture img {
@@ -25,10 +26,13 @@
         }
 
     #product-main-info {
-        width: 45%;
+        background-color: #ebebe0;
+        border-radius: 4px;
+        width: 50%;
         float: left;
-        margin-top: 50px;
+        padding-top: 50px;
         padding-left: 20px;
+        padding-right: 20px;
     }
 
         #product-main-info a {
@@ -41,36 +45,39 @@
             color: white;
             font-size: medium;
             padding: 15px 20px 15px 20px;
-            margin: 40px 200px 10px 190px;
+            margin: 40px 200px 20px 190px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
         }
 
     #product-morePictures-andComments {
-        display: inline-block;
+        margin-left: 3px;
     }
 
-    #product-morePictures {
+    /*#product-morePictures {
         float: left;
         width: 50%;
         display: inline-block;
-    }
+    }*/
 
     #product-comments {
         float: left;
         width: 50%;
+        background-color: #ebebe0;
+        border-radius: 4px;
+        margin-left: 1px;
+        margin-right: 10px;
+        margin-top: 20px;
     }
 
-    /*#product-comments a{
-        text-decoration: none;
-    }*/
-
-    ..mySlides {display:none;}
+    .mySlides {display:none;}
 
     .product-single-comment {
         margin-bottom: 5px;
         margin-left: 10px;
+        padding-left: 20px;
+        padding-right: 20px;
     }
 
     #product-comments button {
@@ -79,7 +86,7 @@
         color: white;
         font-size: medium;
         padding: 15px 20px 15px 20px;
-        margin: 10px 200px 10px 190px;
+        margin: 10px 200px 25px 190px;
         border: none;
         border-radius: 4px;
         cursor: pointer;
@@ -87,11 +94,12 @@
 
     #product-actions {
         display: inline-block;
+        margin-left: 50px;
     }
 
         #product-actions a {
             float: left;
-            margin-right: 5px;
+            margin-right: 10px;
         }
 
     .product-small-pic {
@@ -112,7 +120,7 @@
     }
 
     hr {
-        border-top: 2px solid #a3a375;
+        border-top: 1px solid #a3a375;
     }
 </style>
 <div id="entire-product">
@@ -121,7 +129,7 @@
             <div class="w3-content w3-display-container">
                 @for (int i = 0; i < Model.Pictures.Count(); i++)
                 {
-                    <a href="/Pictures/Display/@Model.Pictures[i].Id"><img class="mySlides" src="@Model.Pictures[i].ImageUrl" style="width:100%"></a>
+                    <a href="/Pictures/Display/@Model.Pictures[i].Id"><img class="mySlides" src="@Model.Pictures[i].ImageUrl" style="width:100%; border-radius:4px"></a>
                 }
                 <button class="w3-button w3-display-left" onclick="plusDivs(-1)">&#10094;</button>
                 <button class="w3-button w3-display-right" onclick="plusDivs(1)">&#10095;</button>
@@ -140,24 +148,18 @@
         </div>
     </div>
     <div id="product-morePictures-andComments">
-        @*<div id="product-morePictures">
-            <div class="w3-content w3-display-container">
-                @for (int i = 1; i < Model.Pictures.Count(); i++)
-                {
-                    <a href="/Pictures/Display/@Model.Pictures[i].Id"><img class="mySlides" src="@Model.Pictures[i].ImageUrl" style="width:100%"></a>
-                }
-                <button class="w3-button w3-black w3-display-left" onclick="plusDivs(-1)">&#10094;</button>
-                <button class="w3-button w3-black w3-display-right" onclick="plusDivs(1)">&#10095;</button>
-            </div>
-        </div>*@
         <div id="product-comments">
-            <hr />
-            @foreach (var review in Model.Reviews)
+            @if (Model.Reviews.Count() > 0)
             {
-                <div class="product-single-comment">
-                    <p style="margin-bottom: 1px">On @review.DateCreated <bold>@review.Author</bold> said: <q>@review.Title</q> @*<a href="/CustomerReviews/Details/@review.Id" style="font-size:small"> Read comment</a>*@</p>
-                    <p style="margin-top: 1px"><q>@review.Text</q></p>
-                </div>
+                <h5 class="text-center">What people say about @Model.Name</h5>
+                @foreach (var review in Model.Reviews)
+                {
+                    <div class="product-single-comment">
+                        <p style="margin-bottom: 1px">On @review.DateCreated <bold>@review.Author</bold> said: <q>@review.Title</q> @*<a href="/CustomerReviews/Details/@review.Id" style="font-size:small"> Read comment</a>*@</p>
+                        <p style="margin-top: 1px"><q>@review.Text</q></p>
+                        <hr />
+                    </div>
+                }
             }
             <a href="/CustomerReviews/Create/@Model.Id"><button>Add Review</button></a>
         </div>

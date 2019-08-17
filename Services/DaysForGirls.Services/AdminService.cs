@@ -119,29 +119,44 @@ namespace DaysForGirls.Services
                 .Include(p => p.ProductType)
                 .Include(p => p.Manufacturer)
                 .Include(p => p.Quantity)
+                .Include(p => p.Pictures)
+                .Include(p => p.Reviews)
                 .SingleOrDefaultAsync(p => p.Id == productId);
 
-            var pics = await this.pictureService
-                .GetPicturesOfProductByProductId(product.Id).ToListAsync();
+            //var pics = this.pictureService
+            //    .GetPicturesOfProductByProductId(product.Id).ToList();
 
-            //var productPictures = await this.db.Pictures
-            //    .Where(pic => pic.ProductId == product.Id)
-            //        .Select(pic => new PictureServiceModel
-            //        {
-            //            Id = pic.Id,
-            //            PictureUrl = pic.PictureUrl
-            //        }).ToListAsync();
-
-            var productReviews = await this.db.CustomerReviews
-                .Where(cR => cR.ProductId == product.Id)
-                .Select(pR => new CustomerReviewServiceModel
+            var productPictures = product.Pictures
+                .Where(p => p.IsDeleted == false)
+                .Select(p => new PictureServiceModel
                 {
-                    Id = pR.Id,
-                    Title = pR.Title,
-                    Text = pR.Text,
-                    CreatedOn = pR.CreatedOn.ToString("dddd, dd MMMM yyyy"),
-                    AuthorUsername = pR.Author.UserName
-                }).ToListAsync();
+                    Id = p.Id,
+                    PictureUrl = p.PictureUrl,
+                    ProductId = product.Id
+                }).ToList();
+
+            var productReviews = product.Reviews
+                .Where(r => r.IsDeleted == false)
+                .Select(r => new CustomerReviewServiceModel
+                {
+                    Id = r.Id,
+                    Title = r.Title,
+                    Text = r.Text,
+                    CreatedOn = r.CreatedOn.ToString("dddd, dd MMMM yyyy"),
+                    AuthorUsername = r.Author.UserName,
+                    ProductId = product.Id
+                }).ToList();
+
+            //var productReviews = this.db.CustomerReviews
+            //    .Where(cR => cR.ProductId == product.Id)
+            //    .Select(pR => new CustomerReviewServiceModel
+            //    {
+            //        Id = pR.Id,
+            //        Title = pR.Title,
+            //        Text = pR.Text,
+            //        CreatedOn = pR.CreatedOn.ToString("dddd, dd MMMM yyyy"),
+            //        AuthorUsername = pR.Author.UserName
+            //    }).ToList();
 
             
 
@@ -161,7 +176,7 @@ namespace DaysForGirls.Services
                     Name = product.Category.Name
                 },
                 Description = product.Description,
-                Pictures = pics,
+                Pictures = productPictures,
                 Colour = product.Colour,
                 Size = product.Size,
                 Price = product.Price,

@@ -33,11 +33,11 @@ namespace DaysForGirls.Services.Models
 
         public List<CustomerReviewServiceModel> Reviews { get; set; }
 
-        public bool IsDeleted { get; set; }
-
         public string SaleId { get; set; }
 
         public bool IsInSale => this.SaleId != null;
+
+        public bool IsDeleted { get; set; }
 
         //public List<ProductCart> Carts { get; set; }
 

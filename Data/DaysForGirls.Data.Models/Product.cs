@@ -27,7 +27,7 @@ namespace DaysForGirls.Data.Models
         [Required]
         public string Description { get; set; }
 
-        public ICollection<Picture> Pictures { get; set; }
+        public List<Picture> Pictures { get; set; }
 
         [Required]
         public string Colour { get; set; }
@@ -44,9 +44,9 @@ namespace DaysForGirls.Data.Models
         public int QuantityId { get; set; }
         public Quantity Quantity { get; set; }
 
-        public ICollection<CustomerReview> Reviews { get; set; }
+        public List<CustomerReview> Reviews { get; set; }
 
-        public ICollection<ProductCart> Carts { get; set; }
+        public List<ProductCart> Carts { get; set; }
 
         public string SaleId { get; set; }
         public Sale Sale { get; set; }

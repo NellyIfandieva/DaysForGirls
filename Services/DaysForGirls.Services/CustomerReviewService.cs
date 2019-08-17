@@ -4,6 +4,7 @@ using DaysForGirls.Services.Models;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,16 +15,13 @@ namespace DaysForGirls.Services
     {
         private readonly UserManager<DaysForGirlsUser> userManager;
         private readonly DaysForGirlsDbContext db;
-        private readonly IProductService productService;
 
         public CustomerReviewService(
             UserManager<DaysForGirlsUser> userManager,
-            DaysForGirlsDbContext db,
-            IProductService productService)
+            DaysForGirlsDbContext db)
         {
             this.userManager = userManager;
             this.db = db;
-            this.productService = productService;
         }
 
         public async Task<bool> CreateAsync(CustomerReviewServiceModel model, int productId)
@@ -36,16 +34,36 @@ namespace DaysForGirls.Services
                 Title = model.Title,
                 Text = model.Text,
                 Author = currentUser,
-                ProductId = model.Product.Id,
+                ProductId = model.ProductId,
                 CreatedOn = DateTime.UtcNow
             };
 
             this.db.CustomerReviews.Add(productReview);
-            await this.db.SaveChangesAsync();
+            int result = await this.db.SaveChangesAsync();
 
-            bool reviewIsAddedToProduct = await this.productService.AddReviewToProductByProductIdAsync(productId, productReview.Id);
+            bool reviewIsAdded = result > 0;
 
-            return reviewIsAddedToProduct;
+            //bool reviewIsAddedToProduct = await this.productService.AddReviewToProductByProductIdAsync(productId, productReview.Id);
+
+            return reviewIsAdded;
+        }
+
+        public IQueryable<CustomerReviewServiceModel> GetAllCommentsOfProductByProductId(int productId)
+        {
+            var allProductComments = this.db.CustomerReviews
+                .Where(cR => cR.Product.Id == productId
+                && cR.IsDeleted == false)
+                .Select(cR => new CustomerReviewServiceModel
+                {
+                    Id = cR.Id,
+                    Title = cR.Title,
+                    Text = cR.Text,
+                    CreatedOn = cR.CreatedOn.ToString("dddd, dd MMMM yyyy"),
+                    AuthorUsername = cR.Author.UserName,
+                    ProductId = productId
+                });
+
+            return allProductComments;
         }
     }
 }

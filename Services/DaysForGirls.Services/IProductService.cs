@@ -8,15 +8,15 @@ namespace DaysForGirls.Services
     {
         IQueryable<ProductDisplayAllServiceModel> DisplayAll();
 
-        Task<ProductServiceModel> GetProductByIdAsync(int productId);
+        Task<ProductAsShoppingCartItem> GetProductByIdAsync(int productId);
 
         IQueryable<DisplayAllOfCategoryProductServiceModel> GetAllProductsOfCategory(string categoryName);
 
         IQueryable<DisplayAllOfCategoryAndTypeServiceModel> GetAllProductsOfTypeAndCategory(
             string productTypeName, string categoryName);
 
-        Task<bool> UpdateProductQuantity(int productId);
+        Task<bool> AddProductToShoppingCart(int productId, string shoppingCartId);
 
-        Task<bool> AddReviewToProductByProductIdAsync(int productId, int reviewId);
+        //Task<bool> AddReviewToProductByProductIdAsync(int productId, int reviewId);
     }
 }

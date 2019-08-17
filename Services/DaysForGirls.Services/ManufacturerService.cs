@@ -60,7 +60,8 @@ namespace DaysForGirls.Services
                     {
                         Id = p.Id
                     })
-                    .ToList()
+                    .ToList(),
+                    ProductsCount = m.Products.Count()
                 });
 
             return allManufacturers;
