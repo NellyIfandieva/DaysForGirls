@@ -62,7 +62,6 @@ namespace DaysForGirls.Web.Controllers
         {
             string userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-
             var shoppingCartInDb = await this.shoppingCartService.GetCartByUserIdAsync(userId);
 
             if(shoppingCartInDb == null)
@@ -95,6 +94,19 @@ namespace DaysForGirls.Web.Controllers
 
             return View(cartToReturn);
         }
+
+        [Authorize]
+        [HttpGet("/ShoppingCarts/RemoveItem/{itemId}")]
+        public async Task<IActionResult> RemoveItem(int itemId)
+        {
+            string userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            bool itemIsRemovedFromCart = await this.shoppingCartService
+                .RemoveItemFromCartAsync(userId, itemId);
+
+            return Redirect("/ShoppingCarts/Display");
+        }
+
         //public async Task<bool> Add(ShoppingCartInputModel model)
         //{
         //    var productToAdd = this.productService.GetProductDetailsById(model.ProductId);

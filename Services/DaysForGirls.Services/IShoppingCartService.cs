@@ -10,5 +10,7 @@ namespace DaysForGirls.Services
         Task<string> AddItemToCartCartAsync(string userId, ShoppingCartItemServiceModel model);
 
         Task<ShoppingCartServiceModel> GetCartByUserIdAsync(string userId);
+
+        Task<bool> RemoveItemFromCartAsync(string userId, int itemId);
     }
 }

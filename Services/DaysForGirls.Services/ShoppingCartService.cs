@@ -35,14 +35,6 @@ namespace DaysForGirls.Services
             var cart = await this.db.ShoppingCarts
                 .SingleOrDefaultAsync(u => u.UserId == userId);
 
-            //if(cart == null)
-            //{
-            //    cart = new ShoppingCart
-            //    {
-            //        UserId = userId
-            //    };
-            //}
-
             ShoppingCartItem shoppingCartItem = new ShoppingCartItem
             {
                 ProductId = model.Product.Id,
@@ -54,21 +46,6 @@ namespace DaysForGirls.Services
 
             cart.ShoppingCartItems.Add(shoppingCartItem);
 
-            //if (cart.ShoppingCartItems.Count() >= 1)
-            //{
-            //    this.db.ShoppingCarts.Add(cart);
-            //}
-            //else
-            //{
-            //    foreach (var item in cart.ShoppingCartItems)
-            //    {
-            //        if(item.Product.Id == model.Product.Id)
-            //        {
-            //            item.Quantity++;
-            //        }
-            //    }
-            //    
-            //}
             this.db.Update(cart);
             int result = await this.db.SaveChangesAsync();
 
@@ -111,6 +88,33 @@ namespace DaysForGirls.Services
             };
 
             return cartToReturn;
+        }
+
+        public async Task<bool> RemoveItemFromCartAsync(string userId, int itemId)
+        {
+            var cart = await this.db.ShoppingCarts
+                .Include(sC => sC.ShoppingCartItems)
+                .SingleOrDefaultAsync(sC => sC.UserId == userId);
+
+            var cartItemToDelete = await this.db.ShoppingCartItems
+                .SingleOrDefaultAsync(sCI => sCI.Id == itemId);
+
+            var productId = cartItemToDelete.ProductId;
+
+            cart.ShoppingCartItems.Remove(cartItemToDelete);
+
+            this.db.Update(cart);
+
+            this.db.ShoppingCartItems.Remove(cartItemToDelete);
+
+            int result = await this.db.SaveChangesAsync();
+
+            bool productQuantityIsUpdated = await this.productService
+                .RemoveProductFromShoppingCartAsync(productId);
+
+            bool itemRemovedFromCart = result > 0;
+
+            return itemRemovedFromCart;
         }
 
 

@@ -53,7 +53,7 @@
         }
 
         /* The Modal (background) */
-.modal {
+/*.modal {
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
   z-index: 1; /* Sit on top */
@@ -65,29 +65,29 @@
   overflow: auto; /* Enable scroll if needed */
   background-color: rgb(204,0,102); /* Fallback color */
   background-color: rgba(204,0,102,0.6); /* Black w/ opacity */
-}
+}*/
 
 /* Modal Content */
-.modal-content {
+/*.modal-content {
   background-color: #ebebe0;
   margin: auto;
   padding: 20px;
   border: 1px solid #888;
   width: 80%;
   display: inline-block;
-}
+}*/
 
-.modal-content img{
+/*.modal-content img{
     width: 10%;
     float: left;
-}
+}*/
 
-.modal-content p{
+/*.modal-content p{
     float: left;
-}
+}*/
 
 /* The Close Button */
-.close {
+/*.close {
   color: #cc0066;
   float: right;
   font-size: 25px;
@@ -98,7 +98,7 @@
   color: #4d0026;
   text-decoration: none;
   cursor: pointer;
-}
+}*/
 
 
     #product-morePictures-andComments {
@@ -188,13 +188,13 @@
             <p style="font-size: medium"><span style="font-weight: bold">Available Quantity:</span> @Model.AvailableItems</p>
             <br />
             <a href="/ShoppingCarts/AddProduct/@Model.Id"><button id="order-modal">Order</button></a>
-            <div id="myModal" class="modal">
+            @*<div id="myModal" class="modal">
                 <div class="modal-content">
                     <span class="close">&times;</span>
                     <img src="@Model.Pictures[0].PictureUrl" alt="@Model.Name"/>
                     <p>@Model.Name @Model.Colour @Model.Size @Model.Price</p>
                 </div>
-            </div>
+            </div>*@
         </div>
     </div>
     <div id="product-morePictures-andComments">
@@ -235,29 +235,29 @@
         x[slideIndex - 1].style.display = "block";
     }
 
-    // Get the modal
-var modal = document.getElementById("myModal");
+//    // Get the modal
+//var modal = document.getElementById("myModal");
 
-// Get the button that opens the modal
-var btn = document.getElementById("order-modal");
+//// Get the button that opens the modal
+//var btn = document.getElementById("order-modal");
 
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
+//// Get the <span> element that closes the modal
+//var span = document.getElementsByClassName("close")[0];
 
-// When the user clicks the button, open the modal 
-btn.onclick = function() {
-  modal.style.display = "block";
-}
+//// When the user clicks the button, open the modal 
+//btn.onclick = function() {
+//  modal.style.display = "block";
+//}
 
-// When the user clicks on <span> (x), close the modal
-span.onclick = function() {
-  modal.style.display = "none";
-}
+//// When the user clicks on <span> (x), close the modal
+//span.onclick = function() {
+//  modal.style.display = "none";
+//}
 
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
-}
+//// When the user clicks anywhere outside of the modal, close it
+//window.onclick = function(event) {
+//  if (event.target == modal) {
+//    modal.style.display = "none";
+//  }
+//}
 </script>

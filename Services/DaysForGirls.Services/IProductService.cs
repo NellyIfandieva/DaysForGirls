@@ -17,6 +17,8 @@ namespace DaysForGirls.Services
 
         Task<bool> AddProductToShoppingCartAsync(int productId, string shoppingCartId);
 
+        Task<bool> RemoveProductFromShoppingCartAsync(int productId);
+
         //Task<bool> AddReviewToProductByProductIdAsync(int productId, int reviewId);
     }
 }

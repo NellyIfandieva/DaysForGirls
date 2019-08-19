@@ -193,5 +193,23 @@ namespace DaysForGirls.Services
 
             return productQuantityIsUpdated;
         }
+
+        public async Task<bool> RemoveProductFromShoppingCartAsync(int productId)
+        {
+            var product = await this.db.Products
+                .Include(p => p.Quantity)
+                .Include(p => p.ShoppingCart)
+                .SingleOrDefaultAsync(p => p.Id == productId);
+
+            product.Quantity.AvailableItems++;
+            product.ShoppingCartId = null;
+
+            this.db.Update(product);
+            int result = await this.db.SaveChangesAsync();
+
+            bool productIsOutOfCart = result > 0;
+
+            return productIsOutOfCart;
+        }
     }
 }
