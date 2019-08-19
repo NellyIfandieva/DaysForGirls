@@ -59,7 +59,7 @@ namespace DaysForGirls.Web.Controllers
 
             bool isCreated = await this.customerReviewService.CreateAsync(newCustomerReview, model.ProductId);
             string id = productId.ToString();
-            return Redirect("/Products/Details/{productId}");
+            return Redirect("/Products/Details/productId");
         }
     }
 }

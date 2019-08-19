@@ -36,13 +36,24 @@
         font-weight: bold;
     }
 
-    .text-bottom-right {
+    .text-bottom-right, .text-bottom-right-sold-out, .text-bottom-right-in-a-cart {
         background-color: crimson;
         color: antiquewhite;
-        width: 60px;
         position: absolute;
         bottom: 10px;
         right: 0px;
+    }
+
+    .text-bottom-right {
+        width: 60px;
+    }
+
+    .text-bottom-right-sold-out {
+        width: 100px;
+    }
+
+    .text-bottom-right-in-a-cart{
+        width: 150px;
     }
 
     .product-info-holder {
@@ -69,6 +80,7 @@
     p {
         margin-top: 0px;
         margin-bottom: 0px;
+        padding-left: 4px;
     }
 </style>
 
@@ -78,7 +90,21 @@
     @foreach (var product in Model)
     {
         <div class="prom-product-pres">
-            @if (product.IsInSale)
+            @if (product.ShoppingCartId != null)
+            {
+                <div class="text-over-image">
+                    <a href="/Products/Details/@product.Id"><img src="@product.Picture" alt="@product.Name" /></a>
+                    <div class="text-bottom-right-in-a-cart">Currently in a Cart</div>
+                </div>
+            }
+            else if (product.AvailableItems < 1)
+            {
+                <div class="text-over-image">
+                    <img src="@product.Picture" alt="@product.Name" />
+                    <div class="text-bottom-right-sold-out">Sold Out</div>
+                </div>
+            }
+            else if (product.SaleId != null)
             {
                 <div class="text-over-image">
                     <img src="@product.Picture" alt="@product.Name" />
@@ -87,13 +113,18 @@
             }
             else
             {
-                <div>
-                    <a href="/Products/Details/@product.Id"><img src="@product.Picture" alt="@product.Name" /></a>
-                </div>
+                <a href="/Products/Details/@product.Id"><img src="@product.Picture" alt="@product.Name" /></a>
             }
             <div class="product-info-holder">
                 <a href="/Products/Details/@product.Id"><h4>@product.Name</h4></a>
-                <h4 style="margin-top: 1px"> &euro;@product.Price</h4>
+                @if (product.SaleId == null)
+                {
+                    <p style="margin-top: 1px">&euro;@product.Price</p>
+                }
+                else
+                {
+                    <p style="margin-top: 1px">&euro;<strike>@product.Price</strike></p>
+                }
             </div>
         </div>
     }

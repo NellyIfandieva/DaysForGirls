@@ -18,10 +18,14 @@ namespace DaysForGirls.Services.Models
 
         public decimal Price { get; set; }
 
+        public int AvailableItems { get; set; }
+
         public bool IsDeleted { get; set; }
 
         public bool IsInSale { get; set; }
 
         public string SaleId { get; set; }
+
+        public string ShoppingCartId { get; set; }
     }
 }

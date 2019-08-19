@@ -27,5 +27,9 @@ namespace DaysForGirls.Web.ViewModels
         public string ManufacturerName { get; set; }
 
         public List<CustomerReviewAllViewModel> Reviews { get; set; }
+
+        public string SaleId { get; set; }
+
+        public string ShoppingCartId { get; set; }
     }
 }

@@ -179,10 +179,12 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                     Category = product.Category.Name,
                     Picture = product.Picture.PictureUrl,
                     Price = product.Price,
+                    AvailableItems = product.AvailableItems,
                     Manufacturer = product.Manufacturer.Name,
                     IsDeleted = product.IsDeleted,
                     IsInSale = product.IsInSale,
-                    SaleId = product.SaleId
+                    SaleId = product.SaleId,
+                    ShoppingCartId = product.ShoppingCartId
                 }).ToList();
 
             await Task.Delay(0);

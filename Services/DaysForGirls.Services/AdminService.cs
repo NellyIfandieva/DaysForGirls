@@ -99,13 +99,15 @@ namespace DaysForGirls.Services
                         PictureUrl = p.Pictures.ElementAt(0).PictureUrl
                     },
                     Price = p.Price,
+                    AvailableItems = p.Quantity.AvailableItems,
                     Manufacturer = new ManufacturerServiceModel
                     {
                         Name = p.Manufacturer.Name
                     },
                     IsDeleted = p.IsDeleted,
                     IsInSale = p.IsInSale,
-                    SaleId = p.SaleId
+                    SaleId = p.SaleId,
+                    ShoppingCartId = p.ShoppingCartId
                 });
 
             return allProducts;
@@ -120,6 +122,8 @@ namespace DaysForGirls.Services
                 .Include(p => p.Quantity)
                 .Include(p => p.Pictures)
                 .Include(p => p.Reviews)
+                .Include(p => p.Sale)
+                .Include(p => p.ShoppingCart)
                 .SingleOrDefaultAsync(p => p.Id == productId);
 
             //var pics = this.pictureService
@@ -145,22 +149,6 @@ namespace DaysForGirls.Services
                     AuthorUsername = r.Author.UserName,
                     ProductId = product.Id
                 }).ToList();
-
-            //var productReviews = this.db.CustomerReviews
-            //    .Where(cR => cR.ProductId == product.Id)
-            //    .Select(pR => new CustomerReviewServiceModel
-            //    {
-            //        Id = pR.Id,
-            //        Title = pR.Title,
-            //        Text = pR.Text,
-            //        CreatedOn = pR.CreatedOn.ToString("dddd, dd MMMM yyyy"),
-            //        AuthorUsername = pR.Author.UserName
-            //    }).ToList();
-
-            
-
-            //var productCategory = await this.db.Categories
-            //    .SingleOrDefaultAsync(c => c.Id == product.CategoryId);
 
             ProductServiceModel productToReturn = new ProductServiceModel
             {
@@ -190,7 +178,8 @@ namespace DaysForGirls.Services
                 },
                 Reviews = productReviews,
                 IsDeleted = product.IsDeleted,
-                SaleId = product.SaleId
+                SaleId = product.SaleId,
+                ShoppingCartId = product.ShoppingCartId
             };
 
             return productToReturn;

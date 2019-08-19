@@ -29,8 +29,10 @@ namespace DaysForGirls.Web.Controllers
                     Name = p.Name,
                     Picture = p.Picture.PictureUrl,
                     Price = p.Price.ToString("f2"),
+                    AvailableItems = p.AvailableItems,
                     IsInSale = p.IsInSale,
-                    SaleId = p.SaleId
+                    SaleId = p.SaleId,
+                    ShoppingCartId = p.ShoppingCartId
                 })
                 .ToListAsync();
 
@@ -48,7 +50,10 @@ namespace DaysForGirls.Web.Controllers
                     Id = d.Id,
                     Name = d.Name,
                     Picture = d.Picture.PictureUrl,
-                    Price = d.Price.ToString("f2")
+                    Price = d.Price.ToString("f2"),
+                    AvailableItems = d.AvailableItems,
+                    SaleId = d.SaleId,
+                    ShoppingCartId = d.ShoppingCartId
                 })
                 .ToListAsync();
 
@@ -65,7 +70,10 @@ namespace DaysForGirls.Web.Controllers
                     Id = s.Id,
                     Name = s.Name,
                     Picture = s.Picture.PictureUrl,
-                    Price = s.Price.ToString("f2")
+                    Price = s.Price.ToString("f2"),
+                    AvailableItems = s.AvailableItems,
+                    SaleId = s.SaleId,
+                    ShoppingCartId = s.ShoppingCartId
                 })
                 .ToListAsync();
 
@@ -82,7 +90,10 @@ namespace DaysForGirls.Web.Controllers
                     Id = a.Id,
                     Name =a.Name,
                     Picture = a.Picture.PictureUrl,
-                    Price = a.Price.ToString("f2")
+                    Price = a.Price.ToString("f2"),
+                    AvailableItems = a.AvailableItems,
+                    SaleId = a.SaleId,
+                    ShoppingCartId = a.ShoppingCartId
                 })
                 .ToListAsync();
 

@@ -18,6 +18,8 @@ namespace DaysForGirls.Web.ViewModels
 
         public decimal Price { get; set; }
 
+        public int AvailableItems { get; set; }
+
         public bool IsDeleted { get; set; }
 
         public bool IsInSale { get; set; }
@@ -25,5 +27,7 @@ namespace DaysForGirls.Web.ViewModels
         public string SaleId { get; set; }
 
         public decimal NewPrice => this.Price - (0.3m * this.Price);
+
+        public string ShoppingCartId { get; set; }
     }
 }

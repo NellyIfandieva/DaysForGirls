@@ -29,6 +29,7 @@ namespace DaysForGirls.Services
                 .Include(p => p.Quantity)
                 .Include(p => p.Pictures)
                 .Include(p => p.Sale)
+                .Include(p => p.ShoppingCart)
                 .SingleOrDefaultAsync(p => p.Id == productId);
 
             var picture = product.Pictures.ElementAt(0).PictureUrl;
@@ -40,7 +41,10 @@ namespace DaysForGirls.Services
                 Colour = product.Colour,
                 Size = product.Size,
                 Price = product.Price,
-                MainPictureUrl = picture
+                MainPictureUrl = picture,
+                AvailableItems = product.Quantity.AvailableItems,
+                SaleId = product.SaleId,
+                ShoppingCartId = product.ShoppingCartId
             };
 
             return productToReturn;
@@ -58,7 +62,10 @@ namespace DaysForGirls.Services
                      Picture = new PictureServiceModel
                      {
                         PictureUrl = p.Pictures.ElementAt(0).PictureUrl
-                     }
+                     },
+                     AvailableItems = p.Quantity.AvailableItems,
+                     SaleId = p.SaleId,
+                     ShoppingCartId = p.ShoppingCartId
                  });
 
             return allProducts;
@@ -78,8 +85,10 @@ namespace DaysForGirls.Services
                     {
                         PictureUrl = p.Pictures.ElementAt(0).PictureUrl
                     },
+                    AvailableItems = p.Quantity.AvailableItems,
                     IsInSale = p.IsInSale,
-                    SaleId = p.SaleId
+                    SaleId = p.SaleId,
+                    ShoppingCartId = p.ShoppingCartId
                 });
 
             return allProductsOfCategory;
@@ -99,7 +108,10 @@ namespace DaysForGirls.Services
                     {
                         PictureUrl = p.Pictures.ElementAt(0).PictureUrl
                     },
-                    Price = p.Price
+                    Price = p.Price,
+                    AvailableItems = p.Quantity.AvailableItems,
+                    SaleId = p.SaleId,
+                    ShoppingCartId = p.ShoppingCartId
                 });
 
             return allProductsOfCategoryAndType;

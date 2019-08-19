@@ -39,7 +39,7 @@ namespace DaysForGirls.Services.Models
 
         public bool IsDeleted { get; set; }
 
-        //public List<ProductCart> Carts { get; set; }
+        public string ShoppingCartId { get; set; }
 
         //public OrderServiceModel Order { get; set; }
     }

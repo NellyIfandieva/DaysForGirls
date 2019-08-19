@@ -13,5 +13,11 @@ namespace DaysForGirls.Services.Models
         public decimal Price { get; set; }
 
         public PictureServiceModel Picture { get; set; }
+
+        public int AvailableItems { get; set; }
+
+        public string SaleId { get; set; }
+
+        public string ShoppingCartId { get; set; }
     }
 }
