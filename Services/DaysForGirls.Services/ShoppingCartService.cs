@@ -3,6 +3,7 @@ using DaysForGirls.Data.Models;
 using DaysForGirls.Services.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -17,54 +18,99 @@ namespace DaysForGirls.Services
     {
         private readonly DaysForGirlsDbContext db;
         private readonly UserManager<DaysForGirlsUser> userManager;
+        private readonly IProductService productService;
 
         public ShoppingCartService(
             DaysForGirlsDbContext db,
-            UserManager<DaysForGirlsUser> userManager)
+            UserManager<DaysForGirlsUser> userManager,
+            IProductService productService)
         {
             this.db = db;
             this.userManager = userManager;
+            this.productService = productService;
         }
 
-        public async Task<string> CreateCart(string userId, ShoppingCartItemServiceModel model)
+        public async Task<string> AddItemToCartCartAsync(string userId, ShoppingCartItemServiceModel model)
         {
-            var cart = this.db.ShoppingCarts
-                .SingleOrDefault(u => u.UserId == userId);
+            var cart = await this.db.ShoppingCarts
+                .SingleOrDefaultAsync(u => u.UserId == userId);
 
-            if(cart == null)
-            {
-                //DaysForGirlsUser currentUser =
-                //await this.userManager.FindByIdAsync(userId);
-
-                cart = new ShoppingCart
-                {
-                    UserId = userId,
-                    ShoppingCartItems = new List<ShoppingCartItem>()
-                };
-            }
+            //if(cart == null)
+            //{
+            //    cart = new ShoppingCart
+            //    {
+            //        UserId = userId
+            //    };
+            //}
 
             ShoppingCartItem shoppingCartItem = new ShoppingCartItem
             {
                 ProductId = model.Product.Id,
-                Quantity = 1
+                ShoppingCartId = cart.Id,
+                Quantity = model.Quantity
             };
+
+            this.db.ShoppingCartItems.Add(shoppingCartItem);
 
             cart.ShoppingCartItems.Add(shoppingCartItem);
 
-            if(cart.ShoppingCartItems.Count() <= 1)
-            {
-                this.db.ShoppingCarts.Add(cart);
-            }
-            else
-            {
-                this.db.Update(cart);
-            }
-
+            //if (cart.ShoppingCartItems.Count() >= 1)
+            //{
+            //    this.db.ShoppingCarts.Add(cart);
+            //}
+            //else
+            //{
+            //    foreach (var item in cart.ShoppingCartItems)
+            //    {
+            //        if(item.Product.Id == model.Product.Id)
+            //        {
+            //            item.Quantity++;
+            //        }
+            //    }
+            //    
+            //}
+            this.db.Update(cart);
             int result = await this.db.SaveChangesAsync();
 
             string shoppinCartId = cart.Id;
 
+            bool productIsInCart = await this.productService
+                .AddProductToShoppingCartAsync(model.Product.Id, shoppinCartId);
+
             return shoppinCartId;
+        }
+
+        public async Task<ShoppingCartServiceModel> GetCartByUserIdAsync(string userId)
+        {
+            var cart = await this.db.ShoppingCarts
+                .Include(c => c.ShoppingCartItems)
+                .SingleOrDefaultAsync(c => c.UserId == userId);
+
+            var cartItems = await this.db.ShoppingCartItems
+                .Where(sCI => sCI.ShoppingCartId == cart.Id)
+                .Select(sCI => new ShoppingCartItemServiceModel
+                {
+                    Id = sCI.Id,
+                    Product = new ProductAsShoppingCartItem
+                    {
+                        Id = sCI.Product.Id,
+                        Name = sCI.Product.Name,
+                        Colour = sCI.Product.Colour,
+                        Size = sCI.Product.Size,
+                        Price = sCI.Product.Price,
+                        MainPictureUrl = sCI.Product.Pictures.ElementAt(0).PictureUrl
+                    },
+                    Quantity = sCI.Quantity
+                })
+                .ToListAsync();
+
+            var cartToReturn = new ShoppingCartServiceModel
+            {
+                Id = cart.Id,
+                ShoppingCartItems = cartItems
+            };
+
+            return cartToReturn;
         }
 
 

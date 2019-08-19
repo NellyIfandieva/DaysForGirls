@@ -31,8 +31,14 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         }
 
         [HttpPost("/Administration/Manufacturer/Create")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ManufacturerCreateInputModel model)
         {
+            if(ModelState.IsValid == false)
+            {
+                return View(model);
+            }
+
             string imageUrl = await this.cloudinaryService.UploadPictureForProductAsync(
                 model.Logo, model.Name + "_" + "Logo");
             ManufacturerServiceModel manufacturerServiceModel = new ManufacturerServiceModel
@@ -65,11 +71,28 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                 .OrderBy(m => m.Name)
                 .ToListAsync();
 
+            if(allManufacturers == null)
+            {
+                return NotFound();
+            }
+
             return View(allManufacturers);
         }
 
-        //TODO implement edit
+        [HttpGet("/Administration/Manufacturer/Delete/{manufacturerId}")]
+        public async Task<IActionResult> Delete(int manufacturerId)
+        {
+            if(manufacturerId <= 0)
+            {
+                return BadRequest();
+            }
 
-        //TODO implement delete
+            bool manufacturerIsDeleted = await this.manufacturerService
+                .DeleteManufacturerByIdAsync(manufacturerId);
+
+            return Redirect("/Administration/Manufacturer/All");
+        }
+
+        //TODO implement edit
     }
 }

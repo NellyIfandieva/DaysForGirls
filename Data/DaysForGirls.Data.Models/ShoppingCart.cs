@@ -14,6 +14,6 @@ namespace DaysForGirls.Data.Models
         public string UserId { get; set; }
         public DaysForGirlsUser User { get; set; }
 
-        public ICollection<ShoppingCartItem> ShoppingCartItems { get; set; }
+        public List<ShoppingCartItem> ShoppingCartItems { get; set; }
     }
 }

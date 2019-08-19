@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using DaysForGirls.Data;
 using DaysForGirls.Data.Models;
 using DaysForGirls.Services.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace DaysForGirls.Services
 {
@@ -39,6 +40,21 @@ namespace DaysForGirls.Services
                 });
 
             return allProductTypes;
+        }
+
+        public async Task<bool> DeleteTypeByIdAsync(int productTypeId)
+        {
+            var productTypeToDelete = await this.db.ProductTypes
+                .SingleOrDefaultAsync(pT => pT.Id == productTypeId);
+
+            productTypeToDelete.IsDeleted = true;
+
+            this.db.Update(productTypeToDelete);
+            int result = await this.db.SaveChangesAsync();
+
+            bool productTypeIsDeleted = result > 0;
+
+            return productTypeIsDeleted;
         }
     }
 }

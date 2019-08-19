@@ -15,7 +15,7 @@ namespace DaysForGirls.Services
         IQueryable<DisplayAllOfCategoryAndTypeServiceModel> GetAllProductsOfTypeAndCategory(
             string productTypeName, string categoryName);
 
-        Task<bool> AddProductToShoppingCart(int productId, string shoppingCartId);
+        Task<bool> AddProductToShoppingCartAsync(int productId, string shoppingCartId);
 
         //Task<bool> AddReviewToProductByProductIdAsync(int productId, int reviewId);
     }

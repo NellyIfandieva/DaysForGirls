@@ -1,0 +1,81 @@
+﻿@using DaysForGirls.Web.ViewModels
+@model ManufacturerDetailsViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    #entire-manufacturer{
+        margin-top: 40px;
+    }
+
+    #logo-and-info-holder{
+        margin-left: 350px;
+        display: block;
+    }
+
+    #logo-and-info-holder img{
+        margin-left: 50px;
+        width: 20%;
+    }
+
+    #logo-and-info-holder p{
+        background-color: #ebebe0;
+        text-align: justify;
+        width: 50%;
+        height: 25%;
+        padding: 6px 6px 6px 6px;
+    }
+
+    #manufacturer-products-holder{
+        display: inline-block;
+        margin-top: 30px;
+    }
+
+    #single-product{
+        float: left;
+    }
+    #single-product img{
+        width: 20%;
+    }
+
+    #single-product-info-holder{
+        background-color: #ebebe0;
+        width: 20%;
+    }
+
+    #single-product-info-holder a{
+        text-decoration: none;
+    }
+
+    hr{
+        border-top: 1.5px solid #a3a375;
+        margin-top: 50px;
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+</style>
+
+<div id="entire-manufacturer">
+    <div id="logo-and-info-holder">
+        <img src="@Model.Logo" alt="@Model.Name" />
+        <p>@Model.Description</p>
+    </div>
+    <hr />
+    <h2 class="text-center">@Model.Name  Products</h2>
+    <div id="manufacturer-products-holder">
+        @foreach(var product in Model.Products)
+        {
+            <div id="single-product">
+                <a href="/Products/Details/@product.Id"><img src="@product.Picture"/></a>
+                <div id="single-product-info-holder">
+                    <a href="/Products/Details/@product.Id"><p>@product.Name</p></a>
+                    <p>@product.Price</p>
+                </div>
+            </div>
+        }
+    </div>
+</div>

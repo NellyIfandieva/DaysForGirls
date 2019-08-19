@@ -37,6 +37,7 @@ namespace DaysForGirls.Web.Controllers
 
         [Authorize]
         [HttpPost("/CustomerReviews/Create/{productId}")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CustomerReviewInputModel model)
         {
             if(this.User.Identity.IsAuthenticated == false)

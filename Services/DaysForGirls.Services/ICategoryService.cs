@@ -10,6 +10,9 @@ namespace DaysForGirls.Services
     public interface ICategoryService
     {
         Task<int> Create(CategoryServiceModel categoryServiceModel);
+
         IQueryable<CategoryServiceModel> DisplayAll();
+
+        Task<bool> DeleteCategoryByIdAsync(int categoryId);
     }
 }

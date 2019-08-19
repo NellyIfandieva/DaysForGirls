@@ -11,7 +11,6 @@ namespace DaysForGirls.Data.Models
         public Product()
         {
             this.Pictures = new List<Picture>();
-            this.Carts = new List<ProductCart>();
             this.Reviews = new List<CustomerReview>();
         }
 
@@ -46,12 +45,13 @@ namespace DaysForGirls.Data.Models
 
         public List<CustomerReview> Reviews { get; set; }
 
-        public List<ProductCart> Carts { get; set; }
-
         public string SaleId { get; set; }
         public Sale Sale { get; set; }
 
         public bool IsInSale { get; set; }
+
+        public string ShoppingCartId { get; set; }
+        public ShoppingCart ShoppingCart { get; set; }
 
         public string OrderId { get; set; }
         public Order Order { get; set; }

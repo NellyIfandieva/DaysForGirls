@@ -10,6 +10,11 @@ namespace DaysForGirls.Services
     public interface IManufacturerService
     {
         Task<int> Create(ManufacturerServiceModel manufacturerServiceModel);
+
         IQueryable<ManufacturerServiceModel> DisplayAll();
+
+        Task<bool> DeleteManufacturerByIdAsync(int manufacturerId);
+
+        Task<ManufacturerServiceModel> GetManufacturerByIdAsync(int manufacturerId);
     }
 }

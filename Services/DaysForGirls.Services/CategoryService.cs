@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using DaysForGirls.Data;
 using DaysForGirls.Data.Models;
 using DaysForGirls.Services.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace DaysForGirls.Services
 {
@@ -46,6 +47,22 @@ namespace DaysForGirls.Services
                 });
 
             return allCategories;
+        }
+
+        public async Task<bool> DeleteCategoryByIdAsync(int categoryId)
+        {
+            var categoryToDelete = await this.db.Categories
+                .SingleOrDefaultAsync(c => c.Id == categoryId);
+
+            categoryToDelete.IsDeleted = true;
+
+            this.db.Update(categoryToDelete);
+
+            int result = await this.db.SaveChangesAsync();
+
+            bool categoryIsDeleted = result > 0;
+
+            return categoryIsDeleted;
         }
     }
 }

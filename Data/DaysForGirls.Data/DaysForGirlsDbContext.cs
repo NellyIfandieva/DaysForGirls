@@ -15,9 +15,7 @@ namespace DaysForGirls.Data
         public DbSet<OrderStatus> OrderStatuses { get; set; }
         public DbSet<Picture> Pictures { get; set; }
         public DbSet<Product> Products { get; set; }
-        public DbSet<ProductCart> ProductsCarts { get; set; }
         public DbSet<ProductOrder> ProductsOrders { get; set; }
-        //public DbSet<ProductSale> ProductsSales { get; set; }
         public DbSet<ProductType> ProductTypes { get; set; }
         public DbSet<Quantity> Quantities { get; set; }
         public DbSet<Sale> Sales { get; set; }

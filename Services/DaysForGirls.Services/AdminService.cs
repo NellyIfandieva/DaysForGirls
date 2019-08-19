@@ -53,7 +53,6 @@ namespace DaysForGirls.Services
                 Size = productServiceModel.Size,
                 Price = productServiceModel.Price,
                 Manufacturer = manufacturerInDb,
-                Carts = new List<ProductCart>(),
                 Reviews = new List<CustomerReview>(),
                 Pictures = new List<Picture>()
             };
@@ -182,6 +181,7 @@ namespace DaysForGirls.Services
                 Price = product.Price,
                 Manufacturer = new ManufacturerServiceModel
                 {
+                    Id = product.Manufacturer.Id,
                     Name = product.Manufacturer.Name
                 },
                 Quantity = new QuantityServiceModel

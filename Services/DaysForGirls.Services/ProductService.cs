@@ -178,24 +178,13 @@ namespace DaysForGirls.Services
         //    return productIsAddedToSale;
         //}
 
-        public async Task<bool> AddProductToShoppingCart(int productId, string shoppingCartId)
+        public async Task<bool> AddProductToShoppingCartAsync(int productId, string shoppingCartId)
         {
             var product = await this.db.Products
                 .SingleOrDefaultAsync(p => p.Id == productId);
 
-            if(product != null)
-            {
-                var productCart = new ProductCart
-                {
-                    ProductId = product.Id,
-                    Product = product,
-                    ShoppingCartId = shoppingCartId
-                };
-
-                this.db.ProductsCarts.Add(productCart);
-                product.Carts.Add(productCart);
-                product.Quantity.AvailableItems--;
-            }
+            product.ShoppingCartId = shoppingCartId;
+            product.Quantity.AvailableItems--;
 
             this.db.Update(product);
             int result = await this.db.SaveChangesAsync();

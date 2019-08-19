@@ -27,8 +27,14 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         }
 
         [HttpPost("/Administration/ProductType/Create")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProductTypeCreateInputModel model)
         {
+            if(ModelState.IsValid == false)
+            {
+                return View(model);
+            }
+
             ProductTypeServiceModel pTServiceModel = new ProductTypeServiceModel
             {
                 Name = model.Name
@@ -56,7 +62,28 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                 .OrderBy(pt => pt.Name)
                 .ToListAsync();
 
+            if(allProductTypes == null)
+            {
+                return NotFound();
+            }
+
             return View(allProductTypes);
         }
+
+        [HttpGet("/Administration/ProductType/Delete/{productTypeId}")]
+        public async Task<IActionResult> Delete(int productTypeId)
+        {
+            if(productTypeId <= 0)
+            {
+                return BadRequest();
+            }
+
+            bool productTypeIsDeleted = await this.productTypeService
+                .DeleteTypeByIdAsync(productTypeId);
+
+            return Redirect("/Administration/ProductType/All");
+        }
+
+        //TODO implement Edit
     }
 }

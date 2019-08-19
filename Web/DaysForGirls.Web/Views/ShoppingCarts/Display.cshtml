@@ -1,0 +1,14 @@
+﻿@using DaysForGirls.Web.ViewModels
+@model  ShoppingCartDisplayViewModel
+
+@foreach(var item in Model.Items)
+{
+    <div>
+        <img src="@item.Product.Picture" alt="@item.Product.Name"/> - @item.Product.Name - 
+        @item.Product.Colour - @item.Product.Size  - @item.Product.Price - @item.Quantity
+    </div>
+}
+
+<p>Total: @Model.Total</p>
+
+<a><button>Check-Out</button></a>

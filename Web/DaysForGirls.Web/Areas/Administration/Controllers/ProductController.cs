@@ -92,6 +92,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         }
 
         [HttpPost("/Administration/Product/Create")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProductCreateInputModel model)
         {
             if(ModelState.IsValid == false)
@@ -185,6 +186,11 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                 }).ToList();
 
             await Task.Delay(0);
+
+            if(allProducts == null)
+            {
+                return NotFound();
+            }
             return View(allProducts);
         }
 
@@ -193,6 +199,11 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         {
             ProductServiceModel productInDb = await this.adminService
                 .GetProductByIdAsync(id);
+
+            if(productInDb == null)
+            {
+                return new StatusCodeResult(404);
+            }
 
             ProductDetailsViewModel productToDisplay = new ProductDetailsViewModel
             {
@@ -235,6 +246,11 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
             var productWithId = 
                 await this.adminService.GetProductByIdAsync(productId);
 
+            if(productWithId == null)
+            {
+                return NotFound();
+            }
+
             var currentProductPictures = await this.pictureService
                 .GetPicturesOfProductByProductId(productId).ToListAsync();
 
@@ -260,8 +276,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
 
             if (productToEdit == null)
             {
-                // TODO: Error Handling
-                return this.Redirect("/");
+                return NotFound();
             }
 
             var allProductTypes = 
@@ -297,16 +312,18 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         }
 
         [HttpPost("/Administration/Product/Edit/{productId}")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int productId, ProductEditInputModel model)
         {
-            if (!this.ModelState.IsValid)
+            if (this.ModelState.IsValid == false)
             {
                 var productTypes = await this.productTypeService.DisplayAll().ToListAsync();
 
                 this.ViewData["types"] = productTypes.Select(pT => new ProductCreateProductTypeViewModel
                 {
                     Name = pT.Name
-                }).ToList(); ;
+                })
+                .ToList(); ;
 
                 var categories = await this.categoryService.DisplayAll().ToListAsync();
 
@@ -383,7 +400,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
             return Redirect("/Administration/Product/Edit/{productId}");
         }
 
-        [HttpGet("/Administration/Product/Delete/{productId}")]
+        [HttpDelete("/Administration/Product/Delete/{productId}")]
         public async Task<IActionResult> Delete(int productId)
         {
             bool isDeleted = await this.adminService.DeleteProductByIdAsync(productId);

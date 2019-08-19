@@ -66,5 +66,77 @@ namespace DaysForGirls.Services
 
             return allManufacturers;
         }
+
+        public async Task<bool> DeleteManufacturerByIdAsync(int manufacturerId)
+        {
+            var manufacturerToDelete = await this.db.Manufacturers
+                .SingleOrDefaultAsync(m => m.Id == manufacturerId);
+
+            manufacturerToDelete.IsDeleted = true;
+
+            var manufacturerProducts = await this.db.Products
+                .Where(p => p.Manufacturer.Id == manufacturerId)
+                .ToListAsync();
+
+            foreach(var product in manufacturerProducts)
+            {
+                if(product.IsDeleted == false)
+                {
+                    product.IsDeleted = true;
+                }
+            }
+
+            this.db.UpdateRange(manufacturerProducts);
+            this.db.Update(manufacturerToDelete);
+            int result = await this.db.SaveChangesAsync();
+
+            bool manufaturerAndProductsAreDeleted = result > 0;
+
+            return manufaturerAndProductsAreDeleted;
+        }
+
+        public async Task<ManufacturerServiceModel> GetManufacturerByIdAsync(int manufacturerId)
+        {
+            var manufacturer = await this.db.Manufacturers
+                .Include(m => m.Logo)
+                .Include(m => m.Products)
+                .SingleOrDefaultAsync(m => m.Id == manufacturerId);
+
+            var logo = await this.db.Logos
+                .SingleOrDefaultAsync(l => l.Manufacturer.Id == manufacturer.Logo.Id);
+
+            var manufacturerProducts = await this.db.Products
+                .Where(p => p.Manufacturer.Id == manufacturerId
+                && p.IsDeleted == false)
+                .Select(p => new ProductServiceModel
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Pictures = p.Pictures
+                    .Select(pic => new PictureServiceModel
+                    {
+                        Id = pic.Id,
+                        PictureUrl = pic.PictureUrl
+                    }).ToList(),
+                    Price = p.Price,
+                    SaleId = p.SaleId
+                })
+                .ToListAsync();
+
+            ManufacturerServiceModel manufacturerToReturn = new ManufacturerServiceModel
+            {
+                Id = manufacturer.Id,
+                Name = manufacturer.Name,
+                Description = manufacturer.Description,
+                Logo = new LogoServiceModel
+                {
+                    Id = logo.Id,
+                    LogoUrl = logo.LogoUrl
+                },
+                Products = manufacturerProducts
+            };
+
+            return manufacturerToReturn;
+        }
     }
 }

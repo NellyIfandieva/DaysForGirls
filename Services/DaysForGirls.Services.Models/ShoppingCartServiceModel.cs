@@ -8,6 +8,8 @@ namespace DaysForGirls.Services.Models
     {
         public string Id { get; set; }
 
+        public string UserId { get; set; }
+
         public List<ShoppingCartItemServiceModel> ShoppingCartItems { get; set; }
     }
 }

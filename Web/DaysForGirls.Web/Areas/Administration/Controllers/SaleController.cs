@@ -40,8 +40,13 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         }
 
         [HttpPost("/Administration/Sale/Create")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(SaleCreateInputModel model)
         {
+            if(ModelState.IsValid == false)
+            {
+                return View(model);
+            }
             string imageUrl = await this.cloudinaryService
                 .UploadPictureForSaleAsync(model.Picture, model.Title);
 
@@ -74,13 +79,28 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                 })
                 .ToListAsync();
 
+            if(allSales == null)
+            {
+                return NotFound();
+            }
+
             return View(allSales);
         }
 
         [HttpGet("/Administration/Sale/Details/{id}")]
         public async Task<IActionResult> Details(string id)
         {
+            if(id == null)
+            {
+                return BadRequest();
+            }
+
             var sale = await this.saleService.GetSaleByIdAsync(id);
+
+            if(sale == null)
+            {
+                return NotFound();
+            }
 
             var saleToDisplay = new SaleDetailsAdminViewModel
             {
@@ -106,8 +126,13 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         public async Task<IActionResult> Edit(string saleId)
         {
             await Task.Delay(0);
+
+            if(saleId == null)
+            {
+                return BadRequest();
+            }
+
             return View();
-            //return Redirect("/Administration/Sale/Details/{saleId}");
         }
 
         //[HttpPost("/Sale/Edit/{id}")]
@@ -140,6 +165,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         }
 
         [HttpPost("/Administration/Sale/AddProductToSale/{saleId}")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddProductToSale(SaleAddProductInputModel model)
         {
             var saleToAddTo = await this.saleService.GetSaleByIdAsync(model.SaleId);

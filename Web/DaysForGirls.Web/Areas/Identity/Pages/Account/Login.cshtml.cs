@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using DaysForGirls.Data;
 
 namespace DaysForGirls.Web.Areas.Identity.Pages.Account
 {
@@ -18,11 +19,19 @@ namespace DaysForGirls.Web.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<DaysForGirlsUser> signInManager;
         private readonly ILogger<LoginModel> logger;
+        private readonly UserManager<DaysForGirlsUser> userManager;
+        private readonly DaysForGirlsDbContext db;
 
-        public LoginModel(SignInManager<DaysForGirlsUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(
+            SignInManager<DaysForGirlsUser> signInManager, 
+            ILogger<LoginModel> logger,
+            UserManager<DaysForGirlsUser> userManager,
+            DaysForGirlsDbContext db)
         {
             this.signInManager = signInManager;
             this.logger = logger;
+            this.userManager = userManager;
+            this.db = db;
         }
 
         [BindProperty]
@@ -75,7 +84,19 @@ namespace DaysForGirls.Web.Areas.Identity.Pages.Account
                 var result = await this.signInManager.PasswordSignInAsync(Input.Username, Input.Password, Input.RememberMe, lockoutOnFailure: true);
                 if (result.Succeeded)
                 {
+                    DaysForGirlsUser currentUser = await this.userManager.FindByNameAsync(Input.Username);
+                    string userId = currentUser.Id;
+
+                    var userCart = new ShoppingCart
+                    {
+                        UserId = userId
+                    };
+
+                    this.db.ShoppingCarts.Add(userCart);
+                    await this.db.SaveChangesAsync();
+
                     this.logger.LogInformation("User logged in.");
+
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)

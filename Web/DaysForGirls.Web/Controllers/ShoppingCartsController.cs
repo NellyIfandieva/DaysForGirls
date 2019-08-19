@@ -41,6 +41,7 @@ namespace DaysForGirls.Web.Controllers
             {
                 return Redirect("Areas/Identity/Account/Login");
             }
+
             string userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
             var product = await this.productService.GetProductByIdAsync(productId);
@@ -51,23 +52,48 @@ namespace DaysForGirls.Web.Controllers
                 Quantity = 1
             };
 
-            string cartId = await this.shoppingCartService.CreateCart(userId, item);
+            string cartId = await this.shoppingCartService.AddItemToCartCartAsync(userId, item);
 
-            bool productIsAdded = await this.productService.AddProductToShoppingCart(product.Id, cartId);
-
-            return Redirect("/Products/Details/{productId}");
+            return Redirect("/ShoppingCarts/Display");
         }
 
         [HttpGet("/ShoppingCarts/Display")]
         public async Task<IActionResult> Display()
         {
             string userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var shoppingCart = this.db.ShoppingCarts
-                .SingleOrDefault(sC => sC.UserId == userId);
 
-            var itemsInCart = shoppingCart.ShoppingCartItems.ToList();
 
-            return View();
+            var shoppingCartInDb = await this.shoppingCartService.GetCartByUserIdAsync(userId);
+
+            if(shoppingCartInDb == null)
+            {
+                return NotFound();
+            }
+
+            var cartToReturn = new ShoppingCartDisplayViewModel
+            {
+                Id = shoppingCartInDb.Id,
+                Items = shoppingCartInDb.ShoppingCartItems
+                    .Select(i => new ShoppingCartItemViewModel
+                    {
+                        Id = i.Id,
+                        Product = new ProductAsCartItemViewModel
+                        {
+                            Id = i.Product.Id,
+                            Name = i.Product.Name,
+                            Picture = i.Product.MainPictureUrl,
+                            Colour = i.Product.Colour,
+                            Size = i.Product.Size,
+                            Price = i.Product.Price
+                        },
+                        Quantity = i.Quantity
+                    })
+                    .ToList(),
+                Total = shoppingCartInDb.ShoppingCartItems
+                .Sum(p => p.Product.Price)
+            };
+
+            return View(cartToReturn);
         }
         //public async Task<bool> Add(ShoppingCartInputModel model)
         //{

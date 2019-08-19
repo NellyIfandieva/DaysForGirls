@@ -27,8 +27,13 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         }
 
         [HttpPost("/Administration/Category/Create")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CategoryCreateInputModel model)
         {
+            if(ModelState.IsValid == false)
+            {
+                return View(model);
+            }
             CategoryServiceModel categoryServiceModel = new CategoryServiceModel
             {
                 Name = model.Name,
@@ -54,11 +59,28 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                 .OrderBy(c => c.Name)
                 .ToListAsync();
 
+            if(allCategories == null)
+            {
+                return NotFound();
+            }
+
             return View(allCategories);
         }
 
-        //TODO implement Details
+        [HttpGet("/Administration/Category/Delete/{categoryId}")]
+        public async Task<IActionResult> Delete(int categoryId)
+        {
+            if(categoryId <= 0)
+            {
+                return BadRequest();
+            }
 
-        //TODO implement Delete
+            bool categoryIsDeleted = await this.categoryService
+                .DeleteCategoryByIdAsync(categoryId);
+
+            return Redirect("/Administration/Category/All");
+        }
+
+        //TODO implement Edit
     }
 }
