@@ -39,7 +39,7 @@ namespace DaysForGirls.Web.Controllers
         {
             if(this.User.Identity.IsAuthenticated == false)
             {
-                return Redirect("Areas/Identity/Account/Login");
+                return Redirect("/Identity/Account/Login");
             }
 
             string userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;

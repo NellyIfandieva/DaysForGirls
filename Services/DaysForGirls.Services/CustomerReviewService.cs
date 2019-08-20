@@ -33,6 +33,7 @@ namespace DaysForGirls.Services
             {
                 Title = model.Title,
                 Text = model.Text,
+                AuthorId = currentUser.Id,
                 Author = currentUser,
                 ProductId = model.ProductId,
                 CreatedOn = DateTime.UtcNow

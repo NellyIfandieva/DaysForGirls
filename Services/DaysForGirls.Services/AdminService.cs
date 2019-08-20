@@ -13,13 +13,16 @@ namespace DaysForGirls.Services
     {
         private readonly DaysForGirlsDbContext db;
         private readonly IPictureService pictureService;
+        private readonly ICustomerReviewService customerReviewService;
 
         public AdminService(
             DaysForGirlsDbContext db,
-            IPictureService pictureService)
+            IPictureService pictureService,
+            ICustomerReviewService customerReviewService)
         {
             this.db = db;
             this.pictureService = pictureService;
+            this.customerReviewService = customerReviewService;
         }
 
         public async Task<int> CreateAsync(ProductServiceModel productServiceModel)
@@ -120,35 +123,16 @@ namespace DaysForGirls.Services
                 .Include(p => p.ProductType)
                 .Include(p => p.Manufacturer)
                 .Include(p => p.Quantity)
-                .Include(p => p.Pictures)
-                .Include(p => p.Reviews)
                 .Include(p => p.Sale)
                 .Include(p => p.ShoppingCart)
                 .SingleOrDefaultAsync(p => p.Id == productId);
 
-            //var pics = this.pictureService
-            //    .GetPicturesOfProductByProductId(product.Id).ToList();
+            var productPictures = await this.pictureService
+                .GetPicturesOfProductByProductId(product.Id).ToListAsync();
 
-            var productPictures = product.Pictures
-                .Where(p => p.IsDeleted == false)
-                .Select(p => new PictureServiceModel
-                {
-                    Id = p.Id,
-                    PictureUrl = p.PictureUrl,
-                    ProductId = product.Id
-                }).ToList();
-
-            var productReviews = product.Reviews
-                .Where(r => r.IsDeleted == false)
-                .Select(r => new CustomerReviewServiceModel
-                {
-                    Id = r.Id,
-                    Title = r.Title,
-                    Text = r.Text,
-                    CreatedOn = r.CreatedOn.ToString("dddd, dd MMMM yyyy"),
-                    AuthorUsername = r.Author.UserName,
-                    ProductId = product.Id
-                }).ToList();
+            var productReviews = await this.customerReviewService
+                .GetAllCommentsOfProductByProductId(product.Id)
+                .ToListAsync();
 
             ProductServiceModel productToReturn = new ProductServiceModel
             {
@@ -350,18 +334,34 @@ namespace DaysForGirls.Services
             return productToReturn;
         }
 
-        //public IQueryable<ProductServiceModel> GetAllProductsByIds(List<int> productIds)
-        //{
-        //    var allSearchedProducts = this.db.Products
-        //        .Where(p => productIds.Contains(p.Id)
-        //        && p.IsDeleted == false)
-        //        .Select(p => new ProductServiceModel
-        //        {
-        //            Id = p.Id
-        //        });
+        private IQueryable<Product> GetAllProductsByIds(List<int> productIds)
+        {
+            var allSearchedProducts = this.db.Products
+                .Where(p => productIds.Contains(p.Id)
+                && p.IsDeleted == false);
 
-        //    return allSearchedProducts;
-        //}
+            return allSearchedProducts;
+        }
+
+        public async Task<bool> SetProductsCartIdToNullAsync(List<int> productIds)
+        {
+            var products = await GetAllProductsByIds(productIds)
+                .Include(p => p.Quantity)
+                .ToListAsync();
+
+            foreach(var product in products)
+            {
+                product.Quantity.AvailableItems++;
+                product.ShoppingCartId = null;
+            }
+
+            this.db.UpdateRange(products);
+            int result = await this.db.SaveChangesAsync();
+
+            bool productsCartIdIsSetToNull = result > 0;
+
+            return productsCartIdIsSetToNull;
+        }
 
         //public async Task<bool> AddProductsToSaleAsync(List<int> productIds, int saleId)
         //{

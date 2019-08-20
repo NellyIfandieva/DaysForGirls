@@ -30,7 +30,12 @@ namespace DaysForGirls.Web.Controllers
         public async Task<IActionResult> Create(int productId)
         {
             this.ViewData["productId"] = productId;
-            
+
+            if (this.User.Identity.IsAuthenticated == false)
+            {
+                return Redirect("/Identity/Account/Login");
+            }
+
             await Task.Delay(0);
             return View();
         }
@@ -40,10 +45,10 @@ namespace DaysForGirls.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CustomerReviewInputModel model)
         {
-            if(this.User.Identity.IsAuthenticated == false)
-            {
-                return Redirect("/Identity/Account/Login");
-            }
+            //if(this.User.Identity.IsAuthenticated == false)
+            //{
+            //    return Redirect("/Identity/Account/Login");
+            //}
 
             string username = this.User.Identity.Name;
             var productId = model.ProductId;

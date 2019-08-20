@@ -13,7 +13,7 @@ namespace DaysForGirls.Services
 
         Task<ProductServiceModel> GetProductByIdAsync(int productId);
 
-        //IQueryable<ProductServiceModel> GetAllProductsByIds(List<int> productIds);
+        Task<bool> SetProductsCartIdToNullAsync(List<int> productIds);
 
         Task<bool> DeleteProductByIdAsync(int productId);
 
