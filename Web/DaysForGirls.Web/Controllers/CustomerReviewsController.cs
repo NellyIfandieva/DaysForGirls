@@ -40,15 +40,14 @@ namespace DaysForGirls.Web.Controllers
             return View();
         }
 
-        [Authorize]
         [HttpPost("/CustomerReviews/Create/{productId}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CustomerReviewInputModel model)
         {
-            //if(this.User.Identity.IsAuthenticated == false)
-            //{
-            //    return Redirect("/Identity/Account/Login");
-            //}
+            if (this.User.Identity.IsAuthenticated == false)
+            {
+                return Redirect("/Identity/Account/Login");
+            }
 
             string username = this.User.Identity.Name;
             var productId = model.ProductId;
@@ -63,8 +62,8 @@ namespace DaysForGirls.Web.Controllers
             };
 
             bool isCreated = await this.customerReviewService.CreateAsync(newCustomerReview, model.ProductId);
-            string id = productId.ToString();
-            return Redirect("/Products/Details/productId");
+            //string id = "/Products/Details/productId";
+            return Redirect("/Products/Details/" + productId);
         }
     }
 }
