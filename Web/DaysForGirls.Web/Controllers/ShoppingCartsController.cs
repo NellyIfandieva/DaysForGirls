@@ -89,7 +89,8 @@ namespace DaysForGirls.Web.Controllers
                     })
                     .ToList(),
                 Total = shoppingCartInDb.ShoppingCartItems
-                .Sum(p => p.Product.Price)
+                .Sum(p => p.Product.Price),
+                UserId = userId
             };
 
             return View(cartToReturn);

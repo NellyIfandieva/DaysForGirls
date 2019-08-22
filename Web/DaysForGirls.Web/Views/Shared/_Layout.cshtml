@@ -9,49 +9,60 @@
     <link rel="stylesheet" href="~/css/style.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <script src="https://kit.fontawesome.com/0652279571.js"></script>
+
+    @*#cc0066*@
+    @*the go button of the search field #e60073*@
 </head>
 <body>
     <header>
-        <div class="w3-bar" style="background-color: #cc0066; color: white;">
+        <div class="w3-bar" style="background-color: #996600; color: white;">
             <a href="/" class="w3-bar-item w3-button"><img src="~/Images/Logo.jpg" alt="DaysForGirls" style="width:100%;max-width:200px" /></a>
             <input type="text" class="w3-bar-item w3-input w3-center" placeholder="Search..">
-            <a style="background-color: #e60073; margin-top: 8px" href="#" class="w3-bar-item w3-button">Go</a>
+            <a style="background-color: #b37700; margin-top: 8px" href="#" class="w3-bar-item w3-button">Go</a>
             @if (this.User.Identity.IsAuthenticated)
             {
                 if (this.User.IsInRole("Admin"))
                 {
-                    <div class="w3-dropdown-hover">
-                        <a href="/Administration/Product/All"><button class="w3-button">Product</button></a>
-                        <div class="w3-dropdown-content w3-bar-block w3-card-4">
-                            <a href="/Administration/Product/Create" class="w3-bar-item w3-button">Create</a>
+                    <div id="admin-buttons" style="margin-top: 70px">
+                        <div class="w3-dropdown-hover">
+                            <a href="/Administration/Product/All"><button class="w3-button" style="background-color: #996600; color: white">Product</button></a>
+                            <div class="w3-dropdown-content w3-bar-block w3-card-4">
+                                <a href="/Administration/Product/Create" class="w3-bar-item w3-button">Create</a>
+                            </div>
                         </div>
-                    </div>
-                    <div class="w3-dropdown-hover">
-                        <a href="/Administration/ProductType/All"><button class="w3-button">Product Type</button></a>
-                        <div class="w3-dropdown-content w3-bar-block w3-card-4">
-                            <a href="/Administration/ProductType/Create" class="w3-bar-item w3-button">Create</a>
+                        <div class="w3-dropdown-hover">
+                            <a href="/Administration/ProductType/All"><button class="w3-button">Product Type</button></a>
+                            <div class="w3-dropdown-content w3-bar-block w3-card-4">
+                                <a href="/Administration/ProductType/Create" class="w3-bar-item w3-button">Create</a>
+                            </div>
                         </div>
-                    </div>
-                    <div class="w3-dropdown-hover">
-                        <a href="/Administration/Category/All"><button class="w3-button">Category</button></a>
-                        <div class="w3-dropdown-content w3-bar-block w3-card-4">
-                            <a href="/Administration/Category/Create" class="w3-bar-item w3-button">Create</a>
+                        <div class="w3-dropdown-hover">
+                            <a href="/Administration/Category/All"><button class="w3-button">Category</button></a>
+                            <div class="w3-dropdown-content w3-bar-block w3-card-4">
+                                <a href="/Administration/Category/Create" class="w3-bar-item w3-button">Create</a>
+                            </div>
                         </div>
-                    </div>
-                    <div class="w3-dropdown-hover">
-                        <a href="/Administration/Manufacturer/All"><button class="w3-button">Manufacturer</button></a>
-                        <div class="w3-dropdown-content w3-bar-block w3-card-4">
-                            <a href="/Administration/Manufacturer/Create" class="w3-bar-item w3-button">Create</a>
+                        <div class="w3-dropdown-hover">
+                            <a href="/Administration/Manufacturer/All"><button class="w3-button">Manufacturer</button></a>
+                            <div class="w3-dropdown-content w3-bar-block w3-card-4">
+                                <a href="/Administration/Manufacturer/Create" class="w3-bar-item w3-button">Create</a>
+                            </div>
                         </div>
-                    </div>
-                    <div class="w3-dropdown-hover">
-                        <a href="/Administration/Sale/All"><button class="w3-button">Sale</button></a>
-                        <div class="w3-dropdown-content w3-bar-block w3-card-4">
-                            <a href="/Administration/Sale/Create" class="w3-bar-item w3-button">Create</a>
+                        <div class="w3-dropdown-hover">
+                            <a href="/Administration/Sale/All"><button class="w3-button">Sale</button></a>
+                            <div class="w3-dropdown-content w3-bar-block w3-card-4">
+                                <a href="/Administration/Sale/Create" class="w3-bar-item w3-button">Create</a>
+                            </div>
+                        </div>
+                        <div class="w3-dropdown-hover">
+                            <a href="/Orders/AllAdmin"><button class="w3-button">Orders</button></a>
+                            @*<div class="w3-dropdown-content w3-bar-block w3-card-4">
+                                <a href="/Administration/Sale/Create" class="w3-bar-item w3-button">Create</a>
+                            </div>*@
                         </div>
                     </div>
                 }
-                <a href="/ShoppingCarts/Display"><button style="background-color: #cc0066; color: white; border: none; margin-top: 8px; margin-left: 38px"><i class="fas fa-cart-plus"></i></button></a>
+                <a href="/ShoppingCarts/Display"><button style="background-color: #996600; color: white; border: none; margin-top: 8px; margin-left: 210px"><i class="fas fa-cart-plus"></i></button></a>
                 <a class="w3-bar-item w3-button w3-right" href="/Identity/Account/Manage/Index" @*asp-area="Identity" asp-page="/Account/Manage/Index"*@ title="Manage">Hello, @User.Identity.Name!</a>
                 <a class="w3-bar-item w3-button w3-right" href="/Identity/Account/Logout" @*asp-area="Identity" asp-page="/Account/Logout"*@>Logout</a>
             }
@@ -62,10 +73,11 @@
             }
         </div>
     </header>
+    @*#cc0066*@
     <br />
-    <div class="w3-bar" style="background-color: #cc0066; color: white;">
+    <div class="w3-bar" style="background-color: #996600; color: white;">
         <div class="w3-dropdown-hover">
-            <a href="/Weddings/All"><button class="w3-button" style="background-color: #cc0066; color: white;">Wedding</button></a>
+            <a href="/Weddings/All"><button class="w3-button" style="background-color: #996600; color: white;">Wedding</button></a>
             <div class="w3-dropdown-content w3-bar-block w3-card-4">
                 <a href="/Weddings/Dresses" class="w3-bar-item w3-button">Dresses</a>
                 <a href="/Weddings/Suits" class="w3-bar-item w3-button">Suits</a>
@@ -74,11 +86,11 @@
         </div>
         <div class="w3-dropdown-hover">
             <a href="/Proms/All"><button class="w3-button">Prom</button></a>
-                <div class="w3-dropdown-content w3-bar-block w3-card-4">
-                    <a href="/Proms/Dresses" class="w3-bar-item w3-button">Dresses</a>
-                    <a href="/Proms/Suits" class="w3-bar-item w3-button">Suits</a>
-                    <a href="/Proms/Accessories" class="w3-bar-item w3-button">Accessories</a>
-                </div>
+            <div class="w3-dropdown-content w3-bar-block w3-card-4">
+                <a href="/Proms/Dresses" class="w3-bar-item w3-button">Dresses</a>
+                <a href="/Proms/Suits" class="w3-bar-item w3-button">Suits</a>
+                <a href="/Proms/Accessories" class="w3-bar-item w3-button">Accessories</a>
+            </div>
         </div>
         <div class="w3-dropdown-hover">
             <a href="/Other/All"><button class="w3-button">Other Special Occasions</button></a>
@@ -88,6 +100,12 @@
                 <a href="/Other/Accessories" class="w3-bar-item w3-button">Accessories</a>
             </div>
         </div>
+        @if (this.User.Identity.IsAuthenticated)
+        {
+            <div class="w3-dropdown-hover" style="margin-left: 755px">
+                <a href="/Orders/UserAll/@this.User.Identity.Name"><button class="w3-button">Your Orders</button></a>
+            </div>
+        }
     </div>
     <div class="w3-container">
         <main>

@@ -35,8 +35,12 @@ namespace DaysForGirls.Services
             var cart = await this.db.ShoppingCarts
                 .SingleOrDefaultAsync(u => u.UserId == userId);
 
+            var product = await this.db.Products
+                .SingleOrDefaultAsync(p => p.Id == model.Product.Id);
+
             ShoppingCartItem shoppingCartItem = new ShoppingCartItem
             {
+                Product = product,
                 ProductId = model.Product.Id,
                 ShoppingCartId = cart.Id,
                 Quantity = model.Quantity

@@ -12,10 +12,10 @@ namespace DaysForGirls.Data
         public DbSet<Logo> Logos { get; set; }
         public DbSet<Manufacturer> Manufacturers { get; set; }
         public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderedProduct> OrderedProducts { get; set; }
         public DbSet<OrderStatus> OrderStatuses { get; set; }
         public DbSet<Picture> Pictures { get; set; }
         public DbSet<Product> Products { get; set; }
-        public DbSet<ProductOrder> ProductsOrders { get; set; }
         public DbSet<ProductType> ProductTypes { get; set; }
         public DbSet<Quantity> Quantities { get; set; }
         public DbSet<Sale> Sales { get; set; }

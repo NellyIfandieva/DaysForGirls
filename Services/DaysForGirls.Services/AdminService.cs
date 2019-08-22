@@ -363,6 +363,25 @@ namespace DaysForGirls.Services
             return productsCartIdIsSetToNull;
         }
 
+        public async Task<bool> SetOrderIdToProductsAsync(List<int> productIds, string orderId)
+        {
+            var productsToAddToOrder = await this.db.Products
+                .Where(p => productIds.Contains(p.Id)).ToListAsync();
+
+            foreach(var product in productsToAddToOrder)
+            {
+                product.OrderId = orderId;
+                product.ShoppingCartId = null;
+            }
+
+            this.db.UpdateRange(productsToAddToOrder);
+            int result = await this.db.SaveChangesAsync();
+
+            bool productsAreAddedToOrder = result > 0;
+
+            return productsAreAddedToOrder;
+        }
+
         //public async Task<bool> AddProductsToSaleAsync(List<int> productIds, int saleId)
         //{
         //    var productsToAddToSale = await this.db.Products

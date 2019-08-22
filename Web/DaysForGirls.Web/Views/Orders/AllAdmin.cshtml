@@ -1,0 +1,68 @@
+﻿@using DaysForGirls.Web.ViewModels
+@model List<AdminOrdersDisplayAllViewModel>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<style>
+    table {
+        border-collapse: collapse;
+        /*margin-left: 150px;*/
+        width: 100%;
+        table-layout: auto;
+        margin-top: 50px;
+    }
+
+    table, th, td {
+        border: 1px solid #ccccb3;
+    }
+
+    th {
+        font-weight: bold;
+        height: 50px;
+    }
+
+    td {
+        text-align: center;
+    }
+
+        td a {
+            text-decoration: none;
+        }
+</style>
+
+<h3>All Orders</h3>
+
+<table>
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Id</th>
+            <th>Issued On</th>
+            <th>Products</th>
+            <th>Total Price</th>
+            <th>UserId</th>
+            <th>Status</th>
+            <th>Is Deleted</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var order in Model)
+        {
+            //int number = @order.Number++;
+            <tr>
+                <td>@order.Number</td>
+                <td>@order.Id</td>
+                <td>@order.IssuedOn</td>
+                <td><a>@order.OrderedProducts.Count()</a></td>
+                <td>@order.TotalPrice</td>
+                <td>@order.UserId</td>
+                <td>@order.OrderStatus</td>
+                <td>@order.IsDeleted</td>
+                <td>
+                    <a>Edit</a>
+                    <a>Details</a>
+                    <a>Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -11,5 +11,7 @@ namespace DaysForGirls.Web.ViewModels
         public List<ShoppingCartItemViewModel> Items { get; set; }
 
         public decimal Total { get; set; }
+
+        public string UserId { get; set; }
     }
 }
