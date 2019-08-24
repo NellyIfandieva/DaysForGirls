@@ -78,7 +78,7 @@
 <div id="all-products-container">
     @foreach(var product in Model)
     {
-        <div id="product-holder" @*class="product-holder-container"*@>
+        <div id="product-holder">
             @if (product.ShoppingCartId != null)
             {
                 <div class="text-over-image">

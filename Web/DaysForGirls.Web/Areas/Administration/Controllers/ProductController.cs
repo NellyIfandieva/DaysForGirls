@@ -424,19 +424,19 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         //    return View("Administration/Product/Details/{productId}");
         //}
 
-        public async Task<IActionResult> UploadNewPicture(ProductEditInputModel model)
-        {
-            int productId = model.ProductId;
+        //public async Task<IActionResult> UploadNewPicture(ProductEditInputModel model)
+        //{
+        //    int productId = model.ProductId;
 
-            Guid name = new Guid();
+        //    Guid name = new Guid();
 
-            //string imageUrl = await this.cloudinaryService.UploadPictureForProductAsync(
-            //    model.NewPicture, name.ToString());
+        //    //string imageUrl = await this.cloudinaryService.UploadPictureForProductAsync(
+        //    //    model.NewPicture, name.ToString());
 
-            //bool imageIsAdded = await this.adminService.UploadNewPictureToProductAsync(productId, imageUrl);
+        //    //bool imageIsAdded = await this.adminService.UploadNewPictureToProductAsync(productId, imageUrl);
 
-            return Redirect("/Administration/Product/Details/{productId}");
-        }
+        //    return Redirect("/Administration/Product/Details/{productId}");
+        //}
 
         [HttpDelete("/Administration/Product/Delete/{productId}")]
         public async Task<IActionResult> Delete(int productId)

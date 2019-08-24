@@ -13,6 +13,10 @@ namespace DaysForGirls.Services
 
         IQueryable<ProductTypeServiceModel> DisplayAll();
 
+        Task<ProductTypeServiceModel> GetProductTypeByIdAsync(int productTypeId);
+
+        Task<bool> EditAsync(ProductTypeServiceModel model);
+
         Task<bool> DeleteTypeByIdAsync(int productTypeId);
     }
 }

@@ -54,6 +54,11 @@ namespace DaysForGirls.Services
             var categoryInDb = await this.db.Categories
                 .SingleOrDefaultAsync(c => c.Id == categoryId);
 
+            if(categoryInDb == null)
+            {
+                throw new ArgumentNullException(nameof(categoryInDb));
+            }
+
             var categoryToReturn = new CategoryServiceModel
             {
                 Id = categoryInDb.Id,
@@ -70,6 +75,11 @@ namespace DaysForGirls.Services
             var categoryInDb = await this.db.Categories
                 .SingleOrDefaultAsync(c => c.Id == model.Id);
 
+            if (categoryInDb == null)
+            {
+                throw new ArgumentNullException(nameof(categoryInDb));
+            }
+
             categoryInDb.Name = model.Name;
             categoryInDb.Description = model.Description;
 
@@ -85,6 +95,11 @@ namespace DaysForGirls.Services
         {
             var categoryToDelete = await this.db.Categories
                 .SingleOrDefaultAsync(c => c.Id == categoryId);
+
+            if (categoryToDelete == null)
+            {
+                throw new ArgumentNullException(nameof(categoryToDelete));
+            }
 
             categoryToDelete.IsDeleted = true;
 

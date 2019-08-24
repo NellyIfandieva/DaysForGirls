@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DaysForGirls.Services.Models
+namespace DaysForGirls.Web.InputModels
 {
-    public class ProductTypeServiceModel
+    public class ProductTypeEditInputModel
     {
         public int Id { get; set; }
 

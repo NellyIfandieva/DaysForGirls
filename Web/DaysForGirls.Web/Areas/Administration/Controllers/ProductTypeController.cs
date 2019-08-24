@@ -70,6 +70,42 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
             return View(allProductTypes);
         }
 
+        [HttpGet("/Administration/ProductType/Edit/{productTypeId}")]
+        public async Task<IActionResult> Edit(int productTypeId)
+        {
+            if(productTypeId <= 0)
+            {
+                return BadRequest();
+            }
+
+            var productTypeFromDb = await this.productTypeService
+                .GetProductTypeByIdAsync(productTypeId);
+
+            var productTypeToEdit = new ProductTypeEditInputModel
+            {
+                Id = productTypeId,
+                Name = productTypeFromDb.Name,
+                IsDeleted = productTypeFromDb.IsDeleted
+            };
+
+            return View(productTypeToEdit);
+        }
+
+        [HttpPost("/Administration/ProductType/Edit/{productTypeId}")]
+        public async Task<IActionResult> Edit(int productTypeId, ProductTypeEditInputModel model)
+        {
+            var productTypeWithEdits = new ProductTypeServiceModel
+            {
+                Id = productTypeId,
+                Name = model.Name
+            };
+
+            bool productTypeIsEdited = await this.productTypeService
+                .EditAsync(productTypeWithEdits);
+
+            return Redirect("/Administration/ProductType/All");
+        }
+
         [HttpGet("/Administration/ProductType/Delete/{productTypeId}")]
         public async Task<IActionResult> Delete(int productTypeId)
         {

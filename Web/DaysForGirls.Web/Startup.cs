@@ -65,7 +65,6 @@ namespace DaysForGirls.Web
             services.AddTransient<IPictureService, PictureService>();
             services.AddTransient<IProductService, ProductService>();
             services.AddTransient<IProductTypeService, ProductTypeService>();
-            services.AddTransient<IQuantityService, QuantityService>();
             services.AddTransient<ISaleService, SaleService>();
             services.AddTransient<IShoppingCartService, ShoppingCartService>();
 
