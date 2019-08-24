@@ -27,5 +27,7 @@ namespace DaysForGirls.Services.Models
         public string SaleId { get; set; }
 
         public string ShoppingCartId { get; set; }
+
+        public string OrderId { get; set; }
     }
 }

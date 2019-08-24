@@ -1,0 +1,133 @@
+﻿@model List<DaysForGirls.Web.ViewModels.SaleDisplayAllViewModel>
+
+@{
+    ViewData["Title"] = "All";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+    <style>
+        #sale-holder{
+        margin-left: 250px;
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+
+    /*#sale-holder img{
+        width: 50%;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 5px;
+        margin-bottom: 0px;
+    }*/
+    #saleTitle{
+        text-decoration: none;
+        margin-top: 0px;
+        margin-bottom: 0px;
+        padding-top: 0px;
+    }
+
+    #saleEndsOn{
+        margin-top: 0px;
+        padding-top: 0px;
+    }
+
+    #sale-image{
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 5px;
+        margin-bottom: 0px;
+    }
+
+    #sale-image:hover {
+      box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+    }
+
+    .text-over-image{
+        /*margin-left: 0px;*/
+        position: relative;
+        /*text-align: center;*/
+        font-weight: bold;
+    }
+
+    .text-bottom-center{
+        margin-left: 1px;
+        opacity: 0.5;
+        background-color: #ebebe0;
+        color: #1f1f14;
+        position: absolute;
+        bottom: 20px;
+        width: 538px;
+        left: 5px;
+        /*right: 5px;*/
+    }
+
+    h1{
+        margin-top: 30px;
+        margin-bottom: 50px;
+    }
+
+        .mySlides {
+            display: none
+        }
+
+        .w3-left, .w3-right, /*.w3-badge*/ {
+            cursor: pointer
+        }
+
+        /*.w3-badge {
+            height: 13px;
+            width: 13px;
+            padding: 0
+        }*/
+    </style>
+
+<h2 class="text-center">All Active Sales</h2>
+
+    <div class="w3-content w3-display-container">
+        @for (int i = 0; i < Model.Count(); i++)
+        {
+            <div id="sale-holder">
+                <div class="text-over-image">
+                    <a href="/Sales/Details/@Model[i].Id"><img class="mySlides" id="sale-image" src="@Model[i].Picture" alt="@Model[i].Title" width="550" /></a>
+                    <div class="text-bottom-center">
+                        <a id="saleTitle" href="/Sales/Details/@Model[i].Id"><h3 class="text-center">@Model[i].Title</h3></a>
+                    </div>
+                </div>
+                <div class="w3-center w3-display-bottommiddle" style="width:525px; margin-left: 34px; margin-bottom: 160px;">
+                    <div class="w3-left" onclick="plusDivs(-1)">&#10094;</div>
+                    <div class="w3-right" onclick="plusDivs(1)">&#10095;</div>
+                    <span class="w3-badge demo w3-border" onclick="currentDiv(i)"></span>
+                </div>
+            </div>
+        }
+
+    </div>
+
+    <script>
+        var slideIndex = 1;
+        showDivs(slideIndex);
+
+        function plusDivs(n) {
+            showDivs(slideIndex += n);
+        }
+
+        function currentDiv(n) {
+            showDivs(slideIndex = n);
+        }
+
+        function showDivs(n) {
+            var i;
+            var x = document.getElementsByClassName("mySlides");
+            var dots = document.getElementsByClassName("demo");
+            if (n > x.length) { slideIndex = 1 }
+            if (n < 1) { slideIndex = x.length }
+            for (i = 0; i < x.length; i++) {
+                x[i].style.display = "none";
+            }
+            for (i = 0; i < dots.length; i++) {
+                dots[i].className = dots[i].className.replace(" w3-white", "");
+            }
+            x[slideIndex - 1].style.display = "block";
+            dots[slideIndex - 1].className += " w3-white";
+        }
+    </script>

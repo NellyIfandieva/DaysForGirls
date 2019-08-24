@@ -32,6 +32,10 @@ namespace DaysForGirls.Data.Models
 
         public string OrderStatus { get; set; }
 
+        public DateTime DeliveryEarliestDate => this.IssuedOn.AddDays(12);
+
+        public DateTime DeliveryLatestDate => this.DeliveryEarliestDate.AddDays(5);
+
         //public int OrderStatusId { get; set; }
         //public OrderStatus OrderStatus { get; set; }
 

@@ -1,0 +1,61 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - DaysForGirls</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="~/css/fontawesome.min.css" />
+    <link rel="stylesheet" href="~/css/myle.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://kit.fontawesome.com/0652279571.js"></script>
+</head>
+<body>
+    <header>
+        <div class="topnav" id="myTopnav">
+            <a href="/"><img src="~/Images/Logo.jpg" alt="DaysForGirls" /></a>
+            <input type="search" class="w3-bar-item w3-input w3-center" placeholder="Search...">
+            <a id="search-button" href="#">Go</a>
+            @if(this.User.Identity.IsAuthenticated)
+            {
+                <a href="/ShoppingCarts/Display"><button style="background-color: #009999; color: white; border: none; margin-top: 8px; margin-left: 210px"><i class="fas fa-cart-plus"></i></button></a>
+                <a class="w3-bar-item w3-button w3-right" href="/Identity/Account/Manage/Index" title="Manage" style="color: white">Hello, @User.Identity.Name!</a>
+                <a class="w3-bar-item w3-button w3-right" href="/Identity/Account/Logout" style="color: white">Logout</a>
+            }
+            else
+            {
+                <a class="w3-bar-item w3-button w3-right" asp-area="Identity" asp-page="/Account/Login">Login</a>
+                <a class="w3-bar-item w3-button w3-right" asp-area="Identity" asp-page="/Account/Register">Register</a>
+            }
+            @if(this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
+            {
+                <div class="dropdown">
+                    <a href="/Administration/Product/All"><button class="dropbtn">Product</button></a>
+                    <div class="dropdown-content">
+                        <a href="/Administration/Product/Create">Create</a>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <button class="dropbtn">Category</button>
+                    <div class="dropdown-content">
+                        <a href="/Administration/Category/Create">Create</a>
+                    </div>
+                </div>
+            }
+        </div>
+    </header>
+    <main>
+        @RenderBody()
+    </main>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+
+    </script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

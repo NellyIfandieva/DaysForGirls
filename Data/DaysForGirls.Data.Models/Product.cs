@@ -7,6 +7,7 @@ namespace DaysForGirls.Data.Models
     {
         private const string MinPrice = "0.00";
         private const string MaxPrice = "10000";
+        private const string RequiredErrorMessage = "The field is required.";
 
         public Product()
         {
@@ -14,7 +15,7 @@ namespace DaysForGirls.Data.Models
             this.Reviews = new List<CustomerReview>();
         }
 
-        [Required]
+        [Required(ErrorMessage = RequiredErrorMessage)]
         public string Name { get; set; }
 
         public int ProductTypeId { get; set; }
@@ -23,15 +24,15 @@ namespace DaysForGirls.Data.Models
         public int CategoryId { get; set; }
         public Category Category { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = RequiredErrorMessage)]
         public string Description { get; set; }
 
         public List<Picture> Pictures { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = RequiredErrorMessage)]
         public string Colour { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = RequiredErrorMessage)]
         public string Size { get; set; }
 
         [Range(typeof(decimal), MinPrice, MaxPrice)]

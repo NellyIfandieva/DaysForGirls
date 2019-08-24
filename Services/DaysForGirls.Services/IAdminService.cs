@@ -17,7 +17,7 @@ namespace DaysForGirls.Services
 
         Task<bool> DeleteProductByIdAsync(int productId);
 
-        Task<bool> EditAsync(int productId, ProductServiceModel model);
+        Task<bool> EditAsync(ProductServiceModel model);
 
         Task<bool> UploadNewPictureToProductAsync(int productId, string imageUrl);
 

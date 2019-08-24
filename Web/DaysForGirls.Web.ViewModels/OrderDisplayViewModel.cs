@@ -16,6 +16,10 @@ namespace DaysForGirls.Web.ViewModels
 
         public string UserFullName { get; set; }
 
+        public string DeliveryEarliestDate { get; set; }
+
+        public string DeliveryLatestDate { get; set; }
+
         public string OrderStatus { get; set; }
 
         public bool IsDeleted { get; set; }

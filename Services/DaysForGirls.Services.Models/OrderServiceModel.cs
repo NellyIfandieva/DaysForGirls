@@ -20,6 +20,10 @@ namespace DaysForGirls.Services.Models
 
         public DaysForGirlsUserServiceModel User { get; set; }
 
+        public string DeliveryEarlistDate { get; set; }
+
+        public string DeliveryLatestDate { get; set; }
+
         public string OrderStatus { get; set; }
 
         public bool IsDeleted { get; set; }

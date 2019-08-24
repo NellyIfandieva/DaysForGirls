@@ -38,15 +38,47 @@ namespace DaysForGirls.Services
         public IQueryable<CategoryServiceModel> DisplayAll()
         {
             var allCategories = this.db.Categories
-                .Where(ci => ci.IsDeleted == false)
                 .Select(c => new CategoryServiceModel
                 {
                     Id = c.Id,
                     Name = c.Name,
-                    Description = c.Description
+                    Description = c.Description,
+                    IsDeleted = c.IsDeleted
                 });
 
             return allCategories;
+        }
+
+        public async Task<CategoryServiceModel> GetCategoryByIdAsync(int categoryId)
+        {
+            var categoryInDb = await this.db.Categories
+                .SingleOrDefaultAsync(c => c.Id == categoryId);
+
+            var categoryToReturn = new CategoryServiceModel
+            {
+                Id = categoryInDb.Id,
+                Name = categoryInDb.Name,
+                Description = categoryInDb.Description,
+                IsDeleted = categoryInDb.IsDeleted
+            };
+
+            return categoryToReturn;
+        }
+
+        public async Task<bool> EditAsync(CategoryServiceModel model)
+        {
+            var categoryInDb = await this.db.Categories
+                .SingleOrDefaultAsync(c => c.Id == model.Id);
+
+            categoryInDb.Name = model.Name;
+            categoryInDb.Description = model.Description;
+
+            this.db.Update(categoryInDb);
+            int result = await this.db.SaveChangesAsync();
+
+            bool categoryIsEdited = result > 0;
+
+            return categoryIsEdited;
         }
 
         public async Task<bool> DeleteCategoryByIdAsync(int categoryId)

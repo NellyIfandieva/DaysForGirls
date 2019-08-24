@@ -65,7 +65,8 @@ namespace DaysForGirls.Services
                      },
                      AvailableItems = p.Quantity.AvailableItems,
                      SaleId = p.SaleId,
-                     ShoppingCartId = p.ShoppingCartId
+                     ShoppingCartId = p.ShoppingCartId,
+                     OrderId = p.OrderId
                  });
 
             return allProducts;
@@ -88,7 +89,8 @@ namespace DaysForGirls.Services
                     AvailableItems = p.Quantity.AvailableItems,
                     IsInSale = p.IsInSale,
                     SaleId = p.SaleId,
-                    ShoppingCartId = p.ShoppingCartId
+                    ShoppingCartId = p.ShoppingCartId,
+                    OrderId = p.OrderId
                 });
 
             return allProductsOfCategory;
@@ -111,7 +113,8 @@ namespace DaysForGirls.Services
                     Price = p.Price,
                     AvailableItems = p.Quantity.AvailableItems,
                     SaleId = p.SaleId,
-                    ShoppingCartId = p.ShoppingCartId
+                    ShoppingCartId = p.ShoppingCartId,
+                    OrderId = p.OrderId
                 });
 
             return allProductsOfCategoryAndType;

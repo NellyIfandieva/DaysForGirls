@@ -14,5 +14,9 @@ namespace DaysForGirls.Services
         IQueryable<CategoryServiceModel> DisplayAll();
 
         Task<bool> DeleteCategoryByIdAsync(int categoryId);
+
+        Task<CategoryServiceModel> GetCategoryByIdAsync(int categoryId);
+
+        Task<bool> EditAsync(CategoryServiceModel model);
     }
 }

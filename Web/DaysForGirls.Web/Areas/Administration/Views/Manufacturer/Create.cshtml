@@ -8,8 +8,17 @@
 }
 
     <style>
+        .row {
+            width: 50%;
+            margin-left: 400px;
+            position: center;
+            border-radius: 5px;
+            background-color: #f2f2f2;
+            padding: 20px;
+        }
+
         input[type=text], select {
-            width: 30%;
+            width: 50%;
             padding: 12px 20px;
             margin: 8px 0;
             display: inline-block;
@@ -19,12 +28,12 @@
         }
 
         input[type=submit] {
-            width: 15%;
-            background-color: #007f99;
+            width: 20%;
+            background-color:#996600;
             color: white;
             font-size: medium;
             padding: 15px 20px 15px 20px;
-            margin: 10px 200px 10px 25px;
+            margin: 20px 200px 10px 50px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
@@ -33,6 +42,16 @@
             input[type=submit]:hover {
                 background-color: #a3a375;
             }
+
+            input[type=file] {
+            width: 50%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
 
         #row {
             margin-left: 250px;
@@ -58,12 +77,12 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" placeholder="Enter the Name of the Manufacturer" autofocus />
+                <input asp-for="Name" class="form-control" placeholder="Manufacturer's Name" autofocus />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" placeholder="Enter the Manufacturer's Description" />
+                <input asp-for="Description" class="form-control" placeholder="Manufacturer's Description" />
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -76,10 +95,6 @@
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

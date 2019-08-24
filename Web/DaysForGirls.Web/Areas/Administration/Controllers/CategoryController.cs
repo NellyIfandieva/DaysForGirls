@@ -67,6 +67,48 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
             return View(allCategories);
         }
 
+        [HttpGet("/Administration/Category/Edit/{categoryId}")]
+        public async Task<IActionResult> Edit(int categoryId)
+        {
+            if(categoryId <= 0)
+            {
+                return BadRequest();
+            }
+
+            var categoryFromDb = await this.categoryService
+                .GetCategoryByIdAsync(categoryId);
+
+            var categoryToEdit = new CategoryEditInputModel
+            {
+                Id = categoryFromDb.Id,
+                Name = categoryFromDb.Name,
+                Description = categoryFromDb.Description
+            };
+
+            return View(categoryToEdit);
+        }
+
+        [HttpPost("/Administration/Category/Edit/{categoryId}")]
+        public async Task<IActionResult> Edit(int categoryId, CategoryEditInputModel model)
+        {
+            if(ModelState.IsValid == false)
+            {
+                return View(model);
+            }
+
+            var categoryToEdit = new CategoryServiceModel
+            {
+                Id = categoryId,
+                Name = model.Name,
+                Description = model.Description
+            };
+
+            bool categoryIsEdited = await this.categoryService
+                .EditAsync(categoryToEdit);
+
+            return Redirect("/Administration/Category/All");
+        }
+
         [HttpGet("/Administration/Category/Delete/{categoryId}")]
         public async Task<IActionResult> Delete(int categoryId)
         {
@@ -80,7 +122,5 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
 
             return Redirect("/Administration/Category/All");
         }
-
-        //TODO implement Edit
     }
 }

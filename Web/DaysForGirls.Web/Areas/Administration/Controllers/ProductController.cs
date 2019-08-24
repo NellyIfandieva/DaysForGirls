@@ -170,7 +170,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         [HttpGet("/Administration/Product/All")]
         public async Task<IActionResult> All()
         {
-            var allProducts = this.adminService
+            var allProducts = await this.adminService
                 .DisplayAll()
                 .Select(product => new AdminDisplayAllViewModel
                 {
@@ -184,27 +184,32 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                     IsDeleted = product.IsDeleted,
                     IsInSale = product.IsInSale,
                     SaleId = product.SaleId,
-                    ShoppingCartId = product.ShoppingCartId
-                }).ToList();
-
-            await Task.Delay(0);
+                    ShoppingCartId = product.ShoppingCartId,
+                    OrderId = product.OrderId
+                }).ToListAsync();
 
             if(allProducts == null)
             {
                 return NotFound();
             }
+
             return View(allProducts);
         }
 
         [HttpGet("/Administration/Product/Details/{id}")]
         public async Task<IActionResult> Details(int id)
         {
-            ProductServiceModel productInDb = await this.adminService
+            if(id <= 0)
+            {
+                return BadRequest();
+            }
+
+            var productInDb = await this.adminService
                 .GetProductByIdAsync(id);
 
             if(productInDb == null)
             {
-                return new StatusCodeResult(404);
+                return NotFound();
             }
 
             ProductDetailsViewModel productToDisplay = new ProductDetailsViewModel
@@ -226,7 +231,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                         ImageUrl = p.PictureUrl,
                         ProductId = productInDb.Id
                     }).ToList(),
-                
+                IsDeleted = productInDb.IsDeleted,
                 Reviews = productInDb.Reviews
                     .Select(pR => new CustomerReviewAllViewModel
                     {
@@ -236,7 +241,9 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                         DateCreated = pR.CreatedOn,
                         Author = pR.AuthorUsername,
                     })
-                    .ToList()
+                    .ToList(),
+                ShoppingCartId = productInDb.ShoppingCartId,
+                OrderId = productInDb.OrderId
             };
 
             return View(productToDisplay);
@@ -245,6 +252,11 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         [HttpGet("/Administration/Product/Edit/{productId}")]
         public async Task<IActionResult> Edit(int productId)
         {
+            if(productId <= 0)
+            {
+                return BadRequest();
+            }
+
             var productWithId = 
                 await this.adminService.GetProductByIdAsync(productId);
 
@@ -253,33 +265,16 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                 return NotFound();
             }
 
-            var currentProductPictures = await this.pictureService
-                .GetPicturesOfProductByProductId(productId).ToListAsync();
-
-            var currentProductPicturesToStrings = new List<string>();
-
-            foreach(var pic in currentProductPictures)
-            {
-                string url = pic.PictureUrl;
-                currentProductPicturesToStrings.Add(pic.PictureUrl);
-            }
-
             var productToEdit = new ProductEditInputModel
             {
-                Id = productWithId.Id,
+                ProductId = productWithId.Id,
                 Name = productWithId.Name,
                 Description = productWithId.Description,
                 Colour = productWithId.Colour,
                 Size = productWithId.Size,
-                CurrentPictures = currentProductPicturesToStrings,
                 Price = productWithId.Price,
                 Quantity = productWithId.Quantity.AvailableItems
             };
-
-            if (productToEdit == null)
-            {
-                return NotFound();
-            }
 
             var allProductTypes = 
                 await this.productTypeService.DisplayAll()
@@ -308,6 +303,17 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                 {
                     Name = manufacturer.Name
                 })
+                .ToList();
+
+            var allActiveSales = await this.saleService
+                .DisplayAll().ToListAsync();
+
+            this.ViewData["sales"] = allActiveSales
+                .Select(s => new ProductCreateSaleViewModel
+                {
+                    Title = s.Title
+                })
+                .OrderBy(s => s.Title)
                 .ToList();
 
             return this.View(productToEdit);
@@ -341,38 +347,68 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                     Name = m.Name
                 });
 
+                var allActiveSales = await this.saleService
+                .DisplayAll().ToListAsync();
+
+                this.ViewData["sales"] = allActiveSales
+                    .Select(s => new ProductCreateSaleViewModel
+                    {
+                        Title = s.Title
+                    })
+                    .OrderBy(s => s.Title)
+                    .ToList();
+
                 return this.View(model);
             }
 
-            var productWithEdits = new ProductServiceModel
+            string saleId = null;
+
+            if (model.SaleTitle != null)
+            {
+                var sale = await this.saleService.GetSaleByTitleAsync(model.SaleTitle);
+                saleId = sale.Id;
+            }
+
+            List<string> imageUrls = new List<string>();
+
+            int imageNameExtension = 1;
+
+            foreach (var iFormFile in model.Pictures)
+            {
+                string imageUrl = await this.cloudinaryService.UploadPictureForProductAsync(
+                iFormFile, model.Name + "_" + imageNameExtension++);
+
+                imageUrls.Add(imageUrl);
+            }
+
+            var productToEdit = new ProductServiceModel
             {
                 Id = productId,
                 Name = model.Name,
-                Category = new CategoryServiceModel
-                {
-                    Name = model.Category
-                },
-                ProductType = new ProductTypeServiceModel
-                {
-                    Name = model.ProductType
-                },
+                Category = new CategoryServiceModel { Name = model.Category },
+                ProductType = new ProductTypeServiceModel { Name = model.ProductType },
                 Description = model.Description,
                 Colour = model.Colour,
                 Size = model.Size,
                 Price = model.Price,
-                Manufacturer = new ManufacturerServiceModel
-                {
-                    Name = model.Manufacturer
-                },
-                Quantity = new QuantityServiceModel
-                {
-                    AvailableItems = model.Quantity
-                }
+                Manufacturer = new ManufacturerServiceModel { Name = model.Manufacturer },
+                Quantity = new QuantityServiceModel { AvailableItems = model.Quantity }
             };
 
-            bool productIsEditedInDb = await this.adminService.EditAsync(productId, productWithEdits);
+            productToEdit.Pictures = imageUrls.Select(image => new PictureServiceModel
+            {
+                PictureUrl = image
+            }).ToList();
 
-            return this.Redirect("/Administration/Product/Details/{productId}");
+            bool productIsEdited = await this.adminService.EditAsync(productToEdit);
+
+            if (model.SaleTitle != null)
+            {
+                bool saleAddedProduct = await this.saleService.AddProductToSaleAsync(saleId, productToEdit.Id);
+                bool productIsInSale = await this.adminService.AddProductToSaleAsync(productToEdit.Id, saleId);
+            }
+
+            return this.Redirect("/Administration/Product/Details/" + productId);
         }
 
         //public async Task<IActionResult> DeletePicture(string pictureUrl)
@@ -390,16 +426,16 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
 
         public async Task<IActionResult> UploadNewPicture(ProductEditInputModel model)
         {
-            int productId = model.Id;
+            int productId = model.ProductId;
 
             Guid name = new Guid();
 
-            string imageUrl = await this.cloudinaryService.UploadPictureForProductAsync(
-                model.NewPicture, name.ToString());
+            //string imageUrl = await this.cloudinaryService.UploadPictureForProductAsync(
+            //    model.NewPicture, name.ToString());
 
-            bool imageIsAdded = await this.adminService.UploadNewPictureToProductAsync(productId, imageUrl);
+            //bool imageIsAdded = await this.adminService.UploadNewPictureToProductAsync(productId, imageUrl);
 
-            return Redirect("/Administration/Product/Edit/{productId}");
+            return Redirect("/Administration/Product/Details/{productId}");
         }
 
         [HttpDelete("/Administration/Product/Delete/{productId}")]

@@ -106,6 +106,8 @@ namespace DaysForGirls.Services
                         FirstName = order.User.FirstName,
                         LastName = order.User.LastName
                     },
+                    DeliveryEarlistDate = order.DeliveryEarliestDate.ToString("dddd, dd MMMM yyyy"),
+                    DeliveryLatestDate = order.DeliveryLatestDate.ToString("dddd, dd MMMM yyyy"),
                     OrderStatus = order.OrderStatus,
                     IsDeleted = order.IsDeleted
                 };

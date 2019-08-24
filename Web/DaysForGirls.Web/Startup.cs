@@ -56,9 +56,6 @@ namespace DaysForGirls.Web
                 options.User.RequireUniqueEmail = true;
             });
 
-            //services.AddTransient<SignInManager<IdentityUser>>();
-            //services.AddTransient<UserManager<IdentityUser>>();
-
             services.AddTransient<IAdminService, AdminService>();
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<ICloudinaryService, CloudinaryService>();
@@ -71,8 +68,6 @@ namespace DaysForGirls.Web
             services.AddTransient<IQuantityService, QuantityService>();
             services.AddTransient<ISaleService, SaleService>();
             services.AddTransient<IShoppingCartService, ShoppingCartService>();
-            
-            
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }

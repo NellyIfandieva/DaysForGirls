@@ -30,11 +30,26 @@ namespace DaysForGirls.Services
             ProductType productTypeInDb = db.ProductTypes
                 .SingleOrDefault(pT => pT.Name == productServiceModel.ProductType.Name);
 
+            if(productTypeInDb == null)
+            {
+                throw new ArgumentNullException(nameof(productTypeInDb));
+            }
+
             Category categoryInDb = this.db.Categories
                 .SingleOrDefault(cat => cat.Name == productServiceModel.Category.Name);
 
+            if(categoryInDb == null)
+            {
+                throw new ArgumentNullException(nameof(categoryInDb));
+            }
+
             Manufacturer manufacturerInDb = this.db.Manufacturers
                 .SingleOrDefault(man => man.Name == productServiceModel.Manufacturer.Name);
+
+            if(manufacturerInDb == null)
+            {
+                throw new ArgumentNullException(nameof(manufacturerInDb));
+            }
 
             Quantity quantityOfProduct = new Quantity
             {
@@ -110,7 +125,8 @@ namespace DaysForGirls.Services
                     IsDeleted = p.IsDeleted,
                     IsInSale = p.IsInSale,
                     SaleId = p.SaleId,
-                    ShoppingCartId = p.ShoppingCartId
+                    ShoppingCartId = p.ShoppingCartId,
+                    OrderId = p.OrderId
                 });
 
             return allProducts;
@@ -186,16 +202,16 @@ namespace DaysForGirls.Services
             return productIsDeleted;
         }
 
-        public async Task<bool> EditAsync(int productId, ProductServiceModel model)
+        public async Task<bool> EditAsync(ProductServiceModel model)
         {
-            ProductType productTypeOfProduct = this.db.ProductTypes
-                .SingleOrDefault(pT => pT.Name == model.ProductType.Name);
+            ProductType productTypeOfProduct = await this.db.ProductTypes
+                .SingleOrDefaultAsync(pT => pT.Name == model.ProductType.Name);
 
-            Category categoryOfProduct = this.db.Categories
-                .SingleOrDefault(c => c.Name == model.Category.Name);
+            Category categoryOfProduct = await this.db.Categories
+                .SingleOrDefaultAsync(c => c.Name == model.Category.Name);
 
-            Manufacturer manufacturerOfProduct = this.db.Manufacturers
-                .SingleOrDefault(m => m.Name == model.Manufacturer.Name);
+            Manufacturer manufacturerOfProduct = await this.db.Manufacturers
+                .SingleOrDefaultAsync(m => m.Name == model.Manufacturer.Name);
 
             if (productTypeOfProduct == null
                 || categoryOfProduct == null
@@ -204,25 +220,48 @@ namespace DaysForGirls.Services
                 throw new ArgumentNullException(nameof(productTypeOfProduct));
             }
 
-            Product productInDb = this.db.Products
-                .SingleOrDefault(p => p.Id == productId);
+            Product productInDb = await this.db.Products
+                .Include(p => p.Category)
+                .Include(p => p.ProductType)
+                .Include(p => p.Manufacturer)
+                .Include(p => p.Quantity)
+                .Include(p => p.Sale)
+                .SingleOrDefaultAsync(p => p.Id == model.Id);
 
             productInDb.Name = model.Name;
-            productInDb.ProductType = productTypeOfProduct;
-            productInDb.Category = categoryOfProduct;
             productInDb.Description = model.Description;
             productInDb.Colour = model.Colour;
             productInDb.Size = model.Size;
             productInDb.Price = model.Price;
+            productInDb.ManufacturerId = manufacturerOfProduct.Id;
             productInDb.Manufacturer = manufacturerOfProduct;
-            productInDb.QuantityId = model.Quantity.Id;
+            productInDb.ProductTypeId = productTypeOfProduct.Id;
+            productInDb.ProductType = productTypeOfProduct;
+            productInDb.CategoryId = categoryOfProduct.Id;
+            productInDb.Category = categoryOfProduct;
+            productInDb.Quantity.AvailableItems = model.Quantity.AvailableItems;
+            productInDb.SaleId = model.SaleId;
 
-            this.db.Products.Update(productInDb);
+            productInDb.Pictures.Clear();
+
+            foreach(var pic in model.Pictures)
+            {
+                Picture picture = new Picture
+                {
+                    PictureUrl = pic.PictureUrl,
+                    ProductId = productInDb.Id,
+                    Product = productInDb,
+                };
+
+                productInDb.Pictures.Add(picture);
+            }
+
+            this.db.Update(productInDb);
             int result = await db.SaveChangesAsync();
 
-            bool editsApplied = result > 0;
+            bool productIsEdited = result > 0;
 
-            return editsApplied;
+            return productIsEdited;
         }
 
         public async Task<bool> UploadNewPictureToProduct(int productId, string imageUrl)

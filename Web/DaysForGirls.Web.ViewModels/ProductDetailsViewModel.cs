@@ -28,6 +28,12 @@ namespace DaysForGirls.Web.ViewModels
 
         public List<PictureDisplayAllViewModel> Pictures { get; set; }
 
+        public bool IsDeleted { get; set; }
+
         public List<CustomerReviewAllViewModel> Reviews { get; set; }
+
+        public string ShoppingCartId { get; set; }
+
+        public string OrderId { get; set; }
     }
 }

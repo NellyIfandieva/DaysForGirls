@@ -21,8 +21,6 @@ namespace DaysForGirls.Services
 
         Task<bool> DeletePicturesOfDeletedProductAsync(int productId);
 
-        //Task<bool> DeletePicturesOfDeletedProduct(int productId);
-
         //Task<bool> DeletePictureWithUrl(string pictureUrl);
     }
 }

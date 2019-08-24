@@ -80,18 +80,6 @@
         padding-right: 20px;
     }
 
-    #product-comments button {
-        width: 200px;
-        background-color: #cc0066;
-        color: white;
-        font-size: medium;
-        padding: 15px 20px 15px 20px;
-        margin: 10px 200px 25px 190px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-
     #product-actions {
         display: inline-block;
         margin-left: 50px;
@@ -101,6 +89,19 @@
             float: left;
             margin-right: 10px;
         }
+
+        .product-button {
+            float: left;
+            width: 200px;
+            background-color: #996600;
+            color: white;
+            font-size: medium;
+            padding: 15px 20px 15px 20px;
+            margin: 10px 10px 25px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+    }
 
     .product-small-pic {
         /*margin-left: 2px;*/
@@ -143,8 +144,6 @@
             <p style="font-size: medium"><span style="font-weight: bold">Size:</span> @Model.Size</p>
             <p style="font-size: medium"><span style="font-weight: bold">Price:</span> @Model.Price</p>
             <p style="font-size: medium"><span style="font-weight: bold">Available Quantity:</span> @Model.AvailableQuantity</p>
-            <br />
-            <a href="/ShoppingCarts/AddProduct/@Model.Id"><button>Order</button></a>
         </div>
     </div>
     <div id="product-morePictures-andComments">
@@ -159,14 +158,21 @@
                         <p style="margin-top: 1px"><q>@review.Text</q></p>
                         <hr />
                     </div>
+                    <a href="/Administration/Review/Delete/@review.Id">Delete Review</a>
                 }
             }
-            <a href="/CustomerReviews/Create/@Model.Id"><button>Add Review</button></a>
         </div>
-    </div>
-    <div id="product-actions">
-        <a href="/Product/Edit/@Model.Id">Edit</a>
-        <a href="/Product/Delete/@Model.Id">Delete</a>
+        <div id="product-actions">
+            <a href="/Product/Edit/@Model.Id"><button class="product-button">Edit</button></a>
+            @if (@Model.IsDeleted)
+            {
+                <a>Delete Permanently</a>
+            }
+            else
+            {
+                <a href="/Product/Delete/@Model.Id"><button class="product-button">Delete</button></a>
+            }
+        </div>
     </div>
 </div>
 

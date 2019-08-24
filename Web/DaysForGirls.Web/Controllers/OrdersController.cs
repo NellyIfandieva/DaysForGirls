@@ -44,9 +44,10 @@ namespace DaysForGirls.Web.Controllers
                         ProductPicture = p.ProductPicture,
                         ProductQuantity = p.ProductQuantity
                     }).ToList(),
-
                 TotalPrice = order.TotalPrice,
                 UserFullName = order.User.FirstName + " " + order.User.LastName,
+                DeliveryEarliestDate = order.DeliveryEarlistDate,
+                DeliveryLatestDate = order.DeliveryLatestDate,
                 OrderStatus = order.OrderStatus,
                 IsDeleted = order.IsDeleted
             };

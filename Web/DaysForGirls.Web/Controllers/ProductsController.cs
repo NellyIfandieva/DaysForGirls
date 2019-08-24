@@ -35,7 +35,8 @@ namespace DaysForGirls.Web.Controllers
                     AvailableItems = p.AvailableItems,
                     Picture = p.Picture.PictureUrl,
                     SaleId = p.SaleId,
-                    ShoppingCartId = p.ShoppingCartId
+                    ShoppingCartId = p.ShoppingCartId,
+                    OrderId = p.OrderId
                 }).ToListAsync();
 
             return View(allProducts);
@@ -76,7 +77,8 @@ namespace DaysForGirls.Web.Controllers
                     })
                     .ToList(),
                 SaleId = productFromDb.SaleId,
-                ShoppingCartId = productFromDb.ShoppingCartId
+                ShoppingCartId = productFromDb.ShoppingCartId,
+                OrderId = productFromDb.OrderId
             };
 
             return View(productToDisplay);

@@ -37,10 +37,10 @@ namespace DaysForGirls.Services.Models
 
         public bool IsInSale => this.SaleId != null;
 
-        public bool IsDeleted { get; set; }
-
         public string ShoppingCartId { get; set; }
 
-        //public OrderServiceModel Order { get; set; }
+        public string OrderId { get; set; }
+
+        public bool IsDeleted { get; set; }
     }
 }
