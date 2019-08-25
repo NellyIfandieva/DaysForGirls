@@ -19,7 +19,7 @@ namespace DaysForGirls.Services
             this.db = db;
         }
 
-        public async Task<int> Create(CategoryServiceModel categoryServiceModel)
+        public async Task<int> CreateAsync(CategoryServiceModel categoryServiceModel)
         {
             Category category = new Category
             {

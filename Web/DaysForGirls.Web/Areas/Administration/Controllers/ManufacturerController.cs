@@ -51,7 +51,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                 }
             };
 
-            int newManufacturerId = await this.manufacturerService.Create(manufacturerServiceModel);
+            int newManufacturerId = await this.manufacturerService.CreateAsync(manufacturerServiceModel);
             return Redirect("/Administration/Manufacturer/All");
         }
 
@@ -79,6 +79,53 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
             return View(allManufacturers);
         }
 
+        [HttpGet("/Administration/Manufacturer/Edit/{manufacturerId}")]
+        public async Task<IActionResult> Edit(int manufacturerId)
+        {
+            if(manufacturerId <= 0)
+            {
+                return BadRequest();
+            }
+
+            var manufacturerFromDb = await this.manufacturerService
+                .GetManufacturerByIdAsync(manufacturerId);
+
+            if(manufacturerFromDb == null)
+            {
+                return NotFound();
+            }
+
+            var manufacturerToEdit = new ManufacturerEditInputModel
+            {
+                Id = manufacturerFromDb.Id,
+                Name = manufacturerFromDb.Name,
+                Description = manufacturerFromDb.Description
+            };
+
+            return View(manufacturerToEdit);
+        }
+
+        [HttpPost("/Administration/Manufacturer/Edit/{manufacturerId}")]
+        public async Task<IActionResult> Edit(int manufacturerId, ManufacturerEditInputModel model)
+        {
+            if(ModelState.IsValid == false)
+            {
+                return View(model);
+            }
+
+            var manufacturerToEdit = new ManufacturerServiceModel
+            {
+                Id = manufacturerId,
+                Name = model.Name,
+                Description = model.Description
+            };
+
+            bool manufacturerIsEdited = await this.manufacturerService
+                .EditAsync(manufacturerToEdit);
+
+            return Redirect("/Administration/Manufacturer/All");
+        }
+
         [HttpGet("/Administration/Manufacturer/Delete/{manufacturerId}")]
         public async Task<IActionResult> Delete(int manufacturerId)
         {
@@ -92,7 +139,5 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
 
             return Redirect("/Administration/Manufacturer/All");
         }
-
-        //TODO implement edit
     }
 }

@@ -9,7 +9,7 @@ namespace DaysForGirls.Services
 {
     public interface IProductTypeService
     {
-        Task<bool> Create(ProductTypeServiceModel prTServiceModel);
+        Task<bool> CreateAsync(ProductTypeServiceModel prTServiceModel);
 
         IQueryable<ProductTypeServiceModel> DisplayAll();
 

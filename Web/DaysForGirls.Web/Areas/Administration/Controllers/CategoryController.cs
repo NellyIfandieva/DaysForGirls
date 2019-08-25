@@ -40,7 +40,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                 Description = model.Description
             };
 
-            int newCategoryId = await this.categoryService.Create(categoryServiceModel);
+            int newCategoryId = await this.categoryService.CreateAsync(categoryServiceModel);
 
             return Redirect("/Administration/Category/All");
         }

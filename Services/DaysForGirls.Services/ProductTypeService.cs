@@ -17,7 +17,7 @@ namespace DaysForGirls.Services
             this.db = db;
         }
 
-        public async Task<bool> Create(ProductTypeServiceModel prTServiceModel)
+        public async Task<bool> CreateAsync(ProductTypeServiceModel prTServiceModel)
         {
             ProductType productType = new ProductType
             {

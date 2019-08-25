@@ -19,7 +19,7 @@ namespace DaysForGirls.Services
             this.db = db;
         }
 
-        public async Task<int> Create(ManufacturerServiceModel manufacturerServiceModel)
+        public async Task<int> CreateAsync(ManufacturerServiceModel manufacturerServiceModel)
         {
             Manufacturer manufacturer = new Manufacturer
             {
@@ -39,68 +39,17 @@ namespace DaysForGirls.Services
             return manufacturerId;
         }
 
-        public IQueryable<ManufacturerServiceModel> DisplayAll()
-        {
-            var allManufacturers = this.db.Manufacturers
-                .Where(mi => mi.IsDeleted == false)
-                .Include(m => m.Products)
-                .Select(m => new ManufacturerServiceModel
-                {
-                    Id = m.Id,
-                    Name = m.Name,
-                    Description = m.Description,
-                    Logo = new LogoServiceModel
-                    {
-                        LogoUrl = m.Logo.LogoUrl
-                    },
-                    IsDeleted = m.IsDeleted,
-                    Products = m.Products
-                    .Where(p => p.ManufacturerId == m.Id)
-                    .Select(p => new ProductServiceModel
-                    {
-                        Id = p.Id
-                    })
-                    .ToList(),
-                    ProductsCount = m.Products.Count()
-                });
-
-            return allManufacturers;
-        }
-
-        public async Task<bool> DeleteManufacturerByIdAsync(int manufacturerId)
-        {
-            var manufacturerToDelete = await this.db.Manufacturers
-                .SingleOrDefaultAsync(m => m.Id == manufacturerId);
-
-            manufacturerToDelete.IsDeleted = true;
-
-            var manufacturerProducts = await this.db.Products
-                .Where(p => p.Manufacturer.Id == manufacturerId)
-                .ToListAsync();
-
-            foreach(var product in manufacturerProducts)
-            {
-                if(product.IsDeleted == false)
-                {
-                    product.IsDeleted = true;
-                }
-            }
-
-            this.db.UpdateRange(manufacturerProducts);
-            this.db.Update(manufacturerToDelete);
-            int result = await this.db.SaveChangesAsync();
-
-            bool manufaturerAndProductsAreDeleted = result > 0;
-
-            return manufaturerAndProductsAreDeleted;
-        }
-
         public async Task<ManufacturerServiceModel> GetManufacturerByIdAsync(int manufacturerId)
         {
             var manufacturer = await this.db.Manufacturers
                 .Include(m => m.Logo)
                 .Include(m => m.Products)
                 .SingleOrDefaultAsync(m => m.Id == manufacturerId);
+
+            if(manufacturer == null)
+            {
+                throw new ArgumentNullException(nameof(manufacturer));
+            }
 
             var logo = await this.db.Logos
                 .SingleOrDefaultAsync(l => l.Manufacturer.Id == manufacturer.Logo.Id);
@@ -137,6 +86,84 @@ namespace DaysForGirls.Services
             };
 
             return manufacturerToReturn;
+        }
+
+        public IQueryable<ManufacturerServiceModel> DisplayAll()
+        {
+            var allManufacturers = this.db.Manufacturers
+                .Where(mi => mi.IsDeleted == false)
+                .Include(m => m.Products)
+                .Select(m => new ManufacturerServiceModel
+                {
+                    Id = m.Id,
+                    Name = m.Name,
+                    Description = m.Description,
+                    Logo = new LogoServiceModel
+                    {
+                        LogoUrl = m.Logo.LogoUrl
+                    },
+                    IsDeleted = m.IsDeleted,
+                    Products = m.Products
+                    .Where(p => p.ManufacturerId == m.Id)
+                    .Select(p => new ProductServiceModel
+                    {
+                        Id = p.Id
+                    })
+                    .ToList(),
+                    ProductsCount = m.Products.Count()
+                });
+
+            return allManufacturers;
+        }
+
+        public async Task<bool> EditAsync(ManufacturerServiceModel model)
+        {
+            var manufacturerInDb = await this.db.Manufacturers
+                .SingleOrDefaultAsync(m => m.Id == model.Id);
+
+
+            Logo newLogo = new Logo
+            {
+                ManufacturerId = manufacturerInDb.Id,
+                LogoUrl = model.Logo.LogoUrl
+            };
+
+            manufacturerInDb.Name = model.Name;
+            manufacturerInDb.Description = model.Description;
+            manufacturerInDb.Logo = newLogo;
+
+            this.db.Update(manufacturerInDb);
+            int result = await this.db.SaveChangesAsync();
+            bool manufacturerIsEdited = result > 0;
+            return true;
+        }
+
+        public async Task<bool> DeleteManufacturerByIdAsync(int manufacturerId)
+        {
+            var manufacturerToDelete = await this.db.Manufacturers
+                .SingleOrDefaultAsync(m => m.Id == manufacturerId);
+
+            manufacturerToDelete.IsDeleted = true;
+
+            var manufacturerProducts = await this.db.Products
+                .Where(p => p.Manufacturer.Id == manufacturerId)
+                .ToListAsync();
+
+            foreach(var product in manufacturerProducts)
+            {
+                if(product.IsDeleted == false)
+                {
+                    product.IsDeleted = true;
+                }
+            }
+
+            this.db.UpdateRange(manufacturerProducts);
+            this.db.Update(manufacturerToDelete);
+            int result = await this.db.SaveChangesAsync();
+
+            bool manufaturerAndProductsAreDeleted = result > 0;
+
+            return manufaturerAndProductsAreDeleted;
         }
     }
 }

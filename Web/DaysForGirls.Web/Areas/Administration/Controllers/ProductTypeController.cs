@@ -40,7 +40,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                 Name = model.Name
             };
 
-            bool isCreated = await this.productTypeService.Create(pTServiceModel);
+            bool isCreated = await this.productTypeService.CreateAsync(pTServiceModel);
 
             if(isCreated == false)
             {

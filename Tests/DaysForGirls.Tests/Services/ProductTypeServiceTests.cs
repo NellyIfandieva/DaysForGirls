@@ -16,7 +16,8 @@
     public class ProductTypeServiceTests
     {
         private IProductTypeService productTypeService;
-        private List<ProductType> GetDummyData()
+
+        private List<ProductType> GetSampleProductTypes()
         {
             return new List<ProductType>()
             {
@@ -31,16 +32,16 @@
             };
         }
 
-        private async Task SeedData(DaysForGirlsDbContext db)
+        private async Task SeedProductTypes(DaysForGirlsDbContext db)
         {
-            db.AddRange(GetDummyData());
+            db.AddRange(GetSampleProductTypes());
             await db.SaveChangesAsync();
         }
 
         [Fact]
-        public async Task Create_WithCorrectData_ShouldSuccessfullyCreate()
+        public async Task Create_WithCorrectData_ShouldCreateAProductType()
         {
-            string errorMessagePrefix = "ProductTypeService Create() method does not work properly.";
+            string errorMessagePrefix = "ProductTypeService CreateAsync() method does not work properly.";
 
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
             this.productTypeService = new ProductTypeService(db);
@@ -50,17 +51,17 @@
                 Name = "Accessory"
             };
 
-            bool actualResult = await this.productTypeService.Create(testProductType);
+            bool actualResult = await this.productTypeService.CreateAsync(testProductType);
             Assert.True(actualResult, errorMessagePrefix);
         }
 
         [Fact]
-        public async Task GetById_WithExistingId_ShouldReturnAProductType()
+        public async Task GetById_WithExistingId_ExpectedToReturnAProductType()
         {
             string errorMessagePrefix = "ProductTypeService GetProductTypeByIdAsync() method does not work properly.";
 
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
-            await SeedData(db);
+            await SeedProductTypes(db);
             this.productTypeService = new ProductTypeService(db);
 
             ProductType expectedData = db.ProductTypes.First();
@@ -78,12 +79,10 @@
         }
 
         [Fact]
-        public async Task GetById_WithNonexistentId_ShouldThrowArgumentNullException()
+        public async Task GetById_WithNonexistentId_ExpectedArgumentNullException()
         {
-            string errorMessagePrefix = "ProductService GetProductTypeByIdAsync() method does not work properly.";
-
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
-            await SeedData(db);
+            await SeedProductTypes(db);
             this.productTypeService = new ProductTypeService(db);
 
             await Assert.ThrowsAsync<ArgumentNullException>(() => this.productTypeService.GetProductTypeByIdAsync(8));
@@ -91,16 +90,16 @@
 
 
         [Fact]
-        public async Task DisplayAll_WithDummyData_ExpectedResultAreCorrect()
+        public async Task DisplayAll_WithDummyData_ExpectedToReturnAllExistingProductTypes()
         {
             string errorMessagePrefix = "ProductTypeService DisplayAll() method does not work properly.";
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
             
-            await SeedData(db);
+            await SeedProductTypes(db);
             this.productTypeService = new ProductTypeService(db);
 
             List<ProductTypeServiceModel> actualResults = await this.productTypeService.DisplayAll().ToListAsync();
-            List<ProductTypeServiceModel> expectedResults = GetDummyData()
+            List<ProductTypeServiceModel> expectedResults = GetSampleProductTypes()
                 .Select(pT => new ProductTypeServiceModel
                 {
                     Name = pT.Name
@@ -116,7 +115,7 @@
         }
 
         [Fact]
-        public async Task DisplayAll_WithZeroData_ShouldReturnAnEmptyList()
+        public async Task DisplayAll_WithZeroData_ExpectedAnEmptyList()
         {
             string errorMessagePrefix = "ProductTypeService DisplayAll() method does not work properly.";
 
@@ -129,12 +128,12 @@
         }
 
         [Fact]
-        public async Task Edit_WithCorrectData_ShouldEditProductTypeCorrectly()
+        public async Task Edit_WithCorrectData_ExpectedToCorrectlyEditProductType()
         {
-            string errorMessagePrefix = "ProductTypeService Edit() method does not work properly.";
+            string errorMessagePrefix = "ProductTypeService EditAsync() method does not work properly.";
 
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
-            await SeedData(db);
+            await SeedProductTypes(db);
             this.productTypeService = new ProductTypeService(db);
 
             ProductType expectedData = db.ProductTypes.First();

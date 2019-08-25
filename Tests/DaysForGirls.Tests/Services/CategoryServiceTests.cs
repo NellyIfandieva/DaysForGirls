@@ -16,7 +16,7 @@
     public class CategoryServiceTests
     {
         private ICategoryService categoryService;
-        private List<Category> GetDummyData()
+        private List<Category> GetSampleCategories()
         {
             return new List<Category>()
             {
@@ -33,16 +33,16 @@
             };
         }
 
-        private async Task SeedData(DaysForGirlsDbContext db)
+        private async Task SeedSampleCategories(DaysForGirlsDbContext db)
         {
-            db.AddRange(GetDummyData());
+            db.AddRange(GetSampleCategories());
             await db.SaveChangesAsync();
         }
 
         [Fact]
         public async Task Create_WithCorrectData_ShouldSuccessfullyCreate()
         {
-            string errorMessagePrefix = "CategoryService Create() method does not work properly.";
+            string errorMessagePrefix = "CategoryService CreateAsync() method does not work properly.";
 
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
             this.categoryService = new CategoryService(db);
@@ -53,17 +53,17 @@
                 Description = "Beautiful to the final touch"
             };
 
-            int actualResult = await this.categoryService.Create(testCategory);
+            int actualResult = await this.categoryService.CreateAsync(testCategory);
             Assert.True(actualResult > 0, errorMessagePrefix);
         }
 
         [Fact]
-        public async Task GetById_WithExistingId_ShouldReturnAProductType()
+        public async Task GetById_WithExistingId_ShouldReturnACategory()
         {
-            string errorMessagePrefix = "CategroyService GetCategoryByIdAsync() method does not work properly.";
+            string errorMessagePrefix = "CategoryService GetCategoryByIdAsync() method does not work properly.";
 
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
-            await SeedData(db);
+            await SeedSampleCategories(db);
             this.categoryService = new CategoryService(db);
 
             Category expectedData = db.Categories.First();
@@ -87,25 +87,23 @@
         [Fact]
         public async Task GetById_WithNonexistentId_ShouldThrowArgumentNullException()
         {
-            string errorMessagePrefix = "CategroyService GetCategoryByIdAsync() method does not work properly.";
-
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
-            await SeedData(db);
+            await SeedSampleCategories(db);
             this.categoryService = new CategoryService(db);
 
             await Assert.ThrowsAsync<ArgumentNullException>(() => this.categoryService.GetCategoryByIdAsync(8));
         }
 
         [Fact]
-        public async Task DisplayAll_WithDummyData_ExpectedResultAreCorrect()
+        public async Task DisplayAll_WithDummyData_ExpectedAllExistingCategoriesReturned()
         {
             string errorMessagePrefix = "CategoryService DisplayAll() method does not work properly.";
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
 
-            await SeedData(db);
+            await SeedSampleCategories(db);
             this.categoryService = new CategoryService(db);
 
-            List<CategoryServiceModel> expectedResults = GetDummyData()
+            List<CategoryServiceModel> expectedResults = GetSampleCategories()
                 .Select(c => new CategoryServiceModel
                 {
                     Name = c.Name,
@@ -128,7 +126,7 @@
         }
 
         [Fact]
-        public async Task DisplayAll_WithZeroData_ShouldReturnAnEmptyList()
+        public async Task DisplayAll_WithZeroData_ExpectedAnEmptyList()
         {
             string errorMessagePrefix = "CategoryService DisplayAll() method does not work properly.";
 
@@ -141,12 +139,12 @@
         }
 
         [Fact]
-        public async Task Edit_WithCorrectData_ShouldEditProductTypeCorrectly()
+        public async Task Edit_WithCorrectData_ExpectedCorrectlyEditedCategory()
         {
-            string errorMessagePrefix = "CategoryService Edit() method does not work properly.";
+            string errorMessagePrefix = "CategoryService EditAsync() method does not work properly.";
 
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
-            await SeedData(db);
+            await SeedSampleCategories(db);
             this.categoryService = new CategoryService(db);
 
             Category expectedData = db.Categories.First();

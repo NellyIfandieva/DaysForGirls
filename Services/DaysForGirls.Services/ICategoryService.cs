@@ -9,7 +9,7 @@ namespace DaysForGirls.Services
 {
     public interface ICategoryService
     {
-        Task<int> Create(CategoryServiceModel categoryServiceModel);
+        Task<int> CreateAsync(CategoryServiceModel categoryServiceModel);
 
         IQueryable<CategoryServiceModel> DisplayAll();
 
