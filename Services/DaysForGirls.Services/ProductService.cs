@@ -10,17 +10,11 @@ namespace DaysForGirls.Services
     public class ProductService : IProductService
     {
         private readonly DaysForGirlsDbContext db;
-        private readonly IPictureService pictureService;
-        private readonly ICustomerReviewService customerReviewService;
 
         public ProductService(
-            DaysForGirlsDbContext db,
-            IPictureService pictureService,
-            ICustomerReviewService customerReviewService)
+            DaysForGirlsDbContext db)
         {
             this.db = db;
-            this.pictureService = pictureService;
-            this.customerReviewService = customerReviewService;
         }
 
         public async Task<ProductAsShoppingCartItem> GetProductByIdAsync(int productId)

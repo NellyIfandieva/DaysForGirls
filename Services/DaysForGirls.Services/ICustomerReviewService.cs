@@ -12,5 +12,9 @@ namespace DaysForGirls.Services
         Task<bool> CreateAsync(CustomerReviewServiceModel model, int productId);
 
         IQueryable<CustomerReviewServiceModel> GetAllCommentsOfProductByProductId(int productId);
+
+        //Task<CustomerReviewServiceModel> GetReviewByIdAsync(int reviewId);
+
+        Task<bool> DeleteReviewByIdAsync(int reviewId);
     }
 }

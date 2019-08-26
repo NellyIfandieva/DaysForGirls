@@ -2,6 +2,7 @@
 using DaysForGirls.Data.Models;
 using DaysForGirls.Services.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,8 +45,6 @@ namespace DaysForGirls.Services
 
             bool reviewIsAdded = result > 0;
 
-            //bool reviewIsAddedToProduct = await this.productService.AddReviewToProductByProductIdAsync(productId, productReview.Id);
-
             return reviewIsAdded;
         }
 
@@ -65,6 +64,50 @@ namespace DaysForGirls.Services
                 });
 
             return allProductComments;
+        }
+
+        //public async Task<CustomerReviewServiceModel> GetReviewByIdAsync(int reviewId)
+        //{
+        //    var review = await this.db.CustomerReviews
+        //        .SingleOrDefaultAsync(r => r.Id == reviewId);
+
+        //    if(review == null)
+        //    {
+        //        throw new ArgumentNullException(nameof(review));
+        //    }
+
+        //    var reviewToReturn = new CustomerReviewServiceModel
+        //    {
+        //        Id = review.Id,
+        //        Title = review.Title,
+        //        Text = review.Text,
+        //        AuthorUsername = review.Author.UserName,
+        //        CreatedOn = review.CreatedOn.ToString("dddd, dd MMMM yyyy"),
+        //        ProductId = review.ProductId,
+        //        IsDeleted = review.IsDeleted
+        //    };
+
+        //    return reviewToReturn;
+        //}
+
+        public async Task<bool> DeleteReviewByIdAsync(int reviewId)
+        {
+            var reviewToDelete = await this.db.CustomerReviews
+                .SingleOrDefaultAsync(r => r.Id == reviewId);
+
+            if(reviewToDelete == null)
+            {
+                throw new ArgumentNullException(nameof(reviewToDelete));
+            }
+
+            reviewToDelete.IsDeleted = true;
+
+            this.db.Update(reviewToDelete);
+            int result = await this.db.SaveChangesAsync();
+
+            bool reviewIsDeleted = result > 0;
+
+            return reviewIsDeleted;
         }
     }
 }

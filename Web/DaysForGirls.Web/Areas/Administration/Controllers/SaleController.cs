@@ -164,22 +164,22 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
             return View();
         }
 
-        [HttpPost("/Administration/Sale/AddProductToSale/{saleId}")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddProductToSale(SaleAddProductInputModel model)
-        {
-            var saleToAddTo = await this.saleService.GetSaleByIdAsync(model.SaleId);
+        //[HttpPost("/Administration/Sale/AddProductToSale/{saleId}")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> AddProductToSale(SaleAddProductInputModel model)
+        //{
+        //    var saleToAddTo = await this.saleService.GetSaleByIdAsync(model.SaleId);
 
-            var productToAdd = await this.adminService
-                .GetProductByNameAsync(model.ProductName);
+        //    var productToAdd = await this.adminService
+        //        .GetProductByNameAsync(model.ProductName);
 
-            saleToAddTo.NewProduct = productToAdd;
+        //    saleToAddTo.NewProduct = productToAdd;
 
-            bool saleAddedProduct = await this.saleService.AddProductToSaleAsync(saleToAddTo.Id, productToAdd.Id);
-            bool productAddedSale = await this.adminService.AddProductToSaleAsync(productToAdd.Id, saleToAddTo.Id);
+        //    bool saleAddedProduct = await this.saleService.AddProductToSaleAsync(saleToAddTo.Id, productToAdd.Id);
+        //    bool productAddedSale = await this.adminService.AddProductToSaleAsync(productToAdd.Id, saleToAddTo.Id);
 
-            return Redirect("/Administration/Sale/Details/{saleId}");
-        }
+        //    return Redirect("/Administration/Sale/Details/{saleId}");
+        //}
 
         public async Task<IActionResult> Delete(string saleId)
         {
