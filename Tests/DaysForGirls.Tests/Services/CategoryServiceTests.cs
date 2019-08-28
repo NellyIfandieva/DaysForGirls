@@ -174,5 +174,87 @@
             Assert.True(actualServiceModel.Name == expectedServiceModel.Name, errorMessagePrefix + " " + "Name not edited properly.");
             Assert.True(actualServiceModel.Description == expectedServiceModel.Description, errorMessagePrefix + " " + "Description not edited properly.");
         }
+
+        [Fact]
+        public async Task DeleteCategoryById_WithExistingIdAndNoProducts_ExpectedToDeleteCategoryFromDb()
+        {
+            string errorMessagePrefix = "CategoryService DeleteByIdAsync() method does not work properly.";
+
+            var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
+            await SeedSampleCategories(db);
+            this.categoryService = new CategoryService(db);
+
+            var categoryToDelete = db.Categories.First();
+
+            bool actualResult = await this.categoryService.DeleteCategoryByIdAsync(categoryToDelete.Id);
+
+            Assert.True(actualResult, errorMessagePrefix + " " + "Category was not deleted from the db");
+        }
+
+        [Fact]
+        public async Task DeleteCategoryById_WithNonexistentId_ExpectedToThrowArgumentNullException()
+        {
+            string errorMessagePrefix = "CategoryService DeleteByIdAsync() method does not work properly.";
+
+            var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
+            await SeedSampleCategories(db);
+            this.categoryService = new CategoryService(db);
+
+            await Assert.ThrowsAsync<ArgumentNullException>(() => this.categoryService.DeleteCategoryByIdAsync(8));
+        }
+
+        [Fact]
+        public async Task DeleteCategoryById_WithExistingIdAndAProductRelatedToCategory_ExpectedToSetCategoryIsDeletedToTrue()
+        {
+            string errorMessagePrefix = "CategoryService DeleteByIdAsync() method does not work properly.";
+
+            var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
+
+            var category = new Category
+            {
+                Name = "Mess",
+                Description = "Big time"
+            };
+
+            db.Categories.Add(category);
+
+            var product = new Product
+            {
+                Name = "Product One",
+                Category = category,
+                ProductType = new ProductType { Name = "Pants" },
+                Manufacturer = new Manufacturer
+                {
+                    Name = "Manuf",
+                    Description = "About Manuf",
+                    Logo = new Logo { LogoUrl = "Manuf_logo"}
+                },
+                Colour = "Green",
+                Size = "Fit",
+                OrderId = null,
+                SaleId = null,
+                ShoppingCart = null,
+                Price = 20.00m,
+                Quantity = new Quantity { AvailableItems = 1 },
+                Pictures = new List<Picture>()
+                {
+                    new Picture{ PictureUrl = "a" },
+                    new Picture{ PictureUrl = "b" }
+                }
+            };
+
+            db.Products.Add(product);
+            await db.SaveChangesAsync();
+
+            this.categoryService = new CategoryService(db);
+
+            var categoryToDelete = db.Categories.First();
+
+            bool categoryIsDeletedSetToTrue = await this.categoryService
+                .DeleteCategoryByIdAsync(categoryToDelete.Id);
+
+            Assert.True(categoryIsDeletedSetToTrue, errorMessagePrefix + " " + "Service returned false");
+            Assert.True(categoryToDelete.IsDeleted, errorMessagePrefix + " " + "Category IsDeleted not set to True");
+        }
     }
 }

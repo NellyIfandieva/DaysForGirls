@@ -1,0 +1,119 @@
+﻿@model DaysForGirls.Web.ViewModels.OrderDetailsViewModel
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    table {
+        border-collapse: collapse;
+        /*margin-left: 150px;*/
+        width: 100%;
+        table-layout: auto;
+        margin-top: 50px;
+    }
+
+    table, th, td {
+        border: 1px solid #ccccb3;
+    }
+
+    th {
+        font-weight: bold;
+        height: 50px;
+    }
+
+    td {
+        text-align: center;
+    }
+
+        td a {
+            text-decoration: none;
+        }
+
+        td img {
+            width: 60px;
+            padding: 4px;
+        }
+
+    h2 {
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+
+    hr {
+        border: 0.5px solid #a3a375;
+    }
+
+    h3 {
+        margin-top: 50px;
+    }
+
+    #edit-order-status {
+        width: 200px;
+        background-color: #cc0052;
+        color: white;
+        font-size: medium;
+        padding: 15px 20px 15px 20px;
+        margin: 40px 200px 20px 500px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+</style>
+
+<h2 class="text-center">Order Id: @Model.Id</h2>
+
+<hr />
+
+<div id="order-info-holder">
+    <h5>
+        Issued On: @Model.IssuedOn<br />
+        Issued To: @Model.UserIssuedTo<br />
+        Earliest Delivery Date: @Model.DeliveryEarlistDate<br />
+        Latest Delivery Date: @Model.DeliveryLatestDate<br />
+        Status: @Model.OrderStatus
+    </h5>
+
+</div>
+
+<h3 class="text-center">Products In Order</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Picture</th>
+            <th>Colour</th>
+            <th>Size</th>
+            <th>Price</th>
+            <th>Quantity</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in Model.OrderedProducts)
+        {
+            <tr>
+                <td>@product.ProductName</td>
+                <td><img src="@product.ProductPicture" alt="@product.ProductName" /></td>
+                <td>@product.ProductColour</td>
+                <td>@product.ProductSize</td>
+                <td>@product.ProductPrice</td>
+                <td>@product.ProductQuantity</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h3>Totally Paid: @Model.TotalPrice</h3>
+
+@if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
+{
+    if (@Model.OrderStatus != "Delivered and Paid")
+    {
+        <a href="/Orders/Edit/@Model.Id"><button id="edit-order-status">Edit Order Status</button></a>
+    }
+}
+else if (this.User.IsInRole("User"))
+{
+    <h3 class="text-center">Thank you for choosing us<img src="~/Images/JustFlower-Transperant.png" width="80" /></h3>
+}

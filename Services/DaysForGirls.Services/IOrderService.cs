@@ -12,5 +12,9 @@
         Task<List<OrderServiceModel>> DisplayAllOrdersOfUser(string userName);
 
         IQueryable<OrderServiceModel> DisplayAllOrdersToAdminAsync();
+
+        Task<OrderServiceModel> GetOrderByIdAsync(string orderId);
+
+        Task<bool> EditOrderStatusAsync(OrderServiceModel model);
     }
 }

@@ -1,0 +1,18 @@
+﻿@model IEnumerable<ProductSearchResultViewModel>
+
+@if (Model.Count() > 1)
+{
+    <h2>You entered no search criteria <img src="~/Images/JustFlower-Transperant.png" alt="DaysForGirls" width="50"/></h2>
+}
+else
+{
+    <h2 class="tex-center">Your <img src="~/Images/JustFlower-Transperant.png" alt="DaysForGirls" width="50" /> Search Results</h2>
+
+    @foreach (var product in Model)
+    {
+        <div>
+            <a><img src="@product.Picture" alt="@product.Name" /></a>
+
+        </div>
+    }
+}

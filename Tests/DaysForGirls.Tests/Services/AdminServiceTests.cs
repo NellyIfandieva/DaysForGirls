@@ -483,83 +483,83 @@ namespace DaysForGirls.Tests.Services
             Assert.True(expectedDataServiceModel.OrderId == actualRecordServiceModel.OrderId, errorMessagePrefix + " " + "Order Id is not returned properly.");
         }
 
-        [Fact]
-        public async Task DeleteProductById_WithExistingId_ExpectedToReturnTrue()
-        {
-            string errorMessagePrefix = "AdminService EditAsync() method does not work properly.";
+        //[Fact]
+        //public async Task DeleteProductById_WithExistingId_ExpectedToReturnTrue()
+        //{
+        //    string errorMessagePrefix = "AdminService EditAsync() method does not work properly.";
 
-            var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
-            var pictureService = new PictureService(db);
-            var userManager = UserManagerMOQ.TestUserManager<DaysForGirlsUser>();
-            var customerReviewService = new CustomerReviewService(userManager, db);
-            this.adminService = new AdminService(db, pictureService, customerReviewService);
-            await SeedSampleProducts(db);
+        //    var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
+        //    var pictureService = new PictureService(db);
+        //    var userManager = UserManagerMOQ.TestUserManager<DaysForGirlsUser>();
+        //    var customerReviewService = new CustomerReviewService(userManager, db);
+        //    this.adminService = new AdminService(db, pictureService, customerReviewService);
+        //    await SeedSampleProducts(db);
 
-            this.adminService = new AdminService(db, pictureService, customerReviewService);
+        //    this.adminService = new AdminService(db, pictureService, customerReviewService);
 
-            Product product = db.Products.First();
+        //    Product product = db.Products.First();
 
-            bool actualResult = await this.adminService.DeleteProductByIdAsync(product.Id);
+        //    bool actualResult = await this.adminService.DeleteProductByIdAsync(product.Id);
 
-            Assert.True(actualResult, errorMessagePrefix);
-        }
+        //    Assert.True(actualResult, errorMessagePrefix);
+        //}
 
-        [Fact]
-        public async Task DeleteProductById_WithNonexistentId_ExpectedToThrowArgumentNullException()
-        {
-            var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
-            var pictureService = new PictureService(db);
-            var userManager = UserManagerMOQ.TestUserManager<DaysForGirlsUser>();
-            var customerReviewService = new CustomerReviewService(userManager, db);
-            this.adminService = new AdminService(db, pictureService, customerReviewService);
-            await SeedSampleProducts(db);
+        //[Fact]
+        //public async Task DeleteProductById_WithNonexistentId_ExpectedToThrowArgumentNullException()
+        //{
+        //    var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
+        //    var pictureService = new PictureService(db);
+        //    var userManager = UserManagerMOQ.TestUserManager<DaysForGirlsUser>();
+        //    var customerReviewService = new CustomerReviewService(userManager, db);
+        //    this.adminService = new AdminService(db, pictureService, customerReviewService);
+        //    await SeedSampleProducts(db);
 
-            this.adminService = new AdminService(db, pictureService, customerReviewService);
+        //    this.adminService = new AdminService(db, pictureService, customerReviewService);
 
-            Product product = db.Products.First();
+        //    Product product = db.Products.First();
 
-            await Assert.ThrowsAsync<ArgumentNullException>(() => this.adminService.GetProductByIdAsync(8));
-        }
+        //    await Assert.ThrowsAsync<ArgumentNullException>(() => this.adminService.GetProductByIdAsync(8));
+        //}
 
-        [Fact]
-        public async Task UploadNewPictureToProduct_WithValidData_ExpectedToAddNewPictureToProduct()
-        {
-            string errorMessagePrefix = "AdminService UploadNewPictureToProductAsync() method does not work properly.";
+        //[Fact]
+        //public async Task UploadNewPictureToProduct_WithValidData_ExpectedToAddNewPictureToProduct()
+        //{
+        //    string errorMessagePrefix = "AdminService UploadNewPictureToProductAsync() method does not work properly.";
 
-            var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
-            var pictureService = new PictureService(db);
-            var userManager = UserManagerMOQ.TestUserManager<DaysForGirlsUser>();
-            var customerReviewService = new CustomerReviewService(userManager, db);
-            this.adminService = new AdminService(db, pictureService, customerReviewService);
-            await SeedSampleProducts(db);
+        //    var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
+        //    var pictureService = new PictureService(db);
+        //    var userManager = UserManagerMOQ.TestUserManager<DaysForGirlsUser>();
+        //    var customerReviewService = new CustomerReviewService(userManager, db);
+        //    this.adminService = new AdminService(db, pictureService, customerReviewService);
+        //    await SeedSampleProducts(db);
 
-            this.adminService = new AdminService(db, pictureService, customerReviewService);
+        //    this.adminService = new AdminService(db, pictureService, customerReviewService);
 
-            Product product = db.Products.First();
+        //    Product product = db.Products.First();
 
-            string pictureUrl = "New Product Picture";
+        //    string pictureUrl = "New Product Picture";
 
-            bool pictureIsAdded = await this.adminService.UploadNewPictureToProductAsync(product.Id, pictureUrl);
+        //    bool pictureIsAdded = await this.adminService.UploadNewPictureToProductAsync(product.Id, pictureUrl);
 
-            Assert.True(pictureIsAdded, errorMessagePrefix);
-        }
+        //    Assert.True(pictureIsAdded, errorMessagePrefix);
+        //}
 
-        [Fact]
-        public async Task UploadNewPictureToProduct_NonexistentProduct_ExpectedToThrowArgumentNullException()
-        {
-            var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
-            var pictureService = new PictureService(db);
-            var userManager = UserManagerMOQ.TestUserManager<DaysForGirlsUser>();
-            var customerReviewService = new CustomerReviewService(userManager, db);
-            this.adminService = new AdminService(db, pictureService, customerReviewService);
-            await SeedSampleProducts(db);
+        //[Fact]
+        //public async Task UploadNewPictureToProduct_NonexistentProduct_ExpectedToThrowArgumentNullException()
+        //{
+        //    var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
+        //    var pictureService = new PictureService(db);
+        //    var userManager = UserManagerMOQ.TestUserManager<DaysForGirlsUser>();
+        //    var customerReviewService = new CustomerReviewService(userManager, db);
+        //    this.adminService = new AdminService(db, pictureService, customerReviewService);
+        //    await SeedSampleProducts(db);
 
-            this.adminService = new AdminService(db, pictureService, customerReviewService);
+        //    this.adminService = new AdminService(db, pictureService, customerReviewService);
 
-            string pictureUrl = "New Product Picture";
+        //    string pictureUrl = "New Product Picture";
 
-            await Assert.ThrowsAsync<ArgumentNullException>(() => this.adminService.UploadNewPictureToProductAsync(8, pictureUrl));
-        }
+        //    await Assert.ThrowsAsync<ArgumentNullException>(() => this.adminService.UploadNewPictureToProductAsync(8, pictureUrl));
+        //}
 
         [Fact]
         public async Task AddProductToSale_WithValidData_ExpectedToAddTheProductToTheSale()

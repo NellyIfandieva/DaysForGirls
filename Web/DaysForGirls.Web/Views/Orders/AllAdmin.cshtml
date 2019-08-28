@@ -63,9 +63,11 @@
                 <td>@order.OrderStatus</td>
                 <td>@order.IsDeleted</td>
                 <td>
-                    <a>Edit</a>
-                    <a>Details</a>
-                    <a>Delete</a>
+                    @if (order.OrderStatus != "Delivered and Paid")
+                    {
+                        <a href="/Orders/Edit/@order.Id">Edit</a>
+                    }
+                    <a href="/Orders/Details/@order.Id">Details</a>
                 </td>
             </tr>
         }

@@ -212,5 +212,85 @@ namespace DaysForGirls.Tests.Services
             Assert.True(actualServiceModel.Logo.LogoUrl == expectedServiceModel.Logo.LogoUrl, errorMessagePrefix + " " + "LogoUrl not edited properly.");
             Assert.True(actualServiceModel.IsDeleted == expectedServiceModel.IsDeleted, errorMessagePrefix + " " + "IsDeleted not edited properly.");
         }
+
+        [Fact]
+        public async Task DeleteManufacturerById_WithExistingIdAndNoProducts_ExpectedToDeleteManufacturerFromDb()
+        {
+            string errorMessagePrefix = "ManufacturerService DeleteTypeByIdAsync() method does not work properly.";
+
+            var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
+            await SeedSampleManufacturers(db);
+            this.manufacturerService = new ManufacturerService(db);
+
+            var manufacturerToDelete = db.Manufacturers.First();
+
+            bool actualResult = await this.manufacturerService.DeleteManufacturerByIdAsync(manufacturerToDelete.Id);
+
+            Assert.True(actualResult, errorMessagePrefix + " " + "Manufacturer was not deleted from the db");
+        }
+
+        [Fact]
+        public async Task DeleteManufacturerById_WithNonexistentId_ExpectedToThrowArgumentNullException()
+        {
+            var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
+            await SeedSampleManufacturers(db);
+            this.manufacturerService = new ManufacturerService(db);
+
+            await Assert.ThrowsAsync<ArgumentNullException>(() => this.manufacturerService.DeleteManufacturerByIdAsync(8));
+        }
+
+        [Fact]
+        public async Task DeleteManufacturerById_WithExistingIdAndAProductRelatedToCategory_ExpectedToSetManufacturerIsDeletedToTrue()
+        {
+            string errorMessagePrefix = "ManufacturerService DeleteTypeByIdAsync() method does not work properly.";
+
+            var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
+
+            var manufacturer = new Manufacturer
+            {
+                Name = "Armani",
+                Description = "About Armani",
+                Logo = new Logo { LogoUrl = "Armani_logo" }
+            };
+
+            db.Manufacturers.Add(manufacturer);
+
+            var product = new Product
+            {
+                Name = "Product One",
+                Category = new Category
+                {
+                    Name = "Haha",
+                    Description = "Haha is great"
+                },
+                ProductType = new ProductType { Name = "Gashti" },
+                Manufacturer = manufacturer,
+                Colour = "Green",
+                Size = "Fit",
+                OrderId = null,
+                SaleId = null,
+                ShoppingCart = null,
+                Price = 20.00m,
+                Quantity = new Quantity { AvailableItems = 1 },
+                Pictures = new List<Picture>()
+                {
+                    new Picture{ PictureUrl = "a" },
+                    new Picture{ PictureUrl = "b" }
+                }
+            };
+
+            db.Products.Add(product);
+            await db.SaveChangesAsync();
+
+            this.manufacturerService = new ManufacturerService(db);
+
+            var manufacturerToDelete = db.Manufacturers.First();
+
+            bool manufacturerIsDeletedSetToTrue = await this.manufacturerService
+                .DeleteManufacturerByIdAsync(manufacturerToDelete.Id);
+
+            Assert.True(manufacturerIsDeletedSetToTrue, errorMessagePrefix + " " + "Service returned false");
+            Assert.True(manufacturerToDelete.IsDeleted, errorMessagePrefix + " " + "Manufacturer IsDeleted not set to True");
+        }
     }
 }

@@ -1,0 +1,54 @@
+﻿@model OrderEditInputModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    input[type=submit] {
+        width: 30%;
+        background-color: #cc0052;
+        color: white;
+        font-size: medium;
+        padding: 15px 20px 15px 20px;
+        margin: 30px 200px 10px 25px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+        input[type=submit]:hover {
+            background-color: #a3a375;
+        }
+</style>
+
+<h2 class="text-center">Order Id: @Model.Id</h2>
+
+<hr />
+
+<div id="order-info-holder">
+    <h5>
+        Issued On: @Model.IssuedOn<br />
+        Issued To: @Model.UserIssuedTo<br />
+        Earliest Delivery Date: @Model.DeliveryEarlistDate<br />
+        Latest Delivery Date: @Model.DeliveryLatestDate<br />
+        Status: @Model.OrderStatus<br />
+        Number of Products: @Model.OrderedProductsNum
+    </h5>
+    <form method="post" asp-action="edit">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="OrderStatus" class="control-label"></label>
+            <input type="text" asp-for="OrderStatus" class="form-control" placeholder="@Model.OrderStatus" autofocus />
+            <span asp-validation-for="OrderStatus" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Save Changes" class="btn btn-primary" />
+        </div>
+    </form>
+</div>
+
+

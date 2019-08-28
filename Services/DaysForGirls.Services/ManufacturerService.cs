@@ -151,15 +151,13 @@
                 throw new ArgumentNullException(nameof(manufacturerToDelete));
             }
 
-            bool manufacturerIsDeleted = false;
-
-            var manufacturerProducts = await this.db.Products
-                .Where(p => p.Manufacturer.Id == manufacturerId)
-                .ToListAsync();
+            var manufacturerProducts = this.db.Products
+                .Where(p => p.Manufacturer.Id == manufacturerId);
 
             if(manufacturerProducts.Count() > 0)
             {
-                return manufacturerIsDeleted;
+                manufacturerToDelete.IsDeleted = true;
+                this.db.Update(manufacturerToDelete);
             }
             else
             {
@@ -173,12 +171,11 @@
 
                 this.db.Logos.Remove(logoToDelete);
                 this.db.Manufacturers.Remove(manufacturerToDelete);
-
-                int result = await this.db.SaveChangesAsync();
-
-                manufacturerIsDeleted = result > 0;
             }
 
+            int result = await this.db.SaveChangesAsync();
+
+            bool manufacturerIsDeleted = result > 0;
             return manufacturerIsDeleted;
         }
     }

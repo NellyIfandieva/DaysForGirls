@@ -5,6 +5,7 @@
     using DaysForGirls.Services.Models;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -185,6 +186,66 @@
                 });
 
             return allOrdersInDb;
+        }
+
+        public async Task<OrderServiceModel> GetOrderByIdAsync(string orderId)
+        {
+            var orderInDb = await this.db.Orders
+                .Include(o => o.OrderedProducts)
+                .Include(o => o.User)
+                .SingleOrDefaultAsync(o => o.Id == orderId);
+
+            if(orderInDb == null)
+            {
+                throw new ArgumentNullException(nameof(orderInDb));
+            }
+
+            var orderToReturn = new OrderServiceModel
+            {
+                Id = orderInDb.Id,
+                DeliveryEarlistDate = orderInDb.DeliveryEarliestDate.ToString("dddd, dd MMMM yyyy"),
+                DeliveryLatestDate = orderInDb.DeliveryLatestDate.ToString("dddd, dd MMMM yyyy"),
+                IssuedOn = orderInDb.IssuedOn,
+                IssuedTo = orderInDb.User.FirstName + " " + orderInDb.User.LastName,
+                OrderStatus = orderInDb.OrderStatus,
+                TotalPrice = orderInDb.TotalPrice,
+                OrderedProducts = orderInDb.OrderedProducts
+                    .Select(p => new OrderedProductServiceModel
+                    {
+                        Id = p.Id,
+                        ProductId = p.ProductId,
+                        ProductName = p.ProductName,
+                        ProductPicture = p.ProductPicture,
+                        ProductColour = p.ProductColour,
+                        ProductSize = p.ProductSize,
+                        ProductPrice = p.ProductPrice,
+                        ProductQuantity = p.ProductQuantity,
+                        
+                    })
+                    .ToList()
+            };
+
+            return orderToReturn;
+        }
+
+        public async Task<bool> EditOrderStatusAsync(OrderServiceModel model)
+        {
+            var orderInDb = await this.db.Orders
+                .SingleOrDefaultAsync(o => o.Id == model.Id);
+
+            if(orderInDb == null)
+            {
+                throw new ArgumentNullException(nameof(orderInDb));
+            }
+
+            orderInDb.OrderStatus = model.OrderStatus;
+
+            this.db.Update(orderInDb);
+            int result = await this.db.SaveChangesAsync();
+
+            bool orderStatusIsEdited = result > 0;
+
+            return orderStatusIsEdited;
         }
     }
 }

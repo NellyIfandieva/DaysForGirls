@@ -17,8 +17,10 @@
     <header> 
         <div class="w3-bar" style="background-color: #c5b358; color: whitesmoke;">
             <a href="/" class="w3-bar-item w3-button"><img src="~/Images/Logo.jpg" alt="DaysForGirls" style="width:100%;max-width:200px" /></a>
-            <input type="text" class="w3-bar-item w3-input w3-center" placeholder="Search...">
-            <a style="background-color: #d0c279; font-size: large; font-weight: 500; margin-top: 8px; height: 39px; border-radius: 5px; padding-top: 8px;" href="#" class="w3-bar-item w3-button">Go</a>
+            <form method="post" action="display">
+                <input type="text" class="w3-bar-item w3-input w3-center" asp-controller="Search" asp-action="Display" placeholder="Search...">
+                <a style="background-color: #d0c279; font-size: large; font-weight: 500; margin-top: 8px; height: 39px; border-radius: 5px; padding-top: 8px;" href="/Search/Display/" class="w3-bar-item w3-button">Go</a>
+            </form>
             @if (this.User.Identity.IsAuthenticated)
             {
                 if (this.User.IsInRole("Admin"))

@@ -8,6 +8,8 @@ namespace DaysForGirls.Web.ViewModels
     {
         public string Id { get; set; }
 
+        public string Picture { get; set; }
+
         public string Title { get; set; }
 
         public string EndsOn { get; set; }

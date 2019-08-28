@@ -19,7 +19,7 @@
 
         Task<bool> EditAsync(ProductServiceModel model);
 
-        Task<bool> UploadNewPictureToProductAsync(int productId, string imageUrl);
+        //Task<bool> UploadNewPictureToProductAsync(int productId, string imageUrl);
 
         Task<bool> AddProductToSaleAsync(int productId, string saleId);
 

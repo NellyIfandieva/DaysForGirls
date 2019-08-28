@@ -14,7 +14,7 @@ namespace DaysForGirls.Web.ViewModels
 
         public decimal OldPrice { get; set; }
 
-        public decimal NewPrice { get; set; }
+        public decimal NewPrice => this.OldPrice - (0.3m * this.OldPrice);
 
         public int AvailableQuantity { get; set; }
     }

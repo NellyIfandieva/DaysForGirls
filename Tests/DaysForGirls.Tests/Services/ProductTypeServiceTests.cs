@@ -157,5 +157,88 @@
 
             Assert.True(actualServiceModel.Name == expectedServiceModel.Name, errorMessagePrefix + " " + "Name not edited properly.");
         }
+
+        [Fact]
+        public async Task DeleteProductTypeById_WithExistingIdAndNoProducts_ExpectedToDeleteProductTypeFromDb()
+        {
+            string errorMessagePrefix = "ProductTypeService DeleteTypeByIdAsync() method does not work properly.";
+
+            var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
+            await SeedProductTypes(db);
+            this.productTypeService = new ProductTypeService(db);
+
+            var productTypeToDelete = db.ProductTypes.First();
+
+            bool actualResult = await this.productTypeService.DeleteTypeByIdAsync(productTypeToDelete.Id);
+
+            Assert.True(actualResult, errorMessagePrefix + " " + "ProductType was not deleted from the db");
+        }
+
+        [Fact]
+        public async Task DeleteProductTypeById_WithNonexistentId_ExpectedToThrowArgumentNullException()
+        {
+            var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
+            await SeedProductTypes(db);
+            this.productTypeService = new ProductTypeService(db);
+
+            await Assert.ThrowsAsync<ArgumentNullException>(() => this.productTypeService.DeleteTypeByIdAsync(8));
+        }
+
+        [Fact]
+        public async Task DeleteProductTypeById_WithExistingIdAndAProductRelatedToCategory_ExpectedToSetProductTypeIsDeletedToTrue()
+        {
+            string errorMessagePrefix = "CategoryService EditAsync() method does not work properly.";
+
+            var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
+
+            var productType = new ProductType
+            {
+                Name = "Love"
+            };
+
+            db.ProductTypes.Add(productType);
+
+            var product = new Product
+            {
+                Name = "Product One",
+                Category = new Category
+                {
+                    Name = "Haha",
+                    Description = "Haha is great"
+                },
+                ProductType = productType,
+                Manufacturer = new Manufacturer
+                {
+                    Name = "Manuf",
+                    Description = "About Manuf",
+                    Logo = new Logo { LogoUrl = "Manuf_logo" }
+                },
+                Colour = "Green",
+                Size = "Fit",
+                OrderId = null,
+                SaleId = null,
+                ShoppingCart = null,
+                Price = 20.00m,
+                Quantity = new Quantity { AvailableItems = 1 },
+                Pictures = new List<Picture>()
+                {
+                    new Picture{ PictureUrl = "a" },
+                    new Picture{ PictureUrl = "b" }
+                }
+            };
+
+            db.Products.Add(product);
+            await db.SaveChangesAsync();
+
+            this.productTypeService = new ProductTypeService(db);
+
+            var productTypeToDelete = db.ProductTypes.First();
+
+            bool typeIsDeletedSetToTrue = await this.productTypeService
+                .DeleteTypeByIdAsync(productTypeToDelete.Id);
+
+            Assert.True(typeIsDeletedSetToTrue, errorMessagePrefix + " " + "Service returned false");
+            Assert.True(productTypeToDelete.IsDeleted, errorMessagePrefix + " " + "ProductType IsDeleted not set to True");
+        }
     }
 }

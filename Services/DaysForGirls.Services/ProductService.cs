@@ -4,6 +4,7 @@
     using DaysForGirls.Data.Models;
     using DaysForGirls.Services.Models;
     using Microsoft.EntityFrameworkCore;
+    using System;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -24,7 +25,13 @@
                 .Include(p => p.Pictures)
                 .Include(p => p.Sale)
                 .Include(p => p.ShoppingCart)
-                .SingleOrDefaultAsync(p => p.Id == productId);
+                .SingleOrDefaultAsync(p => p.Id == productId 
+                && p.IsDeleted == false);
+
+            if(product == null)
+            {
+                throw new ArgumentNullException(nameof(product));
+            }
 
             var picture = product.Pictures.ElementAt(0).PictureUrl;
 
@@ -114,28 +121,26 @@
             return allProductsOfCategoryAndType;
         }
 
-        //public async Task<bool> AddReviewToProductByProductIdAsync(int productId, int reviewId)
-        //{
-        //    var product = this.db.Products
-        //        .SingleOrDefault(p => p.Id == productId);
-
-        //    var review = this.db.CustomerReviews
-        //        .SingleOrDefault(r => r.Id == reviewId);
-
-        //    product.Reviews.Add(review);
-        //    this.db.Products.Update(product);
-        //    int result = await this.db.SaveChangesAsync();
-
-        //    return result > 0;
-        //}
-
         public async Task<bool> DeletePictureWithUrl(string pictureUrl)
         {
-            Picture pictureToDelete = this.db.Pictures
+            var pictureToDelete = this.db.Pictures
                 .SingleOrDefault(pic => pic.PictureUrl == pictureUrl);
 
             var product = await this.db.Products
                 .SingleOrDefaultAsync(p => p.Id == pictureToDelete.ProductId);
+
+            if(pictureToDelete == null
+                || product == null)
+            {
+                if(pictureToDelete == null)
+                {
+                    throw new ArgumentNullException(nameof(pictureToDelete));
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(product));
+                }
+            }
 
             product.Pictures.Remove(pictureToDelete);
 
@@ -192,6 +197,11 @@
             var product = await this.db.Products
                 .SingleOrDefaultAsync(p => p.Id == productId);
 
+            if(product == null)
+            {
+                throw new ArgumentNullException(nameof(product));
+            }
+
             product.ShoppingCartId = shoppingCartId;
             product.Quantity.AvailableItems--;
 
@@ -210,6 +220,11 @@
                 .Include(p => p.ShoppingCart)
                 .SingleOrDefaultAsync(p => p.Id == productId);
 
+            if (product == null)
+            {
+                throw new ArgumentNullException(nameof(product));
+            }
+
             product.Quantity.AvailableItems++;
             product.ShoppingCartId = null;
 
@@ -219,6 +234,133 @@
             bool productIsOutOfCart = result > 0;
 
             return productIsOutOfCart;
+        }
+
+        public IQueryable<ProductServiceModel> GetAllSearchResultsByCriteria(string criteria)
+        {
+            decimal priceCriteria;
+            bool criteriaIsDecimal = decimal.TryParse(criteria, out priceCriteria);
+
+            IQueryable<ProductServiceModel> allSearchResults = null;
+
+            if(criteriaIsDecimal)
+            {
+                allSearchResults = this.db.Products
+                    .Include(p => p.Category)
+                    .Include(p => p.ProductType)
+                    .Include(p => p.Pictures)
+                    .Include(p => p.Manufacturer)
+                    .Include(p => p.Reviews)
+                    .Where(p => p.Price <= priceCriteria
+                    && p.IsDeleted == false)
+                    .Select(p => new ProductServiceModel
+                    {
+                        Id = p.Id,
+                        Name = p.Name,
+                        Category = new CategoryServiceModel
+                        {
+                            Name = p.Category.Name
+                        },
+                        ProductType = new ProductTypeServiceModel
+                        {
+                            Name = p.ProductType.Name
+                        },
+                        Description = p.Description,
+                        Pictures = p.Pictures
+                            .Select(pic => new PictureServiceModel
+                            {
+                                Id = pic.Id,
+                                PictureUrl = pic.PictureUrl
+                            })
+                            .ToList(),
+                        Colour = p.Colour,
+                        Size = p.Size,
+                        Manufacturer = new ManufacturerServiceModel
+                        {
+                            Id = p.ManufacturerId,
+                            Name = p.Manufacturer.Name
+                        },
+                        Price = p.Price,
+                        Quantity = new QuantityServiceModel
+                        {
+                            Id = p.QuantityId,
+                            AvailableItems = p.Quantity.AvailableItems
+                        },
+                        SaleId = p.SaleId,
+                        ShoppingCartId = p.ShoppingCartId,
+                        OrderId = p.OrderId,
+                        Reviews = p.Reviews
+                            .Select(r => new CustomerReviewServiceModel
+                            {
+                                Id = r.Id,
+                                Title = r.Title,
+                                Text = r.Text,
+                                CreatedOn = r.CreatedOn.ToString("dddd, dd MMMM yyyy"),
+                                AuthorUsername = r.Author.FullName
+                            })
+                            .ToList()
+                    });
+            }
+            else
+            {
+                allSearchResults = this.db.Products
+                    .Include(p => p.Category)
+                    .Include(p => p.ProductType)
+                    .Include(p => p.Pictures)
+                    .Include(p => p.Manufacturer)
+                    .Include(p => p.Reviews)
+                    .Where(p => p.Name.Contains(criteria)
+                    || p.Manufacturer.Name.Contains(criteria))
+                    .Select(p => new ProductServiceModel
+                    {
+                        Id = p.Id,
+                        Name = p.Name,
+                        Category = new CategoryServiceModel
+                        {
+                            Name = p.Category.Name
+                        },
+                        ProductType = new ProductTypeServiceModel
+                        {
+                            Name = p.ProductType.Name
+                        },
+                        Description = p.Description,
+                        Pictures = p.Pictures
+                            .Select(pic => new PictureServiceModel
+                            {
+                                Id = pic.Id,
+                                PictureUrl = pic.PictureUrl
+                            })
+                            .ToList(),
+                        Colour = p.Colour,
+                        Size = p.Size,
+                        Manufacturer = new ManufacturerServiceModel
+                        {
+                            Id = p.ManufacturerId,
+                            Name = p.Manufacturer.Name
+                        },
+                        Price = p.Price,
+                        Quantity = new QuantityServiceModel
+                        {
+                            Id = p.QuantityId,
+                            AvailableItems = p.Quantity.AvailableItems
+                        },
+                        SaleId = p.SaleId,
+                        ShoppingCartId = p.ShoppingCartId,
+                        OrderId = p.OrderId,
+                        Reviews = p.Reviews
+                            .Select(r => new CustomerReviewServiceModel
+                            {
+                                Id = r.Id,
+                                Title = r.Title,
+                                Text = r.Text,
+                                CreatedOn = r.CreatedOn.ToString("dddd, dd MMMM yyyy"),
+                                AuthorUsername = r.Author.FullName
+                            })
+                            .ToList()
+                    });
+            }
+
+            return allSearchResults;
         }
     }
 }

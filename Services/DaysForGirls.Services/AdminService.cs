@@ -183,47 +183,12 @@
                 Reviews = productReviews,
                 IsDeleted = product.IsDeleted,
                 SaleId = product.SaleId,
-                ShoppingCartId = product.ShoppingCartId
+                ShoppingCartId = product.ShoppingCartId,
+                OrderId = product.OrderId
             };
 
             return productToReturn;
         }
-
-        //public async Task<bool> DeleteProductByIdAsync(int id)
-        //{
-        //    var productToDelete = await this.db.Products
-        //        .SingleOrDefaultAsync(product => product.Id == id);
-
-        //    if(productToDelete == null)
-        //    {
-        //        throw new ArgumentNullException(nameof(productToDelete));
-        //    }
-
-        //    if(productToDelete.SaleId != null)
-        //    {
-        //        var sale = await this.db.Sales
-        //            .SingleOrDefaultAsync(s => s.Id == productToDelete.SaleId);
-
-        //        if(sale == null)
-        //        {
-        //            throw new ArgumentNullException(nameof(sale));
-        //        }
-
-        //        sale.Products.Remove(productToDelete);
-        //        this.db.Update(sale);
-        //    }
-
-        //    productToDelete.IsDeleted = true;
-
-        //    //bool picturesAreDeleted = await this.pictureService
-        //    //    .DeletePicturesOfDeletedProductAsync(productToDelete.Id);
-
-        //    this.db.Update(productToDelete);
-        //    int result = await this.db.SaveChangesAsync();
-        //    bool productIsDeleted = result > 0;
-
-        //    return productIsDeleted;
-        //}
 
         public async Task<bool> EditAsync(ProductServiceModel model)
         {
@@ -287,30 +252,30 @@
             return productIsEdited;
         }
 
-        public async Task<bool> UploadNewPictureToProductAsync(int productId, string imageUrl)
-        {
-            var productInDb = await this.db.Products.
-                SingleOrDefaultAsync(p => p.Id == productId);
+        //public async Task<bool> UploadNewPictureToProductAsync(int productId, string imageUrl)
+        //{
+        //    var productInDb = await this.db.Products.
+        //        SingleOrDefaultAsync(p => p.Id == productId);
 
-            if(productInDb == null)
-            {
-                throw new ArgumentNullException(nameof(productInDb));
-            }
+        //    if(productInDb == null)
+        //    {
+        //        throw new ArgumentNullException(nameof(productInDb));
+        //    }
 
-            Picture newPicture = new Picture
-            {
-                PictureUrl = imageUrl
-            };
+        //    Picture newPicture = new Picture
+        //    {
+        //        PictureUrl = imageUrl
+        //    };
 
-            productInDb.Pictures.Add(newPicture);
+        //    productInDb.Pictures.Add(newPicture);
 
-            this.db.Update(productInDb);
-            int result = await this.db.SaveChangesAsync();
+        //    this.db.Update(productInDb);
+        //    int result = await this.db.SaveChangesAsync();
 
-            bool pictureIsAdded = result > 0;
+        //    bool pictureIsAdded = result > 0;
 
-            return pictureIsAdded;
-        }
+        //    return pictureIsAdded;
+        //}
 
         public async Task<bool> AddProductToSaleAsync(int productId, string saleId)
         { 
@@ -322,7 +287,14 @@
 
             if (product == null || sale == null)
             {
-                throw new ArgumentNullException(nameof(product));
+                if(product == null)
+                {
+                    throw new ArgumentNullException(nameof(product));
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(sale));
+                }
             }
 
             product.SaleId = sale.Id;
@@ -388,14 +360,14 @@
             var productInDb = await this.db.Products
                 .SingleOrDefaultAsync(p => p.Id == productId);
 
-            string outcome = null;
-
             if(productInDb == null)
             {
                 throw new ArgumentNullException(nameof(productInDb));
             }
 
-            if(productInDb.ShoppingCartId != null || productInDb.OrderId != null)
+            string outcome = null;
+
+            if (productInDb.ShoppingCartId != null || productInDb.OrderId != null)
             {
                 if(productInDb.ShoppingCartId != null)
                 {
@@ -403,7 +375,10 @@
                 }
                 else
                 {
-                    outcome = productInDb.Name + " has been purchased and cannot be erased.";
+                    productInDb.IsDeleted = false;
+                    this.db.Update(productInDb);
+                    await this.db.SaveChangesAsync();
+                    outcome = productInDb.Name + " has been purchased and was only set to IsDeleted.";
                 }
 
                 return outcome;

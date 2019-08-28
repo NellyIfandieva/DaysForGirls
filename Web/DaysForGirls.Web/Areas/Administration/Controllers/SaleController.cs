@@ -1,5 +1,6 @@
 ﻿namespace DaysForGirls.Web.Areas.Administration.Controllers
 {
+    using System;
     using System.Linq;
     using System.Threading.Tasks;
     using DaysForGirls.Services;
@@ -101,9 +102,9 @@
             var saleToDisplay = new SaleDetailsAdminViewModel
             {
                 Id = sale.Id,
+                Picture = sale.Picture,
                 Title = sale.Title,
-                EndsOn = sale.EndsOn.ToString(),
-                IsActive = sale.IsActive,
+                EndsOn = sale.EndsOn.ToString("dddd, dd MMMM yyyy"),
                 Products = sale.Products
                     .Select(p => new ProductInSaleAdminViewModel
                     {
@@ -114,6 +115,8 @@
                         AvailableQuantity = p.Quantity.AvailableItems
                     }).ToList()
             };
+
+            saleToDisplay.IsActive = DateTime.UtcNow <= sale.EndsOn;
 
             return View(saleToDisplay);
         }

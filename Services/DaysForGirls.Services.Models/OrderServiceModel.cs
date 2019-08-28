@@ -14,6 +14,8 @@ namespace DaysForGirls.Services.Models
 
         public DateTime IssuedOn { get; set; }
 
+        public string IssuedTo { get; set; }
+
         public List<OrderedProductServiceModel> OrderedProducts { get; set; }
 
         public decimal TotalPrice { get; set; }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DaysForGirls.Services;
+using DaysForGirls.Services.Models;
+using DaysForGirls.Web.InputModels;
 using DaysForGirls.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -131,6 +133,102 @@ namespace DaysForGirls.Web.Controllers
             }
 
             return View(adminOrders);
+        }
+
+        [HttpGet("/Orders/Details/{orderId}")]
+        public async Task<IActionResult> Details(string orderId)
+        {
+            if(this.User.Identity.IsAuthenticated == false)
+            {
+                return Redirect("/Identity/Account/Login");
+            }
+
+            if(orderId == null)
+            {
+                return BadRequest();
+            }
+
+            var orderInDb = await this.orderService.GetOrderByIdAsync(orderId);
+
+            if(orderInDb == null)
+            {
+                return NotFound();
+            }
+
+            var orderToReturn = new OrderDetailsViewModel
+            {
+                Id = orderInDb.Id,
+                DeliveryEarlistDate = orderInDb.DeliveryEarlistDate,
+                DeliveryLatestDate = orderInDb.DeliveryLatestDate,
+                IssuedOn = orderInDb.IssuedOn.ToString("dddd, dd MMMM yyyy"),
+                UserIssuedTo = orderInDb.IssuedTo,
+                OrderStatus = orderInDb.OrderStatus,
+                TotalPrice = orderInDb.TotalPrice,
+                OrderedProducts = orderInDb.OrderedProducts
+                    .Select(p => new ProductInOrderViewModel
+                    {
+                        Id = p.Id,
+                        ProductId = p.ProductId,
+                        ProductName = p.ProductName,
+                        ProductPicture = p.ProductPicture,
+                        ProductColour = p.ProductColour,
+                        ProductSize = p.ProductSize,
+                        ProductPrice = p.ProductPrice,
+                        ProductQuantity = p.ProductQuantity
+                    })
+                    .ToList()
+            };
+
+            return View(orderToReturn);
+        }
+
+        [HttpGet("/Orders/Edit/{orderId}")]
+        public async Task<IActionResult> Edit(string orderId)
+        {
+            if(orderId == null)
+            {
+                return BadRequest();
+            }
+
+            var orderInDb = await this.orderService.GetOrderByIdAsync(orderId);
+
+            if(orderInDb == null)
+            {
+                return NotFound();
+            }
+
+            var orderToEdit = new OrderEditInputModel
+            {
+                Id = orderInDb.Id,
+                IssuedOn = orderInDb.IssuedOn.ToString("dddd, dd MMMM yyyy"),
+                UserIssuedTo = orderInDb.IssuedTo,
+                DeliveryEarlistDate = orderInDb.DeliveryEarlistDate,
+                DeliveryLatestDate = orderInDb.DeliveryLatestDate,
+                OrderStatus = orderInDb.OrderStatus,
+                TotalPrice = orderInDb.TotalPrice,
+                OrderedProductsNum = orderInDb.OrderedProducts.Count()
+            };
+
+            return View(orderToEdit);
+        }
+
+        [HttpPost("/Orders/Edit/{orderId}")]
+        public async Task<IActionResult> Edit(string orderId, OrderEditInputModel model)
+        {
+            if(ModelState.IsValid == false)
+            {
+                return View(model);
+            }
+
+            OrderServiceModel orderToEdit = new OrderServiceModel
+            {
+                Id = orderId,
+                OrderStatus = model.OrderStatus
+            };
+
+            bool orderIsEdited = await this.orderService.EditOrderStatusAsync(orderToEdit);
+
+            return Redirect("/Orders/Details/" + orderId);
         }
     }
 }

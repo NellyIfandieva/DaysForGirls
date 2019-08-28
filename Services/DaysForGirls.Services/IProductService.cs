@@ -19,6 +19,6 @@
 
         Task<bool> RemoveProductFromShoppingCartAsync(int productId);
 
-        //Task<bool> AddReviewToProductByProductIdAsync(int productId, int reviewId);
+        IQueryable<ProductServiceModel> GetAllSearchResultsByCriteria(string criteria);
     }
 }

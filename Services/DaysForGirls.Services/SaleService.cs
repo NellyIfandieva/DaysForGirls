@@ -93,6 +93,11 @@
                 .Include(s => s.Products)
                 .SingleOrDefaultAsync(sale => sale.Id == id);
 
+            if(saleWithDetails == null)
+            {
+                throw new ArgumentNullException(nameof(saleWithDetails));
+            }
+
             var productsInSale = await this.db.Products
                 .Where(p => p.SaleId == id)
                 .Select(pS => new ProductServiceModel
@@ -154,6 +159,11 @@
             var saleWithDetails = await this.db.Sales
                 .Include(s => s.Products)
                 .SingleOrDefaultAsync(sale => sale.Title == saleTitle);
+
+            if(saleWithDetails == null)
+            {
+                throw new ArgumentNullException(nameof(saleWithDetails));
+            }
 
             var productsInSale = await this.db.Products
                 .Where(p => p.Sale.Title == saleWithDetails.Title)
@@ -242,8 +252,6 @@
             return productAddedToSale;
         }
 
-        //TODO implement Edit
-
         public async Task<bool> EditAsync(SaleServiceModel model)
         {
             var saleToEdit = await this.db.Sales
@@ -279,13 +287,17 @@
 
             HashSet<Product> productsOutOfSale = saleToDelete.Products
                 .ToHashSet();
-            
-            foreach(var product in productsOutOfSale)
-            {
-                product.IsInSale = false;
-            }
 
-            this.db.UpdateRange(productsOutOfSale);
+            if(productsOutOfSale.Count() > 0)
+            {
+                foreach (var product in productsOutOfSale)
+                {
+                    product.IsInSale = false;
+                }
+
+                this.db.UpdateRange(productsOutOfSale);
+            }
+            
             this.db.Sales.Remove(saleToDelete);
             int result = await this.db.SaveChangesAsync();
 
