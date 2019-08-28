@@ -36,8 +36,10 @@ namespace DaysForGirls.Web.Controllers
                         Name = p.Name,
                         Picture = p.Pictures.ElementAt(0).PictureUrl,
                         Price = p.Price,
-                        IsInSale = p.IsInSale,
-                        SaleId = p.SaleId
+                        AvailableItems = p.Quantity.AvailableItems,
+                        SaleId = p.SaleId,
+                        ShoppingCartId = p.ShoppingCartId,
+                        OrderId = p.OrderId
                     })
                     .ToList()
             };

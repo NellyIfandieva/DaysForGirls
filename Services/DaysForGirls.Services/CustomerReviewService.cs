@@ -1,17 +1,14 @@
-﻿using DaysForGirls.Data;
-using DaysForGirls.Data.Models;
-using DaysForGirls.Services.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DaysForGirls.Services
+﻿namespace DaysForGirls.Services
 {
+    using DaysForGirls.Data;
+    using DaysForGirls.Data.Models;
+    using DaysForGirls.Services.Models;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.EntityFrameworkCore;
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+
     public class CustomerReviewService : ICustomerReviewService
     {
         private readonly UserManager<DaysForGirlsUser> userManager;
@@ -65,30 +62,6 @@ namespace DaysForGirls.Services
 
             return allProductComments;
         }
-
-        //public async Task<CustomerReviewServiceModel> GetReviewByIdAsync(int reviewId)
-        //{
-        //    var review = await this.db.CustomerReviews
-        //        .SingleOrDefaultAsync(r => r.Id == reviewId);
-
-        //    if(review == null)
-        //    {
-        //        throw new ArgumentNullException(nameof(review));
-        //    }
-
-        //    var reviewToReturn = new CustomerReviewServiceModel
-        //    {
-        //        Id = review.Id,
-        //        Title = review.Title,
-        //        Text = review.Text,
-        //        AuthorUsername = review.Author.UserName,
-        //        CreatedOn = review.CreatedOn.ToString("dddd, dd MMMM yyyy"),
-        //        ProductId = review.ProductId,
-        //        IsDeleted = review.IsDeleted
-        //    };
-
-        //    return reviewToReturn;
-        //}
 
         public async Task<bool> DeleteReviewByIdAsync(int reviewId)
         {

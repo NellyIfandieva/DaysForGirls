@@ -1,0 +1,72 @@
+﻿@model DaysForGirls.Web.InputModels.ProductTypeEditInputModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    input[type=text], select {
+        width: 50%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        color: #666666;
+    }
+
+    input[type=submit] {
+            width: 22%;
+            background-color: #cc0052;
+            color: white;
+            font-size: medium;
+            padding: 15px 20px 15px 20px;
+            margin: 30px 200px 10px 50px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+    }
+
+            input[type=submit]:hover {
+                background-color: #a3a375;
+            }
+
+    .row {
+        margin-left: 250px;
+        margin-right: 250px;
+        position: center;
+        border-radius: 5px;
+        background-color: #f7f5ed;
+        padding: 20px;
+    }
+
+    h2{
+        margin-top: 50px;
+    }
+</style>
+
+<h2 class="text-center">Edit Product Type</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class=""></label>
+                <input asp-for="Name" class="form-control" placeholder="Enter the Product Type" autofocus />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save Changes" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

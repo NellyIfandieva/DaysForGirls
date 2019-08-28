@@ -1,15 +1,12 @@
-﻿using DaysForGirls.Services.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DaysForGirls.Services
+﻿namespace DaysForGirls.Services
 {
+    using DaysForGirls.Services.Models;
+    using System.Linq;
+    using System.Threading.Tasks;
+
     public interface ISaleService
     {
-        Task<string> Create(SaleServiceModel saleServiceModel);
+        Task<string> CreateAsync(SaleServiceModel saleServiceModel);
 
         IQueryable<SaleServiceModel> DisplayAllAdmin();
 
@@ -22,5 +19,7 @@ namespace DaysForGirls.Services
         Task<bool> AddProductToSaleAsync(string saleId, int productId);
 
         Task<bool> DeleteSaleById(string saleId);
+
+        Task<bool> EditAsync(SaleServiceModel model);
     }
 }

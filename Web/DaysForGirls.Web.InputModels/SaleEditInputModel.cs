@@ -4,10 +4,12 @@
     using System;
     using System.ComponentModel.DataAnnotations;
 
-    public class SaleCreateInputModel
+    public class SaleEditInputModel
     {
         private const string RequiredFieldErrorMessage = "The field is required";
         private const string RequiredPictureErrorMessage = "You need to upload a picture";
+
+        public string Id { get; set; }
 
         [Required(ErrorMessage = RequiredFieldErrorMessage)]
         public string Title { get; set; }

@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DaysForGirls.Data.Models;
-using DaysForGirls.Services;
-using DaysForGirls.Services.Models;
-using DaysForGirls.Web.InputModels;
-using DaysForGirls.Web.ViewModels;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-
-namespace DaysForGirls.Web.Areas.Administration.Controllers
+﻿namespace DaysForGirls.Web.Areas.Administration.Controllers
 {
+    using System.Linq;
+    using System.Threading.Tasks;
+    using DaysForGirls.Services;
+    using DaysForGirls.Services.Models;
+    using DaysForGirls.Web.InputModels;
+    using DaysForGirls.Web.ViewModels;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
+
     public class SaleController : AdminController
     {
         private readonly ISaleService saleService;
@@ -43,7 +39,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(SaleCreateInputModel model)
         {
-            if(ModelState.IsValid == false)
+            if (ModelState.IsValid == false)
             {
                 return View(model);
             }
@@ -58,7 +54,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                 Picture = imageUrl
             };
 
-            string saleId = await this.saleService.Create(saleServiceModel);
+            string saleId = await this.saleService.CreateAsync(saleServiceModel);
 
             return Redirect("/Administration/Sale/All");
         }
@@ -79,7 +75,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                 })
                 .ToListAsync();
 
-            if(allSales == null)
+            if (allSales == null)
             {
                 return NotFound();
             }
@@ -90,14 +86,14 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         [HttpGet("/Administration/Sale/Details/{id}")]
         public async Task<IActionResult> Details(string id)
         {
-            if(id == null)
+            if (id == null)
             {
                 return BadRequest();
             }
 
             var sale = await this.saleService.GetSaleByIdAsync(id);
 
-            if(sale == null)
+            if (sale == null)
             {
                 return NotFound();
             }
@@ -121,48 +117,57 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
 
             return View(saleToDisplay);
         }
-        //TODO make it EditAsync, also in the interface
-        [HttpGet("/Sale/Edit/{id}")]
+
+        [HttpGet("/Administration/Sale/Edit/{saleId}")]
         public async Task<IActionResult> Edit(string saleId)
         {
-            await Task.Delay(0);
-
-            if(saleId == null)
-            {
-                return BadRequest();
-            }
-
             return View();
         }
 
-        //[HttpPost("/Sale/Edit/{id}")]
-        //public async Task<IActionResult> Edit(int saleId)
-        //{
-        //    throw new NotImplementedException();
-        //    //return Redirect("/Administration/Sale/Details/{saleId}");
-        //}
-
-        //TODO make it EditAsync, also in the interface
-        [HttpGet("/Administration/Sale/AddProductToSale/{saleId}")]
-        public async Task<IActionResult> AddProductToSale(string saleId)
+        [HttpPost("/Administration/Sale/Edit/{saleId}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(string saleId, SaleEditInputModel model)
         {
-                var allProducts = await this.adminService
-                    .DisplayAll()
-                    .Where(p => p.IsInSale == false)
-                    .ToListAsync();
+            if(ModelState.IsValid == false)
+            {
+                return View(model);
+            }
+            string imageUrl = await this.cloudinaryService
+                .UploadPictureForSaleAsync(model.Picture, model.Title);
 
-            this.ViewData["allProducts"] = allProducts
-                .Select(p => new ProductAddToSaleViewModel
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    Picture = p.Picture.PictureUrl,
-                    Price = p.Price.ToString("f2")
-                })
-                .ToList();
+            var saleToEdit = new SaleServiceModel
+            {
+                Id = saleId,
+                Title = model.Title,
+                EndsOn = model.EndsOn,
+                Picture = imageUrl
+            };
 
-            return View();
+            bool saleIsEdited = await this.saleService.EditAsync(saleToEdit);
+
+            return Redirect("/Administration/Sale/Details/" + saleId);
         }
+
+        //[HttpGet("/Administration/Sale/AddProductToSale/{saleId}")]
+        //public async Task<IActionResult> AddProductToSale(string saleId)
+        //{
+        //        var allProducts = await this.adminService
+        //            .DisplayAll()
+        //            .Where(p => p.IsInSale == false)
+        //            .ToListAsync();
+
+        //    this.ViewData["allProducts"] = allProducts
+        //        .Select(p => new ProductAddToSaleViewModel
+        //        {
+        //            Id = p.Id,
+        //            Name = p.Name,
+        //            Picture = p.Picture.PictureUrl,
+        //            Price = p.Price.ToString("f2")
+        //        })
+        //        .ToList();
+
+        //    return View();
+        //}
 
         //[HttpPost("/Administration/Sale/AddProductToSale/{saleId}")]
         //[ValidateAntiForgeryToken]
@@ -181,6 +186,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         //    return Redirect("/Administration/Sale/Details/{saleId}");
         //}
 
+        [HttpGet("/Administration/Sale/Delete/{saleId}")]
         public async Task<IActionResult> Delete(string saleId)
         {
             bool isDeleted = await this.saleService.DeleteSaleById(saleId);

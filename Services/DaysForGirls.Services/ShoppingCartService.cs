@@ -1,19 +1,13 @@
-﻿using DaysForGirls.Data;
-using DaysForGirls.Data.Models;
-using DaysForGirls.Services.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DaysForGirls.Services
+﻿namespace DaysForGirls.Services
 {
+    using DaysForGirls.Data;
+    using DaysForGirls.Data.Models;
+    using DaysForGirls.Services.Models;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.EntityFrameworkCore;
+    using System.Linq;
+    using System.Threading.Tasks;
+
     public class ShoppingCartService : IShoppingCartService
     {
         private readonly DaysForGirlsDbContext db;

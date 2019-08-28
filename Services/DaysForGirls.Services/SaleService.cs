@@ -1,13 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DaysForGirls.Data;
-using DaysForGirls.Data.Models;
-using DaysForGirls.Services.Models;
-using Microsoft.EntityFrameworkCore;
-
-namespace DaysForGirls.Services
+﻿namespace DaysForGirls.Services
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using DaysForGirls.Data;
+    using DaysForGirls.Data.Models;
+    using DaysForGirls.Services.Models;
+    using Microsoft.EntityFrameworkCore;
+
     public class SaleService : ISaleService
     {
         private readonly DaysForGirlsDbContext db;
@@ -17,7 +18,7 @@ namespace DaysForGirls.Services
             this.db = db;
         }
 
-        public async Task<string> Create(SaleServiceModel saleServiceModel)
+        public async Task<string> CreateAsync(SaleServiceModel saleServiceModel)
         {
             Sale sale = new Sale
             {
@@ -215,10 +216,22 @@ namespace DaysForGirls.Services
             Sale sale = await this.db.Sales
                 .SingleOrDefaultAsync(s => s.Id == saleId);
 
-            Product toAdd = await this.db.Products
+            Product productToAdd = await this.db.Products
                 .SingleOrDefaultAsync(p => p.Id == productId);
 
-            sale.Products.Add(toAdd);
+            if(sale == null || productToAdd == null)
+            {
+                if(sale == null)
+                {
+                    throw new ArgumentNullException(nameof(sale));
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(productToAdd));
+                }
+            }
+
+            sale.Products.Add(productToAdd);
 
             this.db.Sales.Update(sale);
 
@@ -227,6 +240,30 @@ namespace DaysForGirls.Services
             bool productAddedToSale = result > 0;
 
             return productAddedToSale;
+        }
+
+        //TODO implement Edit
+
+        public async Task<bool> EditAsync(SaleServiceModel model)
+        {
+            var saleToEdit = await this.db.Sales
+                .SingleOrDefaultAsync(s => s.Id == model.Id);
+
+            if(saleToEdit == null)
+            {
+                throw new ArgumentNullException(nameof(saleToEdit));
+            }
+
+            saleToEdit.Title = model.Title;
+            saleToEdit.EndsOn = model.EndsOn;
+            saleToEdit.Picture = model.Picture;
+
+            this.db.Update(saleToEdit);
+            int result = await this.db.SaveChangesAsync();
+
+            bool saleIsEdited = result > 0;
+
+            return saleIsEdited;
         }
 
         public async Task<bool> DeleteSaleById(string saleId)

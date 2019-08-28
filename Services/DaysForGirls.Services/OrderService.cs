@@ -1,14 +1,14 @@
-﻿using DaysForGirls.Data;
-using DaysForGirls.Data.Models;
-using DaysForGirls.Services.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace DaysForGirls.Services
+﻿namespace DaysForGirls.Services
 {
+    using DaysForGirls.Data;
+    using DaysForGirls.Data.Models;
+    using DaysForGirls.Services.Models;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.EntityFrameworkCore;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+
     public class OrderService : IOrderService
     {
         private readonly DaysForGirlsDbContext db;
@@ -40,8 +40,6 @@ namespace DaysForGirls.Services
                 .Where(sCI => sCI.ShoppingCartId == cart.Id).ToListAsync();
 
             var cartItemProductsIds = cartItems.Select(cI => cI.ProductId).ToList();
-
-            
 
             HashSet<OrderedProduct> orderProducts = new HashSet<OrderedProduct>();
 

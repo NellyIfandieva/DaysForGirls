@@ -1,10 +1,10 @@
-﻿using DaysForGirls.Services.Models;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace DaysForGirls.Services
+﻿namespace DaysForGirls.Services
 {
+    using DaysForGirls.Services.Models;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+
     public interface IAdminService
     {
         Task<int> CreateAsync(ProductServiceModel productServiceModel);
@@ -26,5 +26,7 @@ namespace DaysForGirls.Services
         //Task<ProductServiceModel> GetProductByNameAsync(string productName);
 
         Task<bool> SetOrderIdToProductsAsync(List<int> productIds, string orderId);
+
+        Task<string> EraseFromDb(int productId);
     }
 }

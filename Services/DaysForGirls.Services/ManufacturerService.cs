@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DaysForGirls.Data;
-using DaysForGirls.Data.Models;
-using DaysForGirls.Services.Models;
-using Microsoft.EntityFrameworkCore;
-
-namespace DaysForGirls.Services
+﻿namespace DaysForGirls.Services
 {
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using DaysForGirls.Data;
+    using DaysForGirls.Data.Models;
+    using DaysForGirls.Services.Models;
+    using Microsoft.EntityFrameworkCore;
+
     public class ManufacturerService : IManufacturerService
     {
         private readonly DaysForGirlsDbContext db;
@@ -52,7 +50,7 @@ namespace DaysForGirls.Services
             }
 
             var logo = await this.db.Logos
-                .SingleOrDefaultAsync(l => l.Manufacturer.Id == manufacturer.Logo.Id);
+                .SingleOrDefaultAsync(l => l.Manufacturer.Id == manufacturer.Id);
 
             var manufacturerProducts = await this.db.Products
                 .Where(p => p.Manufacturer.Id == manufacturerId
@@ -68,7 +66,13 @@ namespace DaysForGirls.Services
                         PictureUrl = pic.PictureUrl
                     }).ToList(),
                     Price = p.Price,
-                    SaleId = p.SaleId
+                    Quantity = new QuantityServiceModel
+                    {
+                        AvailableItems = p.Quantity.AvailableItems
+                    },
+                    SaleId = p.SaleId,
+                    ShoppingCartId = p.ShoppingCartId,
+                    OrderId = p.OrderId
                 })
                 .ToListAsync();
 
@@ -119,18 +123,17 @@ namespace DaysForGirls.Services
         public async Task<bool> EditAsync(ManufacturerServiceModel model)
         {
             var manufacturerInDb = await this.db.Manufacturers
+                .Include(m => m.Logo)
                 .SingleOrDefaultAsync(m => m.Id == model.Id);
 
-
-            Logo newLogo = new Logo
+            if(manufacturerInDb == null)
             {
-                ManufacturerId = manufacturerInDb.Id,
-                LogoUrl = model.Logo.LogoUrl
-            };
+                throw new ArgumentNullException(nameof(manufacturerInDb));
+            }
 
             manufacturerInDb.Name = model.Name;
             manufacturerInDb.Description = model.Description;
-            manufacturerInDb.Logo = newLogo;
+            manufacturerInDb.Logo.LogoUrl = model.Logo.LogoUrl;
 
             this.db.Update(manufacturerInDb);
             int result = await this.db.SaveChangesAsync();

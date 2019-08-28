@@ -113,11 +113,18 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                 return View(model);
             }
 
+            string imageUrl = await this.cloudinaryService.UploadPictureForProductAsync(
+                model.Logo, model.Name + "_" + "Logo");
+
             var manufacturerToEdit = new ManufacturerServiceModel
             {
                 Id = manufacturerId,
                 Name = model.Name,
-                Description = model.Description
+                Description = model.Description,
+                Logo = new LogoServiceModel
+                {
+                    LogoUrl = imageUrl
+                }
             };
 
             bool manufacturerIsEdited = await this.manufacturerService

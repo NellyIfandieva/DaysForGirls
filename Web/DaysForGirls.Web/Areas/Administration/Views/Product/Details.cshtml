@@ -41,7 +41,7 @@
 
         #product-main-info button {
             width: 100px;
-            background-color: #cc0066;
+            background-color: #cc0052;
             color: white;
             font-size: medium;
             padding: 15px 20px 15px 20px;
@@ -93,7 +93,7 @@
         .product-button {
             float: left;
             width: 200px;
-            background-color: #996600;
+            background-color: #cc0052;
             color: white;
             font-size: medium;
             padding: 15px 20px 15px 20px;
@@ -163,14 +163,14 @@
             }
         </div>
         <div id="product-actions">
-            <a href="/Product/Edit/@Model.Id"><button class="product-button">Edit</button></a>
+            <a href="/Administration/Product/Edit/@Model.Id"><button class="product-button">Edit</button></a>
             @if (@Model.IsDeleted)
             {
                 <a>Delete Permanently</a>
             }
             else
             {
-                <a href="/Product/Delete/@Model.Id"><button class="product-button">Delete</button></a>
+                <a href="/Administration/Product/Delete/@Model.Id"><button class="product-button">Delete</button></a>
             }
         </div>
     </div>

@@ -20,11 +20,11 @@
 
         input[type=submit] {
             width: 20%;
-            background-color: #996600;
+            background-color: #cc0052;
             color: white;
             font-size: medium;
             padding: 15px 20px 15px 20px;
-            margin: 20px 200px 10px 25px;
+            margin: 30px 200px 10px 25px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
@@ -35,12 +35,16 @@
         }
 
         .row {
-            margin-left: 250px;
-            margin-right: 250px;
+            width: 50%;
+            margin-left: 400px;
             position: center;
             border-radius: 5px;
-            background-color: #f2f2f2;
+            background-color: #f7f5ed;
             padding: 20px;
+        }
+
+        h2{
+            margin-top: 50px;
         }
 
         /*#forgot-or-register {
@@ -48,7 +52,7 @@
         }*/
     </style>
 
-<h1 class="text-center">Create Product Type</h1>
+<h2 class="text-center">Create Product Type</h2>
 
 @*<h4>ProductTypeCreateInputModel</h4>*@
 <hr />
@@ -66,10 +70,6 @@
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

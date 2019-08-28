@@ -8,6 +8,10 @@
 }
 
 <style>
+    #all-product-types{
+        margin-top: 50px;
+    }
+
     table {
   border-collapse: collapse;
   margin-left: 320px;
@@ -34,40 +38,42 @@
     tr:hover {background-color: #f5f5f5;}
 </style>
 
-<h1 class="text-center">All Product Types</h1>
+<div id="all-product-types">
+    <h1 class="text-center">All Product Types</h1>
 
-@*<p>
-        <a asp-action="Create">Create New</a>
-    </p>*@
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+    @*<p>
+            <a asp-action="Create">Create New</a>
+        </p>*@
+    <table class="table">
+        <thead>
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Id)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    <a href="/Administration/ProductType/Edit/@item.Id">Edit</a>
-                    <a href="/Administration/ProductType/Delete/@item.Id">Delete</a>
-                    @*@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })*@
-                </td>
+                <th>
+                    @Html.DisplayNameFor(model => model.Id)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th></th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        <a href="/Administration/ProductType/Edit/@item.Id">Edit</a>
+                        <a href="/Administration/ProductType/Delete/@item.Id">Delete</a>
+                        @*@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })*@
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

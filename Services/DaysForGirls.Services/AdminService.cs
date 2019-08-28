@@ -1,14 +1,14 @@
-﻿using DaysForGirls.Data;
-using DaysForGirls.Data.Models;
-using DaysForGirls.Services.Models;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace DaysForGirls.Services
+﻿namespace DaysForGirls.Services
 {
+    using DaysForGirls.Data;
+    using DaysForGirls.Data.Models;
+    using DaysForGirls.Services.Models;
+    using Microsoft.EntityFrameworkCore;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+
     public class AdminService : IAdminService
     {
         private readonly DaysForGirlsDbContext db;
@@ -103,7 +103,6 @@ namespace DaysForGirls.Services
         public IQueryable<AdminProductAllServiceModel> DisplayAll()
         {
             var allProducts = this.db.Products
-                .Where(p => p.IsDeleted == false)
                 .Select(p => new AdminProductAllServiceModel
                 {
                     Id = p.Id,
@@ -368,6 +367,58 @@ namespace DaysForGirls.Services
             bool productsAreAddedToOrder = result > 0;
 
             return productsAreAddedToOrder;
+        }
+
+        public async Task<string> EraseFromDb(int productId)
+        {
+            var productInDb = await this.db.Products
+                .SingleOrDefaultAsync(p => p.Id == productId);
+
+            string outcome = null;
+
+            if(productInDb == null)
+            {
+                throw new ArgumentNullException(nameof(productInDb));
+            }
+
+            if(productInDb.ShoppingCartId != null || productInDb.OrderId != null)
+            {
+                if(productInDb.ShoppingCartId != null)
+                {
+                    outcome = "Product is in a Shopping Cart and cannot be deleted.";
+                }
+                else
+                {
+                    outcome = "Product as been purchased and cannot be erased.";
+                }
+
+                return outcome;
+            }
+
+            string saleId = productInDb.SaleId;
+
+            if(saleId != null)
+            {
+                var sale = await this.db.Sales
+                    .Include(s => s.Products)
+                    .SingleOrDefaultAsync(s => s.Id == saleId);
+
+                sale.Products.Remove(productInDb);
+                this.db.Update(sale);
+            }
+
+            bool productPicturesAreDeleted = await this.pictureService
+                .DeletePicturesOfDeletedProductAsync(productId);
+
+            this.db.Products.Remove(productInDb);
+            int result = await this.db.SaveChangesAsync();
+
+            if(result > 0)
+            {
+                outcome = "true";
+            }
+
+            return outcome;
         }
     }
 }

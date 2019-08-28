@@ -14,8 +14,12 @@ namespace DaysForGirls.Web.ViewModels
 
         public decimal Price { get; set; }
 
-        public bool IsInSale { get; set; }
-
         public string SaleId { get; set; }
+
+        public int AvailableItems { get; set; }
+
+        public string ShoppingCartId { get; set; }
+
+        public string OrderId { get; set; }
     }
 }

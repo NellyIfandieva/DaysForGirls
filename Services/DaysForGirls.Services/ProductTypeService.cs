@@ -1,13 +1,13 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using DaysForGirls.Data;
-using DaysForGirls.Data.Models;
-using DaysForGirls.Services.Models;
-using Microsoft.EntityFrameworkCore;
-
-namespace DaysForGirls.Services
+﻿namespace DaysForGirls.Services
 {
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using DaysForGirls.Data;
+    using DaysForGirls.Data.Models;
+    using DaysForGirls.Services.Models;
+    using Microsoft.EntityFrameworkCore;
+
     public class ProductTypeService : IProductTypeService
     {
         private readonly DaysForGirlsDbContext db;

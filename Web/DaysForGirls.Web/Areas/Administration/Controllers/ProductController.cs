@@ -1,16 +1,15 @@
-﻿using DaysForGirls.Services;
-using DaysForGirls.Services.Models;
-using DaysForGirls.Web.InputModels;
-using DaysForGirls.Web.ViewModels;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace DaysForGirls.Web.Areas.Administration.Controllers
+﻿namespace DaysForGirls.Web.Areas.Administration.Controllers
 {
+    using DaysForGirls.Services;
+    using DaysForGirls.Services.Models;
+    using DaysForGirls.Web.InputModels;
+    using DaysForGirls.Web.ViewModels;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+
     public class ProductController : AdminController
     {
         private readonly IAdminService adminService;
@@ -95,7 +94,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProductCreateInputModel model)
         {
-            if(ModelState.IsValid == false)
+            if (ModelState.IsValid == false)
             {
                 return this.View(model);
             }
@@ -115,7 +114,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                 Name = model.Manufacturer
             };
             string saleId = null;
-            if(model.SaleTitle != null)
+            if (model.SaleTitle != null)
             {
                 var sale = await this.saleService.GetSaleByTitleAsync(model.SaleTitle);
                 saleId = sale.Id;
@@ -125,7 +124,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
 
             int imageNameExtension = 1;
 
-            foreach(var iFormFile in model.Pictures)
+            foreach (var iFormFile in model.Pictures)
             {
                 string imageUrl = await this.cloudinaryService.UploadPictureForProductAsync(
                 iFormFile, model.Name + "_" + imageNameExtension++);
@@ -188,7 +187,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                     OrderId = product.OrderId
                 }).ToListAsync();
 
-            if(allProducts == null)
+            if (allProducts == null)
             {
                 return NotFound();
             }
@@ -199,7 +198,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         [HttpGet("/Administration/Product/Details/{id}")]
         public async Task<IActionResult> Details(int id)
         {
-            if(id <= 0)
+            if (id <= 0)
             {
                 return BadRequest();
             }
@@ -207,7 +206,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
             var productInDb = await this.adminService
                 .GetProductByIdAsync(id);
 
-            if(productInDb == null)
+            if (productInDb == null)
             {
                 return NotFound();
             }
@@ -252,15 +251,15 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         [HttpGet("/Administration/Product/Edit/{productId}")]
         public async Task<IActionResult> Edit(int productId)
         {
-            if(productId <= 0)
+            if (productId <= 0)
             {
                 return BadRequest();
             }
 
-            var productWithId = 
+            var productWithId =
                 await this.adminService.GetProductByIdAsync(productId);
 
-            if(productWithId == null)
+            if (productWithId == null)
             {
                 return NotFound();
             }
@@ -276,7 +275,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                 Quantity = productWithId.Quantity.AvailableItems
             };
 
-            var allProductTypes = 
+            var allProductTypes =
                 await this.productTypeService.DisplayAll()
                 .ToListAsync();
 
@@ -438,12 +437,32 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         //    return Redirect("/Administration/Product/Details/{productId}");
         //}
 
-        [HttpDelete("/Administration/Product/Delete/{productId}")]
+        [HttpGet("/Administration/Product/Delete/{productId}")]
         public async Task<IActionResult> Delete(int productId)
         {
             bool isDeleted = await this.adminService.DeleteProductByIdAsync(productId);
 
             return Redirect("/Administration/Product/All");
+        }
+
+        [HttpGet("/Administration/Product/Erase/{productId}")]
+        public async Task<IActionResult> Erase(int productId)
+        {
+            string productEraseAttempt = await this.adminService
+                .EraseFromDb(productId);
+
+            this.ViewData["productErasedOrNot"] = null;
+
+            if(productEraseAttempt == "true")
+            {
+                this.ViewData["productErasedOrNot"] = "Product has been successfully removed from the Database.";
+            }
+            else
+            {
+                this.ViewData["productErasedOrNot"] = productEraseAttempt;
+            }
+
+            return View();
         }
     }
 }

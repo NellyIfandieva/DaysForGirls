@@ -1,9 +1,9 @@
-﻿using DaysForGirls.Services.Models;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace DaysForGirls.Services
+﻿namespace DaysForGirls.Services
 {
+    using DaysForGirls.Services.Models;
+    using System.Linq;
+    using System.Threading.Tasks;
+
     public interface IProductService
     {
         IQueryable<ProductDisplayAllServiceModel> DisplayAll();

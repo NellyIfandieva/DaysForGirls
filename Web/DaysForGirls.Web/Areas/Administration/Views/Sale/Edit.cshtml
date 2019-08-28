@@ -1,0 +1,104 @@
+﻿@using DaysForGirls.Web.ViewModels
+@model DaysForGirls.Web.InputModels.SaleCreateInputModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    input[type=text], select {
+        width: 50%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    input[type=datetime], select {
+        width: 50%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    input[type=file], select {
+        width: 50%;
+        height: 85px;
+        padding: 25px 20px;
+        margin: 8px 5px;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    input[type=submit] {
+        width: 30%;
+        background-color: #cc0052;
+        color: white;
+        font-size: medium;
+        padding: 15px 20px 15px 20px;
+        margin: 30px 200px 10px 25px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+        input[type=submit]:hover {
+            background-color: #a3a375;
+        }
+
+    .row {
+        width: 50%;
+        margin-left: 400px;
+        position: center;
+        border-radius: 5px;
+        background-color: #f7f5ed;
+        padding: 20px;
+    }
+
+    h2{
+        margin-top: 50px;
+    }
+</style>
+
+<h2 class="text-center">Edit Sale</h2>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" enctype="multipart/form-data" asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input type="text" asp-for="Title" class="form-control" placeholder="Enter The Name of the Sale" autofocus />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EndsOn" class="control-label"></label>
+                <input type="datetime" asp-for="EndsOn" class="form-control" placeholder="MM/dd/yyyy HH:mm:ss" />
+                <span asp-validation-for="EndsOn" class="text-danger"></span>
+            </div>
+            <div class="form-group mx-auto w-100">
+                <label asp-for="Picture" class="text-primary h5">Picture</label>
+                <input type="file" asp-for="Picture" class="form-control" placeholder="Upload Picture..." />
+                <span asp-validation-for="Picture" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save Changes" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
