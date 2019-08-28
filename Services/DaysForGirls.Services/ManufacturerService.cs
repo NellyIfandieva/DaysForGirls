@@ -146,27 +146,40 @@
             var manufacturerToDelete = await this.db.Manufacturers
                 .SingleOrDefaultAsync(m => m.Id == manufacturerId);
 
-            manufacturerToDelete.IsDeleted = true;
+            if(manufacturerToDelete == null)
+            {
+                throw new ArgumentNullException(nameof(manufacturerToDelete));
+            }
+
+            bool manufacturerIsDeleted = false;
 
             var manufacturerProducts = await this.db.Products
                 .Where(p => p.Manufacturer.Id == manufacturerId)
                 .ToListAsync();
 
-            foreach(var product in manufacturerProducts)
+            if(manufacturerProducts.Count() > 0)
             {
-                if(product.IsDeleted == false)
+                return manufacturerIsDeleted;
+            }
+            else
+            {
+                var logoToDelete = await this.db.Logos
+                    .SingleOrDefaultAsync(l => l.ManufacturerId == manufacturerToDelete.Id);
+
+                if(logoToDelete == null)
                 {
-                    product.IsDeleted = true;
+                    throw new ArgumentNullException(nameof(logoToDelete));
                 }
+
+                this.db.Logos.Remove(logoToDelete);
+                this.db.Manufacturers.Remove(manufacturerToDelete);
+
+                int result = await this.db.SaveChangesAsync();
+
+                manufacturerIsDeleted = result > 0;
             }
 
-            this.db.UpdateRange(manufacturerProducts);
-            this.db.Update(manufacturerToDelete);
-            int result = await this.db.SaveChangesAsync();
-
-            bool manufaturerAndProductsAreDeleted = result > 0;
-
-            return manufaturerAndProductsAreDeleted;
+            return manufacturerIsDeleted;
         }
     }
 }

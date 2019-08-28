@@ -144,6 +144,18 @@
             <p style="font-size: medium"><span style="font-weight: bold">Size:</span> @Model.Size</p>
             <p style="font-size: medium"><span style="font-weight: bold">Price:</span> @Model.Price</p>
             <p style="font-size: medium"><span style="font-weight: bold">Available Quantity:</span> @Model.AvailableQuantity</p>
+            @if (Model.SaleId != null)
+            {
+                <p style="font-size: medium"><span style="font-weight: bold">In Sale:</span> <a href="/Sales/Details/@Model.SaleId">@Model.SaleName</a></p>
+            }
+            @if (Model.ShoppingCartId != null)
+            {
+                <p style="font-size: medium"><span style="font-weight: bold">In a Cart</span></p>
+            }
+            else if (Model.OrderId != null)
+            {
+                <p style="font-size: medium"><span style="font-weight: bold">Sold Out</span></p>
+            }
         </div>
     </div>
     <div id="product-morePictures-andComments">
@@ -164,14 +176,7 @@
         </div>
         <div id="product-actions">
             <a href="/Administration/Product/Edit/@Model.Id"><button class="product-button">Edit</button></a>
-            @if (@Model.IsDeleted)
-            {
-                <a>Delete Permanently</a>
-            }
-            else
-            {
-                <a href="/Administration/Product/Delete/@Model.Id"><button class="product-button">Delete</button></a>
-            }
+            <a href="/Administration/Product/Erase/@Model.Id"><button class="product-button">Delete</button></a>
         </div>
     </div>
 </div>

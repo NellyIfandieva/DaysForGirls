@@ -93,14 +93,24 @@
                 throw new ArgumentNullException(nameof(productTypeToDelete));
             }
 
-            productTypeToDelete.IsDeleted = true;
+            bool typeIsDeleted = false;
 
-            this.db.Update(productTypeToDelete);
-            int result = await this.db.SaveChangesAsync();
+            var productsOfType = await this.db.Products
+                .Where(p => p.ProductTypeId == productTypeToDelete.Id)
+                .ToListAsync();
 
-            bool productTypeIsDeleted = result > 0;
+            if(productsOfType.Count() > 0)
+            {
+                return typeIsDeleted;
+            }
+            else
+            {
+                this.db.ProductTypes.Remove(productTypeToDelete);
+                int result = await this.db.SaveChangesAsync();
+                typeIsDeleted = result > 0;
+            }
 
-            return productTypeIsDeleted;
+            return typeIsDeleted;
         }
     }
 }

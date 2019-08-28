@@ -101,13 +101,22 @@
                 throw new ArgumentNullException(nameof(categoryToDelete));
             }
 
-            categoryToDelete.IsDeleted = true;
+            var productsInCategory = await this.db.Products
+                .Where(p => p.Category.Name == categoryToDelete.Name)
+                .ToListAsync();
 
-            this.db.Update(categoryToDelete);
+            bool categoryIsDeleted = false;
 
-            int result = await this.db.SaveChangesAsync();
-
-            bool categoryIsDeleted = result > 0;
+            if(productsInCategory.Count() > 0)
+            {
+                return categoryIsDeleted;
+            }
+            else
+            {
+                this.db.Categories.Remove(categoryToDelete);
+                int result = await this.db.SaveChangesAsync();
+                categoryIsDeleted = result > 0;
+            }
 
             return categoryIsDeleted;
         }

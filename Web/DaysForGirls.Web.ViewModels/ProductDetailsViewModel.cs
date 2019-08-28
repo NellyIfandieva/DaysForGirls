@@ -32,6 +32,10 @@ namespace DaysForGirls.Web.ViewModels
 
         public List<CustomerReviewAllViewModel> Reviews { get; set; }
 
+        public string SaleId { get; set; }
+
+        public string SaleName { get; set; }
+
         public string ShoppingCartId { get; set; }
 
         public string OrderId { get; set; }

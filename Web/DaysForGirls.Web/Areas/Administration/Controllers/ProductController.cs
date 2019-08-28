@@ -6,6 +6,7 @@
     using DaysForGirls.Web.ViewModels;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -211,6 +212,19 @@
                 return NotFound();
             }
 
+            string saleTitle = null;
+            if(productInDb.SaleId != null)
+            {
+                var sale = await this.saleService.GetSaleByIdAsync(productInDb.SaleId);
+
+                if(sale == null)
+                {
+                    return NotFound(sale);
+                }
+
+                saleTitle = sale.Title;
+            }
+
             ProductDetailsViewModel productToDisplay = new ProductDetailsViewModel
             {
                 Id = productInDb.Id,
@@ -241,6 +255,8 @@
                         Author = pR.AuthorUsername,
                     })
                     .ToList(),
+                SaleId = productInDb.SaleId,
+                SaleName = saleTitle,
                 ShoppingCartId = productInDb.ShoppingCartId,
                 OrderId = productInDb.OrderId
             };
@@ -437,13 +453,13 @@
         //    return Redirect("/Administration/Product/Details/{productId}");
         //}
 
-        [HttpGet("/Administration/Product/Delete/{productId}")]
-        public async Task<IActionResult> Delete(int productId)
-        {
-            bool isDeleted = await this.adminService.DeleteProductByIdAsync(productId);
+        //[HttpGet("/Administration/Product/Delete/{productId}")]
+        //public async Task<IActionResult> Delete(int productId)
+        //{
+        //    bool isDeleted = await this.adminService.DeleteProductByIdAsync(productId);
 
-            return Redirect("/Administration/Product/All");
-        }
+        //    return Redirect("/Administration/Product/All");
+        //}
 
         [HttpGet("/Administration/Product/Erase/{productId}")]
         public async Task<IActionResult> Erase(int productId)
@@ -453,9 +469,11 @@
 
             this.ViewData["productErasedOrNot"] = null;
 
-            if(productEraseAttempt == "true")
+            if(productEraseAttempt.Contains("true"))
             {
-                this.ViewData["productErasedOrNot"] = "Product has been successfully removed from the Database.";
+                string productName = productEraseAttempt.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)[0];
+                this.ViewData["productName"] = productName;
+                this.ViewData["productErasedOrNot"] = " has been successfully removed from the Database.";
             }
             else
             {

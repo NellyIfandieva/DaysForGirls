@@ -189,27 +189,41 @@
             return productToReturn;
         }
 
-        public async Task<bool> DeleteProductByIdAsync(int id)
-        {
-            var productToDelete = await this.db.Products
-                .SingleOrDefaultAsync(product => product.Id == id);
+        //public async Task<bool> DeleteProductByIdAsync(int id)
+        //{
+        //    var productToDelete = await this.db.Products
+        //        .SingleOrDefaultAsync(product => product.Id == id);
 
-            if(productToDelete == null)
-            {
-                throw new ArgumentNullException(nameof(productToDelete));
-            }
+        //    if(productToDelete == null)
+        //    {
+        //        throw new ArgumentNullException(nameof(productToDelete));
+        //    }
 
-            productToDelete.IsDeleted = true;
+        //    if(productToDelete.SaleId != null)
+        //    {
+        //        var sale = await this.db.Sales
+        //            .SingleOrDefaultAsync(s => s.Id == productToDelete.SaleId);
 
-            bool picturesAreDeleted = await this.pictureService
-                .DeletePicturesOfDeletedProductAsync(productToDelete.Id);
+        //        if(sale == null)
+        //        {
+        //            throw new ArgumentNullException(nameof(sale));
+        //        }
 
-            this.db.Update(productToDelete);
-            int result = await this.db.SaveChangesAsync();
-            bool productIsDeleted = result > 0;
+        //        sale.Products.Remove(productToDelete);
+        //        this.db.Update(sale);
+        //    }
 
-            return productIsDeleted;
-        }
+        //    productToDelete.IsDeleted = true;
+
+        //    //bool picturesAreDeleted = await this.pictureService
+        //    //    .DeletePicturesOfDeletedProductAsync(productToDelete.Id);
+
+        //    this.db.Update(productToDelete);
+        //    int result = await this.db.SaveChangesAsync();
+        //    bool productIsDeleted = result > 0;
+
+        //    return productIsDeleted;
+        //}
 
         public async Task<bool> EditAsync(ProductServiceModel model)
         {
@@ -385,15 +399,17 @@
             {
                 if(productInDb.ShoppingCartId != null)
                 {
-                    outcome = "Product is in a Shopping Cart and cannot be deleted.";
+                    outcome = productInDb.Name +  " is in a Shopping Cart and cannot be deleted.";
                 }
                 else
                 {
-                    outcome = "Product as been purchased and cannot be erased.";
+                    outcome = productInDb.Name + " has been purchased and cannot be erased.";
                 }
 
                 return outcome;
             }
+
+            string productName = productInDb.Name;
 
             string saleId = productInDb.SaleId;
 
@@ -415,7 +431,7 @@
 
             if(result > 0)
             {
-                outcome = "true";
+                outcome = productName +  " " + "true";
             }
 
             return outcome;

@@ -6,54 +6,55 @@
 }
 
 <style>
-    #all-products-container{
+    #all-products-container {
         display: inline-block;
     }
 
-    #product-holder{
+    #product-holder {
         margin-top: 15px;
         margin-left: 75px;
         margin-bottom: 10px;
         float: left;
     }
-    #product-holder img{
-        width: 195px;
-        height: 240px;
-        margin-bottom: 1px;
-    }
 
-    #product-function-options{
+        #product-holder img {
+            width: 195px;
+            height: 240px;
+            margin-bottom: 1px;
+        }
+
+    #product-function-options {
         padding-bottom: 2px;
     }
 
-    #product-function-options a{
-        padding-left: 6px;
-    }
+        #product-function-options a {
+            padding-left: 6px;
+        }
 
-    .product-info-holder{
+    .product-info-holder {
         margin-top: 0;
         padding-top: 0;
         background-color: #ebebe0;
     }
 
-    .product-info-holder a{
-        text-decoration: none;
-    }
+        .product-info-holder a {
+            text-decoration: none;
+        }
 
-    .product-info-holder h4{
-        margin-left: 4px;
-        margin-bottom: 2px;
-        font-weight: 500;
-        font-size: medium; 
-    }
+        .product-info-holder h4 {
+            margin-left: 4px;
+            margin-bottom: 2px;
+            font-weight: 500;
+            font-size: medium;
+        }
 
-    .text-over-image{
+    .text-over-image {
         position: relative;
         text-align: center;
         font-weight: bold;
     }
 
-    .text-bottom-right, .text-bottom-right-sold-out, .text-bottom-right-in-a-cart{
+    .text-bottom-right, .text-bottom-right-sold-out, .text-bottom-right-in-a-cart {
         /*background-color: crimson;*/
         color: whitesmoke;
         font-weight: 500;
@@ -61,88 +62,88 @@
         bottom: 10px;
         right: 0px;
     }
-    .text-bottom-right{
+
+    .text-bottom-right {
         width: 60px;
         background-color: #62592c;
     }
 
-    .text-bottom-right-sold-out{
+    .text-bottom-right-sold-out {
         width: 100px;
         background-color: crimson;
         color: whitesmoke;
         font-weight: 500;
     }
 
-    .text-bottom-right-in-a-cart{
+    .text-bottom-right-in-a-cart {
         width: 150px;
         background-color: #c5b358;
     }
+
+    h2{
+        margin-top: 100px;
+        margin-left: 400px;
+    }
 </style>
 
-<h1 class="text-center">All Products - Admin View</h1>
+@if (Model.Count() > 0)
+{
+    <h1 class="text-center">All Products - Admin View</h1>
 
-<div id="all-products-container">
-    @foreach(var product in Model)
-    {
-    <div id="product-holder">
-        @if (product.ShoppingCartId != null)
+    <div id="all-products-container">
+        @foreach (var product in Model)
         {
-            <div class="text-over-image">
-                <a href="/Administration/Product/Details/@product.Id"><img src="@product.Picture" alt="@product.Name" /></a>
-                <div class="text-bottom-right-in-a-cart">Currently in a Cart</div>
-            </div>
-        }
-        else if (product.OrderId != null)
-        {
-            <div class="text-over-image">
-                <img src="@product.Picture" alt="@product.Name" />
-                <div class="text-bottom-right-sold-out">Sold Out</div>
-            </div>
-        }
-        else if (product.SaleId != null)
-        {
-            <div class="text-over-image">
-                <img src="@product.Picture" alt="@product.Name" />
-                <a href="/Sales/Details/@product.SaleId"><div class="text-bottom-right">In Sale</div></a>
-            </div>
-        }
-        else if (product.IsDeleted)
-        {
-            <div class="text-over-image">
-                <img src="@product.Picture" alt="@product.Name" />
-                <a href="/Administration/Product/Details/@product.Id"><div class="text-bottom-right-sold-out">DELETED</div></a>
-            </div>
-        }
-        else
-        {
-            <a href="/Administration/Product/Details/@product.Id"><img src="@product.Picture" alt="@product.Name" /></a>
-        }
-        <div class="product-info-holder">
-            <a href="/Administration/Product/Details/@product.Id"><h4>@product.Name</h4></a>
-            @if (product.IsInSale)
-            {
-                <h4 style="margin-top: 1px">&euro;<strike>@product.Price</strike> &euro;@product.NewPrice</h4>
-            }
-            else
-            {
-                <h4 style="margin-top: 1px">&euro;@product.Price</h4>
-            }
-            <div id="product-function-options">
-                <a href="/Administration/Product/Edit/@product.Id">Edit</a>
-                @if (product.IsInSale == false)
+            <div id="product-holder">
+                @if (product.ShoppingCartId != null)
                 {
-                    <a href="/Administration/Product/Edit/@product.Id">Add to Sale</a>
+                    <div class="text-over-image">
+                        <a href="/Administration/Product/Details/@product.Id"><img src="@product.Picture" alt="@product.Name" /></a>
+                        <div class="text-bottom-right-in-a-cart">Currently in a Cart</div>
+                    </div>
                 }
-                @if (product.IsDeleted)
+                else if (product.OrderId != null)
                 {
-                    <a href="/Administration/Product/Erase/@product.Id">Erase</a>
+                    <div class="text-over-image">
+                        <img src="@product.Picture" alt="@product.Name" />
+                        <div class="text-bottom-right-sold-out">Sold Out</div>
+                    </div>
+                }
+                else if (product.SaleId != null)
+                {
+                    <div class="text-over-image">
+                        <img src="@product.Picture" alt="@product.Name" />
+                        <a href="/Sales/Details/@product.SaleId"><div class="text-bottom-right">In Sale</div></a>
+                    </div>
                 }
                 else
                 {
-                    <a href="/Administration/Product/Delete/@product.Id">Delete</a>
+                    <a href="/Administration/Product/Details/@product.Id"><img src="@product.Picture" alt="@product.Name" /></a>
                 }
+                <div class="product-info-holder">
+                    <a href="/Administration/Product/Details/@product.Id"><h4>@product.Name</h4></a>
+                    @if (product.IsInSale)
+                    {
+                        <h4 style="margin-top: 1px">&euro;<strike>@product.Price</strike> &euro;@product.NewPrice</h4>
+                    }
+                    else
+                    {
+                        <h4 style="margin-top: 1px">&euro;@product.Price</h4>
+                    }
+                    <div id="product-function-options">
+                        <a href="/Administration/Product/Edit/@product.Id">Edit</a>
+                        @if (product.IsInSale == false)
+                        {
+                            <a href="/Administration/Product/Edit/@product.Id">Add to Sale</a>
+                        }
+                        <a href="/Administration/Product/Erase/@product.Id">Delete</a>
+                    </div>
+                </div>
             </div>
-        </div>
+        }
     </div>
-     }
-</div>
+}
+else
+{
+    <h2>No products to show yet <img src="~/Images/JustFlower-Transperant.png" alt="Days For Girls" width="50"/></h2>
+}
+

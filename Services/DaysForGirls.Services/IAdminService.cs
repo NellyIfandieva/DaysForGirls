@@ -15,7 +15,7 @@
 
         Task<bool> SetProductsCartIdToNullAsync(List<int> productIds);
 
-        Task<bool> DeleteProductByIdAsync(int productId);
+        //Task<bool> DeleteProductByIdAsync(int productId);
 
         Task<bool> EditAsync(ProductServiceModel model);
 

@@ -189,6 +189,11 @@
         [HttpGet("/Administration/Sale/Delete/{saleId}")]
         public async Task<IActionResult> Delete(string saleId)
         {
+            if(saleId == null)
+            {
+                return BadRequest();
+            }
+
             bool isDeleted = await this.saleService.DeleteSaleById(saleId);
 
             return Redirect("/Administration/Sale/All");

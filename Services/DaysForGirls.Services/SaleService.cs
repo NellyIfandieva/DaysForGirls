@@ -272,17 +272,21 @@
                 .Include(s => s.Products)
                 .SingleOrDefaultAsync(s => s.Id == saleId);
 
-            HashSet<Product> productsOutOfSale = saleToDelete.Products.ToHashSet();
-            
+            if(saleToDelete == null)
+            {
+                throw new ArgumentNullException(nameof(saleToDelete));
+            }
 
+            HashSet<Product> productsOutOfSale = saleToDelete.Products
+                .ToHashSet();
+            
             foreach(var product in productsOutOfSale)
             {
                 product.IsInSale = false;
             }
 
             this.db.UpdateRange(productsOutOfSale);
-            saleToDelete.IsDeleted = true;
-            this.db.Update(saleToDelete);
+            this.db.Sales.Remove(saleToDelete);
             int result = await this.db.SaveChangesAsync();
 
             bool saleIsDeleted = result > 0;

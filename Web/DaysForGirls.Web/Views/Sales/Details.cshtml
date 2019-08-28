@@ -161,30 +161,37 @@
 <div id="all-products-container">
     @foreach (var product in Model.Products)
     {
-        <div id="product-holder">
-            @if (product.ShoppingCartId != null)
-            {
-                <div class="text-over-image">
-                    <a href="/Administration/Product/Details/@product.Id"><img src="@product.MainPicture" alt="@product.Name" /></a>
-                    <div class="text-bottom-right-in-a-cart">Currently in a Cart</div>
-                </div>
-            }
-            else if (product.OrderId != null)
-            {
-                <div class="text-over-image">
-                    <img src="@product.MainPicture" alt="@product.Name" />
-                    <div class="text-bottom-right-sold-out">Sold Out</div>
-                </div>
-            }
-            else
+    <div id="product-holder">
+        @if (product.ShoppingCartId != null)
+        {
+            <div class="text-over-image">
+                <a href="/Administration/Product/Details/@product.Id"><img src="@product.MainPicture" alt="@product.Name" /></a>
+                <div class="text-bottom-right-in-a-cart">Currently in a Cart</div>
+            </div>
+        }
+        else if (product.OrderId != null)
+        {
+            <div class="text-over-image">
+                <img src="@product.MainPicture" alt="@product.Name" />
+                <div class="text-bottom-right-sold-out">Sold Out</div>
+            </div>
+        }
+        else
+        {
+            if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
             {
                 <a href="/Administration/Product/Details/@product.Id"><img src="@product.MainPicture" alt="@product.Name" /></a>
             }
-            <div class="product-info-holder">
-                <a href="/Administration/Product/Details/@product.Id"><h4>@product.Name</h4></a>
-                <h4 style="margin-top: 1px">&euro;<strike>@product.OldPrice</strike> &euro;@product.NewPrice</h4>
-            </div>
+            else
+            {
+                <a href="/Products/Details/@product.Id"><img src="@product.MainPicture" alt="@product.Name" /></a>
+            }
+        }
+        <div class="product-info-holder">
+            <a href="/Administration/Product/Details/@product.Id"><h4>@product.Name</h4></a>
+            <h4 style="margin-top: 1px">&euro;<strike>@product.OldPrice</strike> &euro;@product.NewPrice</h4>
         </div>
+    </div>
      }
 </div>
                 @*<div id="sale-products-holder">

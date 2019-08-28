@@ -119,7 +119,5 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
 
             return Redirect("/Administration/ProductType/All");
         }
-
-        //TODO implement Edit
     }
 }

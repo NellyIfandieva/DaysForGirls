@@ -112,7 +112,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         [HttpGet("/Administration/Category/Delete/{categoryId}")]
         public async Task<IActionResult> Delete(int categoryId)
         {
-            if(categoryId <= 0)
+            if (categoryId <= 0)
             {
                 return BadRequest();
             }
