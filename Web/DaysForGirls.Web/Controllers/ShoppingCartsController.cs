@@ -49,6 +49,8 @@
             var product = await this.productService
                 .GetProductByIdAsync(productId);
 
+            await this.productService.CalculateProductPriceAsync(product.Id);
+
             var item = new ShoppingCartItemServiceModel
             {
                 Product = product,

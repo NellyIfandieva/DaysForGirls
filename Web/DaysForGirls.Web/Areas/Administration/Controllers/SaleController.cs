@@ -114,7 +114,8 @@
                         Id = p.Id,
                         Name = p.Name,
                         Picture = p.Pictures.ElementAt(0).PictureUrl,
-                        OldPrice = p.Price,
+                        Price = p.Price,
+                        SalePrice = p.SalePrice,
                         AvailableQuantity = p.Quantity.AvailableItems
                     }).ToList()
             };

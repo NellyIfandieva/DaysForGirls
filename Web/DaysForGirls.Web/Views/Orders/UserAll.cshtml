@@ -49,11 +49,16 @@
     h3{
         margin-top: 50px;
     }
+
+    .empty-list{
+        margin-top: 50px;
+        text-align: center;
+    }
 </style>
 
 @if (Model.Count() < 1)
 {
-    <h4>You haven't made any orders yet<img src="~/Images/FlowerLogo.png" alt="DaysForGirls" width="50" /></h4>
+    <h3 class="empty-list">You haven't made any orders yet <img src="~/Images/JustFlower-Transperant.png" alt="DaysForGirls" width="50" /></h3>
 }
 else
 {

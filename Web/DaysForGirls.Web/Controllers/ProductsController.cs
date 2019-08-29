@@ -11,13 +11,16 @@
     {
         private readonly IProductService productService;
         private readonly IAdminService adminService;
+        private readonly ISaleService saleService;
 
         public ProductsController(
             IProductService productService,
-            IAdminService adminService)
+            IAdminService adminService,
+            ISaleService saleService)
         {
             this.productService = productService;
             this.adminService = adminService;
+            this.saleService = saleService;
         }
 
         [HttpGet("/Products/All")]
@@ -51,6 +54,14 @@
             var productFromDb = await this.adminService
                 .GetProductByIdAsync(productId);
 
+            string saleTitle = null;
+
+            if(productFromDb.SaleId != null)
+            {
+                var sale = await this.saleService.GetSaleByIdAsync(productFromDb.SaleId);
+                saleTitle = sale.Title;
+            }
+
             var productToDisplay = new ProductDetailsGeneralUserViewModel
             {
                 Id = productFromDb.Id,
@@ -76,10 +87,11 @@
                         Title = r.Title,
                         Text = r.Text,
                         DateCreated = r.CreatedOn,
-                        Author = r.AuthorUsername
+                        AuthorId = r.AuthorId
                     })
                     .ToList(),
                 SaleId = productFromDb.SaleId,
+                SaleTitle = saleTitle,
                 ShoppingCartId = productFromDb.ShoppingCartId,
                 OrderId = productFromDb.OrderId
             };

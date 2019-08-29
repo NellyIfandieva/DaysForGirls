@@ -438,7 +438,7 @@
                             Title = r.Title,
                             Text = r.Text,
                             //CreatedOn = r.CreatedOn.ToString(dateFormat),
-                            AuthorUsername = r.AuthorUsername
+                            AuthorId = r.AuthorId
                         })
                         .ToList()
                 };

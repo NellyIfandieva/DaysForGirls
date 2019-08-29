@@ -5,6 +5,7 @@
     using InputModels;
     using Microsoft.AspNetCore.Mvc;
     using System.Threading.Tasks;
+    using System.Security.Claims;
 
     public class CustomerReviewsController : Controller
     {
@@ -37,14 +38,15 @@
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CustomerReviewInputModel model)
         {
-            string username = this.User.Identity.Name;
+            string userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            //string username = this.User.Identity.Name;
             var productId = model.ProductId;
             
             var newCustomerReview = new CustomerReviewServiceModel
             {
                 Title = model.Title,
                 Text = model.Text,
-                AuthorUsername = username,
+                AuthorId = userId,
                 ProductId = model.ProductId
             };
 

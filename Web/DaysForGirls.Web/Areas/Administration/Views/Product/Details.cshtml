@@ -142,7 +142,14 @@
             <p style="font-size: medium"><span style="font-weight: bold">Description:</span> @Model.Description</p>
             <p style="font-size: medium"><span style="font-weight: bold">Colour:</span> @Model.Colour</p>
             <p style="font-size: medium"><span style="font-weight: bold">Size:</span> @Model.Size</p>
-            <p style="font-size: medium"><span style="font-weight: bold">Price:</span> @Model.Price</p>
+            @if (Model.SaleId == null)
+            {
+                <p style="font-size: medium"><span style="font-weight: bold">Price:</span> &euro;@Model.Price</p>
+            }
+            else
+            {
+                <p style="font-size: medium"><span style="font-weight: bold">Price:</span> <strike>&euro;@Model.Price</strike> &euro;@Model.SalePrice</p>
+            }
             <p style="font-size: medium"><span style="font-weight: bold">Available Quantity:</span> @Model.AvailableQuantity</p>
             @if (Model.SaleId != null)
             {
@@ -152,7 +159,7 @@
             {
                 <p style="font-size: medium"><span style="font-weight: bold">In a Cart</span></p>
             }
-            else if (Model.OrderId != null)
+            else if (Model.OrderId != null && Model.AvailableQuantity < 1)
             {
                 <p style="font-size: medium"><span style="font-weight: bold">Sold Out</span></p>
             }
@@ -166,7 +173,7 @@
                 @foreach (var review in Model.Reviews)
                 {
                     <div class="product-single-comment">
-                        <p style="margin-bottom: 1px">On @review.DateCreated <bold>@review.Author</bold> said: <q>@review.Title</q> @*<a href="/CustomerReviews/Details/@review.Id" style="font-size:small"> Read comment</a>*@</p>
+                        <p style="margin-bottom: 1px">On @review.DateCreated <bold>@review.AuthorId</bold> said: <q>@review.Title</q> @*<a href="/CustomerReviews/Details/@review.Id" style="font-size:small"> Read comment</a>*@</p>
                         <p style="margin-top: 1px"><q>@review.Text</q></p>
                         <hr />
                     </div>

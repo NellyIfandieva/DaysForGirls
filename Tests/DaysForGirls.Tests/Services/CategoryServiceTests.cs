@@ -194,8 +194,6 @@
         [Fact]
         public async Task DeleteCategoryById_WithNonexistentId_ExpectedToThrowArgumentNullException()
         {
-            string errorMessagePrefix = "CategoryService DeleteByIdAsync() method does not work properly.";
-
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
             await SeedSampleCategories(db);
             this.categoryService = new CategoryService(db);

@@ -43,20 +43,15 @@
                 Id = sale.Id,
                 Title = sale.Title,
                 Picture = sale.Picture,
-                EndsOn = sale.EndsOn.DayOfWeek
-                    + ", "
-                    + sale.EndsOn.Day
-                    + "-"
-                    + sale.EndsOn.Month
-                    + "-"
-                    + sale.EndsOn.Year,
+                EndsOn = sale.EndsOn.ToString("dddd, dd MMMM yyyy"),
                 Products = sale.Products
                     .Select(p => new ProductInSaleViewModel
                     {
                         Id = p.Id,
                         Name = p.Name,
                         MainPicture = p.Pictures.ElementAt(0).PictureUrl,
-                        OldPrice = p.Price,
+                        Price = p.Price,
+                        SalePrice = p.SalePrice,
                         AvailableItems = p.Quantity.AvailableItems,
                         ShoppingCartId = p.ShoppingCartId,
                         OrderId = p.OrderId

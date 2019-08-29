@@ -11,7 +11,7 @@
 
         Task<List<OrderServiceModel>> DisplayAllOrdersOfUserAsync(string userName);
 
-        IQueryable<OrderServiceModel> DisplayAllOrdersToAdminAsync();
+        IQueryable<OrderServiceModel> DisplayAllOrdersToAdmin();
 
         Task<OrderServiceModel> GetOrderByIdAsync(string orderId);
 

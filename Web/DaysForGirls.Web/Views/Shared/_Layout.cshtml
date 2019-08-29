@@ -25,10 +25,6 @@
                     </div>
                 </div>
             </form>
-            @*<form method="post" asp-action="Display" asp-controller="Home">
-                <input type="text" name="criteria" id="criteria" class="w3-bar-item w3-input w3-center form-control" asp-controller="Home" asp-action="Display" placeholder="Search...">
-                <a style="background-color: #d0c279; font-size: large; font-weight: 500; margin-top: 8px; height: 39px; border-radius: 5px; padding-top: 8px;" href="/Home/Display/" class="w3-bar-item w3-button">Go</a>
-            </form>*@
             @if (this.User.Identity.IsAuthenticated)
             {
                 if (this.User.IsInRole("Admin"))

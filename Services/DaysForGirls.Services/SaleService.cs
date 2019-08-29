@@ -123,6 +123,9 @@
                     Colour = pS.Colour,
                     Size = pS.Size,
                     Price = pS.Price,
+                    SalePrice = pS.SalePrice,
+                    SaleId = pS.SaleId,
+                    OrderId = pS.OrderId,
                     Manufacturer = new ManufacturerServiceModel
                     {
                         Name = pS.Manufacturer.Name
@@ -138,7 +141,7 @@
                             Title = pR.Title,
                             Text = pR.Text,
                             CreatedOn = pR.CreatedOn.ToString("dddd dd MMMM yyyy"),
-                            AuthorUsername = pR.Author.UserName
+                            AuthorId = pR.AuthorId
                         }).ToList()
                 })
                 .ToListAsync();
@@ -205,7 +208,7 @@
                             Title = pR.Title,
                             Text = pR.Text,
                             CreatedOn = pR.CreatedOn.ToString("dddd dd MMMM yyyy"),
-                            AuthorUsername = pR.Author.UserName
+                            AuthorId = pR.AuthorId
                         }).ToList()
                 })
                 .ToListAsync();

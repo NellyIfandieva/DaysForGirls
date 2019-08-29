@@ -1,5 +1,19 @@
 ﻿@model  CustomerReviewInputModel
 
+<style>
+    .row input[type=submit] {
+            width: 20%;
+            background-color: #cc0052;
+            color: white;
+            font-size: medium;
+            padding: 15px 20px 15px 20px;
+            margin: 30px 200px 10px 50px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+</style>
+
 <div class="row" style="margin-top:50px">
     <div class="col-md-4">
         <form method="post" enctype="multipart/form-data" asp-action="Create">

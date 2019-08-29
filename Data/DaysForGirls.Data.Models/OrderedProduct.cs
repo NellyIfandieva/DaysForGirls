@@ -16,6 +16,8 @@ namespace DaysForGirls.Data.Models
 
         public decimal ProductPrice { get; set; }
 
+        public decimal ProductSalePrice => this.ProductPrice - (0.3m * this.ProductPrice);
+
         public string ProductPicture { get; set; }
 
         public int ProductQuantity { get; set; }

@@ -44,6 +44,7 @@
                         Name = p.Name,
                         Picture = p.Pictures.ElementAt(0).PictureUrl,
                         Price = p.Price,
+                        SalePrice = p.SalePrice,
                         AvailableItems = p.Quantity.AvailableItems,
                         SaleId = p.SaleId,
                         ShoppingCartId = p.ShoppingCartId,

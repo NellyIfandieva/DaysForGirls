@@ -20,5 +20,7 @@
         Task<bool> RemoveProductFromShoppingCartAsync(int productId);
 
         IQueryable<ProductServiceModel> GetAllSearchResultsByCriteria(string criteria);
+
+        Task<decimal> CalculateProductPriceAsync(int productId);
     }
 }

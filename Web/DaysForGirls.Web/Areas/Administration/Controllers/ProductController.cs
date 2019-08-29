@@ -183,6 +183,7 @@
                     Category = product.Category.Name,
                     Picture = product.Picture.PictureUrl,
                     Price = product.Price,
+                    SalePrice = product.SalePrice,
                     AvailableItems = product.AvailableItems,
                     Manufacturer = product.Manufacturer.Name,
                     IsDeleted = product.IsDeleted,
@@ -241,6 +242,7 @@
                 Description = productInDb.Description,
                 Manufacturer = productInDb.Manufacturer.Name,
                 Price = productInDb.Price,
+                SalePrice = productInDb.SalePrice,
                 AvailableQuantity = productInDb.Quantity.AvailableItems,
                 Pictures = productInDb.Pictures
                     .Select(p => new PictureDisplayAllViewModel
@@ -257,7 +259,7 @@
                         Title = pR.Title,
                         Text = pR.Text,
                         DateCreated = pR.CreatedOn,
-                        Author = pR.AuthorUsername,
+                        AuthorId = pR.AuthorId,
                     })
                     .ToList(),
                 SaleId = productInDb.SaleId,

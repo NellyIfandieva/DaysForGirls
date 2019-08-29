@@ -40,8 +40,8 @@
             text-decoration: none;
         }
 
-        #product-main-info button {
-            width: 100px;
+        /*#product-main-info*/ #order-button {
+            width: 200px;
             background-color: #cc0052;
             color: white;
             font-size: medium;
@@ -50,6 +50,17 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
+        }
+
+        /*#product-main-info*/ #in-cart-button {
+            width: 200px;
+            background-color: #cc0052;
+            color: white;
+            font-size: medium;
+            padding: 15px 20px 15px 20px;
+            margin: 40px 200px 20px 205px;
+            border: none;
+            border-radius: 4px;
         }
 
     #product-morePictures-andComments {
@@ -135,16 +146,27 @@
             <p style="font-size: medium"><span style="font-weight: bold">Description:</span> @Model.Description</p>
             <p style="font-size: medium"><span style="font-weight: bold">Colour:</span> @Model.Colour</p>
             <p style="font-size: medium"><span style="font-weight: bold">Size:</span> @Model.Size</p>
-            <p style="font-size: medium"><span style="font-weight: bold">Price:</span> @Model.Price</p>
+            @if (Model.SaleId == null)
+            {
+                <p style="font-size: medium"><span style="font-weight: bold">Price:</span> @Model.Price</p>
+            }
+            else
+            {
+                <p style="font-size: medium"><span style="font-weight: bold">Price:</span> <strike>@Model.Price</strike>  &ndash;30%</p>
+            }
+            @if (Model.SaleId != null)
+            {
+                <p style="font-size: medium"><span style="font-weight: bold">In Sale:</span> <a href="/Sales/Details/@Model.SaleId">@Model.SaleTitle</a></p>
+            }
             <p style="font-size: medium"><span style="font-weight: bold">Available Quantity:</span> @Model.AvailableItems</p>
             <br />
             @if (Model.ShoppingCartId == null)
             {
-                <a href="/ShoppingCarts/AddProduct/@Model.Id"><button id="order-modal">Order</button></a>
+                <a href="/ShoppingCarts/AddProduct/@Model.Id"><button id="order-button">Order</button></a>
             }
             else
             {
-                <button>Currently In a Cart</button>
+                <button id="in-cart-button">Currently In a Cart</button>
             }
         </div>
     </div>
@@ -156,7 +178,7 @@
                 @foreach (var review in Model.Reviews)
                 {
                     <div class="product-single-comment">
-                        <p style="margin-bottom: 1px">On @review.DateCreated <bold>@review.Author</bold> said: <q>@review.Title</q> @*<a href="/CustomerReviews/Details/@review.Id" style="font-size:small"> Read comment</a>*@</p>
+                        <p style="margin-bottom: 1px">On @review.DateCreated <bold>@review.AuthorId</bold> said: <q>@review.Title</q> @*<a href="/CustomerReviews/Details/@review.Id" style="font-size:small"> Read comment</a>*@</p>
                         <p style="margin-top: 1px"><q>@review.Text</q></p>
                         <hr />
                     </div>

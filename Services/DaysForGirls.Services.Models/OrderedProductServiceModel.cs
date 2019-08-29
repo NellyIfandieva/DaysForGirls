@@ -18,6 +18,8 @@ namespace DaysForGirls.Services.Models
 
         public decimal ProductPrice { get; set; }
 
+        public decimal ProductSalePrice { get; set; }
+
         public string ProductPicture { get; set; }
 
         public int ProductQuantity { get; set; }

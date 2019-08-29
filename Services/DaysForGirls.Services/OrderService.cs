@@ -1,8 +1,8 @@
 ﻿namespace DaysForGirls.Services
 {
-    using DaysForGirls.Data;
-    using DaysForGirls.Data.Models;
-    using DaysForGirls.Services.Models;
+    using Data;
+    using Data.Models;
+    using Models;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using System;
@@ -65,7 +65,7 @@
             Order order = new Order
             {
                 OrderedProducts = orderProducts,
-                TotalPrice = orderProducts.Sum(p => p.ProductPrice),
+                TotalPrice = orderProducts.Sum(p => p.ProductPrice * p.ProductQuantity),
                 User = orderUser,
                 UserId = userId,
                 OrderStatus = "Ordered"
@@ -96,6 +96,7 @@
                             ProductSize = oP.ProductSize,
                             ProductPicture = oP.ProductPicture,
                             ProductPrice = oP.ProductPrice,
+                            ProductSalePrice = oP.ProductSalePrice,
                             ProductQuantity = oP.ProductQuantity
                         }).ToList(),
                     TotalPrice = order.TotalPrice,
@@ -142,6 +143,7 @@
                             ProductSize = p.ProductSize,
                             ProductPicture = p.ProductPicture,
                             ProductPrice = p.ProductPrice,
+                            ProductSalePrice = p.ProductSalePrice,
                             ProductQuantity = p.ProductQuantity
                         }).ToList(),
                     TotalPrice = o.TotalPrice,
@@ -153,7 +155,7 @@
             return allOrdersOfUser;
         }
 
-        public IQueryable<OrderServiceModel> DisplayAllOrdersToAdminAsync()
+        public IQueryable<OrderServiceModel> DisplayAllOrdersToAdmin()
         {
             var allOrdersInDb = this.db.Orders
                 .Include(o => o.OrderedProducts)
@@ -172,6 +174,7 @@
                             ProductColour = p.ProductColour,
                             ProductSize = p.ProductSize,
                             ProductPrice = p.ProductPrice,
+                            ProductSalePrice = p.ProductSalePrice,
                             ProductQuantity = p.ProductQuantity
                         }).ToList(),
                     TotalPrice = o.TotalPrice,
@@ -219,6 +222,7 @@
                         ProductColour = p.ProductColour,
                         ProductSize = p.ProductSize,
                         ProductPrice = p.ProductPrice,
+                        ProductSalePrice = p.ProductSalePrice,
                         ProductQuantity = p.ProductQuantity,
                         
                     })

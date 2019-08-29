@@ -27,6 +27,7 @@ namespace DaysForGirls.Services.Models
 
         public decimal Price { get; set; }
 
+        public decimal SalePrice { get; set; }
         public ManufacturerServiceModel Manufacturer { get; set; }
 
         public QuantityServiceModel Quantity { get; set; }

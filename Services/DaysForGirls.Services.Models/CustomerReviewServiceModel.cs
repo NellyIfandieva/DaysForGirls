@@ -14,7 +14,9 @@ namespace DaysForGirls.Services.Models
 
         public string CreatedOn { get; set; }
 
-        public string AuthorUsername { get; set; }
+        //public string AuthorUsername { get; set; }
+
+        public string AuthorId { get; set; }
 
         public int ProductId { get; set; }
 

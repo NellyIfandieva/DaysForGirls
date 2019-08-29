@@ -1,58 +1,25 @@
 ﻿@model SaleDetailsViewModel
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
-
 @{
     ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <style>
-
-    .sale-general-info{
-        display: inline-block;
-        margin-top: 20px;
-        margin-left: 100px;
-        margin-bottom: 20px;
+    #sale-image {
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 5px;
+        margin-top: 50px;
+        margin-bottom: 0px;
     }
 
-        .sale-general-info div{
-            float: left;
-        }
-
-        .sale-general-info img{
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 5px;
-            width: 300px;
-        }
-
-        .sale-gen-image{
-            margin-right: 20px;
-        }
-
-        .sale-gen-text{
-            margin-top: 30px;
-            margin-left: 100px;
-            text-align: left;
-        }
-        .sale-gen-text h2{
-            margin-bottom: 1px;
-        }
-        .sale-gen-text h4{
-            margin-top: 1px;
-        }
-
-        #all-products-container{
-        display: inline-block;
+    #products-holder {
+        margin-top: 50px;
+        margin-left: 30px;
     }
 
-    #product-holder{
-        margin-top: 15px;
-        margin-left: 75px;
-        margin-bottom: 10px;
-        float: left;
-    }
     #product-holder img{
         width: 195px;
         height: 240px;
@@ -63,8 +30,6 @@
     }
 
     .product-info-holder{
-        margin-top: 0;
-        padding-top: 0;
         background-color: #ebebe0;
     }
 
@@ -99,30 +64,24 @@
 
     .text-bottom-right-sold-out{
         width: 100px;
-        background-color: #990033;
+        background-color: crimson;
     }
 
     .text-bottom-right-in-a-cart{
         width: 150px;
-        background-color: #576ac4;
-    }    
+        background-color: #c5b358;
+    }
 </style>
 
-<div class="sale-general-info">
-    <div class="sale-gen-image">
-        <img src="@Model.Picture" alt="@Model.Title" />
-    </div>
-    <div class="sale-gen-text">
-        <h2>@Model.Title</h2>
-        <h4><span style="font-weight: bold">Ends On:</span> @Model.EndsOn</h4>
-    </div>
-</div>
+<img id="sale-image" src="@Model.Picture" alt="@Model.Title" width="200" />
 
-<div id="all-products-container">
-    @foreach (var product in Model.Products)
+<h2>@Model.Title - Ends on: @Model.EndsOn.ToString()</h2>
+
+<div id="products-holder">
+    @foreach(var product in Model.Products)
     {
-        <div id="product-holder">
-            @if (product.ShoppingCartId != null)
+    <div id="product-holder">
+        @if (product.ShoppingCartId != null)
             {
                 <div class="text-over-image">
                     <a href="/Products/Details/@product.Id"><img src="@product.MainPicture" alt="@product.Name" /></a>
@@ -151,6 +110,6 @@
                 <a href="/Products/Details/@product.Id"><h4>@product.Name</h4></a>
                 <h4 style="margin-top: 1px">&euro;<strike>@product.Price</strike> &euro;@product.SalePrice</h4>
             </div>
-        </div>
-     }
+    </div>
+    }
 </div>

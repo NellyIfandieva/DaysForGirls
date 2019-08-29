@@ -24,15 +24,15 @@
 
         public async Task<bool> CreateAsync(CustomerReviewServiceModel model, int productId)
         {
-            DaysForGirlsUser currentUser = 
-                await this.userManager.FindByNameAsync(model.AuthorUsername);
+            /*DaysForGirlsUser currentUser = 
+               await this.userManager.FindByNameAsync(model.AuthorUsername);*/
 
             CustomerReview productReview = new CustomerReview
             {
                 Title = model.Title,
                 Text = model.Text,
-                AuthorId = currentUser.Id,
-                Author = currentUser,
+                AuthorId = model.AuthorId,
+                //Author = currentUser,
                 ProductId = model.ProductId,
                 CreatedOn = DateTime.UtcNow
             };
@@ -56,7 +56,7 @@
                     Title = cR.Title,
                     Text = cR.Text,
                     CreatedOn = cR.CreatedOn.ToString("dddd, dd MMMM yyyy"),
-                    AuthorUsername = cR.Author.UserName,
+                    AuthorId = cR.AuthorId,
                     ProductId = productId
                 });
 

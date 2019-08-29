@@ -18,6 +18,8 @@ namespace DaysForGirls.Web.ViewModels
 
         public string Price { get; set; }
 
+        public string SalePrice { get; set; }
+
         public int AvailableItems { get; set; }
 
         public List<PictureDetailsViewModel> Pictures { get; set; }
@@ -29,6 +31,8 @@ namespace DaysForGirls.Web.ViewModels
         public List<CustomerReviewAllViewModel> Reviews { get; set; }
 
         public string SaleId { get; set; }
+
+        public string SaleTitle { get; set; }
 
         public string ShoppingCartId { get; set; }
 

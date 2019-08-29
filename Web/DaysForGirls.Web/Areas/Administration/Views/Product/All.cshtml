@@ -55,7 +55,6 @@
     }
 
     .text-bottom-right, .text-bottom-right-sold-out, .text-bottom-right-in-a-cart {
-        /*background-color: crimson;*/
         color: whitesmoke;
         font-weight: 500;
         position: absolute;
@@ -70,14 +69,12 @@
 
     .text-bottom-right-sold-out {
         width: 100px;
-        background-color: crimson;
-        color: whitesmoke;
-        font-weight: 500;
+        background-color: #990033;
     }
 
     .text-bottom-right-in-a-cart {
         width: 150px;
-        background-color: #c5b358;
+        background-color: #576ac4;
     }
 
     h2{
@@ -123,7 +120,7 @@
                     <a href="/Administration/Product/Details/@product.Id"><h4>@product.Name</h4></a>
                     @if (product.IsInSale)
                     {
-                        <h4 style="margin-top: 1px">&euro;<strike>@product.Price</strike> &euro;@product.NewPrice</h4>
+                        <h4 style="margin-top: 1px">&euro;<strike>@product.Price</strike> &euro;@product.SalePrice</h4>
                     }
                     else
                     {

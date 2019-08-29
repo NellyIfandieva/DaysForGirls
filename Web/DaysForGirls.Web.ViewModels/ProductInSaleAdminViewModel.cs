@@ -12,9 +12,9 @@ namespace DaysForGirls.Web.ViewModels
 
         public string Picture { get; set; }
 
-        public decimal OldPrice { get; set; }
+        public decimal Price { get; set; }
 
-        public decimal NewPrice => this.OldPrice - (0.3m * this.OldPrice);
+        public decimal SalePrice { get; set; }
 
         public int AvailableQuantity { get; set; }
     }

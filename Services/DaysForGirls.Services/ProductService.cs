@@ -42,6 +42,7 @@
                 Colour = product.Colour,
                 Size = product.Size,
                 Price = product.Price,
+                SalePrice = product.SalePrice,
                 MainPictureUrl = picture,
                 AvailableItems = product.Quantity.AvailableItems,
                 SaleId = product.SaleId,
@@ -60,6 +61,7 @@
                      Id = p.Id,
                      Name = p.Name,
                      Price = p.Price,
+                     SalePrice = p.SalePrice,
                      Picture = new PictureServiceModel
                      {
                         PictureUrl = p.Pictures.ElementAt(0).PictureUrl
@@ -83,6 +85,7 @@
                     Id = p.Id,
                     Name = p.Name,
                     Price = p.Price,
+                    SalePrice = p.SalePrice,
                     Picture = new PictureServiceModel
                     {
                         PictureUrl = p.Pictures.ElementAt(0).PictureUrl
@@ -112,6 +115,7 @@
                         PictureUrl = p.Pictures.ElementAt(0).PictureUrl
                     },
                     Price = p.Price,
+                    SalePrice = p.SalePrice,
                     AvailableItems = p.Quantity.AvailableItems,
                     SaleId = p.SaleId,
                     ShoppingCartId = p.ShoppingCartId,
@@ -120,77 +124,6 @@
 
             return allProductsOfCategoryAndType;
         }
-
-        //public async Task<bool> DeletePictureWithUrl(string pictureUrl)
-        //{
-        //    var pictureToDelete = this.db.Pictures
-        //        .SingleOrDefault(pic => pic.PictureUrl == pictureUrl);
-
-        //    var product = await this.db.Products
-        //        .SingleOrDefaultAsync(p => p.Id == pictureToDelete.ProductId);
-
-        //    if(pictureToDelete == null
-        //        || product == null)
-        //    {
-        //        if(pictureToDelete == null)
-        //        {
-        //            throw new ArgumentNullException(nameof(pictureToDelete));
-        //        }
-        //        else
-        //        {
-        //            throw new ArgumentNullException(nameof(product));
-        //        }
-        //    }
-
-        //    product.Pictures.Remove(pictureToDelete);
-
-        //    pictureToDelete.IsDeleted = true;
-
-        //    this.db.UpdateRange(pictureToDelete, product);
-
-        //    int result = await this.db.SaveChangesAsync();
-        //    bool pictureIsDeleted = result > 0;
-
-        //    return pictureIsDeleted;
-        //}
-
-        //public async Task<bool> UploadNewPictureToProduct(int productId, string imageUrl)
-        //{
-        //var productInDb = await this.db.Products.
-        //    SingleOrDefaultAsync(p => p.Id == productId);
-
-        //Picture newPicture = new Picture
-        //{
-        //    PictureUrl = imageUrl
-        //};
-
-        //productInDb.Pictures.Add(newPicture);
-        //    this.db.Update(productInDb);
-        //    int result = await this.db.SaveChangesAsync();
-
-        //bool pictureIsAdded = result > 0;
-
-        //    return pictureIsAdded;
-        //}
-
-        //public async Task<bool> AddProductToSale(int productId, int saleId)
-        //{
-        //    var productSale = this.db.ProductsSales
-        //        .SingleOrDefault(pS => pS.ProductId == productId
-        //        && pS.SaleId == saleId);
-
-        //    var product = this.db.Products
-        //        .SingleOrDefault(p => p.Id == productId);
-
-        //    product.Sales.Add(productSale);
-        //    product.IsInSale = true;
-
-        //    this.db.Products.Update(product);
-        //    int result = await this.db.SaveChangesAsync();
-        //    bool productIsAddedToSale = result > 0;
-
-        //    return productIsAddedToSale;
-        //}
 
         public async Task<bool> AddProductToShoppingCartAsync(int productId, string shoppingCartId)
         {
@@ -262,7 +195,8 @@
                 || p.Sale.Title.ToLower().Contains(criteriaToLower)
                 || p.Category.Name.ToLower().Contains(criteriaToLower)
                 || p.ProductType.Name.ToLower().Contains(criteriaToLower)
-                || p.Price <= priceCriteria)
+                || p.Price <= priceCriteria
+                || p.SaleId != null && p.SalePrice <= priceCriteria)
                 .Select(p => new ProductServiceModel
                 {
                     Id = p.Id,
@@ -291,6 +225,7 @@
                         Name = p.Manufacturer.Name
                     },
                     Price = p.Price,
+                    SalePrice = p.SalePrice,
                     Quantity = new QuantityServiceModel
                     {
                         Id = p.QuantityId,
@@ -306,12 +241,28 @@
                             Title = r.Title,
                             Text = r.Text,
                             CreatedOn = r.CreatedOn.ToString("dddd, dd MMMM yyyy"),
-                            AuthorUsername = r.Author.FullName
+                            AuthorId = r.AuthorId
                         })
                         .ToList()
                 });
 
             return allSearchResults;
+        }
+
+        public async Task<decimal> CalculateProductPriceAsync(int productId)
+        {
+            var product = await this.db.Products
+                .SingleOrDefaultAsync(p => p.Id == productId);
+
+            if (product.SaleId != null)
+            {
+                product.Price = product.SalePrice;
+
+                this.db.Update(product);
+                await this.db.SaveChangesAsync();
+            }
+
+            return product.Price;
         }
     }
 }

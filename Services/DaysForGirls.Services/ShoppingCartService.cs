@@ -73,6 +73,7 @@
                         Colour = sCI.Product.Colour,
                         Size = sCI.Product.Size,
                         Price = sCI.Product.Price,
+                        SalePrice = sCI.Product.SalePrice,
                         MainPictureUrl = sCI.Product.Pictures.ElementAt(0).PictureUrl
                     },
                     Quantity = sCI.Quantity

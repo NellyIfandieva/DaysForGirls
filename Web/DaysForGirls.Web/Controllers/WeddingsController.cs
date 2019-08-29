@@ -28,11 +28,13 @@
                     Id = p.Id,
                     Name = p.Name,
                     Picture = p.Picture.PictureUrl,
-                    Price = p.Price.ToString("f2"),
+                    Price = p.Price,
+                    SalePrice = p.SalePrice,
                     AvailableItems = p.AvailableItems,
                     IsInSale = p.IsInSale,
                     SaleId = p.SaleId,
-                    ShoppingCartId = p.ShoppingCartId
+                    ShoppingCartId = p.ShoppingCartId,
+                    OrderId = p.OrderId
                 })
                 .ToListAsync();
 
@@ -53,10 +55,12 @@
                     Id = d.Id,
                     Name = d.Name,
                     Picture = d.Picture.PictureUrl,
-                    Price = d.Price.ToString("f2"),
+                    Price = d.Price,
+                    SalePrice = d.SalePrice,
                     AvailableItems = d.AvailableItems,
                     SaleId = d.SaleId,
-                    ShoppingCartId = d.ShoppingCartId
+                    ShoppingCartId = d.ShoppingCartId,
+                    OrderId = d.OrderId
                 })
                 .ToListAsync();
 
@@ -76,10 +80,12 @@
                     Id = s.Id,
                     Name = s.Name,
                     Picture = s.Picture.PictureUrl,
-                    Price = s.Price.ToString("f2"),
+                    Price = s.Price,
+                    SalePrice = s.SalePrice,
                     AvailableItems = s.AvailableItems,
                     SaleId = s.SaleId,
-                    ShoppingCartId = s.ShoppingCartId
+                    ShoppingCartId = s.ShoppingCartId,
+                    OrderId = s.OrderId
                 })
                 .ToListAsync();
 
@@ -99,10 +105,12 @@
                     Id = a.Id,
                     Name =a.Name,
                     Picture = a.Picture.PictureUrl,
-                    Price = a.Price.ToString("f2"),
+                    Price = a.Price,
+                    SalePrice = a.SalePrice,
                     AvailableItems = a.AvailableItems,
                     SaleId = a.SaleId,
-                    ShoppingCartId = a.ShoppingCartId
+                    ShoppingCartId = a.ShoppingCartId,
+                    OrderId = a.OrderId
                 })
                 .ToListAsync();
 

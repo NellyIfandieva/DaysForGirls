@@ -37,21 +37,24 @@
     }
 
     .text-bottom-right, .text-bottom-right-sold-out, .text-bottom-right-in-a-cart{
-        background-color: crimson;
-        color: antiquewhite;
+        color: whitesmoke;
+        font-weight: 500;
         position: absolute;
         bottom: 10px;
         right: 0px;
     }
     .text-bottom-right{
         width: 60px;
+        background-color: #62592c;
     }
 
     .text-bottom-right-sold-out{
         width: 100px;
+        background-color: #990033;
     }
 
     .text-bottom-right-in-a-cart{
+        background-color: #576ac4;
         width: 150px;
     }
 
@@ -97,7 +100,7 @@
                     <div class="text-bottom-right-in-a-cart">Currently in a Cart</div>
                 </div>
             }
-            else if (product.AvailableItems < 1)
+            else if (product.OrderId != null)
             {
                 <div class="text-over-image">
                     <img src="@product.Picture" alt="@product.Name" />

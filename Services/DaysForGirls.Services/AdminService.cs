@@ -116,6 +116,7 @@
                         PictureUrl = p.Pictures.ElementAt(0).PictureUrl
                     },
                     Price = p.Price,
+                    SalePrice = p.SalePrice,
                     AvailableItems = p.Quantity.AvailableItems,
                     Manufacturer = new ManufacturerServiceModel
                     {
@@ -171,6 +172,7 @@
                 Colour = product.Colour,
                 Size = product.Size,
                 Price = product.Price,
+                SalePrice = product.SalePrice,
                 Manufacturer = new ManufacturerServiceModel
                 {
                     Id = product.Manufacturer.Id,
@@ -251,31 +253,6 @@
 
             return productIsEdited;
         }
-
-        //public async Task<bool> UploadNewPictureToProductAsync(int productId, string imageUrl)
-        //{
-        //    var productInDb = await this.db.Products.
-        //        SingleOrDefaultAsync(p => p.Id == productId);
-
-        //    if(productInDb == null)
-        //    {
-        //        throw new ArgumentNullException(nameof(productInDb));
-        //    }
-
-        //    Picture newPicture = new Picture
-        //    {
-        //        PictureUrl = imageUrl
-        //    };
-
-        //    productInDb.Pictures.Add(newPicture);
-
-        //    this.db.Update(productInDb);
-        //    int result = await this.db.SaveChangesAsync();
-
-        //    bool pictureIsAdded = result > 0;
-
-        //    return pictureIsAdded;
-        //}
 
         public async Task<bool> AddProductToSaleAsync(int productId, string saleId)
         { 

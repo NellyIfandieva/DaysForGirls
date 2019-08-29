@@ -15,6 +15,7 @@
     {
         private readonly IOrderService orderService;
 
+
         public OrdersController(IOrderService orderService)
         {
             this.orderService = orderService;
@@ -106,7 +107,7 @@
         public async Task<IActionResult> AllAdmin()
         {
             var allOrdersInDb = await this.orderService
-                .DisplayAllOrdersToAdminAsync()
+                .DisplayAllOrdersToAdmin()
                 .ToListAsync();
 
             var adminOrders = new List<AdminOrdersDisplayAllViewModel>();

@@ -38,6 +38,8 @@ namespace DaysForGirls.Data.Models
         [Range(typeof(decimal), MinPrice, MaxPrice)]
         public decimal Price { get; set; }
 
+        public decimal SalePrice => this.Price - (0.3m * this.Price);
+
         public int ManufacturerId { get; set; }
         public Manufacturer Manufacturer { get; set; }
 

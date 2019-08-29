@@ -96,13 +96,13 @@ namespace DaysForGirls.Tests.Services
 
             int result = await db.SaveChangesAsync();
 
-            string username = db.Users.First().UserName;
+            string userId = db.Users.First().Id;
 
             CustomerReviewServiceModel testReview = new CustomerReviewServiceModel
             {
                 Title = "Title",
                 Text = "Text",
-                AuthorUsername = username,
+                AuthorId = userId,
                 ProductId = product.Id,
                 CreatedOn = DateTime.UtcNow.ToString("dddd, dd MMMM yyyy")
             };
@@ -172,7 +172,7 @@ namespace DaysForGirls.Tests.Services
                     Id = cR.Id,
                     Title = cR.Title,
                     Text = cR.Text,
-                    AuthorUsername = cR.Author.UserName,
+                    AuthorId = cR.AuthorId,
                     ProductId = cR.ProductId,
                     CreatedOn = cR.CreatedOn.ToString("dddd, dd MMMM yyyy"),
                     IsDeleted = cR.IsDeleted
@@ -191,7 +191,7 @@ namespace DaysForGirls.Tests.Services
                 Assert.True(expectedRecord.Title == actualRecord.Title, errorMessagePrefix + " " + "Title is not returned properly.");
                 Assert.True(expectedRecord.Text == actualRecord.Text, errorMessagePrefix + " " + "Text is not returned properly.");
                 Assert.True(expectedRecord.CreatedOn == actualRecord.CreatedOn, errorMessagePrefix + " " + "CreatedOn is not returned properly.");
-                Assert.True(expectedRecord.AuthorUsername == actualRecord.AuthorUsername, errorMessagePrefix + " " + "AuthorUsername is not returned properly.");
+                Assert.True(expectedRecord.AuthorId == actualRecord.AuthorId, errorMessagePrefix + " " + "AuthorUsername is not returned properly.");
                 Assert.True(expectedRecord.ProductId == actualRecord.ProductId, errorMessagePrefix + " " + "ProductId is not returned properly.");
                 Assert.True(expectedRecord.IsDeleted == actualRecord.IsDeleted, errorMessagePrefix + " " + "IsDeleted is not returned properly.");
             }

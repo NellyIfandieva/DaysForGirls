@@ -348,7 +348,7 @@ namespace DaysForGirls.Tests.Services
                         Id = r.Id,
                         Title = r.Title,
                         Text = r.Text,
-                        AuthorUsername = r.Author.UserName,
+                        AuthorId = r.AuthorId,
                         CreatedOn = r.CreatedOn.ToString("dddd, dd MMMM yyyy"),
                         IsDeleted = r.IsDeleted
                     }).ToList(),
@@ -425,7 +425,7 @@ namespace DaysForGirls.Tests.Services
                         Id = r.Id,
                         Title = r.Title,
                         Text = r.Text,
-                        AuthorUsername = r.Author.UserName,
+                        AuthorId = r.AuthorId,
                         CreatedOn = r.CreatedOn.ToString("dddd, dd MMMM yyyy"),
                         IsDeleted = r.IsDeleted
                     }).ToList(),
@@ -464,7 +464,7 @@ namespace DaysForGirls.Tests.Services
                         Id = r.Id,
                         Title = r.Title,
                         Text = r.Text,
-                        AuthorUsername = r.Author.UserName,
+                        AuthorId = r.AuthorId,
                         CreatedOn = r.CreatedOn.ToString("dddd, dd MMMM yyyy"),
                         IsDeleted = r.IsDeleted
                     }).ToList(),
