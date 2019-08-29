@@ -46,7 +46,12 @@
             var picture = await this.db.Pictures
                 .SingleOrDefaultAsync(p => p.Id == id);
 
-            PictureServiceModel pictureToReturn = new PictureServiceModel
+            if(picture == null)
+            {
+                throw new ArgumentNullException(nameof(picture));
+            }
+
+            var pictureToReturn = new PictureServiceModel
             {
                 Id = picture.Id,
                 PictureUrl = picture.PictureUrl,
@@ -58,6 +63,11 @@
 
         public IQueryable<PictureServiceModel> GetPicturesOfProductByProductId(int productId)
         {
+            if(productId <= 0)
+            {
+                throw new InvalidOperationException(nameof(productId));
+            }
+
             var pictures = this.db.Pictures
                 .Where(p => p.ProductId == productId
                 && p.IsDeleted == false)
@@ -102,6 +112,11 @@
 
         public async Task<bool> DeletePicturesOfDeletedProductAsync(int productId)
         {
+            if(productId <= 0)
+            {
+                throw new InvalidOperationException(nameof(productId));
+            }
+
             var picturesToDelete = await this.db.Pictures
                 .Where(p => p.ProductId == productId)
                 .ToListAsync();

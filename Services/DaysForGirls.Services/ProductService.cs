@@ -1,8 +1,8 @@
 ﻿namespace DaysForGirls.Services
 {
-    using DaysForGirls.Data;
-    using DaysForGirls.Data.Models;
-    using DaysForGirls.Services.Models;
+    using Data;
+    using Data.Models;
+    using Models;
     using Microsoft.EntityFrameworkCore;
     using System;
     using System.Linq;
@@ -121,38 +121,38 @@
             return allProductsOfCategoryAndType;
         }
 
-        public async Task<bool> DeletePictureWithUrl(string pictureUrl)
-        {
-            var pictureToDelete = this.db.Pictures
-                .SingleOrDefault(pic => pic.PictureUrl == pictureUrl);
+        //public async Task<bool> DeletePictureWithUrl(string pictureUrl)
+        //{
+        //    var pictureToDelete = this.db.Pictures
+        //        .SingleOrDefault(pic => pic.PictureUrl == pictureUrl);
 
-            var product = await this.db.Products
-                .SingleOrDefaultAsync(p => p.Id == pictureToDelete.ProductId);
+        //    var product = await this.db.Products
+        //        .SingleOrDefaultAsync(p => p.Id == pictureToDelete.ProductId);
 
-            if(pictureToDelete == null
-                || product == null)
-            {
-                if(pictureToDelete == null)
-                {
-                    throw new ArgumentNullException(nameof(pictureToDelete));
-                }
-                else
-                {
-                    throw new ArgumentNullException(nameof(product));
-                }
-            }
+        //    if(pictureToDelete == null
+        //        || product == null)
+        //    {
+        //        if(pictureToDelete == null)
+        //        {
+        //            throw new ArgumentNullException(nameof(pictureToDelete));
+        //        }
+        //        else
+        //        {
+        //            throw new ArgumentNullException(nameof(product));
+        //        }
+        //    }
 
-            product.Pictures.Remove(pictureToDelete);
+        //    product.Pictures.Remove(pictureToDelete);
 
-            pictureToDelete.IsDeleted = true;
+        //    pictureToDelete.IsDeleted = true;
 
-            this.db.UpdateRange(pictureToDelete, product);
+        //    this.db.UpdateRange(pictureToDelete, product);
 
-            int result = await this.db.SaveChangesAsync();
-            bool pictureIsDeleted = result > 0;
+        //    int result = await this.db.SaveChangesAsync();
+        //    bool pictureIsDeleted = result > 0;
 
-            return pictureIsDeleted;
-        }
+        //    return pictureIsDeleted;
+        //}
 
         //public async Task<bool> UploadNewPictureToProduct(int productId, string imageUrl)
         //{
@@ -310,133 +310,6 @@
                         })
                         .ToList()
                 });
-
-            //IQueryable<ProductServiceModel> allSearchResults = null;
-
-                //if(criteriaIsDecimal)
-                //{
-                //    allSearchResults = this.db.Products
-                //        .Include(p => p.Category)
-                //        .Include(p => p.ProductType)
-                //        .Include(p => p.Pictures)
-                //        .Include(p => p.Manufacturer)
-                //        .Include(p => p.Reviews)
-                //        .Where(p => p.Price <= priceCriteria
-                //        && p.IsDeleted == false)
-                //        .Select(p => new ProductServiceModel
-                //        {
-                //            Id = p.Id,
-                //            Name = p.Name,
-                //            Category = new CategoryServiceModel
-                //            {
-                //                Name = p.Category.Name
-                //            },
-                //            ProductType = new ProductTypeServiceModel
-                //            {
-                //                Name = p.ProductType.Name
-                //            },
-                //            Description = p.Description,
-                //            Pictures = p.Pictures
-                //                .Select(pic => new PictureServiceModel
-                //                {
-                //                    Id = pic.Id,
-                //                    PictureUrl = pic.PictureUrl
-                //                })
-                //                .ToList(),
-                //            Colour = p.Colour,
-                //            Size = p.Size,
-                //            Manufacturer = new ManufacturerServiceModel
-                //            {
-                //                Id = p.ManufacturerId,
-                //                Name = p.Manufacturer.Name
-                //            },
-                //            Price = p.Price,
-                //            Quantity = new QuantityServiceModel
-                //            {
-                //                Id = p.QuantityId,
-                //                AvailableItems = p.Quantity.AvailableItems
-                //            },
-                //            SaleId = p.SaleId,
-                //            ShoppingCartId = p.ShoppingCartId,
-                //            OrderId = p.OrderId,
-                //            Reviews = p.Reviews
-                //                .Select(r => new CustomerReviewServiceModel
-                //                {
-                //                    Id = r.Id,
-                //                    Title = r.Title,
-                //                    Text = r.Text,
-                //                    CreatedOn = r.CreatedOn.ToString("dddd, dd MMMM yyyy"),
-                //                    AuthorUsername = r.Author.FullName
-                //                })
-                //                .ToList()
-                //        });
-                //}
-            //else
-            //{
-            //    string criteriaToLower = criteria.ToLower();
-
-            //    allSearchResults = this.db.Products
-            //        .Include(p => p.Category)
-            //        .Include(p => p.ProductType)
-            //        .Include(p => p.Pictures)
-            //        .Include(p => p.Manufacturer)
-            //        .Include(p => p.Reviews)
-            //        .Where(p => p.Name.ToLower().Contains(criteriaToLower)
-            //        || p.Description.ToLower().Contains(criteriaToLower)
-            //        || p.Manufacturer.Name.ToLower().Contains(criteriaToLower)
-            //        || p.Colour.ToLower().Contains(criteriaToLower)
-            //        || p.Size.ToLower().Contains(criteriaToLower)
-            //        || p.Sale.Title.ToLower().Contains(criteriaToLower)
-            //        || p.Category.Name.ToLower().Contains(criteriaToLower)
-            //        || p.ProductType.Name.ToLower().Contains(criteriaToLower))
-            //        .Select(p => new ProductServiceModel
-            //        {
-            //            Id = p.Id,
-            //            Name = p.Name,
-            //            Category = new CategoryServiceModel
-            //            {
-            //                Name = p.Category.Name
-            //            },
-            //            ProductType = new ProductTypeServiceModel
-            //            {
-            //                Name = p.ProductType.Name
-            //            },
-            //            Description = p.Description,
-            //            Pictures = p.Pictures
-            //                .Select(pic => new PictureServiceModel
-            //                {
-            //                    Id = pic.Id,
-            //                    PictureUrl = pic.PictureUrl
-            //                })
-            //                .ToList(),
-            //            Colour = p.Colour,
-            //            Size = p.Size,
-            //            Manufacturer = new ManufacturerServiceModel
-            //            {
-            //                Id = p.ManufacturerId,
-            //                Name = p.Manufacturer.Name
-            //            },
-            //            Price = p.Price,
-            //            Quantity = new QuantityServiceModel
-            //            {
-            //                Id = p.QuantityId,
-            //                AvailableItems = p.Quantity.AvailableItems
-            //            },
-            //            SaleId = p.SaleId,
-            //            ShoppingCartId = p.ShoppingCartId,
-            //            OrderId = p.OrderId,
-            //            Reviews = p.Reviews
-            //                .Select(r => new CustomerReviewServiceModel
-            //                {
-            //                    Id = r.Id,
-            //                    Title = r.Title,
-            //                    Text = r.Text,
-            //                    CreatedOn = r.CreatedOn.ToString("dddd, dd MMMM yyyy"),
-            //                    AuthorUsername = r.Author.FullName
-            //                })
-            //                .ToList()
-            //        });
-            //}
 
             return allSearchResults;
         }
