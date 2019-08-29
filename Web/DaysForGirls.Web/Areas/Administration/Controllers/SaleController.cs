@@ -85,16 +85,16 @@
             return View(allSales);
         }
 
-        [HttpGet("/Administration/Sale/Details/{id}")]
-        public async Task<IActionResult> Details(string id)
+        [HttpGet("/Administration/Sale/Details/{saleId}")]
+        public async Task<IActionResult> Details(string saleId)
         {
-            if (id == null)
+            if (saleId == null)
             {
                 return BadRequest();
             }
 
             var sale = await this.saleService
-                .GetSaleByIdAsync(id);
+                .GetSaleByIdAsync(saleId);
 
             if (sale == null)
             {

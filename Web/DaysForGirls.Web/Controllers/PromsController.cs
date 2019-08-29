@@ -19,8 +19,10 @@
         [HttpGet("/Proms/All")]
         public async Task<IActionResult> All()
         {
+            string categoryName = "Prom";
+
             var allPromProducts = await this.productService
-                .GetAllProductsOfCategory("Prom")
+                .GetAllProductsOfCategory(categoryName)
                 .Select(p => new DisplayAllOfCategoryViewModel
                 {
                     Id = p.Id,

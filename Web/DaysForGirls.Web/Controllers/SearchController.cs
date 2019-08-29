@@ -19,12 +19,6 @@
         [HttpGet("/Search/Display/{criteria}")]
         public async Task<IActionResult> Display(string criteria)
         {
-            if(criteria == null)
-            {
-                this.ViewData["error"] = "You entered no search criteria";
-                return View();
-            }
-
             var searchResults = await this.productService
                 .GetAllSearchResultsByCriteria(criteria)
                 .Select(p => new ProductSearchResultViewModel

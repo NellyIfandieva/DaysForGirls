@@ -29,6 +29,7 @@ namespace DaysForGirls.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Display(string criteria)
         {
+            await Task.Delay(0);
             return Redirect("/Search/Display/" + criteria);
         }
 

@@ -201,16 +201,16 @@
             return View(allProducts);
         }
 
-        [HttpGet("/Administration/Product/Details/{id}")]
-        public async Task<IActionResult> Details(int id)
+        [HttpGet("/Administration/Product/Details/{productId}")]
+        public async Task<IActionResult> Details(int productId)
         {
-            if (id <= 0)
+            if (productId <= 0)
             {
                 return BadRequest();
             }
 
             var productInDb = await this.adminService
-                .GetProductByIdAsync(id);
+                .GetProductByIdAsync(productId);
 
             if (productInDb == null)
             {

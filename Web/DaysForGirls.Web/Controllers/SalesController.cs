@@ -33,14 +33,9 @@
             return View(allSales);
         }
 
-        [HttpGet("/Sales/Details/{id}")]
+        [HttpGet("/Sales/Details/{saleId}")]
         public async Task<IActionResult> Details(string saleId)
         {
-            //if(saleId == null)
-            //{
-            //    return BadRequest();
-            //}
-
             var sale = await this.saleService.GetSaleByIdAsync(saleId);
 
             var saleToDisplay = new SaleDetailsViewModel

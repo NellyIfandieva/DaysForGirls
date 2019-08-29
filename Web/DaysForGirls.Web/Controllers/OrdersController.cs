@@ -9,6 +9,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Authorization;
 
     public class OrdersController : Controller
     {
@@ -100,6 +101,7 @@
             return View(ordersToReturn);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet("/Orders/AllAdmin")]
         public async Task<IActionResult> AllAdmin()
         {
@@ -144,6 +146,7 @@
             return View(adminOrders);
         }
 
+        [Authorize]
         [HttpGet("/Orders/Details/{orderId}")]
         public async Task<IActionResult> Details(string orderId)
         {
@@ -192,6 +195,7 @@
             return View(orderToReturn);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet("/Orders/Edit/{orderId}")]
         public async Task<IActionResult> Edit(string orderId)
         {
@@ -223,6 +227,7 @@
             return View(orderToEdit);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("/Orders/Edit/{orderId}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string orderId, OrderEditInputModel model)

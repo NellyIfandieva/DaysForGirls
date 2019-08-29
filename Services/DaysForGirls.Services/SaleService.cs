@@ -42,15 +42,16 @@
         public IQueryable<SaleServiceModel> DisplayAll()
         {
             var allSales = this.db.Sales
+                .Include(s => s.Products)
                 .Where(s => s.IsDeleted == false
                 && s.IsActive == true)
-                .Select(ss => new SaleServiceModel
+                .Select(s => new SaleServiceModel
                 {
-                    Id = ss.Id,
-                    Title = ss.Title,
-                    EndsOn = ss.EndsOn,
-                    Picture = ss.Picture,
-                    Products = ss.Products
+                    Id = s.Id,
+                    Title = s.Title,
+                    EndsOn = s.EndsOn,
+                    Picture = s.Picture,
+                    Products = s.Products
                         .Select(p => new ProductServiceModel
                         {
                             Id = p.Id,

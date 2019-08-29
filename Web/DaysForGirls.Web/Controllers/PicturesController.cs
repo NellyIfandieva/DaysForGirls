@@ -18,7 +18,7 @@
             this.productService = productService;
         }
 
-        [HttpGet("/Pictures/Display/{id}")]
+        [HttpGet("/Pictures/Display/{pictureId}")]
         public async Task<IActionResult> Display(int pictureId)
         {
             if(pictureId <= 0)
