@@ -17,10 +17,18 @@
     <header> 
         <div class="w3-bar" style="background-color: #c5b358; color: whitesmoke;">
             <a href="/" class="w3-bar-item w3-button"><img src="~/Images/Logo.jpg" alt="DaysForGirls" style="width:100%;max-width:200px" /></a>
-            <form method="post" action="display">
-                <input type="text" class="w3-bar-item w3-input w3-center" asp-controller="Search" asp-action="Display" placeholder="Search...">
-                <a style="background-color: #d0c279; font-size: large; font-weight: 500; margin-top: 8px; height: 39px; border-radius: 5px; padding-top: 8px;" href="/Search/Display/" class="w3-bar-item w3-button">Go</a>
+            <form method="post" asp-action="Display" asp-controller="Home">
+                <div class="row input-group">
+                    <input type="text" name="criteria" id="criteria" class="w3-bar-item w3-input w3-center form-control" />
+                    <div class="input-group-btn">
+                        <input type="submit" value="Go" class="w3-bar-item w3-button" style="background-color: #d0c279; font-size: large; font-weight: 500; margin-top: 8px; height: 39px; border-radius: 5px; padding-top: 8px"/>
+                    </div>
+                </div>
             </form>
+            @*<form method="post" asp-action="Display" asp-controller="Home">
+                <input type="text" name="criteria" id="criteria" class="w3-bar-item w3-input w3-center form-control" asp-controller="Home" asp-action="Display" placeholder="Search...">
+                <a style="background-color: #d0c279; font-size: large; font-weight: 500; margin-top: 8px; height: 39px; border-radius: 5px; padding-top: 8px;" href="/Home/Display/" class="w3-bar-item w3-button">Go</a>
+            </form>*@
             @if (this.User.Identity.IsAuthenticated)
             {
                 if (this.User.IsInRole("Admin"))

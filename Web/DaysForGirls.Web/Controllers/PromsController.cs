@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DaysForGirls.Services;
-using DaysForGirls.Web.ViewModels;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-
-namespace DaysForGirls.Web.Controllers
+﻿namespace DaysForGirls.Web.Controllers
 {
+    using Services;
+    using ViewModels;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
+    using System.Linq;
+    using System.Threading.Tasks;
+
     public class PromsController : Controller
     {
         private readonly IProductService productService;
@@ -42,8 +40,11 @@ namespace DaysForGirls.Web.Controllers
         [HttpGet("/Proms/Dresses")]
         public async Task<IActionResult> Dresses()
         {
+            string productTypeName = "Dress";
+            string categoryName = "Prom";
+
             var allPromDresses = await this.productService
-                .GetAllProductsOfTypeAndCategory("Dress", "Prom")
+                .GetAllProductsOfTypeAndCategory(productTypeName, categoryName)
                 .Select(d => new DisplayAllOfCategoryAndTypeViewModel
                 {
                     Id = d.Id,
@@ -62,8 +63,11 @@ namespace DaysForGirls.Web.Controllers
         [HttpGet("/Proms/Suits")]
         public async Task<IActionResult> Suits()
         {
+            string productTypeName = "Suit";
+            string categoryName = "Prom";
+
             var allPromSuits = await this.productService
-                .GetAllProductsOfTypeAndCategory("Suit", "Prom")
+                .GetAllProductsOfTypeAndCategory(productTypeName, categoryName)
                 .Select(s => new DisplayAllOfCategoryAndTypeViewModel
                 {
                     Id = s.Id,
@@ -82,8 +86,11 @@ namespace DaysForGirls.Web.Controllers
         [HttpGet("/Proms/Accessories")]
         public async Task<IActionResult> Accessories()
         {
+            string productTypeName = "Accessory";
+            string categoryName = "Prom";
+
             var allPromAccessories = await this.productService
-                .GetAllProductsOfTypeAndCategory("Accessory", "Prom")
+                .GetAllProductsOfTypeAndCategory(productTypeName, categoryName)
                 .Select(a => new DisplayAllOfCategoryAndTypeViewModel
                 {
                     Id = a.Id,

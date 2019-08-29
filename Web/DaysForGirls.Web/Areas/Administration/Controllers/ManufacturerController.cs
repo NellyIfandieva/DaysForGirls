@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DaysForGirls.Services;
-using DaysForGirls.Services.Models;
-using DaysForGirls.Web.InputModels;
-using DaysForGirls.Web.ViewModels;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-
-namespace DaysForGirls.Web.Areas.Administration.Controllers
+﻿namespace DaysForGirls.Web.Areas.Administration.Controllers
 {
+    using Services;
+    using Services.Models;
+    using InputModels;
+    using ViewModels;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
+    using System.Linq;
+    using System.Threading.Tasks;
+
     public class ManufacturerController : AdminController
     {
         private readonly IManufacturerService manufacturerService;
@@ -25,8 +23,9 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         }
 
         [HttpGet("/Administration/Manufacturer/Create")]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            await Task.Delay(0);
             return View();
         }
 
@@ -41,7 +40,8 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
 
             string imageUrl = await this.cloudinaryService.UploadPictureForProductAsync(
                 model.Logo, model.Name + "_" + "Logo");
-            ManufacturerServiceModel manufacturerServiceModel = new ManufacturerServiceModel
+
+            var manufacturerServiceModel = new ManufacturerServiceModel
             {
                 Name = model.Name,
                 Description = model.Description,
@@ -51,7 +51,9 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                 }
             };
 
-            int newManufacturerId = await this.manufacturerService.CreateAsync(manufacturerServiceModel);
+            int newManufacturerId = await this.manufacturerService
+                .CreateAsync(manufacturerServiceModel);
+
             return Redirect("/Administration/Manufacturer/All");
         }
 
@@ -71,7 +73,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                 .OrderBy(m => m.Name)
                 .ToListAsync();
 
-            if(allManufacturers == null)
+            if(allManufacturers.Count() < 1)
             {
                 return NotFound();
             }
@@ -113,7 +115,8 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                 return View(model);
             }
 
-            string imageUrl = await this.cloudinaryService.UploadPictureForProductAsync(
+            string imageUrl = await this.cloudinaryService
+                .UploadPictureForProductAsync(
                 model.Logo, model.Name + "_" + "Logo");
 
             var manufacturerToEdit = new ManufacturerServiceModel

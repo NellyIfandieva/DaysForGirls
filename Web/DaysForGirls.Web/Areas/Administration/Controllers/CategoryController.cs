@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DaysForGirls.Services;
-using DaysForGirls.Services.Models;
-using DaysForGirls.Web.InputModels;
-using DaysForGirls.Web.ViewModels;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-
-namespace DaysForGirls.Web.Areas.Administration.Controllers
+﻿namespace DaysForGirls.Web.Areas.Administration.Controllers
 {
+    using Services;
+    using Services.Models;
+    using InputModels;
+    using ViewModels;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
+    using System.Linq;
+    using System.Threading.Tasks;
+
     public class CategoryController : AdminController
     {
         private readonly ICategoryService categoryService;
@@ -21,8 +19,9 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         }
 
         [HttpGet("/Administration/Category/Create")]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            await Task.Delay(0);
             return View();
         }
 
@@ -34,13 +33,14 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
             {
                 return View(model);
             }
-            CategoryServiceModel categoryServiceModel = new CategoryServiceModel
+            var categoryServiceModel = new CategoryServiceModel
             {
                 Name = model.Name,
                 Description = model.Description
             };
 
-            int newCategoryId = await this.categoryService.CreateAsync(categoryServiceModel);
+            int newCategoryId = await this.categoryService
+                .CreateAsync(categoryServiceModel);
 
             return Redirect("/Administration/Category/All");
         }
@@ -59,7 +59,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                 .OrderBy(c => c.Name)
                 .ToListAsync();
 
-            if(allCategories == null)
+            if(allCategories.Count() < 1)
             {
                 return NotFound();
             }

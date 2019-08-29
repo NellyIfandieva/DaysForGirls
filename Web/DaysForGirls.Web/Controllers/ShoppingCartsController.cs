@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using DaysForGirls.Data;
-using DaysForGirls.Services;
-using DaysForGirls.Services.Models;
-using DaysForGirls.Web.InputModels;
-using DaysForGirls.Web.ViewModels;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-
-namespace DaysForGirls.Web.Controllers
+﻿namespace DaysForGirls.Web.Controllers
 {
+    using DaysForGirls.Data;
+    using DaysForGirls.Services;
+    using DaysForGirls.Services.Models;
+    using DaysForGirls.Web.ViewModels;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc;
+    using System.Linq;
+    using System.Security.Claims;
+    using System.Threading.Tasks;
+
     public class ShoppingCartsController : Controller
     {
         private readonly DaysForGirlsDbContext db;
@@ -33,36 +29,47 @@ namespace DaysForGirls.Web.Controllers
             this.productService = productService;
         }
 
-
+        [Authorize]
         [HttpGet("/ShoppingCarts/AddProduct/{productId}")]
         public async Task<IActionResult> AddProduct(int productId)
         {
+            if(productId <= 0)
+            {
+                return BadRequest();
+            }
+
             if(this.User.Identity.IsAuthenticated == false)
             {
                 return Redirect("/Identity/Account/Login");
             }
 
-            string userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            string userId = this.User
+                .FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            var product = await this.productService.GetProductByIdAsync(productId);
+            var product = await this.productService
+                .GetProductByIdAsync(productId);
 
-            ShoppingCartItemServiceModel item = new ShoppingCartItemServiceModel
+            var item = new ShoppingCartItemServiceModel
             {
                 Product = product,
                 Quantity = 1
             };
 
-            string cartId = await this.shoppingCartService.AddItemToCartCartAsync(userId, item);
+            string cartId = await this.shoppingCartService
+                .AddItemToCartCartAsync(userId, item);
 
             return Redirect("/ShoppingCarts/Display");
         }
 
+        [Authorize]
         [HttpGet("/ShoppingCarts/Display")]
         public async Task<IActionResult> Display()
         {
-            string userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            string userId = this.User
+                .FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            var shoppingCartInDb = await this.shoppingCartService.GetCartByUserIdAsync(userId);
+            var shoppingCartInDb = await this.shoppingCartService
+                .GetCartByUserIdAsync(userId);
 
             if(shoppingCartInDb == null)
             {
@@ -107,32 +114,5 @@ namespace DaysForGirls.Web.Controllers
 
             return Redirect("/ShoppingCarts/Display");
         }
-
-        //public async Task<bool> Add(ShoppingCartInputModel model)
-        //{
-        //    var productToAdd = this.productService.GetProductDetailsById(model.ProductId);
-
-        //    if (productToAdd == null)
-        //    {
-        //        //
-        //    }
-
-        //    ProductServiceModel productServiceModel = new ProductServiceModel
-        //    {
-        //        Id = productToAdd.Id
-        //    };
-
-        //    ShoppingCartItemServiceModel itemServiceModel = new ShoppingCartItemServiceModel
-        //    {
-        //        Product = productServiceModel,
-        //        Quantity = model.Quantity
-        //    };
-
-        //    //ShoppingCartItem itemToAdd = this.shoppingCartService.Create(itemServiceModel);
-
-        //    bool isAdded = await this.shoppingCartService.Add(itemServiceModel);
-
-        //    return isAdded;
-        //}
     }
 }

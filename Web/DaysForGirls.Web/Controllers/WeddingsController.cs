@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DaysForGirls.Services;
-using DaysForGirls.Web.ViewModels;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-
-namespace DaysForGirls.Web.Controllers
+﻿namespace DaysForGirls.Web.Controllers
 {
+    using DaysForGirls.Services;
+    using DaysForGirls.Web.ViewModels;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
+    using System.Linq;
+    using System.Threading.Tasks;
+
     public class WeddingsController : Controller
     {
         private readonly IProductService productService;
@@ -43,8 +41,11 @@ namespace DaysForGirls.Web.Controllers
         [HttpGet("/Weddings/Dresses")]
         public async Task<IActionResult> Dresses()
         {
+            string productTypeName = "Dress";
+            string categoryName = "Wedding";
+
             var allWeddingDresses = await this.productService
-                .GetAllProductsOfTypeAndCategory("Dress", "Wedding")
+                .GetAllProductsOfTypeAndCategory(productTypeName, categoryName)
                 .Select(d => new DisplayAllOfCategoryAndTypeViewModel
                 {
                     Id = d.Id,
@@ -63,8 +64,11 @@ namespace DaysForGirls.Web.Controllers
         [HttpGet("/Weddings/Suits")]
         public async Task<IActionResult> Suits()
         {
+            string productTypeName = "Suit";
+            string categoryName = "Wedding";
+
             var allWeddingSuits = await this.productService
-                .GetAllProductsOfTypeAndCategory("Suit", "Wedding")
+                .GetAllProductsOfTypeAndCategory(productTypeName, categoryName)
                 .Select(s => new DisplayAllOfCategoryAndTypeViewModel
                 {
                     Id = s.Id,
@@ -83,8 +87,11 @@ namespace DaysForGirls.Web.Controllers
         [HttpGet("/Weddings/Accessories")]
         public async Task<IActionResult> Accessories()
         {
+            string productTypeName = "Accessory";
+            string categoryName = "Wedding";
+
             var allWeddingAccessories = await this.productService
-                .GetAllProductsOfTypeAndCategory("Accessory", "Wedding")
+                .GetAllProductsOfTypeAndCategory(productTypeName, categoryName)
                 .Select(a => new DisplayAllOfCategoryAndTypeViewModel
                 {
                     Id = a.Id,

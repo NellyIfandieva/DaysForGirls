@@ -1,15 +1,12 @@
-﻿using DaysForGirls.Services;
-using DaysForGirls.Services.Models;
-using DaysForGirls.Web.ViewModels;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace DaysForGirls.Web.Controllers
+﻿namespace DaysForGirls.Web.Controllers
 {
+    using Services;
+    using ViewModels;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
+    using System.Linq;
+    using System.Threading.Tasks;
+
     public class SalesController : Controller
     {
         private readonly ISaleService saleService;
@@ -37,9 +34,14 @@ namespace DaysForGirls.Web.Controllers
         }
 
         [HttpGet("/Sales/Details/{id}")]
-        public async Task<IActionResult> Details(string id)
+        public async Task<IActionResult> Details(string saleId)
         {
-            var sale = await this.saleService.GetSaleByIdAsync(id);
+            //if(saleId == null)
+            //{
+            //    return BadRequest();
+            //}
+
+            var sale = await this.saleService.GetSaleByIdAsync(saleId);
 
             var saleToDisplay = new SaleDetailsViewModel
             {

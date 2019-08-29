@@ -483,26 +483,374 @@ namespace DaysForGirls.Tests.Services
             Assert.True(expectedDataServiceModel.OrderId == actualRecordServiceModel.OrderId, errorMessagePrefix + " " + "Order Id is not returned properly.");
         }
 
-        //[Fact]
-        //public async Task DeleteProductById_WithExistingId_ExpectedToReturnTrue()
-        //{
-        //    string errorMessagePrefix = "AdminService EditAsync() method does not work properly.";
+        [Fact]
+        public async Task DeleteProductById_WithExistingIdNotSaleCartOrOrder_ExpectedResultShouldContainTrue()
+        {
+            string errorMessagePrefix = "AdminService EraseFromDb() method does not work properly.";
 
-        //    var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
-        //    var pictureService = new PictureService(db);
-        //    var userManager = UserManagerMOQ.TestUserManager<DaysForGirlsUser>();
-        //    var customerReviewService = new CustomerReviewService(userManager, db);
-        //    this.adminService = new AdminService(db, pictureService, customerReviewService);
-        //    await SeedSampleProducts(db);
+            var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
+            var pictureService = new PictureService(db);
+            var userManager = UserManagerMOQ.TestUserManager<DaysForGirlsUser>();
+            var customerReviewService = new CustomerReviewService(userManager, db);
+            this.adminService = new AdminService(db, pictureService, customerReviewService);
+            await SeedSampleProducts(db);
 
-        //    this.adminService = new AdminService(db, pictureService, customerReviewService);
+            this.adminService = new AdminService(db, pictureService, customerReviewService);
 
-        //    Product product = db.Products.First();
+            Product product = db.Products.First();
 
-        //    bool actualResult = await this.adminService.DeleteProductByIdAsync(product.Id);
+            string actualResult = await this.adminService.EraseFromDb(product.Id);
+            string[] actualResultSplit = actualResult.Split(new[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
+            Assert.True(actualResultSplit[0] == product.Name, errorMessagePrefix + " " + "Resukt does not contain the product name.");
+            Assert.True(actualResultSplit[1] == "true", errorMessagePrefix + " " + "Result does not contain the word True.");
+        }
 
-        //    Assert.True(actualResult, errorMessagePrefix);
-        //}
+        [Fact]
+        public async Task DeleteProductById_WithExistingIdInSaleNoCartOrOrder_ExpectedResultShouldContainTrue()
+        {
+            string errorMessagePrefix = "AdminService EraseFromDb() method does not work properly.";
+
+            var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
+            var pictureService = new PictureService(db);
+            var userManager = UserManagerMOQ.TestUserManager<DaysForGirlsUser>();
+            var customerReviewService = new CustomerReviewService(userManager, db);
+            this.adminService = new AdminService(db, pictureService, customerReviewService);
+            Sale sale = new Sale
+            {
+                Title = "Sale",
+                EndsOn = DateTime.UtcNow.AddDays(20),
+                Picture = "Sale_Picture"
+            };
+
+            db.Sales.Add(sale);
+            await db.SaveChangesAsync();
+
+            Product product = new Product
+            {
+                Name = "Product One",
+                Category = new Category
+                {
+                    Name = "Haha",
+                    Description = "Haha is great"
+                },
+                ProductType = new ProductType { Name = "Gashti" },
+                Manufacturer = new Manufacturer
+                {
+                    Name = "Armani",
+                    Description = "About Armani",
+                    Logo = new Logo { LogoUrl = "Armani_Logo" }
+                },
+                Colour = "Green",
+                Size = "Fit",
+                OrderId = null,
+                SaleId = sale.Id,
+                ShoppingCart = null,
+                Price = 20.00m,
+                Quantity = new Quantity { AvailableItems = 1 },
+                Pictures = new List<Picture>()
+                {
+                    new Picture{ PictureUrl = "a" },
+                    new Picture{ PictureUrl = "b" }
+                }
+            };
+
+            db.Products.Add(product);
+            await db.SaveChangesAsync();
+
+            this.adminService = new AdminService(db, pictureService, customerReviewService);
+
+            Product productToDelete = db.Products.First();
+
+            string actualResult = await this.adminService.EraseFromDb(product.Id);
+            string[] actualResultSplit = actualResult.Split(new[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
+            Assert.True(actualResultSplit[0] == product.Name, errorMessagePrefix + " " + "Resukt does not contain the product name.");
+            Assert.True(actualResultSplit[1] == "true", errorMessagePrefix + " " + "Result does not contain the word True.");
+        }
+
+        [Fact]
+        public async Task DeleteProductById_WithExistingIdInSaleInCartNoOrder_ExpectedResultShouldNotDeleteProduct()
+        {
+            string errorMessagePrefix = "AdminService EraseFromDb() method does not work properly.";
+
+            var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
+            var pictureService = new PictureService(db);
+            var userManager = UserManagerMOQ.TestUserManager<DaysForGirlsUser>();
+            var customerReviewService = new CustomerReviewService(userManager, db);
+            this.adminService = new AdminService(db, pictureService, customerReviewService);
+            Sale sale = new Sale
+            {
+                Title = "Sale",
+                EndsOn = DateTime.UtcNow.AddDays(20),
+                Picture = "Sale_Picture"
+            };
+
+            db.Sales.Add(sale);
+            await db.SaveChangesAsync();
+
+            Product product = new Product
+            {
+                Name = "Product One",
+                Category = new Category
+                {
+                    Name = "Haha",
+                    Description = "Haha is great"
+                },
+                ProductType = new ProductType { Name = "Gashti" },
+                Manufacturer = new Manufacturer
+                {
+                    Name = "Armani",
+                    Description = "About Armani",
+                    Logo = new Logo { LogoUrl = "Armani_Logo" }
+                },
+                Colour = "Green",
+                Size = "Fit",
+                OrderId = null,
+                SaleId = sale.Id,
+                ShoppingCartId = "Hi",
+                Price = 20.00m,
+                Quantity = new Quantity { AvailableItems = 1 },
+                Pictures = new List<Picture>()
+                {
+                    new Picture{ PictureUrl = "a" },
+                    new Picture{ PictureUrl = "b" }
+                }
+            };
+
+            db.Products.Add(product);
+            await db.SaveChangesAsync();
+
+            this.adminService = new AdminService(db, pictureService, customerReviewService);
+
+            Product productToDelete = db.Products.First();
+
+            string actualResult = await this.adminService.EraseFromDb(product.Id);
+            string[] actualResultSplit = actualResult.Split(new[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
+            Assert.True(actualResultSplit[0] == product.Name, errorMessagePrefix + " " + "Resukt does not contain the product name.");
+            Assert.True(actualResultSplit[1] == "is in a Shopping Cart and cannot be deleted.", errorMessagePrefix + " " + "Result does not contain the expected message.");
+        }
+
+        [Fact]
+        public async Task DeleteProductById_WithExistingIdInSaleInOrder_ExpectedResultShouldSetIsDeletedToTrue()
+        {
+            string errorMessagePrefix = "AdminService EraseFromDb() method does not work properly.";
+
+            var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
+            var pictureService = new PictureService(db);
+            var userManager = UserManagerMOQ.TestUserManager<DaysForGirlsUser>();
+            var customerReviewService = new CustomerReviewService(userManager, db);
+            this.adminService = new AdminService(db, pictureService, customerReviewService);
+            Sale sale = new Sale
+            {
+                Title = "Sale",
+                EndsOn = DateTime.UtcNow.AddDays(20),
+                Picture = "Sale_Picture"
+            };
+
+            db.Sales.Add(sale);
+            await db.SaveChangesAsync();
+
+            Product product = new Product
+            {
+                Name = "Product One",
+                Category = new Category
+                {
+                    Name = "Haha",
+                    Description = "Haha is great"
+                },
+                ProductType = new ProductType { Name = "Gashti" },
+                Manufacturer = new Manufacturer
+                {
+                    Name = "Armani",
+                    Description = "About Armani",
+                    Logo = new Logo { LogoUrl = "Armani_Logo" }
+                },
+                Colour = "Green",
+                Size = "Fit",
+                OrderId = "Hi",
+                SaleId = sale.Id,
+                ShoppingCartId = null,
+                Price = 20.00m,
+                Quantity = new Quantity { AvailableItems = 1 },
+                Pictures = new List<Picture>()
+                {
+                    new Picture{ PictureUrl = "a" },
+                    new Picture{ PictureUrl = "b" }
+                }
+            };
+
+            db.Products.Add(product);
+            await db.SaveChangesAsync();
+
+            this.adminService = new AdminService(db, pictureService, customerReviewService);
+
+            Product productToDelete = db.Products.First();
+
+            string actualResult = await this.adminService.EraseFromDb(product.Id);
+            string[] actualResultSplit = actualResult.Split(new[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
+            Assert.True(actualResultSplit[0] == product.Name, errorMessagePrefix + " " + "Result does not contain the product name.");
+            Assert.True(actualResultSplit[1] == "has been purchased and was only set to IsDeleted.", errorMessagePrefix + " " + "Result does not return the expected message.");
+            Assert.True(productToDelete.IsDeleted, errorMessagePrefix + " " + "IsDeleted is not set to true");
+        }
+
+        [Fact]
+        public async Task SetOrderId_WithExistingProductId_ExpectedResultShouldSetCartIdToNullAndGivenOrderId()
+        {
+            string errorMessagePrefix = "AdminService SetOrderId() method does not work properly.";
+
+            var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
+            var pictureService = new PictureService(db);
+            var userManager = UserManagerMOQ.TestUserManager<DaysForGirlsUser>();
+            var customerReviewService = new CustomerReviewService(userManager, db);
+            this.adminService = new AdminService(db, pictureService, customerReviewService);
+
+            Product product = new Product
+            {
+                Name = "Product One",
+                Category = new Category
+                {
+                    Name = "Haha",
+                    Description = "Haha is great"
+                },
+                ProductType = new ProductType { Name = "Gashti" },
+                Manufacturer = new Manufacturer
+                {
+                    Name = "Armani",
+                    Description = "About Armani",
+                    Logo = new Logo { LogoUrl = "Armani_Logo" }
+                },
+                Colour = "Green",
+                Size = "Fit",
+                OrderId = null,
+                SaleId = null,
+                ShoppingCartId = "yes",
+                Price = 20.00m,
+                Quantity = new Quantity { AvailableItems = 1 },
+                Pictures = new List<Picture>()
+                {
+                    new Picture{ PictureUrl = "a" },
+                    new Picture{ PictureUrl = "b" }
+                }
+            };
+
+            db.Products.Add(product);
+            await db.SaveChangesAsync();
+
+            this.adminService = new AdminService(db, pictureService, customerReviewService);
+
+            List<int> productIds = db.Products
+                .Select(p => p.Id).ToList();
+
+            bool positive = await this.adminService.SetOrderIdToProductsAsync(productIds, "Hi");
+            Product first = db.Products.SingleOrDefault(p => p.Id == 1);
+
+            Assert.True(positive, errorMessagePrefix + " " + "Products were updated with OrderId");
+            Assert.True(first.OrderId == "Hi", errorMessagePrefix + " " + "OrderId not set to given Id.");
+            Assert.True(first.ShoppingCartId == null, errorMessagePrefix + " " + "CartId not set to null");
+        }
+
+        [Fact]
+        public async Task SetOrderId_WithoutProductIds_ExpectedResultShouldReturnFalse()
+        {
+            string errorMessagePrefix = "AdminService SetOrderId() method does not work properly.";
+
+            var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
+            var pictureService = new PictureService(db);
+            var userManager = UserManagerMOQ.TestUserManager<DaysForGirlsUser>();
+            var customerReviewService = new CustomerReviewService(userManager, db);
+            this.adminService = new AdminService(db, pictureService, customerReviewService);
+
+            Product product = new Product
+            {
+                Name = "Product One",
+                Category = new Category
+                {
+                    Name = "Haha",
+                    Description = "Haha is great"
+                },
+                ProductType = new ProductType { Name = "Gashti" },
+                Manufacturer = new Manufacturer
+                {
+                    Name = "Armani",
+                    Description = "About Armani",
+                    Logo = new Logo { LogoUrl = "Armani_Logo" }
+                },
+                Colour = "Green",
+                Size = "Fit",
+                OrderId = null,
+                SaleId = null,
+                ShoppingCartId = "yes",
+                Price = 20.00m,
+                Quantity = new Quantity { AvailableItems = 1 },
+                Pictures = new List<Picture>()
+                {
+                    new Picture{ PictureUrl = "a" },
+                    new Picture{ PictureUrl = "b" }
+                }
+            };
+
+            db.Products.Add(product);
+            await db.SaveChangesAsync();
+
+            this.adminService = new AdminService(db, pictureService, customerReviewService);
+
+            List<int> productIds = new List<int>();
+
+            bool positive = await this.adminService.SetOrderIdToProductsAsync(productIds, "Hi");
+            Product first = db.Products.SingleOrDefault(p => p.Id == 1);
+
+            Assert.True(positive == false, errorMessagePrefix + " " + "OrderId not set and cartId remains not null.");
+            Assert.True(first.OrderId == null, errorMessagePrefix + " " + "OrderId was set to given Id.");
+            Assert.True(first.ShoppingCartId == "yes", errorMessagePrefix + " " + "CartId was set to null");
+        }
+
+        [Fact]
+        public async Task SetOrderId_WithNullOrderId_ExpectedToThrowArgumentNullException()
+        {
+            var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
+            var pictureService = new PictureService(db);
+            var userManager = UserManagerMOQ.TestUserManager<DaysForGirlsUser>();
+            var customerReviewService = new CustomerReviewService(userManager, db);
+            this.adminService = new AdminService(db, pictureService, customerReviewService);
+
+            Product product = new Product
+            {
+                Name = "Product One",
+                Category = new Category
+                {
+                    Name = "Haha",
+                    Description = "Haha is great"
+                },
+                ProductType = new ProductType { Name = "Gashti" },
+                Manufacturer = new Manufacturer
+                {
+                    Name = "Armani",
+                    Description = "About Armani",
+                    Logo = new Logo { LogoUrl = "Armani_Logo" }
+                },
+                Colour = "Green",
+                Size = "Fit",
+                OrderId = null,
+                SaleId = null,
+                ShoppingCartId = "yes",
+                Price = 20.00m,
+                Quantity = new Quantity { AvailableItems = 1 },
+                Pictures = new List<Picture>()
+                {
+                    new Picture{ PictureUrl = "a" },
+                    new Picture{ PictureUrl = "b" }
+                }
+            };
+
+            db.Products.Add(product);
+            await db.SaveChangesAsync();
+
+            this.adminService = new AdminService(db, pictureService, customerReviewService);
+
+            List<int> productIds = db.Products
+                .Select(p => p.Id).ToList();
+
+            await Assert.ThrowsAsync<ArgumentNullException>(() => this.adminService.SetOrderIdToProductsAsync(productIds, null));
+        }
 
         //[Fact]
         //public async Task DeleteProductById_WithNonexistentId_ExpectedToThrowArgumentNullException()
@@ -663,6 +1011,7 @@ namespace DaysForGirls.Tests.Services
                 },
                 OrderStatus = "ordered"
             };
+            db.Orders.Add(order);
             await SeedSampleProducts(db);
 
             this.adminService = new AdminService(db, pictureService, customerReviewService);

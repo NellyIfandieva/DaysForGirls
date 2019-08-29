@@ -7,17 +7,17 @@
 
     public interface IPictureService
     {
-        Task<bool> Create(List<PictureServiceModel> pictureServiceModels, int ProductId);
-
-        Task<bool> UpdatePictureInfoAsync(int pictureId, int productId);
-
         Task<PictureServiceModel> GetPictureByIdAsync(int id);
 
         IQueryable<PictureServiceModel> GetPicturesOfProductByProductId(int productId);
 
-        Task<PictureServiceModel> GetPictureByUrl(string pictureUrl);
-
         Task<bool> DeletePicturesOfDeletedProductAsync(int productId);
+
+        //Task<bool> Create(List<PictureServiceModel> pictureServiceModels, int ProductId);
+
+        //Task<bool> UpdatePictureInfoAsync(int pictureId, int productId);
+
+        //Task<PictureServiceModel> GetPictureByUrl(string pictureUrl);
 
         //Task<bool> DeletePictureWithUrl(string pictureUrl);
     }

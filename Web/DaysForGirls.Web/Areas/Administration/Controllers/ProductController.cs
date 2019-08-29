@@ -1,9 +1,9 @@
 ﻿namespace DaysForGirls.Web.Areas.Administration.Controllers
 {
-    using DaysForGirls.Services;
-    using DaysForGirls.Services.Models;
-    using DaysForGirls.Web.InputModels;
-    using DaysForGirls.Web.ViewModels;
+    using Services;
+    using Services.Models;
+    using InputModels;
+    using ViewModels;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using System;
@@ -67,7 +67,8 @@
                 .ToList();
 
             var allManufacturers = await this.manufacturerService
-                .DisplayAll().ToListAsync();
+                .DisplayAll()
+                .ToListAsync();
 
             this.ViewData["manufacturers"] = allManufacturers
                 .Select(m => new ProductCreateManufacturerViewModel
@@ -78,7 +79,8 @@
                 .ToList();
 
             var allActiveSales = await this.saleService
-                .DisplayAll().ToListAsync();
+                .DisplayAll()
+                .ToListAsync();
 
             this.ViewData["sales"] = allActiveSales
                 .Select(s => new ProductCreateSaleViewModel
@@ -114,7 +116,9 @@
             {
                 Name = model.Manufacturer
             };
+
             string saleId = null;
+
             if (model.SaleTitle != null)
             {
                 var sale = await this.saleService.GetSaleByTitleAsync(model.SaleTitle);
@@ -186,7 +190,8 @@
                     SaleId = product.SaleId,
                     ShoppingCartId = product.ShoppingCartId,
                     OrderId = product.OrderId
-                }).ToListAsync();
+                })
+                .ToListAsync();
 
             if (allProducts == null)
             {
@@ -225,7 +230,7 @@
                 saleTitle = sale.Title;
             }
 
-            ProductDetailsViewModel productToDisplay = new ProductDetailsViewModel
+            var productToDisplay = new ProductDetailsViewModel
             {
                 Id = productInDb.Id,
                 Name = productInDb.Name,
@@ -292,7 +297,8 @@
             };
 
             var allProductTypes =
-                await this.productTypeService.DisplayAll()
+                await this.productTypeService
+                .DisplayAll()
                 .ToListAsync();
 
             this.ViewData["types"] = allProductTypes
@@ -301,7 +307,8 @@
                     Name = productType.Name
                 }).ToList();
 
-            var allCategories = await this.categoryService.DisplayAll()
+            var allCategories = await this.categoryService
+                .DisplayAll()
                 .ToListAsync();
 
             this.ViewData["categories"] = allCategories
@@ -310,7 +317,8 @@
                     Name = category.Name
                 }).ToList();
 
-            var allManufacturers = await this.manufacturerService.DisplayAll()
+            var allManufacturers = await this.manufacturerService
+                .DisplayAll()
                 .ToListAsync();
 
             this.ViewData["manufacturers"] = allManufacturers
@@ -321,7 +329,8 @@
                 .ToList();
 
             var allActiveSales = await this.saleService
-                .DisplayAll().ToListAsync();
+                .DisplayAll()
+                .ToListAsync();
 
             this.ViewData["sales"] = allActiveSales
                 .Select(s => new ProductCreateSaleViewModel
@@ -380,7 +389,8 @@
 
             if (model.SaleTitle != null)
             {
-                var sale = await this.saleService.GetSaleByTitleAsync(model.SaleTitle);
+                var sale = await this.saleService
+                    .GetSaleByTitleAsync(model.SaleTitle);
                 saleId = sale.Id;
             }
 
@@ -413,53 +423,22 @@
             productToEdit.Pictures = imageUrls.Select(image => new PictureServiceModel
             {
                 PictureUrl = image
-            }).ToList();
+            })
+            .ToList();
 
-            bool productIsEdited = await this.adminService.EditAsync(productToEdit);
+            bool productIsEdited = await this.adminService
+                .EditAsync(productToEdit);
 
             if (model.SaleTitle != null)
             {
-                bool saleAddedProduct = await this.saleService.AddProductToSaleAsync(saleId, productToEdit.Id);
-                bool productIsInSale = await this.adminService.AddProductToSaleAsync(productToEdit.Id, saleId);
+                bool saleAddedProduct = await this.saleService
+                    .AddProductToSaleAsync(saleId, productToEdit.Id);
+                bool productIsInSale = await this.adminService
+                    .AddProductToSaleAsync(productToEdit.Id, saleId);
             }
 
             return this.Redirect("/Administration/Product/Details/" + productId);
         }
-
-        //public async Task<IActionResult> DeletePicture(string pictureUrl)
-        //{
-        //    bool pictureIsDeleted = await this.pictureService
-        //        .DeletePictureWithUrl(pictureUrl);
-
-        //    if(pictureIsDeleted == false)
-        //    {
-        //        return View("Administration/Product/Edit/{productId}");
-        //    }
-
-        //    return View("Administration/Product/Details/{productId}");
-        //}
-
-        //public async Task<IActionResult> UploadNewPicture(ProductEditInputModel model)
-        //{
-        //    int productId = model.ProductId;
-
-        //    Guid name = new Guid();
-
-        //    //string imageUrl = await this.cloudinaryService.UploadPictureForProductAsync(
-        //    //    model.NewPicture, name.ToString());
-
-        //    //bool imageIsAdded = await this.adminService.UploadNewPictureToProductAsync(productId, imageUrl);
-
-        //    return Redirect("/Administration/Product/Details/{productId}");
-        //}
-
-        //[HttpGet("/Administration/Product/Delete/{productId}")]
-        //public async Task<IActionResult> Delete(int productId)
-        //{
-        //    bool isDeleted = await this.adminService.DeleteProductByIdAsync(productId);
-
-        //    return Redirect("/Administration/Product/All");
-        //}
 
         [HttpGet("/Administration/Product/Erase/{productId}")]
         public async Task<IActionResult> Erase(int productId)
@@ -471,9 +450,13 @@
 
             if(productEraseAttempt.Contains("true"))
             {
-                string productName = productEraseAttempt.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)[0];
+                string productName = productEraseAttempt
+                    .Split(new[] { '-' }, StringSplitOptions
+                    .RemoveEmptyEntries)[0];
+
                 this.ViewData["productName"] = productName;
-                this.ViewData["productErasedOrNot"] = " has been successfully removed from the Database.";
+                this.ViewData["productErasedOrNot"] = 
+                    " has been successfully removed from the Database.";
             }
             else
             {

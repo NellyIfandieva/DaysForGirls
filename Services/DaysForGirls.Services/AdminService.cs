@@ -341,6 +341,16 @@
             var productsToAddToOrder = await this.db.Products
                 .Where(p => productIds.Contains(p.Id)).ToListAsync();
 
+            if(productsToAddToOrder.Count() < 1)
+            {
+                return false;
+            }
+
+            if(orderId == null)
+            {
+                throw new ArgumentNullException(nameof(orderId));
+            }
+
             foreach(var product in productsToAddToOrder)
             {
                 product.OrderId = orderId;
@@ -371,14 +381,14 @@
             {
                 if(productInDb.ShoppingCartId != null)
                 {
-                    outcome = productInDb.Name +  " is in a Shopping Cart and cannot be deleted.";
+                    outcome = productInDb.Name + "-" + "is in a Shopping Cart and cannot be deleted.";
                 }
                 else
                 {
-                    productInDb.IsDeleted = false;
+                    productInDb.IsDeleted = true;
                     this.db.Update(productInDb);
                     await this.db.SaveChangesAsync();
-                    outcome = productInDb.Name + " has been purchased and was only set to IsDeleted.";
+                    outcome = productInDb.Name + "-" + "has been purchased and was only set to IsDeleted.";
                 }
 
                 return outcome;
@@ -406,7 +416,7 @@
 
             if(result > 0)
             {
-                outcome = productName +  " " + "true";
+                outcome = productName +  "-" + "true";
             }
 
             return outcome;

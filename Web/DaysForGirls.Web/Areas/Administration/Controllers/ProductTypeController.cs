@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DaysForGirls.Services;
-using DaysForGirls.Services.Models;
-using DaysForGirls.Web.InputModels;
-using DaysForGirls.Web.ViewModels;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-
-namespace DaysForGirls.Web.Areas.Administration.Controllers
+﻿namespace DaysForGirls.Web.Areas.Administration.Controllers
 {
+    using Services;
+    using Services.Models;
+    using InputModels;
+    using ViewModels;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
+    using System.Linq;
+    using System.Threading.Tasks;
+    
     public class ProductTypeController : AdminController
     {
         private readonly IProductTypeService productTypeService;
@@ -21,8 +19,9 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
         }
 
         [HttpGet("/Administration/ProductType/Create")]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            await Task.Delay(0);
             return View();
         }
 
@@ -35,17 +34,13 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                 return View(model);
             }
 
-            ProductTypeServiceModel pTServiceModel = new ProductTypeServiceModel
+            var pTServiceModel = new ProductTypeServiceModel
             {
                 Name = model.Name
             };
 
-            bool isCreated = await this.productTypeService.CreateAsync(pTServiceModel);
-
-            if(isCreated == false)
-            {
-                //TODO what do I return in this case? 
-            }
+            bool isCreated = await this.productTypeService
+                .CreateAsync(pTServiceModel);
 
             return Redirect("/Administration/ProductType/All");
         }
@@ -62,7 +57,7 @@ namespace DaysForGirls.Web.Areas.Administration.Controllers
                 .OrderBy(pt => pt.Name)
                 .ToListAsync();
 
-            if(allProductTypes == null)
+            if(allProductTypes.Count() < 1)
             {
                 return NotFound();
             }

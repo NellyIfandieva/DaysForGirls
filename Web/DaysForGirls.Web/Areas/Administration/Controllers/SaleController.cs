@@ -1,14 +1,14 @@
 ﻿namespace DaysForGirls.Web.Areas.Administration.Controllers
 {
+    using Services;
+    using Services.Models;
+    using InputModels;
+    using ViewModels;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
     using System;
     using System.Linq;
     using System.Threading.Tasks;
-    using DaysForGirls.Services;
-    using DaysForGirls.Services.Models;
-    using DaysForGirls.Web.InputModels;
-    using DaysForGirls.Web.ViewModels;
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
 
     public class SaleController : AdminController
     {
@@ -44,24 +44,25 @@
             {
                 return View(model);
             }
+
             string imageUrl = await this.cloudinaryService
                 .UploadPictureForSaleAsync(model.Picture, model.Title);
 
-
-            SaleServiceModel saleServiceModel = new SaleServiceModel
+            var saleServiceModel = new SaleServiceModel
             {
                 Title = model.Title,
                 EndsOn = model.EndsOn,
                 Picture = imageUrl
             };
 
-            string saleId = await this.saleService.CreateAsync(saleServiceModel);
+            string saleId = await this.saleService
+                .CreateAsync(saleServiceModel);
 
             return Redirect("/Administration/Sale/All");
         }
 
         [HttpGet("/Administration/Sale/All")]
-        public async Task<IActionResult> All()//re-add the Admin
+        public async Task<IActionResult> All()
         {
             var allSales = await this.saleService
                 .DisplayAllAdmin()
@@ -76,7 +77,7 @@
                 })
                 .ToListAsync();
 
-            if (allSales == null)
+            if (allSales.Count() < 1)
             {
                 return NotFound();
             }
@@ -92,7 +93,8 @@
                 return BadRequest();
             }
 
-            var sale = await this.saleService.GetSaleByIdAsync(id);
+            var sale = await this.saleService
+                .GetSaleByIdAsync(id);
 
             if (sale == null)
             {
@@ -105,6 +107,7 @@
                 Picture = sale.Picture,
                 Title = sale.Title,
                 EndsOn = sale.EndsOn.ToString("dddd, dd MMMM yyyy"),
+                IsActive = DateTime.UtcNow <= sale.EndsOn,
                 Products = sale.Products
                     .Select(p => new ProductInSaleAdminViewModel
                     {
@@ -116,14 +119,13 @@
                     }).ToList()
             };
 
-            saleToDisplay.IsActive = DateTime.UtcNow <= sale.EndsOn;
-
             return View(saleToDisplay);
         }
 
         [HttpGet("/Administration/Sale/Edit/{saleId}")]
         public async Task<IActionResult> Edit(string saleId)
         {
+            await Task.Delay(0);
             return View();
         }
 
@@ -135,6 +137,7 @@
             {
                 return View(model);
             }
+
             string imageUrl = await this.cloudinaryService
                 .UploadPictureForSaleAsync(model.Picture, model.Title);
 
@@ -146,48 +149,11 @@
                 Picture = imageUrl
             };
 
-            bool saleIsEdited = await this.saleService.EditAsync(saleToEdit);
+            bool saleIsEdited = await this.saleService
+                .EditAsync(saleToEdit);
 
             return Redirect("/Administration/Sale/Details/" + saleId);
         }
-
-        //[HttpGet("/Administration/Sale/AddProductToSale/{saleId}")]
-        //public async Task<IActionResult> AddProductToSale(string saleId)
-        //{
-        //        var allProducts = await this.adminService
-        //            .DisplayAll()
-        //            .Where(p => p.IsInSale == false)
-        //            .ToListAsync();
-
-        //    this.ViewData["allProducts"] = allProducts
-        //        .Select(p => new ProductAddToSaleViewModel
-        //        {
-        //            Id = p.Id,
-        //            Name = p.Name,
-        //            Picture = p.Picture.PictureUrl,
-        //            Price = p.Price.ToString("f2")
-        //        })
-        //        .ToList();
-
-        //    return View();
-        //}
-
-        //[HttpPost("/Administration/Sale/AddProductToSale/{saleId}")]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> AddProductToSale(SaleAddProductInputModel model)
-        //{
-        //    var saleToAddTo = await this.saleService.GetSaleByIdAsync(model.SaleId);
-
-        //    var productToAdd = await this.adminService
-        //        .GetProductByNameAsync(model.ProductName);
-
-        //    saleToAddTo.NewProduct = productToAdd;
-
-        //    bool saleAddedProduct = await this.saleService.AddProductToSaleAsync(saleToAddTo.Id, productToAdd.Id);
-        //    bool productAddedSale = await this.adminService.AddProductToSaleAsync(productToAdd.Id, saleToAddTo.Id);
-
-        //    return Redirect("/Administration/Sale/Details/{saleId}");
-        //}
 
         [HttpGet("/Administration/Sale/Delete/{saleId}")]
         public async Task<IActionResult> Delete(string saleId)
@@ -197,7 +163,8 @@
                 return BadRequest();
             }
 
-            bool isDeleted = await this.saleService.DeleteSaleById(saleId);
+            bool isDeleted = await this.saleService
+                .DeleteSaleById(saleId);
 
             return Redirect("/Administration/Sale/All");
         }

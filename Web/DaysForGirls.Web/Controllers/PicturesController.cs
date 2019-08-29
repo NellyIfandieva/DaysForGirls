@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DaysForGirls.Services;
-using DaysForGirls.Web.ViewModels;
-using Microsoft.AspNetCore.Mvc;
-
-namespace DaysForGirls.Web.Controllers
+﻿namespace DaysForGirls.Web.Controllers
 {
+    using Services;
+    using ViewModels;
+    using Microsoft.AspNetCore.Mvc;
+    using System.Threading.Tasks;
+
     public class PicturesController : Controller
     {
         private readonly IPictureService pictureService;
@@ -22,23 +19,23 @@ namespace DaysForGirls.Web.Controllers
         }
 
         [HttpGet("/Pictures/Display/{id}")]
-        public async Task<IActionResult> Display(int id)
+        public async Task<IActionResult> Display(int pictureId)
         {
-            var picture = await this.pictureService
-                .GetPictureByIdAsync(id);
+            if(pictureId <= 0)
+            {
+                return BadRequest();
+            }
 
-            PictureDetailsViewModel pictureToDisplay =
+            var picture = await this.pictureService
+                .GetPictureByIdAsync(pictureId);
+
+            var pictureToDisplay =
                 new PictureDetailsViewModel
                 {
                     Id = picture.Id,
                     PictureUrl = picture.PictureUrl,
                     ProductId = picture.ProductId
                 };
-
-            //var product = await this.productService
-            //    .GetProductByIdAsync(picture.ProductId);
-
-            //this.ViewData["productName"] = product.Name;
 
             return View(pictureToDisplay);
         }

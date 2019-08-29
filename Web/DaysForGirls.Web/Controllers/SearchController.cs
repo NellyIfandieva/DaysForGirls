@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DaysForGirls.Services;
-using DaysForGirls.Web.ViewModels;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-
-namespace DaysForGirls.Web.Controllers
+﻿namespace DaysForGirls.Web.Controllers
 {
+    using DaysForGirls.Services;
+    using DaysForGirls.Web.ViewModels;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
+    using System.Linq;
+    using System.Threading.Tasks;
+
     public class SearchController : Controller
     {
         private readonly IProductService productService;
@@ -18,13 +16,15 @@ namespace DaysForGirls.Web.Controllers
             this.productService = productService;
         }
 
-        [HttpPost("/Search/Display/{criteria}")]
+        [HttpGet("/Search/Display/{criteria}")]
         public async Task<IActionResult> Display(string criteria)
         {
             if(criteria == null)
             {
+                this.ViewData["error"] = "You entered no search criteria";
                 return View();
             }
+
             var searchResults = await this.productService
                 .GetAllSearchResultsByCriteria(criteria)
                 .Select(p => new ProductSearchResultViewModel

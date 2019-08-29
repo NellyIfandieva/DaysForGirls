@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DaysForGirls.Services;
-using DaysForGirls.Web.ViewModels;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-
-namespace DaysForGirls.Web.Controllers
+﻿namespace DaysForGirls.Web.Controllers
 {
+    using Services;
+    using ViewModels;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
+    using System.Linq;
+    using System.Threading.Tasks;
+
     public class OtherController : Controller
     {
         private readonly IProductService productService;
@@ -20,8 +18,10 @@ namespace DaysForGirls.Web.Controllers
 
         public async Task<IActionResult> All()
         {
+            string categoryName = "Other";
+
             var allOtherProducts = await this.productService
-                .GetAllProductsOfCategory("Other")
+                .GetAllProductsOfCategory(categoryName)
                 .Select(p => new DisplayAllOfCategoryViewModel
                 {
                     Id = p.Id,
@@ -40,8 +40,11 @@ namespace DaysForGirls.Web.Controllers
 
         public async Task<IActionResult> Dresses()
         {
+            string productTypeName = "Dress";
+            string categoryName = "Other";
+
             var allOtherDresses = await this.productService
-                .GetAllProductsOfTypeAndCategory("Dress", "Other")
+                .GetAllProductsOfTypeAndCategory(productTypeName, categoryName)
                 .Select(d => new DisplayAllOfCategoryAndTypeViewModel
                 {
                     Id = d.Id,
@@ -59,8 +62,11 @@ namespace DaysForGirls.Web.Controllers
 
         public async Task<IActionResult> Suits()
         {
+            string productTypeName = "Suit";
+            string categoryName = "Other";
+
             var allOtherSuits = await this.productService
-                .GetAllProductsOfTypeAndCategory("Suit", "Other")
+                .GetAllProductsOfTypeAndCategory(productTypeName, categoryName)
                 .Select(s => new DisplayAllOfCategoryAndTypeViewModel
                 {
                     Id = s.Id,
@@ -78,8 +84,11 @@ namespace DaysForGirls.Web.Controllers
 
         public async Task<IActionResult> Accessories()
         {
+            string productTypeName = "Accessory";
+            string categoryName = "Other";
+
             var allOtherAccessories = await this.productService
-                .GetAllProductsOfTypeAndCategory("Accessory", "Other")
+                .GetAllProductsOfTypeAndCategory(productTypeName, categoryName)
                 .Select(a => new DisplayAllOfCategoryAndTypeViewModel
                 {
                     Id = a.Id,

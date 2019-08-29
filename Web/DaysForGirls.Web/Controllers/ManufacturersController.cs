@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DaysForGirls.Services;
-using DaysForGirls.Web.ViewModels;
-using Microsoft.AspNetCore.Mvc;
-
-namespace DaysForGirls.Web.Controllers
+﻿namespace DaysForGirls.Web.Controllers
 {
+    using Services;
+    using ViewModels;
+    using Microsoft.AspNetCore.Mvc;
+    using System.Linq;
+    using System.Threading.Tasks;
+
     public class ManufacturersController : Controller
     {
         private readonly IManufacturerService manufacturerService;
@@ -20,8 +18,18 @@ namespace DaysForGirls.Web.Controllers
         [HttpGet("/Manufacturers/Details/{manufacturerId}")]
         public async Task<IActionResult> Details(int manufacturerId)
         {
+            if(manufacturerId <= 0)
+            {
+                return BadRequest();
+            }
+
             var manufacturer = await this.manufacturerService
                 .GetManufacturerByIdAsync(manufacturerId);
+
+            if(manufacturer == null)
+            {
+                return NotFound();
+            }
 
             var manufacturerToReturn = new ManufacturerDetailsViewModel
             {

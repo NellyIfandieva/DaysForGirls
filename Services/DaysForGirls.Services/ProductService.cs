@@ -241,124 +241,202 @@
             decimal priceCriteria;
             bool criteriaIsDecimal = decimal.TryParse(criteria, out priceCriteria);
 
-            IQueryable<ProductServiceModel> allSearchResults = null;
+            if(criteriaIsDecimal == false)
+            {
+                priceCriteria = 0.00m;
+            }
 
-            if(criteriaIsDecimal)
-            {
-                allSearchResults = this.db.Products
-                    .Include(p => p.Category)
-                    .Include(p => p.ProductType)
-                    .Include(p => p.Pictures)
-                    .Include(p => p.Manufacturer)
-                    .Include(p => p.Reviews)
-                    .Where(p => p.Price <= priceCriteria
-                    && p.IsDeleted == false)
-                    .Select(p => new ProductServiceModel
+            string criteriaToLower = criteria.ToLower();
+
+            var allSearchResults = this.db.Products
+                .Include(p => p.Category)
+                .Include(p => p.ProductType)
+                .Include(p => p.Pictures)
+                .Include(p => p.Manufacturer)
+                .Include(p => p.Reviews)
+                .Where(p => p.Name.ToLower().Contains(criteriaToLower)
+                || p.Description.ToLower().Contains(criteriaToLower)
+                || p.Manufacturer.Name.ToLower().Contains(criteriaToLower)
+                || p.Colour.ToLower().Contains(criteriaToLower)
+                || p.Size.ToLower().Contains(criteriaToLower)
+                || p.Sale.Title.ToLower().Contains(criteriaToLower)
+                || p.Category.Name.ToLower().Contains(criteriaToLower)
+                || p.ProductType.Name.ToLower().Contains(criteriaToLower)
+                || p.Price <= priceCriteria)
+                .Select(p => new ProductServiceModel
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Category = new CategoryServiceModel
                     {
-                        Id = p.Id,
-                        Name = p.Name,
-                        Category = new CategoryServiceModel
-                        {
-                            Name = p.Category.Name
-                        },
-                        ProductType = new ProductTypeServiceModel
-                        {
-                            Name = p.ProductType.Name
-                        },
-                        Description = p.Description,
-                        Pictures = p.Pictures
-                            .Select(pic => new PictureServiceModel
-                            {
-                                Id = pic.Id,
-                                PictureUrl = pic.PictureUrl
-                            })
-                            .ToList(),
-                        Colour = p.Colour,
-                        Size = p.Size,
-                        Manufacturer = new ManufacturerServiceModel
-                        {
-                            Id = p.ManufacturerId,
-                            Name = p.Manufacturer.Name
-                        },
-                        Price = p.Price,
-                        Quantity = new QuantityServiceModel
-                        {
-                            Id = p.QuantityId,
-                            AvailableItems = p.Quantity.AvailableItems
-                        },
-                        SaleId = p.SaleId,
-                        ShoppingCartId = p.ShoppingCartId,
-                        OrderId = p.OrderId,
-                        Reviews = p.Reviews
-                            .Select(r => new CustomerReviewServiceModel
-                            {
-                                Id = r.Id,
-                                Title = r.Title,
-                                Text = r.Text,
-                                CreatedOn = r.CreatedOn.ToString("dddd, dd MMMM yyyy"),
-                                AuthorUsername = r.Author.FullName
-                            })
-                            .ToList()
-                    });
-            }
-            else
-            {
-                allSearchResults = this.db.Products
-                    .Include(p => p.Category)
-                    .Include(p => p.ProductType)
-                    .Include(p => p.Pictures)
-                    .Include(p => p.Manufacturer)
-                    .Include(p => p.Reviews)
-                    .Where(p => p.Name.Contains(criteria)
-                    || p.Manufacturer.Name.Contains(criteria))
-                    .Select(p => new ProductServiceModel
+                        Name = p.Category.Name
+                    },
+                    ProductType = new ProductTypeServiceModel
                     {
-                        Id = p.Id,
-                        Name = p.Name,
-                        Category = new CategoryServiceModel
+                        Name = p.ProductType.Name
+                    },
+                    Description = p.Description,
+                    Pictures = p.Pictures
+                        .Select(pic => new PictureServiceModel
                         {
-                            Name = p.Category.Name
-                        },
-                        ProductType = new ProductTypeServiceModel
+                            Id = pic.Id,
+                            PictureUrl = pic.PictureUrl
+                        })
+                        .ToList(),
+                    Colour = p.Colour,
+                    Size = p.Size,
+                    Manufacturer = new ManufacturerServiceModel
+                    {
+                        Id = p.ManufacturerId,
+                        Name = p.Manufacturer.Name
+                    },
+                    Price = p.Price,
+                    Quantity = new QuantityServiceModel
+                    {
+                        Id = p.QuantityId,
+                        AvailableItems = p.Quantity.AvailableItems
+                    },
+                    SaleId = p.SaleId,
+                    ShoppingCartId = p.ShoppingCartId,
+                    OrderId = p.OrderId,
+                    Reviews = p.Reviews
+                        .Select(r => new CustomerReviewServiceModel
                         {
-                            Name = p.ProductType.Name
-                        },
-                        Description = p.Description,
-                        Pictures = p.Pictures
-                            .Select(pic => new PictureServiceModel
-                            {
-                                Id = pic.Id,
-                                PictureUrl = pic.PictureUrl
-                            })
-                            .ToList(),
-                        Colour = p.Colour,
-                        Size = p.Size,
-                        Manufacturer = new ManufacturerServiceModel
-                        {
-                            Id = p.ManufacturerId,
-                            Name = p.Manufacturer.Name
-                        },
-                        Price = p.Price,
-                        Quantity = new QuantityServiceModel
-                        {
-                            Id = p.QuantityId,
-                            AvailableItems = p.Quantity.AvailableItems
-                        },
-                        SaleId = p.SaleId,
-                        ShoppingCartId = p.ShoppingCartId,
-                        OrderId = p.OrderId,
-                        Reviews = p.Reviews
-                            .Select(r => new CustomerReviewServiceModel
-                            {
-                                Id = r.Id,
-                                Title = r.Title,
-                                Text = r.Text,
-                                CreatedOn = r.CreatedOn.ToString("dddd, dd MMMM yyyy"),
-                                AuthorUsername = r.Author.FullName
-                            })
-                            .ToList()
-                    });
-            }
+                            Id = r.Id,
+                            Title = r.Title,
+                            Text = r.Text,
+                            CreatedOn = r.CreatedOn.ToString("dddd, dd MMMM yyyy"),
+                            AuthorUsername = r.Author.FullName
+                        })
+                        .ToList()
+                });
+
+            //IQueryable<ProductServiceModel> allSearchResults = null;
+
+                //if(criteriaIsDecimal)
+                //{
+                //    allSearchResults = this.db.Products
+                //        .Include(p => p.Category)
+                //        .Include(p => p.ProductType)
+                //        .Include(p => p.Pictures)
+                //        .Include(p => p.Manufacturer)
+                //        .Include(p => p.Reviews)
+                //        .Where(p => p.Price <= priceCriteria
+                //        && p.IsDeleted == false)
+                //        .Select(p => new ProductServiceModel
+                //        {
+                //            Id = p.Id,
+                //            Name = p.Name,
+                //            Category = new CategoryServiceModel
+                //            {
+                //                Name = p.Category.Name
+                //            },
+                //            ProductType = new ProductTypeServiceModel
+                //            {
+                //                Name = p.ProductType.Name
+                //            },
+                //            Description = p.Description,
+                //            Pictures = p.Pictures
+                //                .Select(pic => new PictureServiceModel
+                //                {
+                //                    Id = pic.Id,
+                //                    PictureUrl = pic.PictureUrl
+                //                })
+                //                .ToList(),
+                //            Colour = p.Colour,
+                //            Size = p.Size,
+                //            Manufacturer = new ManufacturerServiceModel
+                //            {
+                //                Id = p.ManufacturerId,
+                //                Name = p.Manufacturer.Name
+                //            },
+                //            Price = p.Price,
+                //            Quantity = new QuantityServiceModel
+                //            {
+                //                Id = p.QuantityId,
+                //                AvailableItems = p.Quantity.AvailableItems
+                //            },
+                //            SaleId = p.SaleId,
+                //            ShoppingCartId = p.ShoppingCartId,
+                //            OrderId = p.OrderId,
+                //            Reviews = p.Reviews
+                //                .Select(r => new CustomerReviewServiceModel
+                //                {
+                //                    Id = r.Id,
+                //                    Title = r.Title,
+                //                    Text = r.Text,
+                //                    CreatedOn = r.CreatedOn.ToString("dddd, dd MMMM yyyy"),
+                //                    AuthorUsername = r.Author.FullName
+                //                })
+                //                .ToList()
+                //        });
+                //}
+            //else
+            //{
+            //    string criteriaToLower = criteria.ToLower();
+
+            //    allSearchResults = this.db.Products
+            //        .Include(p => p.Category)
+            //        .Include(p => p.ProductType)
+            //        .Include(p => p.Pictures)
+            //        .Include(p => p.Manufacturer)
+            //        .Include(p => p.Reviews)
+            //        .Where(p => p.Name.ToLower().Contains(criteriaToLower)
+            //        || p.Description.ToLower().Contains(criteriaToLower)
+            //        || p.Manufacturer.Name.ToLower().Contains(criteriaToLower)
+            //        || p.Colour.ToLower().Contains(criteriaToLower)
+            //        || p.Size.ToLower().Contains(criteriaToLower)
+            //        || p.Sale.Title.ToLower().Contains(criteriaToLower)
+            //        || p.Category.Name.ToLower().Contains(criteriaToLower)
+            //        || p.ProductType.Name.ToLower().Contains(criteriaToLower))
+            //        .Select(p => new ProductServiceModel
+            //        {
+            //            Id = p.Id,
+            //            Name = p.Name,
+            //            Category = new CategoryServiceModel
+            //            {
+            //                Name = p.Category.Name
+            //            },
+            //            ProductType = new ProductTypeServiceModel
+            //            {
+            //                Name = p.ProductType.Name
+            //            },
+            //            Description = p.Description,
+            //            Pictures = p.Pictures
+            //                .Select(pic => new PictureServiceModel
+            //                {
+            //                    Id = pic.Id,
+            //                    PictureUrl = pic.PictureUrl
+            //                })
+            //                .ToList(),
+            //            Colour = p.Colour,
+            //            Size = p.Size,
+            //            Manufacturer = new ManufacturerServiceModel
+            //            {
+            //                Id = p.ManufacturerId,
+            //                Name = p.Manufacturer.Name
+            //            },
+            //            Price = p.Price,
+            //            Quantity = new QuantityServiceModel
+            //            {
+            //                Id = p.QuantityId,
+            //                AvailableItems = p.Quantity.AvailableItems
+            //            },
+            //            SaleId = p.SaleId,
+            //            ShoppingCartId = p.ShoppingCartId,
+            //            OrderId = p.OrderId,
+            //            Reviews = p.Reviews
+            //                .Select(r => new CustomerReviewServiceModel
+            //                {
+            //                    Id = r.Id,
+            //                    Title = r.Title,
+            //                    Text = r.Text,
+            //                    CreatedOn = r.CreatedOn.ToString("dddd, dd MMMM yyyy"),
+            //                    AuthorUsername = r.Author.FullName
+            //                })
+            //                .ToList()
+            //        });
+            //}
 
             return allSearchResults;
         }

@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DaysForGirls.Services;
-using DaysForGirls.Services.Models;
-using DaysForGirls.Web.InputModels;
-using DaysForGirls.Web.ViewModels;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-
-namespace DaysForGirls.Web.Controllers
+﻿namespace DaysForGirls.Web.Controllers
 {
+    using Services;
+    using Services.Models;
+    using InputModels;
+    using ViewModels;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+
     public class OrdersController : Controller
     {
         private readonly IOrderService orderService;
@@ -28,9 +27,10 @@ namespace DaysForGirls.Web.Controllers
                 return BadRequest();
             }
 
-            var order = await this.orderService.CreateAsync(userId);
+            var order = await this.orderService
+                .CreateAsync(userId);
 
-            OrderDisplayViewModel orderToDisplay = new OrderDisplayViewModel
+            var orderToDisplay = new OrderDisplayViewModel
             {
                 Id = order.Id,
                 IssuedOn = order.IssuedOn.ToString("dddd, dd MMMM yyyy"),
@@ -60,12 +60,19 @@ namespace DaysForGirls.Web.Controllers
         [HttpGet("/Orders/UserAll/{userName}")]
         public async Task<IActionResult> UserAll(string userName)
         {
+            if(userName == null)
+            {
+                return BadRequest();
+            }
+            
             var allOrdersOfUser = await this.orderService
-                .DisplayAllOrdersOfUser(userName);
+                .DisplayAllOrdersOfUserAsync(userName);
 
-            List<OrderDisplayAllViewModel> ordersToReturn = new List<OrderDisplayAllViewModel>();
+            var ordersToReturn = new List<OrderDisplayAllViewModel>();
+
             int number = 1;
-            foreach(var order in allOrdersOfUser)
+
+            foreach (var order in allOrdersOfUser)
             {
                 var orderToReturn = new OrderDisplayAllViewModel
                 {
@@ -97,9 +104,11 @@ namespace DaysForGirls.Web.Controllers
         public async Task<IActionResult> AllAdmin()
         {
             var allOrdersInDb = await this.orderService
-                .DisplayAllOrdersToAdminAsync().ToListAsync();
+                .DisplayAllOrdersToAdminAsync()
+                .ToListAsync();
 
             var adminOrders = new List<AdminOrdersDisplayAllViewModel>();
+
             int number = 1;
 
             foreach (var order in allOrdersInDb)
@@ -138,17 +147,18 @@ namespace DaysForGirls.Web.Controllers
         [HttpGet("/Orders/Details/{orderId}")]
         public async Task<IActionResult> Details(string orderId)
         {
-            if(this.User.Identity.IsAuthenticated == false)
-            {
-                return Redirect("/Identity/Account/Login");
-            }
-
-            if(orderId == null)
+            if (orderId == null)
             {
                 return BadRequest();
             }
 
-            var orderInDb = await this.orderService.GetOrderByIdAsync(orderId);
+            if (this.User.Identity.IsAuthenticated == false)
+            {
+                return Redirect("/Identity/Account/Login");
+            }
+
+            var orderInDb = await this.orderService
+                .GetOrderByIdAsync(orderId);
 
             if(orderInDb == null)
             {
@@ -190,7 +200,8 @@ namespace DaysForGirls.Web.Controllers
                 return BadRequest();
             }
 
-            var orderInDb = await this.orderService.GetOrderByIdAsync(orderId);
+            var orderInDb = await this.orderService
+                .GetOrderByIdAsync(orderId);
 
             if(orderInDb == null)
             {
@@ -213,20 +224,27 @@ namespace DaysForGirls.Web.Controllers
         }
 
         [HttpPost("/Orders/Edit/{orderId}")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string orderId, OrderEditInputModel model)
         {
+            if(orderId == null)
+            {
+                return BadRequest();
+            }
+
             if(ModelState.IsValid == false)
             {
                 return View(model);
             }
 
-            OrderServiceModel orderToEdit = new OrderServiceModel
+            var orderToEdit = new OrderServiceModel
             {
                 Id = orderId,
                 OrderStatus = model.OrderStatus
             };
 
-            bool orderIsEdited = await this.orderService.EditOrderStatusAsync(orderToEdit);
+            bool orderIsEdited = await this.orderService
+                .EditOrderStatusAsync(orderToEdit);
 
             return Redirect("/Orders/Details/" + orderId);
         }

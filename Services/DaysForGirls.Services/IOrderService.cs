@@ -9,7 +9,7 @@
     {
         Task<OrderServiceModel> CreateAsync(string userId);
 
-        Task<List<OrderServiceModel>> DisplayAllOrdersOfUser(string userName);
+        Task<List<OrderServiceModel>> DisplayAllOrdersOfUserAsync(string userName);
 
         IQueryable<OrderServiceModel> DisplayAllOrdersToAdminAsync();
 

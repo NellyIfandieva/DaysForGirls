@@ -26,14 +26,22 @@ namespace DaysForGirls.Web.Controllers
             return Redirect("/Sales/All");
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        [HttpPost]
+        public async Task<IActionResult> Display(string criteria)
         {
+            return Redirect("/Search/Display/" + criteria);
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public async Task<IActionResult> Error()
+        {
+            await Task.Delay(0);
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public IActionResult Privacy()
+        public async Task<IActionResult> Privacy()
         {
+            await Task.Delay(0);
             return View();
         }
     }

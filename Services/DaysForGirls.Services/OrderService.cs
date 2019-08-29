@@ -122,7 +122,7 @@
             return orderToReturn;
         }
 
-        public async Task<List<OrderServiceModel>> DisplayAllOrdersOfUser(string userName)
+        public async Task<List<OrderServiceModel>> DisplayAllOrdersOfUserAsync(string userName)
         {
             DaysForGirlsUser currentUser = await this.userManager.FindByNameAsync(userName);
 

@@ -1,14 +1,12 @@
-﻿using DaysForGirls.Services;
-using DaysForGirls.Services.Models;
-using DaysForGirls.Web.ViewModels;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Threading.Tasks;
-
-
-namespace DaysForGirls.Web.Controllers
+﻿namespace DaysForGirls.Web.Controllers
 {
+    using Services;
+    using ViewModels;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
+    using System.Linq;
+    using System.Threading.Tasks;
+
     public class ProductsController : Controller
     {
         private readonly IProductService productService;
@@ -45,6 +43,11 @@ namespace DaysForGirls.Web.Controllers
         [HttpGet("/Products/Details/{productId}")]
         public async Task<IActionResult> Details(int productId)
         {
+            if(productId <= 0)
+            {
+                return BadRequest();
+            }
+
             var productFromDb = await this.adminService
                 .GetProductByIdAsync(productId);
 
