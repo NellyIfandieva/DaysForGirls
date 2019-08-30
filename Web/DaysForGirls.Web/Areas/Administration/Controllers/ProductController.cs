@@ -240,6 +240,7 @@
                 Colour = productInDb.Colour,
                 Size = productInDb.Size,
                 Description = productInDb.Description,
+                ManufacturerId = productInDb.Manufacturer.Id,
                 Manufacturer = productInDb.Manufacturer.Name,
                 Price = productInDb.Price,
                 SalePrice = productInDb.SalePrice,
@@ -259,7 +260,7 @@
                         Title = pR.Title,
                         Text = pR.Text,
                         DateCreated = pR.CreatedOn,
-                        AuthorId = pR.AuthorId,
+                        AuthorUsername = pR.AuthorUsername
                     })
                     .ToList(),
                 SaleId = productInDb.SaleId,

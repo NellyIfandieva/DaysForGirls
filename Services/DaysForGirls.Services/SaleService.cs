@@ -88,11 +88,11 @@
             return allSales;
         }
 
-        public async Task<SaleServiceModel> GetSaleByIdAsync(string id)
+        public async Task<SaleServiceModel> GetSaleByIdAsync(string saleId)
         {
             var saleWithDetails = await this.db.Sales
                 .Include(s => s.Products)
-                .SingleOrDefaultAsync(sale => sale.Id == id);
+                .SingleOrDefaultAsync(sale => sale.Id == saleId);
 
             if(saleWithDetails == null)
             {
@@ -100,7 +100,7 @@
             }
 
             var productsInSale = await this.db.Products
-                .Where(p => p.SaleId == id)
+                .Where(p => p.SaleId == saleId)
                 .Select(pS => new ProductServiceModel
                 {
                     Id = pS.Id,
@@ -125,6 +125,7 @@
                     Price = pS.Price,
                     SalePrice = pS.SalePrice,
                     SaleId = pS.SaleId,
+                    ShoppingCartId = pS.ShoppingCartId,
                     OrderId = pS.OrderId,
                     Manufacturer = new ManufacturerServiceModel
                     {

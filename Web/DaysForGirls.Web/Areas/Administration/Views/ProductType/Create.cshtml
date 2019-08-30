@@ -8,7 +8,16 @@
 }
 
     <style>
-        input[type=text], select {
+        .productType-create-row {
+            width: 50%;
+            margin-left: 400px;
+            position: center;
+            border-radius: 5px;
+            background-color: #f7f5ed;
+            padding: 20px;
+        }
+
+        .productType-create-row input[type=text], select {
             width: 50%;
             padding: 12px 20px;
             margin: 8px 0;
@@ -18,7 +27,7 @@
             box-sizing: border-box;
         }
 
-        input[type=submit] {
+        .productType-create-row input[type=submit] {
             width: 20%;
             background-color: #cc0052;
             color: white;
@@ -30,39 +39,21 @@
             cursor: pointer;
         }
 
-        input[type=submit]:hover {
+        .productType-create-row input[type=submit]:hover {
             background-color: #a3a375;
         }
-
-        .row {
-            width: 50%;
-            margin-left: 400px;
-            position: center;
-            border-radius: 5px;
-            background-color: #f7f5ed;
-            padding: 20px;
-        }
-
-        h2{
-            margin-top: 50px;
-        }
-
-        /*#forgot-or-register {
-            color: #cc0052;
-        }*/
     </style>
 
-<h2 class="text-center">Create Product Type</h2>
+<h2 style="margin-top: 50px; text-align: center">Create Product Type</h2>
 
-@*<h4>ProductTypeCreateInputModel</h4>*@
 <hr />
-<div class="row">
+<div class="productType-create-row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" placeholder="Enter the Product Type" autofocus />
+                <input asp-for="Name" class="form-control" placeholder="Enter the Product Type Name" autofocus />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">

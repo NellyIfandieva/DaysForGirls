@@ -6,18 +6,23 @@
     using Microsoft.AspNetCore.Mvc;
     using System.Threading.Tasks;
     using System.Security.Claims;
+    using DaysForGirls.Data.Models;
+    using Microsoft.AspNetCore.Identity;
 
     public class CustomerReviewsController : Controller
     {
         private readonly ICustomerReviewService customerReviewService;
         private readonly IProductService productService;
+        private readonly UserManager<DaysForGirlsUser> userManager;
 
         public CustomerReviewsController(
             ICustomerReviewService customerReviewService,
-            IProductService productService)
+            IProductService productService,
+            UserManager<DaysForGirlsUser> userManager)
         {
             this.customerReviewService = customerReviewService;
             this.productService = productService;
+            this.userManager = userManager;
         }
 
         [HttpGet("/CustomerReviews/Create/{productId}")]
@@ -39,7 +44,10 @@
         public async Task<IActionResult> Create(CustomerReviewInputModel model)
         {
             string userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            //string username = this.User.Identity.Name;
+
+            DaysForGirlsUser currentUser =
+               await this.userManager.FindByIdAsync(userId);
+
             var productId = model.ProductId;
             
             var newCustomerReview = new CustomerReviewServiceModel
@@ -47,6 +55,7 @@
                 Title = model.Title,
                 Text = model.Text,
                 AuthorId = userId,
+                AuthorUsername = currentUser.UserName,
                 ProductId = model.ProductId
             };
 

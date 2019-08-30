@@ -11,14 +11,11 @@
 
     public class CustomerReviewService : ICustomerReviewService
     {
-        private readonly UserManager<DaysForGirlsUser> userManager;
         private readonly DaysForGirlsDbContext db;
 
         public CustomerReviewService(
-            UserManager<DaysForGirlsUser> userManager,
             DaysForGirlsDbContext db)
         {
-            this.userManager = userManager;
             this.db = db;
         }
 
@@ -32,7 +29,6 @@
                 Title = model.Title,
                 Text = model.Text,
                 AuthorId = model.AuthorId,
-                //Author = currentUser,
                 ProductId = model.ProductId,
                 CreatedOn = DateTime.UtcNow
             };
@@ -48,6 +44,7 @@
         public IQueryable<CustomerReviewServiceModel> GetAllCommentsOfProductByProductId(int productId)
         {
             var allProductComments = this.db.CustomerReviews
+                .Include(cR => cR.Author)
                 .Where(cR => cR.Product.Id == productId
                 && cR.IsDeleted == false)
                 .Select(cR => new CustomerReviewServiceModel
@@ -57,6 +54,7 @@
                     Text = cR.Text,
                     CreatedOn = cR.CreatedOn.ToString("dddd, dd MMMM yyyy"),
                     AuthorId = cR.AuthorId,
+                    AuthorUsername = cR.Author.UserName,
                     ProductId = productId
                 });
 

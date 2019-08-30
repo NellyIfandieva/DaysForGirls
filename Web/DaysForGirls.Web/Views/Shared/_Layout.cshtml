@@ -106,11 +106,11 @@
                 <a href="/Other/Accessories" class="w3-bar-item w3-button">Accessories</a>
             </div>
         </div>
+        <a href="/Products/All"><button class="smallNav-additional-button">All Products</button></a>
+        <a href="/Sales/All"><button class="smallNav-additional-button">All Sales</button></a>
         @if (this.User.Identity.IsAuthenticated)
         {
-            <div class="w3-dropdown-hover" style="margin-left: 755px">
-                <a href="/Orders/UserAll/@this.User.Identity.Name"><button class="w3-button">Your Orders</button></a>
-            </div>
+            <a href="/Orders/UserAll/@this.User.Identity.Name"><button class="smallNav-your-orders-button">Your Orders</button></a>
         }
     </div>
     <div class="w3-container">

@@ -9,7 +9,16 @@
 }
 
     <style>
-        input[type=text], select {
+        .product-create-row {
+            width: 50%;
+            margin-left: 400px;
+            position: center;
+            border-radius: 5px;
+            background-color: #f7f5ed;
+            padding: 20px;
+        }
+
+        .product-create-row input[type=text], select {
             width: 50%;
             padding: 12px 20px;
             margin: 8px 0;
@@ -19,7 +28,7 @@
             box-sizing: border-box;
         }
 
-        input[type=number], select {
+        .product-create-row input[type=number], select {
             width: 50%;
             padding: 12px 20px;
             margin: 8px 0;
@@ -29,7 +38,7 @@
             box-sizing: border-box;
         }
 
-        input[type=file], select {
+        .product-create-row input[type=file], select {
             width: 50%;
             padding: 12px 20px;
             margin: 8px 0;
@@ -39,7 +48,7 @@
             box-sizing: border-box;
         }
 
-        input[type=submit] {
+        .product-create-row input[type=submit] {
             width: 20%;
             background-color: #cc0052;
             color: white;
@@ -51,33 +60,20 @@
             cursor: pointer;
         }
 
-            input[type=submit]:hover {
+            .product-create-row input[type=submit]:hover {
                 background-color: #a3a375;
             }
-
-        .row {
-            width: 50%;
-            margin-left: 400px;
-            position: center;
-            border-radius: 5px;
-            background-color: #f7f5ed;
-            padding: 20px;
-        }
-
-        h2{
-            margin-top: 50px;
-        }
 
         select{
             color: #666666;
         }
     </style>
 
-<h2 class="text-center">Create a Product</h2>
+<h2 style="margin-top: 50px; text-align: center">Create a Product</h2>
 
 <hr />
 
-<div class="row">
+<div class="product-create-row">
     <div class="col-md-4">
         <form method="post" enctype="multipart/form-data" asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>

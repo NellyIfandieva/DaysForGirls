@@ -14,6 +14,8 @@ namespace DaysForGirls.Web.ViewModels
 
         public string DateCreated { get; set; }
 
-        public string AuthorId { get; set; }
+        //public string AuthorId { get; set; }
+
+        public string AuthorUsername { get; set; }
     }
 }

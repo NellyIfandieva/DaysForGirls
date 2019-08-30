@@ -116,7 +116,9 @@
                         Picture = p.Pictures.ElementAt(0).PictureUrl,
                         Price = p.Price,
                         SalePrice = p.SalePrice,
-                        AvailableQuantity = p.Quantity.AvailableItems
+                        AvailableQuantity = p.Quantity.AvailableItems,
+                        ShoppingCartId = p.ShoppingCartId,
+                        OrderId = p.OrderId
                     }).ToList()
             };
 
@@ -153,7 +155,7 @@
             bool saleIsEdited = await this.saleService
                 .EditAsync(saleToEdit);
 
-            return Redirect("/Administration/Sale/Details/" + saleId);
+            return Redirect("/Sales/Details/" + saleId);
         }
 
         [HttpGet("/Administration/Sale/Delete/{saleId}")]

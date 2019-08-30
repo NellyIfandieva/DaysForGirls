@@ -87,7 +87,7 @@
                         Title = r.Title,
                         Text = r.Text,
                         DateCreated = r.CreatedOn,
-                        AuthorId = r.AuthorId
+                        AuthorUsername = r.AuthorUsername
                     })
                     .ToList(),
                 SaleId = productFromDb.SaleId,

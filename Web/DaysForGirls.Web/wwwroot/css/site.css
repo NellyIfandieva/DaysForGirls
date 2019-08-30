@@ -47,12 +47,30 @@ body {
   background-color: #f9f7ee;
 
 }
+
+.smallNav-additional-button, .smallNav-your-orders-button {
+    background-color: #4e4723;
+    color: whitesmoke;
+    border: none;
+    margin-top: 8px;
+    cursor: pointer;
+}
+
+.smallNav-additional-button{
+    padding-left: 10px;
+}
+
+
+.smallNav-your-orders-button{
+    padding-left: 600px;
+}
+
 .footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  white-space: nowrap;
-  /* Set the fixed height of the footer here */
-  height: 60px;
-  line-height: 60px; /* Vertically center the text there */
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+    /* Set the fixed height of the footer here */
+    height: 60px;
+    line-height: 60px; /* Vertically center the text there */
 }

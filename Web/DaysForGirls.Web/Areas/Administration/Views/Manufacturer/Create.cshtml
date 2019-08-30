@@ -8,7 +8,7 @@
 }
 
     <style>
-        .row {
+        .manufacturer-create-row {
             width: 50%;
             margin-left: 400px;
             position: center;
@@ -17,7 +17,7 @@
             padding: 20px;
         }
 
-        input[type=text], select {
+        .manufacturer-create-row input[type=text], select {
             width: 50%;
             padding: 12px 20px;
             margin: 8px 0;
@@ -27,7 +27,7 @@
             box-sizing: border-box;
         }
 
-        input[type=submit] {
+        .manufacturer-create-row input[type=submit] {
             width: 20%;
             background-color: #cc0052;
             color: white;
@@ -39,11 +39,11 @@
             cursor: pointer;
         }
 
-            input[type=submit]:hover {
+            .manufacturer-create-row input[type=submit]:hover {
                 background-color: #a3a375;
             }
 
-            input[type=file] {
+            .manufacturer-create-row input[type=file] {
             width: 50%;
             padding: 12px 20px;
             margin: 8px 0;
@@ -52,30 +52,13 @@
             border-radius: 4px;
             box-sizing: border-box;
         }
-
-            h2{
-                margin-top: 50px;
-            }
-
-        /*#row {
-            margin-left: 250px;
-            margin-right: 250px;
-            position: center;
-            border-radius: 5px;
-            background-color: #f2f2f2;
-            padding: 20px;
-        }*/
-
-        /*#forgot-or-register {
-            color: #cc0052;
-        }*/
     </style>
 
-<h2 class="text-center">Create a Manufacturer</h2>
+<h2 style="margin-top: 50px; text-align: center">Create a Manufacturer</h2>
 
 @*<h4>ProductTypeCreateInputModel</h4>*@
 <hr />
-<div class="row">
+<div class="manufacturer-create-row">
     <div class="col-md-4">
         <form method="post" enctype="multipart/form-data" asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>

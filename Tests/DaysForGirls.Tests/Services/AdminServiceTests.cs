@@ -109,8 +109,7 @@ namespace DaysForGirls.Tests.Services
 
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
             var pictureService = new PictureService(db);
-            var userManager = UserManagerMOQ.TestUserManager<DaysForGirlsUser>();
-            var customerReviewService = new CustomerReviewService(userManager, db);
+            var customerReviewService = new CustomerReviewService(db);
             this.adminService = new AdminService(db, pictureService, customerReviewService);
 
             ProductType type = new ProductType { Name = "Dress" };
@@ -173,8 +172,7 @@ namespace DaysForGirls.Tests.Services
         {
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
             var pictureService = new PictureService(db);
-            var userManager = UserManagerMOQ.TestUserManager<DaysForGirlsUser>();
-            var customerReviewService = new CustomerReviewService(userManager, db);
+            var customerReviewService = new CustomerReviewService(db);
             this.adminService = new AdminService(db, pictureService, customerReviewService);
 
             Category category = new Category
@@ -238,8 +236,7 @@ namespace DaysForGirls.Tests.Services
             await SeedSampleProducts(db);
 
             var pictureService = new PictureService(db);
-            var userManager = UserManagerMOQ.TestUserManager<DaysForGirlsUser>();
-            var customerReviewService = new CustomerReviewService(userManager, db);
+            var customerReviewService = new CustomerReviewService(db);
             this.adminService = new AdminService(db, pictureService, customerReviewService);
 
             List<AdminProductAllServiceModel> expectedResults = GetSampleProducts()
@@ -297,8 +294,7 @@ namespace DaysForGirls.Tests.Services
 
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
             var pictureService = new PictureService(db);
-            var userManager = UserManagerMOQ.TestUserManager<DaysForGirlsUser>();
-            var customerReviewService = new CustomerReviewService(userManager, db);
+            var customerReviewService = new CustomerReviewService(db);
             this.adminService = new AdminService(db, pictureService, customerReviewService);
 
             List<AdminProductAllServiceModel> actualResults = await this.adminService.DisplayAll().ToListAsync();
@@ -313,8 +309,7 @@ namespace DaysForGirls.Tests.Services
 
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
             var pictureService = new PictureService(db);
-            var userManager = UserManagerMOQ.TestUserManager<DaysForGirlsUser>();
-            var customerReviewService = new CustomerReviewService(userManager, db);
+            var customerReviewService = new CustomerReviewService(db);
             this.adminService = new AdminService(db, pictureService, customerReviewService);
             await SeedSampleProducts(db);
 
@@ -375,8 +370,7 @@ namespace DaysForGirls.Tests.Services
         {
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
             var pictureService = new PictureService(db);
-            var userManager = UserManagerMOQ.TestUserManager<DaysForGirlsUser>();
-            var customerReviewService = new CustomerReviewService(userManager, db);
+            var customerReviewService = new CustomerReviewService(db);
             this.adminService = new AdminService(db, pictureService, customerReviewService);
             await SeedSampleProducts(db);
 
@@ -390,8 +384,7 @@ namespace DaysForGirls.Tests.Services
 
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
             var pictureService = new PictureService(db);
-            var userManager = UserManagerMOQ.TestUserManager<DaysForGirlsUser>();
-            var customerReviewService = new CustomerReviewService(userManager, db);
+            var customerReviewService = new CustomerReviewService(db);
             this.adminService = new AdminService(db, pictureService, customerReviewService);
             await SeedSampleProducts(db);
 
@@ -490,8 +483,7 @@ namespace DaysForGirls.Tests.Services
 
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
             var pictureService = new PictureService(db);
-            var userManager = UserManagerMOQ.TestUserManager<DaysForGirlsUser>();
-            var customerReviewService = new CustomerReviewService(userManager, db);
+            var customerReviewService = new CustomerReviewService(db);
             this.adminService = new AdminService(db, pictureService, customerReviewService);
             await SeedSampleProducts(db);
 
@@ -512,8 +504,7 @@ namespace DaysForGirls.Tests.Services
 
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
             var pictureService = new PictureService(db);
-            var userManager = UserManagerMOQ.TestUserManager<DaysForGirlsUser>();
-            var customerReviewService = new CustomerReviewService(userManager, db);
+            var customerReviewService = new CustomerReviewService(db);
             this.adminService = new AdminService(db, pictureService, customerReviewService);
             Sale sale = new Sale
             {
@@ -574,8 +565,7 @@ namespace DaysForGirls.Tests.Services
 
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
             var pictureService = new PictureService(db);
-            var userManager = UserManagerMOQ.TestUserManager<DaysForGirlsUser>();
-            var customerReviewService = new CustomerReviewService(userManager, db);
+            var customerReviewService = new CustomerReviewService(db);
             this.adminService = new AdminService(db, pictureService, customerReviewService);
             Sale sale = new Sale
             {
@@ -636,8 +626,7 @@ namespace DaysForGirls.Tests.Services
 
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
             var pictureService = new PictureService(db);
-            var userManager = UserManagerMOQ.TestUserManager<DaysForGirlsUser>();
-            var customerReviewService = new CustomerReviewService(userManager, db);
+            var customerReviewService = new CustomerReviewService(db);
             this.adminService = new AdminService(db, pictureService, customerReviewService);
             Sale sale = new Sale
             {
@@ -699,8 +688,7 @@ namespace DaysForGirls.Tests.Services
 
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
             var pictureService = new PictureService(db);
-            var userManager = UserManagerMOQ.TestUserManager<DaysForGirlsUser>();
-            var customerReviewService = new CustomerReviewService(userManager, db);
+            var customerReviewService = new CustomerReviewService(db);
             this.adminService = new AdminService(db, pictureService, customerReviewService);
 
             Product product = new Product
@@ -755,8 +743,7 @@ namespace DaysForGirls.Tests.Services
 
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
             var pictureService = new PictureService(db);
-            var userManager = UserManagerMOQ.TestUserManager<DaysForGirlsUser>();
-            var customerReviewService = new CustomerReviewService(userManager, db);
+            var customerReviewService = new CustomerReviewService(db);
             this.adminService = new AdminService(db, pictureService, customerReviewService);
 
             Product product = new Product
@@ -808,8 +795,7 @@ namespace DaysForGirls.Tests.Services
         {
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
             var pictureService = new PictureService(db);
-            var userManager = UserManagerMOQ.TestUserManager<DaysForGirlsUser>();
-            var customerReviewService = new CustomerReviewService(userManager, db);
+            var customerReviewService = new CustomerReviewService(db);
             this.adminService = new AdminService(db, pictureService, customerReviewService);
 
             Product product = new Product
@@ -916,8 +902,7 @@ namespace DaysForGirls.Tests.Services
 
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
             var pictureService = new PictureService(db);
-            var userManager = UserManagerMOQ.TestUserManager<DaysForGirlsUser>();
-            var customerReviewService = new CustomerReviewService(userManager, db);
+            var customerReviewService = new CustomerReviewService(db);
             this.adminService = new AdminService(db, pictureService, customerReviewService);
             Sale sale = new Sale
             {
@@ -945,8 +930,7 @@ namespace DaysForGirls.Tests.Services
         {
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
             var pictureService = new PictureService(db);
-            var userManager = UserManagerMOQ.TestUserManager<DaysForGirlsUser>();
-            var customerReviewService = new CustomerReviewService(userManager, db);
+            var customerReviewService = new CustomerReviewService(db);
             this.adminService = new AdminService(db, pictureService, customerReviewService);
 
             await SeedSampleProducts(db);
@@ -965,8 +949,7 @@ namespace DaysForGirls.Tests.Services
 
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
             var pictureService = new PictureService(db);
-            var userManager = UserManagerMOQ.TestUserManager<DaysForGirlsUser>();
-            var customerReviewService = new CustomerReviewService(userManager, db);
+            var customerReviewService = new CustomerReviewService(db);
             this.adminService = new AdminService(db, pictureService, customerReviewService);
 
             await SeedSampleProducts(db);
@@ -993,8 +976,7 @@ namespace DaysForGirls.Tests.Services
 
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
             var pictureService = new PictureService(db);
-            var userManager = UserManagerMOQ.TestUserManager<DaysForGirlsUser>();
-            var customerReviewService = new CustomerReviewService(userManager, db);
+            var customerReviewService = new CustomerReviewService(db);
             this.adminService = new AdminService(db, pictureService, customerReviewService);
             Order order = new Order
             {

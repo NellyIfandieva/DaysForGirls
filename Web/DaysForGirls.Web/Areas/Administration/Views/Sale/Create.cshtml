@@ -9,7 +9,7 @@
 }
 
     <style>
-        input[type=text], select {
+        .sale-create-row input[type=text], select {
             width: 50%;
             padding: 12px 20px;
             margin: 8px 0;
@@ -19,7 +19,7 @@
             box-sizing: border-box;
         }
 
-        input[type=datetime], select {
+        .sale-create-row input[type=datetime], select {
             width: 50%;
             padding: 12px 20px;
             margin: 8px 0;
@@ -29,7 +29,7 @@
             box-sizing: border-box;
         }
 
-        input[type=file], select {
+        .sale-create-row input[type=file], select {
             width: 50%;
             height: 85px;
             padding: 25px 20px;
@@ -40,7 +40,7 @@
             box-sizing: border-box;
         }
 
-        input[type=submit] {
+        .sale-create-row input[type=submit] {
             width: 20%;
             background-color: #cc0052;
             color: white;
@@ -52,11 +52,11 @@
             cursor: pointer;
         }
 
-            input[type=submit]:hover {
+            .sale-create-row input[type=submit]:hover {
                 background-color: #a3a375;
             }
 
-        .row {
+        .sale-create-row {
             width: 50%;
             margin-left: 400px;
             position: center;
@@ -64,16 +64,12 @@
             background-color: #f7f5ed;
             padding: 20px;
         }
-
-        h2{
-            margin-top: 50px;
-        }
     </style>
 
-<h2 class="text-center">Create a Sale</h2>
+<h2 style="margin-top: 50px; text-align: center">Create a Sale</h2>
 
 <hr />
-<div class="row">
+<div class="sale-create-row">
     <div class="col-md-4">
         <form method="post" enctype="multipart/form-data" asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -97,10 +93,6 @@
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

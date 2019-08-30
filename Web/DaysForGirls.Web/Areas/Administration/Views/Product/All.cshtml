@@ -8,6 +8,7 @@
 <style>
     #all-products-container {
         display: inline-block;
+        margin-top: 50px;
     }
 
     #product-holder {
@@ -21,6 +22,9 @@
             width: 195px;
             height: 240px;
             margin-bottom: 1px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px;
         }
 
     #product-function-options {
@@ -28,7 +32,12 @@
     }
 
         #product-function-options a {
-            padding-left: 6px;
+            padding-left: 4px;
+        }
+
+        #product-function-options .addToSale{
+            padding-left: 10px;
+            padding-right: 10px;
         }
 
     .product-info-holder {
@@ -77,6 +86,11 @@
         background-color: #576ac4;
     }
 
+    .main-title{
+        margin-top: 50px;
+        text-align: center;
+    }
+
     h2{
         margin-top: 100px;
         margin-left: 400px;
@@ -85,7 +99,7 @@
 
 @if (Model.Count() > 0)
 {
-    <h1 class="text-center">All Products - Admin View</h1>
+    <h1 class="main-title">All Products - Admin View</h1>
 
     <div id="all-products-container">
         @foreach (var product in Model)
@@ -130,7 +144,7 @@
                         <a href="/Administration/Product/Edit/@product.Id">Edit</a>
                         @if (product.IsInSale == false)
                         {
-                            <a href="/Administration/Product/Edit/@product.Id">Add to Sale</a>
+                            <a href="/Administration/Product/Edit/@product.Id" class="addToSale">Add to Sale</a>
                         }
                         <a href="/Administration/Product/Erase/@product.Id">Delete</a>
                     </div>

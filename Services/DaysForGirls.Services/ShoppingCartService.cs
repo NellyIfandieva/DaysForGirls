@@ -11,16 +11,13 @@
     public class ShoppingCartService : IShoppingCartService
     {
         private readonly DaysForGirlsDbContext db;
-        private readonly UserManager<DaysForGirlsUser> userManager;
         private readonly IProductService productService;
 
         public ShoppingCartService(
             DaysForGirlsDbContext db,
-            UserManager<DaysForGirlsUser> userManager,
             IProductService productService)
         {
             this.db = db;
-            this.userManager = userManager;
             this.productService = productService;
         }
 

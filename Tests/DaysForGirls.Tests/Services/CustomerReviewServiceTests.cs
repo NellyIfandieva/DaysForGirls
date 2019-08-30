@@ -17,7 +17,6 @@ namespace DaysForGirls.Tests.Services
     public class CustomerReviewServiceTests
     {
         private ICustomerReviewService customerReviewService;
-        //private readonly UserManager<DaysForGirlsUser> userManager;
 
         private List<CustomerReview> GetSampleReviews()
         {
@@ -54,9 +53,8 @@ namespace DaysForGirls.Tests.Services
             string errorMessagePrefix = "CustomerReviewService CreateAsync() method does not work properly.";
 
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
-            var userManager = UserManagerMOQ.TestUserManager<DaysForGirlsUser>();
-            
-            this.customerReviewService = new CustomerReviewService(userManager, db);
+
+            this.customerReviewService = new CustomerReviewService(db);
 
             var newUser = new DaysForGirlsUser
             {
@@ -69,8 +67,7 @@ namespace DaysForGirls.Tests.Services
                 PhoneNumber = "0888409104"
             };
 
-            await userManager.CreateAsync(newUser);
-            //db.Users.Add(newUser);
+            db.Users.Add(newUser);
 
             var product = new Product
             {
@@ -116,7 +113,6 @@ namespace DaysForGirls.Tests.Services
         {
             string errorMessagePrefix = "CustomerReviewService GetAllCommentsOfProductByProductId() method does not work properly.";
 
-            var userManager = UserManagerMOQ.TestUserManager<DaysForGirlsUser>();
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
 
             var product = new Product
@@ -161,7 +157,7 @@ namespace DaysForGirls.Tests.Services
             };
 
             db.CustomerReviews.AddRange(reviewOne, reviewTwo);
-            this.customerReviewService = new CustomerReviewService(userManager, db);
+            this.customerReviewService = new CustomerReviewService(db);
 
             var productId = db.Products.First().Id;
 
@@ -202,9 +198,8 @@ namespace DaysForGirls.Tests.Services
         {
             string errorMessagePrefix = "CustomerReviewService GetAllCommentsOfProductByProductId() method does not work properly.";
 
-            var userManager = UserManagerMOQ.TestUserManager<DaysForGirlsUser>();
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
-            this.customerReviewService = new CustomerReviewService(userManager, db);
+            this.customerReviewService = new CustomerReviewService(db);
 
             var product = new Product
             {

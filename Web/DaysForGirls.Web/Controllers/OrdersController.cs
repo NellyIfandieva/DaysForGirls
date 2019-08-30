@@ -10,15 +10,20 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Authorization;
+    using System.Security.Claims;
+    using Microsoft.AspNetCore.Identity;
+    using DaysForGirls.Data.Models;
 
     public class OrdersController : Controller
     {
         private readonly IOrderService orderService;
+        private readonly UserManager<DaysForGirlsUser> userManager;
 
-
-        public OrdersController(IOrderService orderService)
+        public OrdersController(IOrderService orderService,
+            UserManager<DaysForGirlsUser> userManager)
         {
             this.orderService = orderService;
+            this.userManager = userManager;
         }
 
         [HttpGet("/Orders/Create/{userId}")]
@@ -29,8 +34,10 @@
                 return BadRequest();
             }
 
+            var currentUser = await this.userManager.FindByIdAsync(userId);
+
             var order = await this.orderService
-                .CreateAsync(userId);
+                .CreateAsync(currentUser);
 
             var orderToDisplay = new OrderDisplayViewModel
             {
@@ -66,9 +73,12 @@
             {
                 return BadRequest();
             }
-            
+
+            string userId = this.User
+                .FindFirst(ClaimTypes.NameIdentifier).Value;
+
             var allOrdersOfUser = await this.orderService
-                .DisplayAllOrdersOfUserAsync(userName);
+                .DisplayAllOrdersOfUserAsync(userId);
 
             var ordersToReturn = new List<OrderDisplayAllViewModel>();
 

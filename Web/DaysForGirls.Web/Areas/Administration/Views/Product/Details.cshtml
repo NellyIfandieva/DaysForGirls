@@ -103,6 +103,15 @@
             cursor: pointer;
     }
 
+        #sold-out-par{
+            width: 100px;
+            font-size: medium;
+            background-color: #990033;
+            color: whitesmoke;
+            text-align: center;
+            /*padding-left: 11px;*/
+        }
+
     .product-small-pic {
         /*margin-left: 2px;*/
         margin-right: 2px;
@@ -137,7 +146,7 @@
             </div>
         </div>
         <div id="product-main-info">
-            <h2>@Model.Name by <a href="/Manufacturers/Details/@Model.Manufacturer">@Model.Manufacturer</a></h2>
+            <h2>@Model.Name by <a href="/Manufacturers/Details/@Model.ManufacturerId">@Model.Manufacturer</a></h2>
             <hr />
             <p style="font-size: medium"><span style="font-weight: bold">Description:</span> @Model.Description</p>
             <p style="font-size: medium"><span style="font-weight: bold">Colour:</span> @Model.Colour</p>
@@ -161,7 +170,7 @@
             }
             else if (Model.OrderId != null && Model.AvailableQuantity < 1)
             {
-                <p style="font-size: medium"><span style="font-weight: bold">Sold Out</span></p>
+                <p id="sold-out-par"><span style="font-weight: bold">Sold Out</span></p>
             }
         </div>
     </div>
@@ -173,7 +182,7 @@
                 @foreach (var review in Model.Reviews)
                 {
                     <div class="product-single-comment">
-                        <p style="margin-bottom: 1px">On @review.DateCreated <bold>@review.AuthorId</bold> said: <q>@review.Title</q> @*<a href="/CustomerReviews/Details/@review.Id" style="font-size:small"> Read comment</a>*@</p>
+                        <p style="margin-bottom: 1px">On @review.DateCreated <bold>@review.AuthorUsername</bold> said: <q>@review.Title</q> @*<a href="/CustomerReviews/Details/@review.Id" style="font-size:small"> Read comment</a>*@</p>
                         <p style="margin-top: 1px"><q>@review.Text</q></p>
                         <hr />
                     </div>

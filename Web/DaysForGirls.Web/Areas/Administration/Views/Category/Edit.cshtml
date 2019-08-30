@@ -16,11 +16,20 @@
         text-align: center;
     }
 
-    input[type=text]{
+    .category-edit-row {
+                width: 60%;
+                margin-left: 400px;
+                position: center;
+                border-radius: 5px;
+                background-color: #f7f5ed; /*#f2f2f2;*/
+                padding: 20px;
+            }
+
+    .category-edit-row input[type=text]{
         color: #666666;
     }
 
-    input[type=submit] {
+    .category-edit-row input[type=submit] {
         width: 22%;
         background-color: #cc0052;
         color: white;
@@ -32,18 +41,11 @@
         cursor: pointer;
     }
 
-        input[type=submit]:hover {
+        .category-edit-row input[type=submit]:hover {
             background-color: #a3a375;
         }
 
-            .row {
-                width: 60%;
-                margin-left: 400px;
-                position: center;
-                border-radius: 5px;
-                background-color: #f7f5ed; /*#f2f2f2;*/
-                padding: 20px;
-            }
+            
 
             h2{
                 margin-top: 50px;
@@ -53,7 +55,7 @@
     <div id="category-edit-view">
         <h2 class="text-center">Edit Category</h2>
         <hr />
-        <div class="row">
+        <div class="category-edit-row">
             <div class="col-md-4">
                 <form method="post" asp-action="Edit">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>

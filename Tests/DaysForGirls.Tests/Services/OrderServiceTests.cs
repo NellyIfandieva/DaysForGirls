@@ -55,7 +55,7 @@ namespace DaysForGirls.Tests.Services
             var userManager = UserManagerMOQ.TestUserManager<DaysForGirlsUser>();
 
             this.pictureService = new PictureService(db);
-            this.customerReviewService = new CustomerReviewService(userManager, db);
+            this.customerReviewService = new CustomerReviewService(db);
             this.adminService = new AdminService(db, pictureService, customerReviewService);
 
             this.orderService = new OrderService(db, userManager, adminService);
@@ -104,7 +104,7 @@ namespace DaysForGirls.Tests.Services
             var userManager = UserManagerMOQ.TestUserManager<DaysForGirlsUser>();
 
             this.pictureService = new PictureService(db);
-            this.customerReviewService = new CustomerReviewService(userManager, db);
+            this.customerReviewService = new CustomerReviewService(db);
             this.adminService = new AdminService(db, pictureService, customerReviewService);
 
             this.orderService = new OrderService(db, userManager, adminService);

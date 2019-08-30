@@ -1,5 +1,6 @@
 ﻿namespace DaysForGirls.Services
 {
+    using DaysForGirls.Data.Models;
     using DaysForGirls.Services.Models;
     using System.Collections.Generic;
     using System.Linq;
@@ -7,9 +8,9 @@
 
     public interface IOrderService
     {
-        Task<OrderServiceModel> CreateAsync(string userId);
+        Task<OrderServiceModel> CreateAsync(DaysForGirlsUser user);
 
-        Task<List<OrderServiceModel>> DisplayAllOrdersOfUserAsync(string userName);
+        Task<List<OrderServiceModel>> DisplayAllOrdersOfUserAsync(string userId);
 
         IQueryable<OrderServiceModel> DisplayAllOrdersToAdmin();
 

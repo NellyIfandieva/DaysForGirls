@@ -8,7 +8,7 @@
 }
 
     <style>
-        .row {
+        .category-create-row {
             width: 50%;
             margin-left: 400px;
             position: center;
@@ -17,7 +17,7 @@
             padding: 20px;
         }
 
-       .row input[type=text], select {
+       .category-create-row input[type=text], select {
             width: 40%;
             padding: 12px 20px;
             margin: 8px 0;
@@ -39,7 +39,7 @@
             cursor: pointer;
         }*/
 
-        input[type=submit] {
+        .category-create-row input[type=submit] {
             width: 20%;
             background-color: #cc0052;
             color: white;
@@ -51,20 +51,15 @@
             cursor: pointer;
         }
 
-            input[type=submit]:hover {
+           .category-create-row input[type=submit]:hover {
                 background-color: #a3a375;
-            }
-
-            h2{
-                margin-top: 50px;
             }
     </style>
 
-<h2 class="text-center">Create Category</h2>
+<h2 style="margin-top: 50px; text-align: center">Create Category</h2>
 
-@*<h4>ProductTypeCreateInputModel</h4>*@
 <hr />
-<div class="row">
+<div class="category-create-row">
     <form method="post" asp-action="Create">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="form-group">

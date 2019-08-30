@@ -158,10 +158,11 @@
             {
                 <p style="font-size: medium"><span style="font-weight: bold">In Sale:</span> <a href="/Sales/Details/@Model.SaleId">@Model.SaleTitle</a></p>
             }
-            <p style="font-size: medium"><span style="font-weight: bold">Available Quantity:</span> @Model.AvailableItems</p>
-            <br />
+
             @if (Model.ShoppingCartId == null)
             {
+                <p style="font-size: medium"><span style="font-weight: bold">Available Quantity:</span> @Model.AvailableItems</p>
+                <br />
                 <a href="/ShoppingCarts/AddProduct/@Model.Id"><button id="order-button">Order</button></a>
             }
             else
@@ -178,7 +179,7 @@
                 @foreach (var review in Model.Reviews)
                 {
                     <div class="product-single-comment">
-                        <p style="margin-bottom: 1px">On @review.DateCreated <bold>@review.AuthorId</bold> said: <q>@review.Title</q> @*<a href="/CustomerReviews/Details/@review.Id" style="font-size:small"> Read comment</a>*@</p>
+                        <p style="margin-bottom: 1px">On @review.DateCreated <bold>@review.AuthorUsername</bold> said: <q>@review.Title</q></p>
                         <p style="margin-top: 1px"><q>@review.Text</q></p>
                         <hr />
                     </div>

@@ -188,7 +188,7 @@
 
             List<ProductDisplayAllServiceModel> actualResults = await this.productService.DisplayAll().ToListAsync();
 
-            Assert.True(actualResults.Count == 0, errorMessagePrefix);
+            Assert.True(actualResults.Count == 0, errorMessagePrefix + " " + "Returns results.");
         }
 
         [Fact]
@@ -387,8 +387,6 @@
 
             this.productService = new ProductService(db);
 
-            string dateFormat = "dddd, dd MMMM yyyy";
-
             var actualResult = this.productService.GetAllSearchResultsByCriteria("a");
 
             List<ProductServiceModel> productsToReturn = new List<ProductServiceModel>();
@@ -419,13 +417,13 @@
                     Size = prod.Size,
                     Manufacturer = new ManufacturerServiceModel
                     {
-                        //Id = prod.ManufacturerId,
+                        Id = prod.Manufacturer.Id,
                         Name = prod.Manufacturer.Name
                     },
                     Price = prod.Price,
                     Quantity = new QuantityServiceModel
                     {
-                        //Id = prod.QuantityId,
+                        Id = prod.Quantity.Id,
                         AvailableItems = prod.Quantity.AvailableItems
                     },
                     SaleId = prod.SaleId,
@@ -437,14 +435,14 @@
                             Id = r.Id,
                             Title = r.Title,
                             Text = r.Text,
-                            //CreatedOn = r.CreatedOn.ToString(dateFormat),
+                            CreatedOn = r.CreatedOn.ToString(),
                             AuthorId = r.AuthorId
                         })
                         .ToList()
                 };
             }
 
-            Assert.True(productsToReturn.Count() == 2);
+            Assert.True(productsToReturn.Count() == 2, errorMessagePrefix + " " + "and does not return the correct number of search results.");
         }
     }
 }

@@ -8,7 +8,7 @@
 }
 
 <style>
-    .row {
+    .manufacturer-edit-row {
         width: 50%;
         margin-left: 400px;
         position: center;
@@ -17,7 +17,7 @@
         padding: 20px;
     }
 
-    input[type=text], select {
+    .manufacturer-edit-row input[type=text], select {
         width: 50%;
         padding: 12px 20px;
         margin: 8px 0;
@@ -28,7 +28,7 @@
         color: #666666;
     }
 
-    input[type=submit] {
+    .manufacturer-edit-row input[type=submit] {
         width: 30%;
         background-color: #cc0052;
         color: white;
@@ -40,11 +40,11 @@
         cursor: pointer;
     }
 
-        input[type=submit]:hover {
+        .manufacturer-edit-row input[type=submit]:hover {
             background-color: #a3a375;
         }
 
-    input[type=file] {
+    .manufacturer-edit-row input[type=file] {
         width: 50%;
         padding: 12px 20px;
         margin: 8px 0;
@@ -61,7 +61,7 @@
 
 <h2 class="text-center">Edit the Manufacturer</h2>
 <hr />
-<div class="row">
+<div class="manufacturer-edit-row">
     <div class="col-md-4">
         <form method="post" enctype="multipart/form-data" asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>

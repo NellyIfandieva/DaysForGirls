@@ -8,7 +8,16 @@
 }
 
 <style>
-    input[type=text], select {
+    .productType-edit-row {
+        margin-left: 300px;
+        margin-right: 250px;
+        position: center;
+        border-radius: 5px;
+        background-color: #f7f5ed;
+        padding: 20px;
+    }
+
+    .productType-edit-row input[type=text], select {
         width: 50%;
         padding: 12px 20px;
         margin: 8px 0;
@@ -19,8 +28,8 @@
         color: #666666;
     }
 
-    input[type=submit] {
-            width: 22%;
+    .productType-edit-row input[type=submit] {
+            width: 25%;
             background-color: #cc0052;
             color: white;
             font-size: medium;
@@ -31,18 +40,9 @@
             cursor: pointer;
     }
 
-            input[type=submit]:hover {
+            .productType-edit-row input[type=submit]:hover {
                 background-color: #a3a375;
             }
-
-    .row {
-        margin-left: 250px;
-        margin-right: 250px;
-        position: center;
-        border-radius: 5px;
-        background-color: #f7f5ed;
-        padding: 20px;
-    }
 
     h2{
         margin-top: 50px;
@@ -51,7 +51,7 @@
 
 <h2 class="text-center">Edit Product Type</h2>
 <hr />
-<div class="row">
+<div class="productType-edit-row">
     <div class="col-md-4">
         <form method="post" asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>

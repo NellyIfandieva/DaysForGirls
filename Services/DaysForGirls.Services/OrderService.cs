@@ -3,7 +3,6 @@
     using Data;
     using Data.Models;
     using Models;
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
@@ -13,23 +12,19 @@
     public class OrderService : IOrderService
     {
         private readonly DaysForGirlsDbContext db;
-        private readonly UserManager<DaysForGirlsUser> userManager;
         private readonly IAdminService adminService;
 
         public OrderService(
             DaysForGirlsDbContext db,
-            UserManager<DaysForGirlsUser> userManager,
             IAdminService adminService)
         {
             this.db = db;
-            this.userManager = userManager;
             this.adminService = adminService;
         }
 
-        public async Task<OrderServiceModel> CreateAsync(string userId)
+        public async Task<OrderServiceModel> CreateAsync(DaysForGirlsUser user)
         {
-            DaysForGirlsUser orderUser =
-                await this.userManager.FindByIdAsync(userId);
+            string userId = user.Id;
 
             var cart = await this.db.ShoppingCarts
                 .Include(c => c.ShoppingCartItems)
@@ -66,7 +61,7 @@
             {
                 OrderedProducts = orderProducts,
                 TotalPrice = orderProducts.Sum(p => p.ProductPrice * p.ProductQuantity),
-                User = orderUser,
+                User = user,
                 UserId = userId,
                 OrderStatus = "Ordered"
             };
@@ -80,7 +75,7 @@
 
             if(orderId != null)
             {
-                orderUser.Orders.Add(order);
+                user.Orders.Add(order);
 
                 orderToReturn = new OrderServiceModel
                 {
@@ -123,12 +118,12 @@
             return orderToReturn;
         }
 
-        public async Task<List<OrderServiceModel>> DisplayAllOrdersOfUserAsync(string userName)
+        public async Task<List<OrderServiceModel>> DisplayAllOrdersOfUserAsync(string userId)
         {
-            DaysForGirlsUser currentUser = await this.userManager.FindByNameAsync(userName);
+            //DaysForGirlsUser currentUser = await this.userManager.FindByNameAsync(userName);
 
             var allOrdersOfUser = await this.db.Orders
-                .Where(o => o.UserId == currentUser.Id)
+                .Where(o => o.UserId == userId)
                 .Select(o => new OrderServiceModel
                 {
                     Id = o.Id,
@@ -209,7 +204,7 @@
                 DeliveryEarlistDate = orderInDb.DeliveryEarliestDate.ToString("dddd, dd MMMM yyyy"),
                 DeliveryLatestDate = orderInDb.DeliveryLatestDate.ToString("dddd, dd MMMM yyyy"),
                 IssuedOn = orderInDb.IssuedOn,
-                IssuedTo = orderInDb.User.FirstName + " " + orderInDb.User.LastName,
+                IssuedTo = orderInDb.User.FullName,
                 OrderStatus = orderInDb.OrderStatus,
                 TotalPrice = orderInDb.TotalPrice,
                 OrderedProducts = orderInDb.OrderedProducts

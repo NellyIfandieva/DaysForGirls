@@ -44,6 +44,7 @@
                 Title = sale.Title,
                 Picture = sale.Picture,
                 EndsOn = sale.EndsOn.ToString("dddd, dd MMMM yyyy"),
+                IsActive = sale.IsActive,
                 Products = sale.Products
                     .Select(p => new ProductInSaleViewModel
                     {
