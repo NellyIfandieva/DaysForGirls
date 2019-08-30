@@ -1,13 +1,13 @@
 ﻿namespace DaysForGirls.Web.Areas.Administration.Controllers
 {
-    using Services;
-    using Services.Models;
     using InputModels;
-    using ViewModels;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
+    using Services;
+    using Services.Models;
     using System.Linq;
     using System.Threading.Tasks;
+    using ViewModels;
 
     public class ManufacturerController : AdminController
     {
@@ -33,7 +33,7 @@
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ManufacturerCreateInputModel model)
         {
-            if(ModelState.IsValid == false)
+            if (ModelState.IsValid == false)
             {
                 return View(model);
             }
@@ -73,7 +73,7 @@
                 .OrderBy(m => m.Name)
                 .ToListAsync();
 
-            if(allManufacturers.Count() < 1)
+            if (allManufacturers.Count() < 1)
             {
                 return NotFound();
             }
@@ -84,7 +84,7 @@
         [HttpGet("/Administration/Manufacturer/Edit/{manufacturerId}")]
         public async Task<IActionResult> Edit(int manufacturerId)
         {
-            if(manufacturerId <= 0)
+            if (manufacturerId <= 0)
             {
                 return BadRequest();
             }
@@ -92,7 +92,7 @@
             var manufacturerFromDb = await this.manufacturerService
                 .GetManufacturerByIdAsync(manufacturerId);
 
-            if(manufacturerFromDb == null)
+            if (manufacturerFromDb == null)
             {
                 return NotFound();
             }
@@ -110,7 +110,7 @@
         [HttpPost("/Administration/Manufacturer/Edit/{manufacturerId}")]
         public async Task<IActionResult> Edit(int manufacturerId, ManufacturerEditInputModel model)
         {
-            if(ModelState.IsValid == false)
+            if (ModelState.IsValid == false)
             {
                 return View(model);
             }
@@ -139,7 +139,7 @@
         [HttpGet("/Administration/Manufacturer/Delete/{manufacturerId}")]
         public async Task<IActionResult> Delete(int manufacturerId)
         {
-            if(manufacturerId <= 0)
+            if (manufacturerId <= 0)
             {
                 return BadRequest();
             }

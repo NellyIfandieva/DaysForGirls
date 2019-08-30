@@ -1,10 +1,10 @@
 ﻿namespace DaysForGirls.Web.Controllers
 {
-    using Services;
-    using ViewModels;
     using Microsoft.AspNetCore.Mvc;
+    using Services;
     using System.Linq;
     using System.Threading.Tasks;
+    using ViewModels;
 
     public class ManufacturersController : Controller
     {
@@ -18,7 +18,7 @@
         [HttpGet("/Manufacturers/Details/{manufacturerId}")]
         public async Task<IActionResult> Details(int manufacturerId)
         {
-            if(manufacturerId <= 0)
+            if (manufacturerId <= 0)
             {
                 return BadRequest();
             }
@@ -26,7 +26,7 @@
             var manufacturer = await this.manufacturerService
                 .GetManufacturerByIdAsync(manufacturerId);
 
-            if(manufacturer == null)
+            if (manufacturer == null)
             {
                 return NotFound();
             }

@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -783,7 +782,7 @@ namespace DaysForGirls.Tests.Services
             List<int> productIds = new List<int>();
 
             bool positive = await this.adminService.SetOrderIdToProductsAsync(productIds, "Hi");
-            Product first = db.Products.SingleOrDefault(p => p.Id == 1);
+            Product first = db.Products.First();
 
             Assert.True(positive == false, errorMessagePrefix + " " + "OrderId not set and cartId remains not null.");
             Assert.True(first.OrderId == null, errorMessagePrefix + " " + "OrderId was set to given Id.");

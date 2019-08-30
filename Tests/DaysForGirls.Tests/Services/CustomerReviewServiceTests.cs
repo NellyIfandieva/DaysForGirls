@@ -3,12 +3,10 @@ using DaysForGirls.Data.Models;
 using DaysForGirls.Services;
 using DaysForGirls.Services.Models;
 using DaysForGirls.Tests.Common;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -74,7 +72,7 @@ namespace DaysForGirls.Tests.Services
                 Name = "Product",
                 Description = "Descr",
                 Category = new Category { Name = "Category" },
-                ProductType = new ProductType { Name = "Type"},
+                ProductType = new ProductType { Name = "Type" },
                 Colour = "Colour",
                 Size = "Size",
                 Manufacturer = new Manufacturer { Name = "Manufacturer" },

@@ -1,6 +1,7 @@
 ﻿namespace DaysForGirls.Services
 {
     using DaysForGirls.Services.Models;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -19,7 +20,7 @@
 
         Task<bool> RemoveProductFromShoppingCartAsync(int productId);
 
-        IQueryable<ProductServiceModel> GetAllSearchResultsByCriteria(string criteria);
+        List<ProductServiceModel> GetAllSearchResultsByCriteria(string criteria);
 
         Task<decimal> CalculateProductPriceAsync(int productId);
     }

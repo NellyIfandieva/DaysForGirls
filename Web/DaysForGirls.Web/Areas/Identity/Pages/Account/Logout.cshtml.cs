@@ -1,13 +1,13 @@
-﻿using System.Threading.Tasks;
+﻿using DaysForGirls.Data;
+using DaysForGirls.Data.Models;
+using DaysForGirls.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using DaysForGirls.Data.Models;
-using DaysForGirls.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using DaysForGirls.Services;
+using System.Threading.Tasks;
 
 namespace DaysForGirls.Web.Areas.Identity.Pages.Account
 {
@@ -36,13 +36,13 @@ namespace DaysForGirls.Web.Areas.Identity.Pages.Account
                 .Include(sC => sC.ShoppingCartItems)
                 .SingleOrDefaultAsync(sC => sC.UserId == userId);
 
-            if(userShoppingCart != null)
+            if (userShoppingCart != null)
             {
                 var allItemsInCart = userShoppingCart.ShoppingCartItems;
 
                 List<int> productsInCartIds = new List<int>();
 
-                foreach(var item in allItemsInCart)
+                foreach (var item in allItemsInCart)
                 {
                     productsInCartIds.Add(item.ProductId);
                 }

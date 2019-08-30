@@ -3,7 +3,6 @@
     using DaysForGirls.Data;
     using DaysForGirls.Data.Models;
     using DaysForGirls.Services.Models;
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using System;
     using System.Linq;
@@ -66,7 +65,7 @@
             var reviewToDelete = await this.db.CustomerReviews
                 .SingleOrDefaultAsync(r => r.Id == reviewId);
 
-            if(reviewToDelete == null)
+            if (reviewToDelete == null)
             {
                 throw new ArgumentNullException(nameof(reviewToDelete));
             }

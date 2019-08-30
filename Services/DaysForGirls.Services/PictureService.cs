@@ -7,7 +7,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
 
     public class PictureService : IPictureService
@@ -23,7 +22,7 @@
         {
             List<Picture> allPicturesToAddToDb = new List<Picture>();
 
-            foreach(var pSm in pictureServiceModels)
+            foreach (var pSm in pictureServiceModels)
             {
                 Picture picture = new Picture
                 {
@@ -33,7 +32,7 @@
 
                 allPicturesToAddToDb.Add(picture);
             }
-            
+
 
             this.db.Pictures.AddRange(allPicturesToAddToDb);
             int result = await this.db.SaveChangesAsync();
@@ -46,7 +45,7 @@
             var picture = await this.db.Pictures
                 .SingleOrDefaultAsync(p => p.Id == id);
 
-            if(picture == null)
+            if (picture == null)
             {
                 throw new ArgumentNullException(nameof(picture));
             }
@@ -63,7 +62,7 @@
 
         public IQueryable<PictureServiceModel> GetPicturesOfProductByProductId(int productId)
         {
-            if(productId <= 0)
+            if (productId <= 0)
             {
                 throw new InvalidOperationException(nameof(productId));
             }
@@ -112,7 +111,7 @@
 
         public async Task<bool> DeletePicturesOfDeletedProductAsync(int productId)
         {
-            if(productId <= 0)
+            if (productId <= 0)
             {
                 throw new InvalidOperationException(nameof(productId));
             }
@@ -121,7 +120,7 @@
                 .Where(p => p.ProductId == productId)
                 .ToListAsync();
 
-            foreach(var picture in picturesToDelete)
+            foreach (var picture in picturesToDelete)
             {
                 picture.IsDeleted = true;
             }

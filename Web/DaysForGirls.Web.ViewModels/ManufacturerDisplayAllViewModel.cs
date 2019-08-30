@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace DaysForGirls.Web.ViewModels
 {
@@ -15,7 +12,7 @@ namespace DaysForGirls.Web.ViewModels
 
         public string Logo { get; set; }
 
-        [Display(Name="Is Deleted")]
+        [Display(Name = "Is Deleted")]
         public bool IsDeleted { get; set; }
 
         [Display(Name = "Products")]

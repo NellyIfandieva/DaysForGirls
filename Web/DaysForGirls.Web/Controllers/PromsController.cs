@@ -1,11 +1,11 @@
 ﻿namespace DaysForGirls.Web.Controllers
 {
-    using Services;
-    using ViewModels;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
+    using Services;
     using System.Linq;
     using System.Threading.Tasks;
+    using ViewModels;
 
     public class PromsController : Controller
     {

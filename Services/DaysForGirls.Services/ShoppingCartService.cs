@@ -3,8 +3,8 @@
     using DaysForGirls.Data;
     using DaysForGirls.Data.Models;
     using DaysForGirls.Services.Models;
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
+    using System;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -28,6 +28,16 @@
 
             var product = await this.db.Products
                 .SingleOrDefaultAsync(p => p.Id == model.Product.Id);
+
+            if (cart == null || product == null)
+            {
+                if (cart == null)
+                {
+                    throw new ArgumentNullException(nameof(cart));
+                }
+
+                throw new ArgumentNullException(nameof(product));
+            }
 
             ShoppingCartItem shoppingCartItem = new ShoppingCartItem
             {
@@ -57,6 +67,11 @@
             var cart = await this.db.ShoppingCarts
                 .Include(c => c.ShoppingCartItems)
                 .SingleOrDefaultAsync(c => c.UserId == userId);
+
+            if (cart == null)
+            {
+                throw new ArgumentNullException(nameof(cart));
+            }
 
             var cartItems = await this.db.ShoppingCartItems
                 .Where(sCI => sCI.ShoppingCartId == cart.Id)
@@ -92,8 +107,18 @@
                 .Include(sC => sC.ShoppingCartItems)
                 .SingleOrDefaultAsync(sC => sC.UserId == userId);
 
+            if (cart == null)
+            {
+                throw new ArgumentNullException(nameof(cart));
+            }
+
             var cartItemToDelete = await this.db.ShoppingCartItems
                 .SingleOrDefaultAsync(sCI => sCI.Id == itemId);
+
+            if (cartItemToDelete == null)
+            {
+                throw new ArgumentNullException(nameof(cartItemToDelete));
+            }
 
             var productId = cartItemToDelete.ProductId;
 

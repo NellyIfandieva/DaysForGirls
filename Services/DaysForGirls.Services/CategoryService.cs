@@ -1,14 +1,12 @@
 ﻿namespace DaysForGirls.Services
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using DaysForGirls.Data;
     using DaysForGirls.Data.Models;
     using DaysForGirls.Services.Models;
     using Microsoft.EntityFrameworkCore;
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     public class CategoryService : ICategoryService
     {
@@ -54,7 +52,7 @@
             var categoryInDb = await this.db.Categories
                 .SingleOrDefaultAsync(c => c.Id == categoryId);
 
-            if(categoryInDb == null)
+            if (categoryInDb == null)
             {
                 throw new ArgumentNullException(nameof(categoryInDb));
             }
@@ -104,7 +102,7 @@
             var productsInCategory = this.db.Products
                 .Where(p => p.Category.Name == categoryToDelete.Name);
 
-            if(productsInCategory.Count() > 0)
+            if (productsInCategory.Count() > 0)
             {
                 categoryToDelete.IsDeleted = true;
                 this.db.Update(categoryToDelete);

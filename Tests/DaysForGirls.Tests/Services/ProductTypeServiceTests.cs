@@ -1,16 +1,15 @@
 ﻿namespace DaysForGirls.Tests.Services
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using Common;
     using DaysForGirls.Data;
     using DaysForGirls.Data.Models;
     using DaysForGirls.Services;
     using DaysForGirls.Services.Models;
     using Microsoft.EntityFrameworkCore;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class ProductTypeServiceTests
@@ -94,7 +93,7 @@
         {
             string errorMessagePrefix = "ProductTypeService DisplayAll() method does not work properly.";
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
-            
+
             await SeedProductTypes(db);
             this.productTypeService = new ProductTypeService(db);
 

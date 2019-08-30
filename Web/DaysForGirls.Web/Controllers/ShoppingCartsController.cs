@@ -33,12 +33,12 @@
         [HttpGet("/ShoppingCarts/AddProduct/{productId}")]
         public async Task<IActionResult> AddProduct(int productId)
         {
-            if(productId <= 0)
+            if (productId <= 0)
             {
                 return BadRequest();
             }
 
-            if(this.User.Identity.IsAuthenticated == false)
+            if (this.User.Identity.IsAuthenticated == false)
             {
                 return Redirect("/Identity/Account/Login");
             }
@@ -73,7 +73,7 @@
             var shoppingCartInDb = await this.shoppingCartService
                 .GetCartByUserIdAsync(userId);
 
-            if(shoppingCartInDb == null)
+            if (shoppingCartInDb == null)
             {
                 return NotFound();
             }

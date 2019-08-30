@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
+﻿using DaysForGirls.Data.Models;
 using Microsoft.AspNetCore.Authorization;
-using DaysForGirls.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DaysForGirls.Web.Areas.Identity.Pages.Account
 {
@@ -31,7 +31,8 @@ namespace DaysForGirls.Web.Areas.Identity.Pages.Account
             this.signInManager = signInManager;
             this.roleManager = roleManager;
             this.logger = logger;
-            /*this.emailSender = emailSender*/;
+            /*this.emailSender = emailSender*/
+            ;
         }
 
         [BindProperty]
@@ -106,9 +107,9 @@ namespace DaysForGirls.Web.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
-                    if(noUsersInDb)
+                    if (noUsersInDb)
                     {
-                       await this.userManager.AddToRoleAsync(user, "Admin");
+                        await this.userManager.AddToRoleAsync(user, "Admin");
                     }
                     else
                     {

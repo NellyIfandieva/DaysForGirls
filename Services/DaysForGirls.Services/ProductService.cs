@@ -2,9 +2,10 @@
 {
     using Data;
     using Data.Models;
-    using Models;
     using Microsoft.EntityFrameworkCore;
+    using Models;
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -25,10 +26,10 @@
                 .Include(p => p.Pictures)
                 .Include(p => p.Sale)
                 .Include(p => p.ShoppingCart)
-                .SingleOrDefaultAsync(p => p.Id == productId 
+                .SingleOrDefaultAsync(p => p.Id == productId
                 && p.IsDeleted == false);
 
-            if(product == null)
+            if (product == null)
             {
                 throw new ArgumentNullException(nameof(product));
             }
@@ -57,20 +58,20 @@
             var allProducts = this.db.Products
                 .Where(p => p.IsDeleted == false)
                 .Select(p => new ProductDisplayAllServiceModel
-                 {
-                     Id = p.Id,
-                     Name = p.Name,
-                     Price = p.Price,
-                     SalePrice = p.SalePrice,
-                     Picture = new PictureServiceModel
-                     {
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Price = p.Price,
+                    SalePrice = p.SalePrice,
+                    Picture = new PictureServiceModel
+                    {
                         PictureUrl = p.Pictures.ElementAt(0).PictureUrl
-                     },
-                     AvailableItems = p.Quantity.AvailableItems,
-                     SaleId = p.SaleId,
-                     ShoppingCartId = p.ShoppingCartId,
-                     OrderId = p.OrderId
-                 });
+                    },
+                    AvailableItems = p.Quantity.AvailableItems,
+                    SaleId = p.SaleId,
+                    ShoppingCartId = p.ShoppingCartId,
+                    OrderId = p.OrderId
+                });
 
             return allProducts;
         }
@@ -130,7 +131,7 @@
             var product = await this.db.Products
                 .SingleOrDefaultAsync(p => p.Id == productId);
 
-            if(product == null)
+            if (product == null)
             {
                 throw new ArgumentNullException(nameof(product));
             }
@@ -169,19 +170,21 @@
             return productIsOutOfCart;
         }
 
-        public IQueryable<ProductServiceModel> GetAllSearchResultsByCriteria(string criteria)
+        public List<ProductServiceModel> GetAllSearchResultsByCriteria(string criteria)
         {
             decimal priceCriteria;
             bool criteriaIsDecimal = decimal.TryParse(criteria, out priceCriteria);
 
-            if(criteriaIsDecimal == false)
+            if (criteriaIsDecimal == false)
             {
                 priceCriteria = 0.00m;
             }
 
             string criteriaToLower = criteria.ToLower();
 
-            var allSearchResults = this.db.Products
+            var allSearchResults = new List<ProductServiceModel>();
+
+            List<ProductServiceModel> searchResultsBatchOne = db.Products
                 .Include(p => p.Category)
                 .Include(p => p.ProductType)
                 .Include(p => p.Pictures)
@@ -244,7 +247,83 @@
                             AuthorId = r.AuthorId
                         })
                         .ToList()
-                });
+                })
+                .ToList();
+
+            allSearchResults.AddRange(searchResultsBatchOne);
+
+            var allProductsInDb = this.db.Products
+                .Include(p => p.Category)
+                .Include(p => p.ProductType)
+                .Include(p => p.Pictures)
+                .Include(p => p.Manufacturer)
+                .Include(p => p.Reviews)
+                .Include(p => p.Order)
+                .Include(p => p.Sale)
+                .Include(p => p.ShoppingCart)
+                .Include(p => p.Quantity)
+                .ToHashSet();
+
+            foreach (var product in allProductsInDb)
+            {
+                foreach (var review in product.Reviews)
+                {
+                    if (review.Title.ToLower().Contains(criteriaToLower)
+                        || review.Text.ToLower().Contains(criteriaToLower))
+                    {
+                        ProductServiceModel anotherSearchResult = new ProductServiceModel
+                        {
+                            Id = product.Id,
+                            Name = product.Name,
+                            Category = new CategoryServiceModel
+                            {
+                                Name = product.Category.Name
+                            },
+                            ProductType = new ProductTypeServiceModel
+                            {
+                                Name = product.ProductType.Name
+                            },
+                            Description = product.Description,
+                            Pictures = product.Pictures
+                                .Select(pic => new PictureServiceModel
+                                {
+                                    Id = pic.Id,
+                                    PictureUrl = pic.PictureUrl
+                                })
+                                .ToList(),
+                            Colour = product.Colour,
+                            Size = product.Size,
+                            Manufacturer = new ManufacturerServiceModel
+                            {
+                                Id = product.ManufacturerId,
+                                Name = product.Manufacturer.Name
+                            },
+                            Price = product.Price,
+                            SalePrice = product.SalePrice,
+                            Quantity = new QuantityServiceModel
+                            {
+                                Id = product.QuantityId,
+                                AvailableItems = product.Quantity.AvailableItems
+                            },
+                            SaleId = product.SaleId,
+                            ShoppingCartId = product.ShoppingCartId,
+                            OrderId = product.OrderId,
+                            Reviews = product.Reviews
+                                .Select(r => new CustomerReviewServiceModel
+                                {
+                                    Id = r.Id,
+                                    Title = r.Title,
+                                    Text = r.Text,
+                                    CreatedOn = r.CreatedOn.ToString("dddd, dd MMMM yyyy"),
+                                    AuthorId = r.AuthorId
+                                })
+                                .ToList()
+                        };
+
+                        allSearchResults.Add(anotherSearchResult);
+                    }
+                }
+            }
 
             return allSearchResults;
         }
@@ -253,6 +332,11 @@
         {
             var product = await this.db.Products
                 .SingleOrDefaultAsync(p => p.Id == productId);
+
+            if (product == null)
+            {
+                throw new ArgumentNullException(nameof(product));
+            }
 
             if (product.SaleId != null)
             {

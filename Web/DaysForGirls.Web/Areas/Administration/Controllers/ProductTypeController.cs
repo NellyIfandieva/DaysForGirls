@@ -1,14 +1,14 @@
 ﻿namespace DaysForGirls.Web.Areas.Administration.Controllers
 {
-    using Services;
-    using Services.Models;
     using InputModels;
-    using ViewModels;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
+    using Services;
+    using Services.Models;
     using System.Linq;
     using System.Threading.Tasks;
-    
+    using ViewModels;
+
     public class ProductTypeController : AdminController
     {
         private readonly IProductTypeService productTypeService;
@@ -29,7 +29,7 @@
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProductTypeCreateInputModel model)
         {
-            if(ModelState.IsValid == false)
+            if (ModelState.IsValid == false)
             {
                 return View(model);
             }
@@ -57,7 +57,7 @@
                 .OrderBy(pt => pt.Name)
                 .ToListAsync();
 
-            if(allProductTypes.Count() < 1)
+            if (allProductTypes.Count() < 1)
             {
                 return NotFound();
             }
@@ -68,7 +68,7 @@
         [HttpGet("/Administration/ProductType/Edit/{productTypeId}")]
         public async Task<IActionResult> Edit(int productTypeId)
         {
-            if(productTypeId <= 0)
+            if (productTypeId <= 0)
             {
                 return BadRequest();
             }
@@ -104,7 +104,7 @@
         [HttpGet("/Administration/ProductType/Delete/{productTypeId}")]
         public async Task<IActionResult> Delete(int productTypeId)
         {
-            if(productTypeId <= 0)
+            if (productTypeId <= 0)
             {
                 return BadRequest();
             }

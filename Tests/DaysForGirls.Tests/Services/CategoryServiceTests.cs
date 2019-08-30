@@ -9,7 +9,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
     using Xunit;
 
@@ -112,7 +111,7 @@
                 }).ToList();
 
             List<CategoryServiceModel> actualResults = await this.categoryService.DisplayAll().ToListAsync();
-            
+
 
             for (int i = 0; i < expectedResults.Count; i++)
             {
@@ -225,7 +224,7 @@
                 {
                     Name = "Manuf",
                     Description = "About Manuf",
-                    Logo = new Logo { LogoUrl = "Manuf_logo"}
+                    Logo = new Logo { LogoUrl = "Manuf_logo" }
                 },
                 Colour = "Green",
                 Size = "Fit",

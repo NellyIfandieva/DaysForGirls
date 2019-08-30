@@ -3,7 +3,6 @@
     using DaysForGirls.Services;
     using DaysForGirls.Web.ViewModels;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -19,8 +18,10 @@
         [HttpGet("/Search/Display/{criteria}")]
         public async Task<IActionResult> Display(string criteria)
         {
-            var searchResults = await this.productService
-                .GetAllSearchResultsByCriteria(criteria)
+            var productsFromDb = this.productService
+                .GetAllSearchResultsByCriteria(criteria);
+
+            var searchResults = productsFromDb
                 .Select(p => new ProductSearchResultViewModel
                 {
                     Id = p.Id,
@@ -37,8 +38,7 @@
                     SaleId = p.SaleId,
                     ShoppingCartId = p.ShoppingCartId,
                     OrderId = p.OrderId
-                })
-                .ToListAsync();
+                }).ToList();
 
             return View(searchResults);
         }

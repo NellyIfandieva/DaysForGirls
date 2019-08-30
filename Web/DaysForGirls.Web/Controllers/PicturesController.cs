@@ -1,9 +1,9 @@
 ﻿namespace DaysForGirls.Web.Controllers
 {
-    using Services;
-    using ViewModels;
     using Microsoft.AspNetCore.Mvc;
+    using Services;
     using System.Threading.Tasks;
+    using ViewModels;
 
     public class PicturesController : Controller
     {
@@ -21,7 +21,7 @@
         [HttpGet("/Pictures/Display/{pictureId}")]
         public async Task<IActionResult> Display(int pictureId)
         {
-            if(pictureId <= 0)
+            if (pictureId <= 0)
             {
                 return BadRequest();
             }

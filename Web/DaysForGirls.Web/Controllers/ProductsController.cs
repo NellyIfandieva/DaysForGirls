@@ -1,11 +1,11 @@
 ﻿namespace DaysForGirls.Web.Controllers
 {
-    using Services;
-    using ViewModels;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
+    using Services;
     using System.Linq;
     using System.Threading.Tasks;
+    using ViewModels;
 
     public class ProductsController : Controller
     {
@@ -46,7 +46,7 @@
         [HttpGet("/Products/Details/{productId}")]
         public async Task<IActionResult> Details(int productId)
         {
-            if(productId <= 0)
+            if (productId <= 0)
             {
                 return BadRequest();
             }
@@ -56,7 +56,7 @@
 
             string saleTitle = null;
 
-            if(productFromDb.SaleId != null)
+            if (productFromDb.SaleId != null)
             {
                 var sale = await this.saleService.GetSaleByIdAsync(productFromDb.SaleId);
                 saleTitle = sale.Title;

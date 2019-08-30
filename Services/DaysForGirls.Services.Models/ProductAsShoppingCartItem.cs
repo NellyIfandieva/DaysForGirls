@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DaysForGirls.Services.Models
+﻿namespace DaysForGirls.Services.Models
 {
     public class ProductAsShoppingCartItem
     {

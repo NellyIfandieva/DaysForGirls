@@ -1,12 +1,12 @@
 ﻿namespace DaysForGirls.Services
 {
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
     using DaysForGirls.Data;
     using DaysForGirls.Data.Models;
     using DaysForGirls.Services.Models;
     using Microsoft.EntityFrameworkCore;
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     public class ManufacturerService : IManufacturerService
     {
@@ -44,7 +44,7 @@
                 .Include(m => m.Products)
                 .SingleOrDefaultAsync(m => m.Id == manufacturerId);
 
-            if(manufacturer == null)
+            if (manufacturer == null)
             {
                 throw new ArgumentNullException(nameof(manufacturer));
             }
@@ -126,7 +126,7 @@
                 .Include(m => m.Logo)
                 .SingleOrDefaultAsync(m => m.Id == model.Id);
 
-            if(manufacturerInDb == null)
+            if (manufacturerInDb == null)
             {
                 throw new ArgumentNullException(nameof(manufacturerInDb));
             }
@@ -146,7 +146,7 @@
             var manufacturerToDelete = await this.db.Manufacturers
                 .SingleOrDefaultAsync(m => m.Id == manufacturerId);
 
-            if(manufacturerToDelete == null)
+            if (manufacturerToDelete == null)
             {
                 throw new ArgumentNullException(nameof(manufacturerToDelete));
             }
@@ -154,7 +154,7 @@
             var manufacturerProducts = this.db.Products
                 .Where(p => p.Manufacturer.Id == manufacturerId);
 
-            if(manufacturerProducts.Count() > 0)
+            if (manufacturerProducts.Count() > 0)
             {
                 manufacturerToDelete.IsDeleted = true;
                 this.db.Update(manufacturerToDelete);
@@ -164,7 +164,7 @@
                 var logoToDelete = await this.db.Logos
                     .SingleOrDefaultAsync(l => l.ManufacturerId == manufacturerToDelete.Id);
 
-                if(logoToDelete == null)
+                if (logoToDelete == null)
                 {
                     throw new ArgumentNullException(nameof(logoToDelete));
                 }

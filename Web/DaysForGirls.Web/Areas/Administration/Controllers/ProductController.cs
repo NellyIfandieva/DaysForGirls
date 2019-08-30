@@ -1,15 +1,15 @@
 ﻿namespace DaysForGirls.Web.Areas.Administration.Controllers
 {
-    using Services;
-    using Services.Models;
     using InputModels;
-    using ViewModels;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
+    using Services;
+    using Services.Models;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using ViewModels;
 
     public class ProductController : AdminController
     {
@@ -219,11 +219,11 @@
             }
 
             string saleTitle = null;
-            if(productInDb.SaleId != null)
+            if (productInDb.SaleId != null)
             {
                 var sale = await this.saleService.GetSaleByIdAsync(productInDb.SaleId);
 
-                if(sale == null)
+                if (sale == null)
                 {
                     return NotFound(sale);
                 }
@@ -451,14 +451,14 @@
 
             this.ViewData["productErasedOrNot"] = null;
 
-            if(productEraseAttempt.Contains("true"))
+            if (productEraseAttempt.Contains("true"))
             {
                 string productName = productEraseAttempt
                     .Split(new[] { '-' }, StringSplitOptions
                     .RemoveEmptyEntries)[0];
 
                 this.ViewData["productName"] = productName;
-                this.ViewData["productErasedOrNot"] = 
+                this.ViewData["productErasedOrNot"] =
                     " has been successfully removed from the Database.";
             }
             else

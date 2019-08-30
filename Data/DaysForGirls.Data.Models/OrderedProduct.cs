@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DaysForGirls.Data.Models
+﻿namespace DaysForGirls.Data.Models
 {
     public class OrderedProduct : BaseModel<int>
     {

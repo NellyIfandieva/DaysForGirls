@@ -22,9 +22,6 @@ namespace DaysForGirls.Data.Models
 
         public HashSet<OrderedProduct> OrderedProducts { get; set; }
 
-        //[Range(MinOrderedQuantity, MaxOrderedQuantity)]
-        //public int OrderedQuantity { get; set; }
-
         public decimal TotalPrice { get; set; }
 
         public string UserId { get; set; }

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DaysForGirls.Web.ViewModels
+﻿namespace DaysForGirls.Web.ViewModels
 {
     public class ProductCreateProductTypeViewModel
     {

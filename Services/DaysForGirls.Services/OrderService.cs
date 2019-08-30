@@ -2,8 +2,8 @@
 {
     using Data;
     using Data.Models;
-    using Models;
     using Microsoft.EntityFrameworkCore;
+    using Models;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -30,6 +30,11 @@
                 .Include(c => c.ShoppingCartItems)
                 .SingleOrDefaultAsync(c => c.UserId == userId);
 
+            if (userId == null || cart == null)
+            {
+                throw new ArgumentNullException(nameof(userId));
+            }
+
             var cartItems = await this.db.ShoppingCartItems
                 .Include(sCI => sCI.Product)
                 .Include(sCI => sCI.Product.Pictures)
@@ -39,7 +44,7 @@
 
             HashSet<OrderedProduct> orderProducts = new HashSet<OrderedProduct>();
 
-            foreach(var item in cartItems)
+            foreach (var item in cartItems)
             {
                 OrderedProduct product = new OrderedProduct
                 {
@@ -73,7 +78,7 @@
 
             OrderServiceModel orderToReturn = null;
 
-            if(orderId != null)
+            if (orderId != null)
             {
                 user.Orders.Add(order);
 
@@ -159,6 +164,7 @@
                 {
                     Id = o.Id,
                     IssuedOn = o.IssuedOn,
+                    IssuedTo = o.User.FullName,
                     OrderedProducts = o.OrderedProducts
                         .Select(p => new OrderedProductServiceModel
                         {
@@ -179,6 +185,8 @@
                         FirstName = o.User.FirstName,
                         LastName = o.User.LastName
                     },
+                    DeliveryEarlistDate = o.DeliveryEarliestDate.ToString("dddd, dd MMMM yyyy"),
+                    DeliveryLatestDate = o.DeliveryLatestDate.ToString("dddd, dd MMMM yyyy"),
                     OrderStatus = o.OrderStatus,
                     IsDeleted = o.IsDeleted
                 });
@@ -193,7 +201,7 @@
                 .Include(o => o.User)
                 .SingleOrDefaultAsync(o => o.Id == orderId);
 
-            if(orderInDb == null)
+            if (orderInDb == null)
             {
                 throw new ArgumentNullException(nameof(orderInDb));
             }
@@ -219,7 +227,7 @@
                         ProductPrice = p.ProductPrice,
                         ProductSalePrice = p.ProductSalePrice,
                         ProductQuantity = p.ProductQuantity,
-                        
+
                     })
                     .ToList()
             };
@@ -232,7 +240,7 @@
             var orderInDb = await this.db.Orders
                 .SingleOrDefaultAsync(o => o.Id == model.Id);
 
-            if(orderInDb == null)
+            if (orderInDb == null)
             {
                 throw new ArgumentNullException(nameof(orderInDb));
             }

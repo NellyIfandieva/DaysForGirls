@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -137,15 +136,15 @@ namespace DaysForGirls.Tests.Services
                 })
                 .ToListAsync();
 
-            Assert.True(expectedPictures.Count() == actualPictures.Count(), errorMessagePrefix + 
+            Assert.True(expectedPictures.Count() == actualPictures.Count(), errorMessagePrefix +
                 " " + "Lists' Counts are not equal");
 
-            for(int i = 0; i < expectedPictures.Count(); i++)
+            for (int i = 0; i < expectedPictures.Count(); i++)
             {
                 var expectedPic = expectedPictures[i];
                 var actualPic = actualPictures[i];
 
-                Assert.True(expectedPic.PictureUrl == actualPic.PictureUrl, errorMessagePrefix + 
+                Assert.True(expectedPic.PictureUrl == actualPic.PictureUrl, errorMessagePrefix +
                     " " + "PictureUrl do not return correctly.");
             }
         }
@@ -217,9 +216,9 @@ namespace DaysForGirls.Tests.Services
             var actualPicturesAfterModification = db.Pictures
                 .Where(pic => pic.ProductId == productId).ToList();
 
-            foreach(var pic in actualPicturesAfterModification)
+            foreach (var pic in actualPicturesAfterModification)
             {
-                Assert.True(pic.IsDeleted, errorMessagePrefix + " " + 
+                Assert.True(pic.IsDeleted, errorMessagePrefix + " " +
                     "IsDeleted is not returned correctly.");
             }
         }

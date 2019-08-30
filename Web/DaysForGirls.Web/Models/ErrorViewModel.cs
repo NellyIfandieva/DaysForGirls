@@ -1,5 +1,3 @@
-using System;
-
 namespace DaysForGirls.Web.Models
 {
     public class ErrorViewModel

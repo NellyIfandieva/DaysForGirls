@@ -40,7 +40,7 @@
 
             return View(allWeddingProducts);
         }
-        
+
 
         [HttpGet("/Weddings/Dresses")]
         public async Task<IActionResult> Dresses()
@@ -103,7 +103,7 @@
                 .Select(a => new DisplayAllOfCategoryAndTypeViewModel
                 {
                     Id = a.Id,
-                    Name =a.Name,
+                    Name = a.Name,
                     Picture = a.Picture.PictureUrl,
                     Price = a.Price,
                     SalePrice = a.SalePrice,

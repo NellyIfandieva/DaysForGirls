@@ -30,7 +30,7 @@
             ProductType productTypeInDb = db.ProductTypes
                 .SingleOrDefault(pT => pT.Name == productServiceModel.ProductType.Name);
 
-            if(productTypeInDb == null)
+            if (productTypeInDb == null)
             {
                 throw new ArgumentNullException(nameof(productTypeInDb));
             }
@@ -38,7 +38,7 @@
             Category categoryInDb = this.db.Categories
                 .SingleOrDefault(cat => cat.Name == productServiceModel.Category.Name);
 
-            if(categoryInDb == null)
+            if (categoryInDb == null)
             {
                 throw new ArgumentNullException(nameof(categoryInDb));
             }
@@ -46,7 +46,7 @@
             Manufacturer manufacturerInDb = this.db.Manufacturers
                 .SingleOrDefault(man => man.Name == productServiceModel.Manufacturer.Name);
 
-            if(manufacturerInDb == null)
+            if (manufacturerInDb == null)
             {
                 throw new ArgumentNullException(nameof(manufacturerInDb));
             }
@@ -75,12 +75,12 @@
                 Pictures = new List<Picture>()
             };
 
-            if(productServiceModel.SaleId != null)
+            if (productServiceModel.SaleId != null)
             {
                 product.SaleId = productServiceModel.SaleId;
             }
 
-            if(quantityIsAdded)
+            if (quantityIsAdded)
             {
                 product.Quantity = quantityOfProduct;
             }
@@ -143,7 +143,7 @@
                 .Include(p => p.ShoppingCart)
                 .SingleOrDefaultAsync(p => p.Id == productId);
 
-            if(product == null)
+            if (product == null)
             {
                 throw new ArgumentNullException(nameof(product));
             }
@@ -234,7 +234,7 @@
 
             productInDb.Pictures.Clear();
 
-            foreach(var pic in model.Pictures)
+            foreach (var pic in model.Pictures)
             {
                 Picture picture = new Picture
                 {
@@ -255,7 +255,7 @@
         }
 
         public async Task<bool> AddProductToSaleAsync(int productId, string saleId)
-        { 
+        {
             var product = await this.db.Products
                 .SingleOrDefaultAsync(p => p.Id == productId);
 
@@ -264,7 +264,7 @@
 
             if (product == null || sale == null)
             {
-                if(product == null)
+                if (product == null)
                 {
                     throw new ArgumentNullException(nameof(product));
                 }
@@ -299,7 +299,7 @@
                 .Include(p => p.Quantity)
                 .ToListAsync();
 
-            foreach(var product in products)
+            foreach (var product in products)
             {
                 product.Quantity.AvailableItems++;
                 product.ShoppingCartId = null;
@@ -318,17 +318,17 @@
             var productsToAddToOrder = await this.db.Products
                 .Where(p => productIds.Contains(p.Id)).ToListAsync();
 
-            if(productsToAddToOrder.Count() < 1)
+            if (productsToAddToOrder.Count() < 1)
             {
                 return false;
             }
 
-            if(orderId == null)
+            if (orderId == null)
             {
                 throw new ArgumentNullException(nameof(orderId));
             }
 
-            foreach(var product in productsToAddToOrder)
+            foreach (var product in productsToAddToOrder)
             {
                 product.OrderId = orderId;
                 product.ShoppingCartId = null;
@@ -347,7 +347,7 @@
             var productInDb = await this.db.Products
                 .SingleOrDefaultAsync(p => p.Id == productId);
 
-            if(productInDb == null)
+            if (productInDb == null)
             {
                 throw new ArgumentNullException(nameof(productInDb));
             }
@@ -356,7 +356,7 @@
 
             if (productInDb.ShoppingCartId != null || productInDb.OrderId != null)
             {
-                if(productInDb.ShoppingCartId != null)
+                if (productInDb.ShoppingCartId != null)
                 {
                     outcome = productInDb.Name + "-" + "is in a Shopping Cart and cannot be deleted.";
                 }
@@ -375,7 +375,7 @@
 
             string saleId = productInDb.SaleId;
 
-            if(saleId != null)
+            if (saleId != null)
             {
                 var sale = await this.db.Sales
                     .Include(s => s.Products)
@@ -391,9 +391,9 @@
             this.db.Products.Remove(productInDb);
             int result = await this.db.SaveChangesAsync();
 
-            if(result > 0)
+            if (result > 0)
             {
-                outcome = productName +  "-" + "true";
+                outcome = productName + "-" + "true";
             }
 
             return outcome;

@@ -1,13 +1,13 @@
 ﻿namespace DaysForGirls.Web.Controllers
 {
+    using DaysForGirls.Data.Models;
+    using InputModels;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Mvc;
     using Services;
     using Services.Models;
-    using InputModels;
-    using Microsoft.AspNetCore.Mvc;
-    using System.Threading.Tasks;
     using System.Security.Claims;
-    using DaysForGirls.Data.Models;
-    using Microsoft.AspNetCore.Identity;
+    using System.Threading.Tasks;
 
     public class CustomerReviewsController : Controller
     {
@@ -49,7 +49,7 @@
                await this.userManager.FindByIdAsync(userId);
 
             var productId = model.ProductId;
-            
+
             var newCustomerReview = new CustomerReviewServiceModel
             {
                 Title = model.Title,

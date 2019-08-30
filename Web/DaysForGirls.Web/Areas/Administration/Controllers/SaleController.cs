@@ -1,14 +1,14 @@
 ﻿namespace DaysForGirls.Web.Areas.Administration.Controllers
 {
-    using Services;
-    using Services.Models;
     using InputModels;
-    using ViewModels;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
+    using Services;
+    using Services.Models;
     using System;
     using System.Linq;
     using System.Threading.Tasks;
+    using ViewModels;
 
     public class SaleController : AdminController
     {
@@ -136,7 +136,7 @@
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string saleId, SaleEditInputModel model)
         {
-            if(ModelState.IsValid == false)
+            if (ModelState.IsValid == false)
             {
                 return View(model);
             }
@@ -161,7 +161,7 @@
         [HttpGet("/Administration/Sale/Delete/{saleId}")]
         public async Task<IActionResult> Delete(string saleId)
         {
-            if(saleId == null)
+            if (saleId == null)
             {
                 return BadRequest();
             }

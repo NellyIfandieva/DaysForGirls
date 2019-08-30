@@ -1,13 +1,13 @@
 ﻿namespace DaysForGirls.Services
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using DaysForGirls.Data;
     using DaysForGirls.Data.Models;
     using DaysForGirls.Services.Models;
     using Microsoft.EntityFrameworkCore;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     public class SaleService : ISaleService
     {
@@ -31,7 +31,7 @@
             int result = await db.SaveChangesAsync();
             string saleId = null;
 
-            if(result > 0)
+            if (result > 0)
             {
                 saleId = sale.Id;
             }
@@ -94,7 +94,7 @@
                 .Include(s => s.Products)
                 .SingleOrDefaultAsync(sale => sale.Id == saleId);
 
-            if(saleWithDetails == null)
+            if (saleWithDetails == null)
             {
                 throw new ArgumentNullException(nameof(saleWithDetails));
             }
@@ -155,7 +155,7 @@
                 Picture = saleWithDetails.Picture,
                 Products = productsInSale
             };
-            
+
             return saleToReturn;
         }
 
@@ -165,7 +165,7 @@
                 .Include(s => s.Products)
                 .SingleOrDefaultAsync(sale => sale.Title == saleTitle);
 
-            if(saleWithDetails == null)
+            if (saleWithDetails == null)
             {
                 throw new ArgumentNullException(nameof(saleWithDetails));
             }
@@ -234,9 +234,9 @@
             Product productToAdd = await this.db.Products
                 .SingleOrDefaultAsync(p => p.Id == productId);
 
-            if(sale == null || productToAdd == null)
+            if (sale == null || productToAdd == null)
             {
-                if(sale == null)
+                if (sale == null)
                 {
                     throw new ArgumentNullException(nameof(sale));
                 }
@@ -262,7 +262,7 @@
             var saleToEdit = await this.db.Sales
                 .SingleOrDefaultAsync(s => s.Id == model.Id);
 
-            if(saleToEdit == null)
+            if (saleToEdit == null)
             {
                 throw new ArgumentNullException(nameof(saleToEdit));
             }
@@ -285,7 +285,7 @@
                 .Include(s => s.Products)
                 .SingleOrDefaultAsync(s => s.Id == saleId);
 
-            if(saleToDelete == null)
+            if (saleToDelete == null)
             {
                 throw new ArgumentNullException(nameof(saleToDelete));
             }
@@ -293,7 +293,7 @@
             HashSet<Product> productsOutOfSale = saleToDelete.Products
                 .ToHashSet();
 
-            if(productsOutOfSale.Count() > 0)
+            if (productsOutOfSale.Count() > 0)
             {
                 foreach (var product in productsOutOfSale)
                 {
@@ -302,7 +302,7 @@
 
                 this.db.UpdateRange(productsOutOfSale);
             }
-            
+
             this.db.Sales.Remove(saleToDelete);
             int result = await this.db.SaveChangesAsync();
 

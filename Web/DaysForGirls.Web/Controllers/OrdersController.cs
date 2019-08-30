@@ -1,18 +1,18 @@
 ﻿namespace DaysForGirls.Web.Controllers
 {
-    using Services;
-    using Services.Models;
+    using DaysForGirls.Data.Models;
     using InputModels;
-    using ViewModels;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
+    using Services;
+    using Services.Models;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Threading.Tasks;
-    using Microsoft.AspNetCore.Authorization;
     using System.Security.Claims;
-    using Microsoft.AspNetCore.Identity;
-    using DaysForGirls.Data.Models;
+    using System.Threading.Tasks;
+    using ViewModels;
 
     public class OrdersController : Controller
     {
@@ -29,7 +29,7 @@
         [HttpGet("/Orders/Create/{userId}")]
         public async Task<IActionResult> Create(string userId)
         {
-            if(userId == null)
+            if (userId == null)
             {
                 return BadRequest();
             }
@@ -69,7 +69,7 @@
         [HttpGet("/Orders/UserAll/{userName}")]
         public async Task<IActionResult> UserAll(string userName)
         {
-            if(userName == null)
+            if (userName == null)
             {
                 return BadRequest();
             }
@@ -174,7 +174,7 @@
             var orderInDb = await this.orderService
                 .GetOrderByIdAsync(orderId);
 
-            if(orderInDb == null)
+            if (orderInDb == null)
             {
                 return NotFound();
             }
@@ -210,7 +210,7 @@
         [HttpGet("/Orders/Edit/{orderId}")]
         public async Task<IActionResult> Edit(string orderId)
         {
-            if(orderId == null)
+            if (orderId == null)
             {
                 return BadRequest();
             }
@@ -218,7 +218,7 @@
             var orderInDb = await this.orderService
                 .GetOrderByIdAsync(orderId);
 
-            if(orderInDb == null)
+            if (orderInDb == null)
             {
                 return NotFound();
             }
@@ -243,12 +243,12 @@
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string orderId, OrderEditInputModel model)
         {
-            if(orderId == null)
+            if (orderId == null)
             {
                 return BadRequest();
             }
 
-            if(ModelState.IsValid == false)
+            if (ModelState.IsValid == false)
             {
                 return View(model);
             }

@@ -1,12 +1,12 @@
 ﻿namespace DaysForGirls.Services
 {
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
     using DaysForGirls.Data;
     using DaysForGirls.Data.Models;
     using DaysForGirls.Services.Models;
     using Microsoft.EntityFrameworkCore;
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     public class ProductTypeService : IProductTypeService
     {
@@ -48,7 +48,7 @@
             var productTypeInDb = await this.db.ProductTypes
                 .SingleOrDefaultAsync(pT => pT.Id == productTypeId);
 
-            if(productTypeInDb == null)
+            if (productTypeInDb == null)
             {
                 throw new ArgumentNullException(nameof(productTypeInDb));
             }
@@ -88,7 +88,7 @@
             var productTypeToDelete = await this.db.ProductTypes
                 .SingleOrDefaultAsync(pT => pT.Id == productTypeId);
 
-            if(productTypeToDelete == null)
+            if (productTypeToDelete == null)
             {
                 throw new ArgumentNullException(nameof(productTypeToDelete));
             }
@@ -96,7 +96,7 @@
             var productsOfType = this.db.Products
                 .Where(p => p.ProductTypeId == productTypeToDelete.Id);
 
-            if(productsOfType.Count() > 0)
+            if (productsOfType.Count() > 0)
             {
                 productTypeToDelete.IsDeleted = true;
                 this.db.Update(productTypeToDelete);

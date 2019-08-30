@@ -85,6 +85,179 @@
             await db.SaveChangesAsync();
         }
 
+        private List<Product> GetSampleProductsFoRsearch()
+        {
+            return new List<Product>()
+            {
+                new Product
+            {
+                Name = "Product One",
+                Category = new Category
+                {
+                    Name = "Haha",
+                    Description = "Haha is great"
+                },
+                ProductType = new ProductType { Name = "Gashti" },
+                Manufacturer = new Manufacturer
+                {
+                    Name = "Armani",
+                    Description = "About Armani",
+                    Logo = new Logo { LogoUrl = "Armani_Logo" }
+                },
+                Colour = "Green",
+                Size = "Fit",
+                OrderId = null,
+                SaleId = "yes",
+                ShoppingCart = null,
+                Price = 20.00m,
+                Quantity = new Quantity { AvailableItems = 1 },
+                Pictures = new List<Picture>()
+                    {
+                        new Picture{ PictureUrl = "a" },
+                        new Picture{ PictureUrl = "b" }
+                    }
+            },
+
+            new Product
+            {
+                Name = "Product Two",
+                Category = new Category
+                {
+                    Name = "Ehaa",
+                    Description = "Ehaa is another great one"
+                },
+                ProductType = new ProductType { Name = "Charshaf" },
+                Manufacturer = new Manufacturer
+                {
+                    Name = "Versace",
+                    Description = "About Versace",
+                    Logo = new Logo { LogoUrl = "Versace_Logo" }
+                },
+                Colour = "Yellow",
+                Size = "Small",
+                OrderId = null,
+                SaleId = null,
+                ShoppingCart = null,
+                Price = 20.00m,
+                Quantity = new Quantity { AvailableItems = 1 },
+                Pictures = new List<Picture>()
+                {
+                    new Picture{ PictureUrl = "a" },
+                    new Picture{ PictureUrl = "b" }
+                },
+                Reviews = new List<CustomerReview>()
+                {
+                    new CustomerReview
+                    {
+                        Author = new DaysForGirlsUser
+                        {
+                            Address = "S",
+                            Email = "userOne@hello.com",
+                            FirstName = "Ani",
+                            LastName = "Ivanova",
+                            PasswordHash = "123",
+                            PhoneNumber = "0888888888",
+                            UserName = "Ancheto"
+                        },
+                        AuthorId = "1",
+                        CreatedOn = DateTime.UtcNow.AddDays(-10),
+                        Title = "Lovely!",
+                        Text = "I just love it"
+                    },
+                    new CustomerReview
+                    {
+                        Author = new DaysForGirlsUser
+                        {
+                            Address = "A",
+                            Email = "userTwo@hello.com",
+                            FirstName = "Mimi",
+                            LastName = "Todorova",
+                            PasswordHash = "123",
+                            PhoneNumber = "0888888889",
+                            UserName = "Mims"
+                        },
+                        AuthorId = "2",
+                        CreatedOn = DateTime.UtcNow.AddDays(-8),
+                        Title = "Gorgeous",
+                        Text = "More than I ever expected"
+                    }
+                }
+            },
+
+            new Product
+            {
+                Name = "Product Three",
+                Category = new Category
+                {
+                    Name = "Mountain",
+                    Description = "Mountains are beautiful"
+                },
+                ProductType = new ProductType { Name = "Semki" },
+                Manufacturer = new Manufacturer
+                {
+                    Name = "Valentina",
+                    Description = "About Valia",
+                    Logo = new Logo { LogoUrl = "Valentina_Logo" }
+                },
+                Colour = "Red",
+                Size = "Larger",
+                OrderId = null,
+                SaleId = null,
+                ShoppingCart = null,
+                Price = 20.00m,
+                Quantity = new Quantity { AvailableItems = 1 },
+                Pictures = new List<Picture>()
+                {
+                    new Picture{ PictureUrl = "a" },
+                    new Picture{ PictureUrl = "b" }
+                },
+                Reviews = new List<CustomerReview>()
+                {
+                    new CustomerReview
+                    {
+                        Author = new DaysForGirlsUser
+                        {
+                            Address = "B",
+                            Email = "userThree@hello.com",
+                            FirstName = "Pepi",
+                            LastName = "Hristov",
+                            PasswordHash = "123",
+                            PhoneNumber = "0888888898",
+                            UserName = "Peps"
+                        },
+                        AuthorId = "3",
+                        CreatedOn = DateTime.UtcNow.AddDays(-7),
+                        Title = "Amazingly wonderful",
+                        Text = "Everybody said I look great in it!"
+                    },
+                    new CustomerReview
+                    {
+                        Author = new DaysForGirlsUser
+                        {
+                            Address = "D",
+                            Email = "amam@hello.com",
+                            FirstName = "Misho",
+                            LastName = "Petrov",
+                            PasswordHash = "123",
+                            PhoneNumber = "0888888989",
+                            UserName = "Mishkata"
+                        },
+                        AuthorId = "4",
+                        CreatedOn = DateTime.UtcNow.AddDays(-3),
+                        Title = "The best ever",
+                        Text = "I want to sleep in it"
+                    }
+                }
+            }
+        };
+        }
+
+        private async Task SeedSampleProductsForSearch(DaysForGirlsDbContext db)
+        {
+            db.Products.AddRange(GetSampleProductsFoRsearch());
+            await db.SaveChangesAsync();
+        }
+
         [Fact]
         public async Task GetById_WithExistingId_ShouldReturnAProduct()
         {
@@ -328,9 +501,9 @@
             int actualDataAvalailabelQuantity = expectedData.Quantity.AvailableItems;
 
             Assert.True(actualResult, errorMessagePrefix + " " + "The method returned false");
-            Assert.True(expectedData.ShoppingCartId == shoppingCartId, errorMessagePrefix + " " + 
+            Assert.True(expectedData.ShoppingCartId == shoppingCartId, errorMessagePrefix + " " +
                 "ShoppingCartId not set properly.");
-            Assert.True(expectedDataAvailableQuantity > actualDataAvalailabelQuantity, errorMessagePrefix + " " + 
+            Assert.True(expectedDataAvailableQuantity > actualDataAvalailabelQuantity, errorMessagePrefix + " " +
                 "AvalableQuantity not decreased.");
         }
 
@@ -383,66 +556,181 @@
             string errorMessagePrefix = "ProductService GetAllSearchResultsByCriteria() method does not work properly.";
 
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
-            await SeedSampleProducts(db);
+            this.productService = new ProductService(db);
+
+            await SeedSampleProductsForSearch(db);
+
+            string criteria = "A";
+            string criteriaToLower = criteria.ToLower();
+
+            var expectedResults = db.Products
+                .Include(p => p.Category)
+                .Include(p => p.Manufacturer)
+                .Include(p => p.ProductType)
+                .Include(p => p.Reviews)
+                .Where(p => p.Category.Name.ToLower().Contains(criteriaToLower)
+                || p.ProductType.Name.ToLower().Contains(criteriaToLower)
+                || p.Manufacturer.Name.ToLower().Contains(criteriaToLower))
+                .ToList();
+
+            var actualResults = this.productService.GetAllSearchResultsByCriteria(criteriaToLower);
+
+            Assert.True(expectedResults.Count() == actualResults.Count(), errorMessagePrefix + " " + "Count of results does not match");
+
+            //List<ProductServiceModel> productsToReturn = new List<ProductServiceModel>();
+
+            //foreach (var prod in actualResult)
+            //{
+            //    var prodServModel = new ProductServiceModel
+            //    {
+            //        Id = prod.Id,
+            //        Name = prod.Name,
+            //        Category = new CategoryServiceModel
+            //        {
+            //            Name = prod.Category.Name
+            //        },
+            //        ProductType = new ProductTypeServiceModel
+            //        {
+            //            Name = prod.ProductType.Name
+            //        },
+            //        Description = prod.Description,
+            //        Pictures = prod.Pictures
+            //            .Select(pic => new PictureServiceModel
+            //            {
+            //                Id = pic.Id,
+            //                PictureUrl = pic.PictureUrl
+            //            })
+            //            .ToList(),
+            //        Colour = prod.Colour,
+            //        Size = prod.Size,
+            //        Manufacturer = new ManufacturerServiceModel
+            //        {
+            //            Id = prod.Manufacturer.Id,
+            //            Name = prod.Manufacturer.Name
+            //        },
+            //        Price = prod.Price,
+            //        Quantity = new QuantityServiceModel
+            //        {
+            //            Id = prod.Quantity.Id,
+            //            AvailableItems = prod.Quantity.AvailableItems
+            //        },
+            //        SaleId = prod.SaleId,
+            //        ShoppingCartId = prod.ShoppingCartId,
+            //        OrderId = prod.OrderId,
+            //        Reviews = prod.Reviews
+            //            .Select(r => new CustomerReviewServiceModel
+            //            {
+            //                Id = r.Id,
+            //                Title = r.Title,
+            //                Text = r.Text,
+            //                CreatedOn = r.CreatedOn.ToString(),
+            //                AuthorId = r.AuthorId
+            //            })
+            //            .ToList()
+            //    };
+            //}
+
+            //Assert.True(productsToReturn.Count() == 2, errorMessagePrefix + " " + "and does not return the correct number of search results.");
+        }
+
+        [Fact]
+        public async Task CalculateProductPriceAsync_WithAllValidDataAndProductInSale_ExpectedToReturnTheProductSalePrice()
+        {
+            string errorMessagePrefix = "ProductService CalculateProductPriceAsync() does not work correctly";
+
+            var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
 
             this.productService = new ProductService(db);
 
-            var actualResult = this.productService.GetAllSearchResultsByCriteria("a");
-
-            List<ProductServiceModel> productsToReturn = new List<ProductServiceModel>();
-
-            foreach (var prod in actualResult)
+            Product testProductOne = new Product
             {
-                var prodServModel = new ProductServiceModel
+                Name = "Product One",
+                Category = new Category
                 {
-                    Id = prod.Id,
-                    Name = prod.Name,
-                    Category = new CategoryServiceModel
+                    Name = "Haha",
+                    Description = "Haha is great"
+                },
+                ProductType = new ProductType { Name = "Gashti" },
+                Manufacturer = new Manufacturer
+                {
+                    Name = "Armani",
+                    Description = "About Armani",
+                    Logo = new Logo { LogoUrl = "Armani_Logo" }
+                },
+                Colour = "Green",
+                Size = "Fit",
+                OrderId = null,
+                SaleId = "yes",
+                ShoppingCart = null,
+                Price = 20.00m,
+                Quantity = new Quantity { AvailableItems = 1 },
+                Pictures = new List<Picture>()
                     {
-                        Name = prod.Category.Name
-                    },
-                    ProductType = new ProductTypeServiceModel
-                    {
-                        Name = prod.ProductType.Name
-                    },
-                    Description = prod.Description,
-                    Pictures = prod.Pictures
-                        .Select(pic => new PictureServiceModel
-                        {
-                            Id = pic.Id,
-                            PictureUrl = pic.PictureUrl
-                        })
-                        .ToList(),
-                    Colour = prod.Colour,
-                    Size = prod.Size,
-                    Manufacturer = new ManufacturerServiceModel
-                    {
-                        Id = prod.Manufacturer.Id,
-                        Name = prod.Manufacturer.Name
-                    },
-                    Price = prod.Price,
-                    Quantity = new QuantityServiceModel
-                    {
-                        Id = prod.Quantity.Id,
-                        AvailableItems = prod.Quantity.AvailableItems
-                    },
-                    SaleId = prod.SaleId,
-                    ShoppingCartId = prod.ShoppingCartId,
-                    OrderId = prod.OrderId,
-                    Reviews = prod.Reviews
-                        .Select(r => new CustomerReviewServiceModel
-                        {
-                            Id = r.Id,
-                            Title = r.Title,
-                            Text = r.Text,
-                            CreatedOn = r.CreatedOn.ToString(),
-                            AuthorId = r.AuthorId
-                        })
-                        .ToList()
-                };
-            }
+                        new Picture{ PictureUrl = "a" },
+                        new Picture{ PictureUrl = "b" }
+                    }
+            };
 
-            Assert.True(productsToReturn.Count() == 2, errorMessagePrefix + " " + "and does not return the correct number of search results.");
+            db.Products.AddRange(testProductOne);
+            await db.SaveChangesAsync();
+
+            var productToCheck = db.Products.First();
+
+            decimal originalProductPrice = productToCheck.Price;
+
+            decimal actualResult = await this.productService.CalculateProductPriceAsync(productToCheck.Id);
+
+            Assert.True(originalProductPrice > actualResult, errorMessagePrefix + " " + "Price does not return correctly.");
+        }
+
+        [Fact]
+        public async Task CalculateProductPriceAsync_WithAllValidDataAndProductNotInSale_ExpectedToReturnTheOriginalProductPrice()
+        {
+            string errorMessagePrefix = "ProductService CalculateProductPriceAsync() does not work correctly";
+
+            var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
+
+            this.productService = new ProductService(db);
+
+            Product testProductTwo = new Product
+            {
+                Name = "Product Two",
+                Category = new Category
+                {
+                    Name = "Haha",
+                    Description = "Haha is great"
+                },
+                ProductType = new ProductType { Name = "Gashti" },
+                Manufacturer = new Manufacturer
+                {
+                    Name = "Armani",
+                    Description = "About Armani",
+                    Logo = new Logo { LogoUrl = "Armani_Logo" }
+                },
+                Colour = "Yellow",
+                Size = "Fit",
+                OrderId = null,
+                SaleId = null,
+                ShoppingCart = null,
+                Price = 20.00m,
+                Quantity = new Quantity { AvailableItems = 1 },
+                Pictures = new List<Picture>()
+                {
+                    new Picture{ PictureUrl = "a" },
+                    new Picture{ PictureUrl = "b" }
+                }
+            };
+
+            db.Products.AddRange(testProductTwo);
+            await db.SaveChangesAsync();
+
+            var productToCheck = db.Products.First();
+
+            decimal originalProductPrice = productToCheck.Price;
+
+            decimal actualResult = await this.productService.CalculateProductPriceAsync(productToCheck.Id);
+
+            Assert.True(originalProductPrice == actualResult, errorMessagePrefix + " " + "Price does not return correctly.");
         }
     }
 }

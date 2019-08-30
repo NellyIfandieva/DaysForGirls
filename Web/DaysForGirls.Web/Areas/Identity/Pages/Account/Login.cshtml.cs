@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using DaysForGirls.Data;
 using DaysForGirls.Data.Models;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using DaysForGirls.Data;
+using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 
 namespace DaysForGirls.Web.Areas.Identity.Pages.Account
 {
@@ -23,7 +20,7 @@ namespace DaysForGirls.Web.Areas.Identity.Pages.Account
         private readonly DaysForGirlsDbContext db;
 
         public LoginModel(
-            SignInManager<DaysForGirlsUser> signInManager, 
+            SignInManager<DaysForGirlsUser> signInManager,
             ILogger<LoginModel> logger,
             UserManager<DaysForGirlsUser> userManager,
             DaysForGirlsDbContext db)

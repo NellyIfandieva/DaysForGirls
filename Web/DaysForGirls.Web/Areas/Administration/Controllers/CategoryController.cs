@@ -1,13 +1,13 @@
 ﻿namespace DaysForGirls.Web.Areas.Administration.Controllers
 {
-    using Services;
-    using Services.Models;
     using InputModels;
-    using ViewModels;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
+    using Services;
+    using Services.Models;
     using System.Linq;
     using System.Threading.Tasks;
+    using ViewModels;
 
     public class CategoryController : AdminController
     {
@@ -29,7 +29,7 @@
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CategoryCreateInputModel model)
         {
-            if(ModelState.IsValid == false)
+            if (ModelState.IsValid == false)
             {
                 return View(model);
             }
@@ -59,7 +59,7 @@
                 .OrderBy(c => c.Name)
                 .ToListAsync();
 
-            if(allCategories.Count() < 1)
+            if (allCategories.Count() < 1)
             {
                 return NotFound();
             }
@@ -70,7 +70,7 @@
         [HttpGet("/Administration/Category/Edit/{categoryId}")]
         public async Task<IActionResult> Edit(int categoryId)
         {
-            if(categoryId <= 0)
+            if (categoryId <= 0)
             {
                 return BadRequest();
             }
@@ -91,7 +91,7 @@
         [HttpPost("/Administration/Category/Edit/{categoryId}")]
         public async Task<IActionResult> Edit(int categoryId, CategoryEditInputModel model)
         {
-            if(ModelState.IsValid == false)
+            if (ModelState.IsValid == false)
             {
                 return View(model);
             }

@@ -1,12 +1,10 @@
 ﻿namespace DaysForGirls.Services
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Threading.Tasks;
     using CloudinaryDotNet;
     using CloudinaryDotNet.Actions;
     using Microsoft.AspNetCore.Http;
+    using System.IO;
+    using System.Threading.Tasks;
 
     public class CloudinaryService : ICloudinaryService
     {
@@ -18,7 +16,7 @@
         }
 
         public async Task<string> UploadPictureForProductAsync(
-            IFormFile image, 
+            IFormFile image,
             string fileName)
         {
             byte[] destinationData;
