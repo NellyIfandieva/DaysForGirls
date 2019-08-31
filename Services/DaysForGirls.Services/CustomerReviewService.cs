@@ -81,5 +81,23 @@
 
             return reviewIsDeleted;
         }
+
+        public IQueryable<CustomerReviewServiceModel> DisplayAll()
+        {
+            var allReviewsInDb = this.db.CustomerReviews
+                .Select(cR => new CustomerReviewServiceModel
+                {
+                    Id = cR.Id,
+                    AuthorUsername = cR.Author.UserName,
+                    AuthorId = cR.AuthorId,
+                    CreatedOn = cR.CreatedOn.ToString("dddd, dd MMMM yyyy"),
+                    Title = cR.Title,
+                    Text = cR.Text,
+                    IsDeleted = cR.IsDeleted,
+                    ProductId = cR.ProductId
+                });
+
+            return allReviewsInDb;
+        }
     }
 }

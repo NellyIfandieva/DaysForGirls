@@ -105,7 +105,11 @@
         </div>
         <a href="/Products/All"><button class="smallNav-additional-button">All Products</button></a>
         <a href="/Sales/All"><button class="smallNav-additional-button">All Sales</button></a>
-        @if (this.User.Identity.IsAuthenticated)
+        @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
+        {
+            <a href="/Administration/CustomerReview/All"><button class="smallNav-additional-button">Reviews</button></a>
+        }
+        @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin") == false)
         {
             <a href="/Orders/UserAll/@this.User.Identity.Name"><button class="smallNav-your-orders-button">Your Orders</button></a>
         }

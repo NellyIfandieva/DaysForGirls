@@ -13,5 +13,7 @@
         //Task<CustomerReviewServiceModel> GetReviewByIdAsync(int reviewId);
 
         Task<bool> DeleteReviewByIdAsync(int reviewId);
+
+        IQueryable<CustomerReviewServiceModel> DisplayAll();
     }
 }
