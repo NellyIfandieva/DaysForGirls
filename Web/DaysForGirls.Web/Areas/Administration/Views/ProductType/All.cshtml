@@ -63,6 +63,9 @@
                     <th>
                         @Html.DisplayNameFor(model => model.Name)
                     </th>
+                    <th>
+                        Is Deleted
+                    </th>
                     <th></th>
                 </tr>
             </thead>
@@ -75,6 +78,9 @@
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @item.IsDeleted
                         </td>
                         <td id="productType-admin-actions">
                             <a href="/Administration/ProductType/Edit/@item.Id">Edit</a>

@@ -63,7 +63,7 @@
         font-weight: bold;
     }
 
-    .text-bottom-right, .text-bottom-right-sold-out, .text-bottom-right-in-a-cart {
+    .text-bottom-right, .text-bottom-right-sold-out, .text-bottom-right-in-a-cart, .text-bottom-right-deleted {
         color: whitesmoke;
         font-weight: 500;
         position: absolute;
@@ -86,6 +86,11 @@
         background-color: #576ac4;
     }
 
+    .text-bottom-right-deleted{
+        width: 130px;
+        background-color: crimson;
+    }
+
     .main-title{
         margin-top: 50px;
         text-align: center;
@@ -104,52 +109,59 @@
     <div id="all-products-container">
         @foreach (var product in Model)
         {
-            <div id="product-holder">
-                @if (product.ShoppingCartId != null)
+        <div id="product-holder">
+            @if (product.IsDeleted)
+            {
+                <div class="text-over-image">
+                    <img src="@product.Picture" alt="@product.Name" />
+                    <div class="text-bottom-right-deleted">DELETED</div>
+                </div>
+            }
+            else if (product.ShoppingCartId != null)
+            {
+                <div class="text-over-image">
+                    <a href="/Administration/Product/Details/@product.Id"><img src="@product.Picture" alt="@product.Name" /></a>
+                    <div class="text-bottom-right-in-a-cart">Currently in a Cart</div>
+                </div>
+            }
+            else if (product.OrderId != null)
+            {
+                <div class="text-over-image">
+                    <a href="/Products/Details/@product.Id"><img src="@product.Picture" alt="@product.Name" /></a>
+                    <div class="text-bottom-right-sold-out">Sold Out</div>
+                </div>
+            }
+            else if (product.SaleId != null)
+            {
+                <div class="text-over-image">
+                    <img src="@product.Picture" alt="@product.Name" />
+                    <a href="/Sales/Details/@product.SaleId"><div class="text-bottom-right">In Sale</div></a>
+                </div>
+            }
+            else
+            {
+                <a href="/Administration/Product/Details/@product.Id"><img src="@product.Picture" alt="@product.Name" /></a>
+            }
+            <div class="product-info-holder">
+                <a href="/Administration/Product/Details/@product.Id"><h4>@product.Name</h4></a>
+                @if (product.IsInSale)
                 {
-                    <div class="text-over-image">
-                        <a href="/Administration/Product/Details/@product.Id"><img src="@product.Picture" alt="@product.Name" /></a>
-                        <div class="text-bottom-right-in-a-cart">Currently in a Cart</div>
-                    </div>
-                }
-                else if (product.OrderId != null)
-                {
-                    <div class="text-over-image">
-                        <a href="/Products/Details/@product.Id"><img src="@product.Picture" alt="@product.Name" /></a>
-                        <div class="text-bottom-right-sold-out">Sold Out</div>
-                    </div>
-                }
-                else if (product.SaleId != null)
-                {
-                    <div class="text-over-image">
-                        <img src="@product.Picture" alt="@product.Name" />
-                        <a href="/Sales/Details/@product.SaleId"><div class="text-bottom-right">In Sale</div></a>
-                    </div>
+                    <h4 style="margin-top: 1px">&euro;<strike>@product.Price</strike> &euro;@product.SalePrice</h4>
                 }
                 else
                 {
-                    <a href="/Administration/Product/Details/@product.Id"><img src="@product.Picture" alt="@product.Name" /></a>
+                    <h4 style="margin-top: 1px">&euro;@product.Price</h4>
                 }
-                <div class="product-info-holder">
-                    <a href="/Administration/Product/Details/@product.Id"><h4>@product.Name</h4></a>
-                    @if (product.IsInSale)
+                <div id="product-function-options">
+                    <a href="/Administration/Product/Edit/@product.Id">Edit</a>
+                    @if (product.IsInSale == false)
                     {
-                        <h4 style="margin-top: 1px">&euro;<strike>@product.Price</strike> &euro;@product.SalePrice</h4>
+                        <a href="/Administration/Product/Edit/@product.Id" class="addToSale">Add to Sale</a>
                     }
-                    else
-                    {
-                        <h4 style="margin-top: 1px">&euro;@product.Price</h4>
-                    }
-                    <div id="product-function-options">
-                        <a href="/Administration/Product/Edit/@product.Id">Edit</a>
-                        @if (product.IsInSale == false)
-                        {
-                            <a href="/Administration/Product/Edit/@product.Id" class="addToSale">Add to Sale</a>
-                        }
-                        <a href="/Administration/Product/Erase/@product.Id">Delete</a>
-                    </div>
+                    <a href="/Administration/Product/Erase/@product.Id">Delete</a>
                 </div>
             </div>
+        </div>
         }
     </div>
 }

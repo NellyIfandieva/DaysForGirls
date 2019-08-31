@@ -58,7 +58,8 @@
                 .Select(pT => new ProductTypeDisplayAllViewModel
                 {
                     Id = pT.Id,
-                    Name = pT.Name
+                    Name = pT.Name,
+                    IsDeleted = pT.IsDeleted
                 })
                 .OrderBy(pt => pt.Name)
                 .ToListAsync();

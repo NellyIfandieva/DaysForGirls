@@ -44,6 +44,7 @@
         {
             var allProductTypes = await this.productTypeService
                 .DisplayAll()
+                .Where(pT => pT.IsDeleted == false)
                 .ToListAsync();
 
             this.ViewData["productTypes"] = allProductTypes
@@ -56,6 +57,7 @@
 
             var allCategories = await this.categoryService
                 .DisplayAll()
+                .Where(c => c.IsDeleted == false)
                 .ToListAsync();
 
             this.ViewData["categories"] = allCategories
@@ -68,6 +70,7 @@
 
             var allManufacturers = await this.manufacturerService
                 .DisplayAll()
+                .Where(m => m.IsDeleted == false)
                 .ToListAsync();
 
             this.ViewData["manufacturers"] = allManufacturers

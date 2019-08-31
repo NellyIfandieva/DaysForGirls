@@ -218,6 +218,11 @@
                 .Include(p => p.Sale)
                 .SingleOrDefaultAsync(p => p.Id == model.Id);
 
+            if(productInDb == null)
+            {
+                return false;
+            }
+
             productInDb.Name = model.Name;
             productInDb.Description = model.Description;
             productInDb.Colour = model.Colour;
@@ -232,7 +237,10 @@
             productInDb.Quantity.AvailableItems = model.Quantity.AvailableItems;
             productInDb.SaleId = model.SaleId;
 
-            productInDb.Pictures.Clear();
+            if(productInDb.Pictures.Count > 0)
+            {
+                productInDb.Pictures.Clear();
+            }
 
             foreach (var pic in model.Pictures)
             {

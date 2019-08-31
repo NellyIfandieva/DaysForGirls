@@ -166,9 +166,10 @@
 
             @if (Model.ShoppingCartId == null && Model.OrderId == null)
             {
-                @*<p style="font-size: medium"><span style="font-weight: bold">Available Quantity:</span> @Model.AvailableItems</p>
-            <br />*@
-                <a href="/ShoppingCarts/AddProduct/@Model.Id"><button id="order-button">Add to Cart</button></a>
+                if (this.User.IsInRole("Admin") == false)
+                {
+                    <a href="/ShoppingCarts/AddProduct/@Model.Id"><button id="order-button">Add to Cart</button></a>
+                }
             }
             else
             {
@@ -187,17 +188,27 @@
                 @foreach (var review in Model.Reviews)
                 {
                     <div class="product-single-comment">
-                        <p style="margin-bottom: 1px">On @review.DateCreated <bold>@review.AuthorUsername</bold> said: <q>@review.Title</q></p>
-                        <p style="margin-top: 1px"><q>@review.Text</q></p>
+                        <p style="margin-bottom: 1px">On @review.DateCreated <bold>@review.AuthorUsername</bold> said: <q>@review.Title<br />@review.Text</q></p>
                         <hr />
                     </div>
                 }
             }
             else
             {
-                <h5 class="text-center">Be the first to review @Model.Name</h5>
+                if (this.User.IsInRole("Admin") == false)
+                {
+                    <h5 class="text-center">Be the first to review @Model.Name</h5>
+                }
+                else
+                {
+                    <h5 class="text-center">@Model.Name has not been reviewed yet</h5>
+                }
+
             }
-            <a href="/CustomerReviews/Create/@Model.Id"><button>Add Review</button></a>
+            @if (this.User.IsInRole("Admin") == false)
+            {
+                <a href="/CustomerReviews/Create/@Model.Id"><button>Add Review</button></a>
+            }
         </div>
     </div>
 </div>

@@ -35,11 +35,11 @@
         public IQueryable<ProductTypeServiceModel> DisplayAll()
         {
             var allProductTypes = db.ProductTypes
-                .Where(pb => pb.IsDeleted == false)
                 .Select(pt => new ProductTypeServiceModel
                 {
                     Id = pt.Id,
-                    Name = pt.Name
+                    Name = pt.Name,
+                    IsDeleted = pt.IsDeleted
                 });
 
             return allProductTypes;
