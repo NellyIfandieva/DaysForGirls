@@ -24,6 +24,11 @@
 
         public async Task<OrderServiceModel> CreateAsync(DaysForGirlsUser user)
         {
+            if(user == null)
+            {
+                return null;
+            }
+
             string userId = user.Id;
 
             if(userId == null)
@@ -83,6 +88,11 @@
 
             this.db.Orders.Add(order);
             int resultOne = await this.db.SaveChangesAsync();
+
+            if (resultOne < 1)
+            {
+                return null;
+            }
 
             string orderId = order.Id;
 
@@ -214,6 +224,11 @@
 
         public async Task<OrderServiceModel> GetOrderByIdAsync(string orderId)
         {
+            if(orderId == null)
+            {
+                return null;
+            }
+
             var orderInDb = await this.db.Orders
                 .Include(o => o.OrderedProducts)
                 .Include(o => o.User)

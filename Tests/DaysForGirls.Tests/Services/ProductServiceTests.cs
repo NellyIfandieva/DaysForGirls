@@ -299,13 +299,16 @@
         }
 
         [Fact]
-        public async Task GetById_WithNonexistentProductId_ExpectedToReturnArgumentNullException()
+        public async Task GetById_WithNonexistentProductId_ExpectedToReturnNull()
         {
+            string errorMessagePrefix = "ProductService GetById() method does not work properly.";
+
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
-            await SeedSampleProducts(db);
             this.productService = new ProductService(db);
 
-            await Assert.ThrowsAsync<ArgumentNullException>(() => this.productService.GetProductByIdAsync(8));
+            var actualResult = await this.productService.GetProductByIdAsync(0);
+
+            Assert.True(actualResult == null, errorMessagePrefix + " " + "Does not return null");
         }
 
         [Fact]
@@ -510,11 +513,13 @@
         [Fact]
         public async Task AddProductToShoppingCartAsync_WithNonexistentProductId_ExpectedToReturnArgumentNullException()
         {
+            string errorMessagePrefix = "ProductService AddProductToShoppingCartAsync() method does not work properly.";
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
-            await SeedSampleProducts(db);
             this.productService = new ProductService(db);
 
-            await Assert.ThrowsAsync<ArgumentNullException>(() => this.productService.AddProductToShoppingCartAsync(8, "22021975"));
+            var actualResult = await this.productService.AddProductToShoppingCartAsync(0, null);
+
+            Assert.True(actualResult == false, errorMessagePrefix + " " + "Does not return null.");
         }
 
         [Fact]
@@ -541,13 +546,17 @@
         }
 
         [Fact]
-        public async Task RemoveProductFromShoppingCartAsync_WithNonexistentProductId_ExpectedToReturnArgumentNullException()
+        public async Task RemoveProductFromShoppingCartAsync_WithNonexistentProductId_ExpectedToReturnFalse()
         {
+            string errorMessagePrefix = "ProductService RemoveFromCart() method does not work properly.";
+
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
-            await SeedSampleProducts(db);
             this.productService = new ProductService(db);
 
-            await Assert.ThrowsAsync<ArgumentNullException>(() => this.productService.RemoveProductFromShoppingCartAsync(8));
+            bool actualResult = await this.productService.RemoveProductFromShoppingCartAsync(0);
+
+            Assert.True(actualResult == false, errorMessagePrefix + " " + "Returns true.");
+
         }
 
         [Fact]

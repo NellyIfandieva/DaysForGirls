@@ -257,7 +257,7 @@
 
         public async Task<bool> EditAsync(SaleServiceModel model)
         {
-            if(model.Id == null)
+            if(model == null || model.Id == null)
             {
                 return false;
             }

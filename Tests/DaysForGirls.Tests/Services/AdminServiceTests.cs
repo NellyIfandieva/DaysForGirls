@@ -167,8 +167,10 @@ namespace DaysForGirls.Tests.Services
         }
 
         [Fact]
-        public async Task Create_WithNonExistentProductType_ExpectedToCreateAProduct()
+        public async Task Create_WithNonExistentProductType_ExpectedToReturnZero()
         {
+            string errorMessagePrefix = "ManufacturerService DisplayAll() method does not work properly.";
+
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
             var pictureService = new PictureService(db);
             var customerReviewService = new CustomerReviewService(db);
@@ -223,7 +225,11 @@ namespace DaysForGirls.Tests.Services
                 }
             };
 
-            await Assert.ThrowsAsync<ArgumentNullException>(() => this.adminService.CreateAsync(testProduct));
+            int actualProductId = await this.adminService.CreateAsync(testProduct);
+            int actualCountOfProductsInDb = db.Products.Count();
+
+            Assert.True(actualProductId == 0, errorMessagePrefix + " " + "ProductId not returned correctly");
+            Assert.True(actualCountOfProductsInDb == 0, errorMessagePrefix + " " + "Unexpected number of products in db.");
         }
 
         [Fact]
@@ -365,15 +371,19 @@ namespace DaysForGirls.Tests.Services
         }
 
         [Fact]
-        public async Task GetById_WithNonexistentId_ShouldThrowInvalidOperationException()
+        public async Task GetById_WithNonexistentId_ShouldReturnNull()
         {
+            string errorMessagePrefix = "AdminService EditAsync() method does not work properly.";
+
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
             var pictureService = new PictureService(db);
             var customerReviewService = new CustomerReviewService(db);
             this.adminService = new AdminService(db, pictureService, customerReviewService);
-            await SeedSampleProducts(db);
+            //await SeedSampleProducts(db);
 
-            await Assert.ThrowsAsync<ArgumentNullException>(() => this.adminService.GetProductByIdAsync(8));
+            var actualResult = await this.adminService.GetProductByIdAsync(8);
+
+            Assert.True(actualResult == null, errorMessagePrefix + " " + "Returned a product");
         }
 
         [Fact]
@@ -790,8 +800,10 @@ namespace DaysForGirls.Tests.Services
         }
 
         [Fact]
-        public async Task SetOrderId_WithNullOrderId_ExpectedToThrowArgumentNullException()
+        public async Task SetOrderId_WithNullOrderId_ExpectedToReturnFalse()
         {
+            string errorMessagePrefix = "AdminService SetOrderId() method does not work properly.";
+
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
             var pictureService = new PictureService(db);
             var customerReviewService = new CustomerReviewService(db);
@@ -834,7 +846,10 @@ namespace DaysForGirls.Tests.Services
             List<int> productIds = db.Products
                 .Select(p => p.Id).ToList();
 
-            await Assert.ThrowsAsync<ArgumentNullException>(() => this.adminService.SetOrderIdToProductsAsync(productIds, null));
+            bool actualResult = await this.adminService.SetOrderIdToProductsAsync(productIds , null);
+
+            Assert.True(actualResult == false, errorMessagePrefix + " " + "Returns true.");
+            //await Assert.ThrowsAsync<ArgumentNullException>(() => this.adminService.SetOrderIdToProductsAsync(productIds, null));
         }
 
         //[Fact]
@@ -925,8 +940,10 @@ namespace DaysForGirls.Tests.Services
         }
 
         [Fact]
-        public async Task AddProductToSale_WithNonexistentSale_ExpectedToThrowArgumentNullException()
+        public async Task AddProductToSale_WithNonexistentSale_ExpectedToReturnFalse()
         {
+            string errorMessagePrefix = "AdminService AddProductToSaleAsync() method does not work properly.";
+
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
             var pictureService = new PictureService(db);
             var customerReviewService = new CustomerReviewService(db);
@@ -938,7 +955,10 @@ namespace DaysForGirls.Tests.Services
 
             Product product = db.Products.First();
 
-            await Assert.ThrowsAsync<ArgumentNullException>(() => this.adminService.AddProductToSaleAsync(product.Id, "2"));
+            bool actualResult = await this.adminService.AddProductToSaleAsync(product.Id, "sale");
+
+            Assert.True(actualResult == false, errorMessagePrefix + " " + "Returns true instead of false.");
+            Assert.True(product.SaleId == null, errorMessagePrefix + " " + "SaleId does not return coreectly");
         }
 
         [Fact]

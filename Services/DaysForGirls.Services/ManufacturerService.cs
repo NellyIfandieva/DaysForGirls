@@ -39,6 +39,11 @@
 
         public async Task<ManufacturerServiceModel> GetManufacturerByIdAsync(int manufacturerId)
         {
+            if(manufacturerId <= 0)
+            {
+                return null;
+            }
+
             var manufacturer = await this.db.Manufacturers
                 .Include(m => m.Logo)
                 .Include(m => m.Products)

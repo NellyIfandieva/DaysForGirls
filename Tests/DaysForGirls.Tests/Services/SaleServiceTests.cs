@@ -118,7 +118,6 @@ namespace DaysForGirls.Tests.Services
                     Title = s.Title,
                     EndsOn = s.EndsOn,
                     Picture = s.Picture,
-                    IsActive = s.IsActive,
                     Products = s.Products
                     .Where(p => p.SaleId == s.Id)
                     .Select(p => new ProductServiceModel
@@ -174,11 +173,14 @@ namespace DaysForGirls.Tests.Services
         [Fact]
         public async Task GetById_WithNonexistingId_ShouldThrowArgumentNullException()
         {
+            string errorMessagePrefix = "SaleService GetSaleByTitleAsync() method does not work properly.";
+
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
-            await SeedSampleSales(db);
             this.saleService = new SaleService(db);
 
-            await Assert.ThrowsAsync<ArgumentNullException>(() => this.saleService.GetSaleByIdAsync("yes"));
+            var actualResult = await this.saleService.GetSaleByIdAsync(null);
+
+            Assert.True(actualResult == null, errorMessagePrefix + " " + "Returns a nonexistent sale.");
         }
 
         [Fact]
@@ -210,13 +212,16 @@ namespace DaysForGirls.Tests.Services
         }
 
         [Fact]
-        public async Task GetByTitle_WithNonexistingTitle_ShouldThrowArgumentNullException()
+        public async Task GetByTitle_WithNonexistingTitle_ShouldReturnNull()
         {
+            string errorMessagePrefix = "SaleService GetByTitle() method does not work properly.";
+
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
-            await SeedSampleSales(db);
             this.saleService = new SaleService(db);
 
-            await Assert.ThrowsAsync<ArgumentNullException>(() => this.saleService.GetSaleByTitleAsync("yes"));
+            var actualResult = await this.saleService.GetSaleByTitleAsync("sale");
+
+            Assert.True(actualResult == null, errorMessagePrefix + " " + "Returns nonexistent sale");
         }
 
         [Fact]
@@ -274,8 +279,10 @@ namespace DaysForGirls.Tests.Services
         }
 
         [Fact]
-        public async Task AddProductToSale_WithNonexistentSaleId_ExpectedToThrowArgumentNullException()
+        public async Task AddProductToSale_WithNonexistentSaleId_ExpectedToReturnFalse()
         {
+            string errorMessagePrefix = "SaleService AddProductToSale() method does not work properly.";
+
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
 
             Product product = new Product
@@ -320,7 +327,10 @@ namespace DaysForGirls.Tests.Services
 
             var productToAdd = db.Products.First();
 
-            await Assert.ThrowsAsync<ArgumentNullException>(() => this.saleService.AddProductToSaleAsync("yes", productToAdd.Id));
+            bool actualResult = await this.saleService.AddProductToSaleAsync(null, productToAdd.Id);
+
+            Assert.True(actualResult == false, errorMessagePrefix + " " + "Returns true.");
+
         }
 
         [Fact]
@@ -375,21 +385,16 @@ namespace DaysForGirls.Tests.Services
         }
 
         [Fact]
-        public async Task Edit_WithNonexistentId_ShouldThrowArgumentNullException()
+        public async Task Edit_WithNonexistentId_ShouldReturnFalse()
         {
+            string errorMessagePrefix = "SaleService EditAsync() method does not work properly.";
+
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
-            await SeedSampleSales(db);
             this.saleService = new SaleService(db);
 
-            SaleServiceModel expectedServiceModel = new SaleServiceModel
-            {
-                Id = "yes",
-                Title = "Hello",
-                EndsOn = DateTime.UtcNow,
-                Picture = "Hello_Picture"
-            };
+            bool actualResult = await this.saleService.EditAsync(null);
 
-            await Assert.ThrowsAsync<ArgumentNullException>(() => this.saleService.EditAsync(expectedServiceModel));
+            Assert.True(actualResult == false, errorMessagePrefix + " " + "Edited sale.");
         }
 
         [Fact]
@@ -409,13 +414,16 @@ namespace DaysForGirls.Tests.Services
         }
 
         [Fact]
-        public async Task DeleteSaleById_WithNonexistentId_ExpectedToToThrowArgumentNullException()
+        public async Task DeleteSaleById_WithNonexistentId_ExpectedToToReturnFalse()
         {
+            string errorMessagePrefix = "SaleService DeleteByIdAsync() method does not work properly.";
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
             await SeedSampleSales(db);
             this.saleService = new SaleService(db);
 
-            await Assert.ThrowsAsync<ArgumentNullException>(() => this.saleService.DeleteSaleById("yes"));
+            bool actualResult = await this.saleService.DeleteSaleById(null);
+
+            Assert.True(actualResult == false, errorMessagePrefix + " " + "Returns true.");
         }
     }
 }

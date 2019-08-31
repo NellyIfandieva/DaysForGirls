@@ -70,7 +70,7 @@ namespace DaysForGirls.Tests.Services
         [Fact]
         public async Task CreateOrder_WithValidData_ExpectedToReturnAnOrderServiceModel()
         {
-            string errorMessagePrefix = "OrderService DisplayAllAdmin() method does not work properly.";
+            string errorMessagePrefix = "OrderService CreateAsync() method does not work properly.";
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
 
             this.pictureService = new PictureService(db);
@@ -104,6 +104,19 @@ namespace DaysForGirls.Tests.Services
             db.ShoppingCarts.Add(cart);
             await db.SaveChangesAsync();
 
+            var sampleShopCartItem = new ShoppingCartItem
+            {
+                Product = new Product(),
+                ShoppingCartId = cart.Id
+            };
+
+            db.ShoppingCartItems.Add(sampleShopCartItem);
+            await db.SaveChangesAsync();
+
+            cart.ShoppingCartItems.Add(sampleShopCartItem);
+            db.Update(cart);
+            await db.SaveChangesAsync();
+
             OrderServiceModel actualResult = await this.orderService
                 .CreateAsync(user);
 
@@ -111,7 +124,7 @@ namespace DaysForGirls.Tests.Services
         }
 
         [Fact]
-        public async Task CreateOrder_WithInValidUser_ExpectedToThrowArgumentNullException()
+        public async Task CreateOrder_WithInValidUser_ExpectedToReturnNull()
         {
             string errorMessagePrefix = "OrderService DisplayAllAdmin() method does not work properly.";
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
@@ -122,35 +135,9 @@ namespace DaysForGirls.Tests.Services
 
             this.orderService = new OrderService(db, adminService);
 
-            //var sampleUser = new DaysForGirlsUser
-            //{
-            //    FirstName = "Johnny",
-            //    LastName = "Johnson",
-            //    PasswordHash = "123",
-            //    PhoneNumber = "0888888889",
-            //    UserName = "UserTwo",
-            //    Email = "userTwo@userOne.com",
-            //    Address = "S"
-            //};
+            var actualResult = await this.orderService.CreateAsync(null);
 
-            //db.Users.Add(sampleUser);
-            //await db.SaveChangesAsync();
-
-            //var user = db.Users.First();
-            //string userId = user.Id;
-
-            //var cart = new ShoppingCart
-            //{
-            //    UserId = "8"
-            //};
-
-            //db.ShoppingCarts.Add(cart);
-            //await db.SaveChangesAsync();
-
-            //OrderServiceModel actualResult = await this.orderService
-            //    .CreateAsync(new DaysForGirlsUser());
-
-            await Assert.ThrowsAsync<ArgumentNullException>(() => this.orderService.CreateAsync(new DaysForGirlsUser()));
+            Assert.True(actualResult == null, errorMessagePrefix + " " + "Returns an order.");
         }
 
         [Fact]
@@ -283,46 +270,6 @@ namespace DaysForGirls.Tests.Services
             db.Users.Add(sampleUser);
             await db.SaveChangesAsync();
 
-            //var sampleOrderOne = new Order
-            //{
-            //    IssuedOn = DateTime.UtcNow.AddDays(-5),
-
-            //    OrderedProducts = new HashSet<OrderedProduct>(),
-            //    TotalPrice = 500.00m,
-            //    User = new DaysForGirlsUser
-            //    {
-            //        FirstName = "Johnny",
-            //        LastName = "Johnson",
-            //        PasswordHash = "123",
-            //        PhoneNumber = "0888888889",
-            //        UserName = "UserTwo",
-            //        Email = "userTwo@userOne.com",
-            //        Address = "S"
-            //    },
-            //    UserId = "JohnnyJohnson",
-            //    OrderStatus = "Ordered"
-            //};
-
-            //var sampleOrderTwo = new Order
-            //{
-            //    TotalPrice = 1500.00m,
-            //    User = new DaysForGirlsUser
-            //    {
-            //        FirstName = "Mary",
-            //        LastName = "Johnson",
-            //        PasswordHash = "123",
-            //        PhoneNumber = "0888888888",
-            //        UserName = "UserTwo",
-            //        Email = "userOne@userOne.com",
-            //        Address = "S"
-            //    },
-            //    UserId = "MaryJohnson",
-            //    OrderStatus = "Ordered"
-            //};
-
-            //db.Orders.AddRange(sampleOrderOne, sampleOrderTwo);
-            //await db.SaveChangesAsync();
-
             this.pictureService = new PictureService(db);
             this.customerReviewService = new CustomerReviewService(db);
             this.adminService = new AdminService(db, pictureService, customerReviewService);
@@ -330,31 +277,6 @@ namespace DaysForGirls.Tests.Services
             this.orderService = new OrderService(db, adminService);
 
             string userId = db.Users.First().Id;
-
-            //var expectedResults = db.Orders
-            //    .Where(o => o.UserId == userId)
-            //    .Select(o => new OrderServiceModel
-            //    {
-            //        Id = o.Id,
-            //        IssuedOn = o.IssuedOn,
-            //        OrderedProducts = o.OrderedProducts
-            //            .Select(p => new OrderedProductServiceModel
-            //            {
-            //                Id = p.Id,
-            //                ProductId = p.ProductId,
-            //                ProductName = p.ProductName,
-            //                ProductColour = p.ProductColour,
-            //                ProductSize = p.ProductSize,
-            //                ProductPicture = p.ProductPicture,
-            //                ProductPrice = p.ProductPrice,
-            //                ProductSalePrice = p.ProductSalePrice,
-            //                ProductQuantity = p.ProductQuantity
-            //            }).ToList(),
-            //        TotalPrice = o.TotalPrice,
-            //        OrderStatus = o.OrderStatus
-            //    })
-            //    .OrderByDescending(o => o.IssuedOn)
-            //    .ToList();
 
             var actualResults = await this.orderService.DisplayAllOrdersOfUserAsync(userId);
 
@@ -490,7 +412,7 @@ namespace DaysForGirls.Tests.Services
         }
 
         [Fact]
-        public async Task GetById_WithNonexistentId_ExpectedToThrowArgumentNullException()
+        public async Task GetById_WithNonexistentId_ExpectedToReturnNull()
         {
             string errorMessagePrefix = "OrderService GetOrderByIdAsync() method does not work properly.";
 
@@ -503,30 +425,138 @@ namespace DaysForGirls.Tests.Services
 
             this.orderService = new OrderService(db, adminService);
 
-            await Assert.ThrowsAsync<ArgumentNullException>(() => this.orderService.GetOrderByIdAsync("yes"));
+            var actualResult = await this.orderService.GetOrderByIdAsync("8");
 
-            //Order expectedData = db.Orders.First();
+            Assert.True(actualResult == null, errorMessagePrefix + " " + "Returns a nonexisting order.");
+        }
 
-            //var expectedDataServiceModel = new OrderServiceModel
-            //{
-            //    Id = expectedData.Id,
-            //    DeliveryEarlistDate = expectedData.DeliveryEarliestDate.ToString("dddd, dd MMMM yyyy"),
-            //    DeliveryLatestDate = expectedData.DeliveryLatestDate.ToString("dddd, dd MMMM yyyy"),
-            //    IssuedOn = expectedData.IssuedOn,
-            //    OrderedProducts = new List<OrderedProductServiceModel>(),
-            //    OrderStatus = expectedData.OrderStatus,
-            //    TotalPrice = expectedData.TotalPrice
-            //};
+        [Fact]
+        public async Task CheckIfOrderBelongsToUser_WithAllValidData_ExpectedToReturnTrue()
+        {
+            string errorMessagePrefix = "OrderService GetOrderByIdAsync() method does not work properly.";
 
-            //OrderServiceModel actualData = await this.orderService.GetOrderByIdAsync(expectedData.Id);
+            var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
+            await SeedSampleOrders(db);
 
-            //Assert.True(expectedDataServiceModel.Id == actualData.Id, errorMessagePrefix + " " + "Id is not returned properly.");
-            //Assert.True(expectedDataServiceModel.DeliveryEarlistDate == actualData.DeliveryEarlistDate, errorMessagePrefix + " " + "Name is not returned properly.");
-            //Assert.True(expectedDataServiceModel.DeliveryLatestDate == actualData.DeliveryLatestDate, errorMessagePrefix + " " + "Description is not returned properly");
-            //Assert.True(expectedDataServiceModel.IssuedOn == actualData.IssuedOn, errorMessagePrefix + " " + "LogoId is not returned properly.");
-            //Assert.True(expectedDataServiceModel.OrderedProducts.Count() == actualData.OrderedProducts.Count(), errorMessagePrefix + " " + "LogoUrl is not returned properly.");
-            //Assert.True(expectedDataServiceModel.OrderStatus == actualData.OrderStatus, errorMessagePrefix + " " + "LogoUrl is not returned properly.");
-            //Assert.True(expectedDataServiceModel.TotalPrice == actualData.TotalPrice, errorMessagePrefix + " " + "LogoUrl is not returned properly.");
+            this.pictureService = new PictureService(db);
+            this.customerReviewService = new CustomerReviewService(db);
+            this.adminService = new AdminService(db, pictureService, customerReviewService);
+
+            this.orderService = new OrderService(db, adminService);
+
+            var testUser = new DaysForGirlsUser
+            {
+                FirstName = "Johnny",
+                LastName = "Johnson",
+                PasswordHash = "123",
+                PhoneNumber = "0888888889",
+                UserName = "UserTwo",
+                Email = "userTwo@userOne.com",
+                Address = "S"
+            };
+
+            db.Users.Add(testUser);
+            await db.SaveChangesAsync();
+
+            var userId = db.Users.First().Id;
+
+            Order testOrder = new Order
+            {
+                IssuedOn = DateTime.UtcNow.AddDays(-5),
+                OrderedProducts = new HashSet<OrderedProduct>(),
+                OrderStatus = "Ordered",
+                User = testUser,
+                UserId = userId
+            };
+
+            db.Orders.Add(testOrder);
+            await db.SaveChangesAsync();
+
+            bool actualResult = await this.orderService.CheckIfOrderBelongsToUser(testOrder.Id, userId);
+
+            Assert.True(actualResult, errorMessagePrefix + " " + "Returns false");
+        }
+
+        [Fact]
+        public async Task CheckIfOrderBelongsToUser_WithInvalidOrderId_ExpectedToReturnFalse()
+        {
+            string errorMessagePrefix = "OrderService GetOrderByIdAsync() method does not work properly.";
+
+            var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
+            await SeedSampleOrders(db);
+
+            this.pictureService = new PictureService(db);
+            this.customerReviewService = new CustomerReviewService(db);
+            this.adminService = new AdminService(db, pictureService, customerReviewService);
+
+            this.orderService = new OrderService(db, adminService);
+
+            var testUser = new DaysForGirlsUser
+            {
+                FirstName = "Johnny",
+                LastName = "Johnson",
+                PasswordHash = "123",
+                PhoneNumber = "0888888889",
+                UserName = "UserTwo",
+                Email = "userTwo@userOne.com",
+                Address = "S"
+            };
+
+            db.Users.Add(testUser);
+            await db.SaveChangesAsync();
+
+            var userId = db.Users.First().Id;
+
+            bool actualResult = await this.orderService.CheckIfOrderBelongsToUser("order", userId);
+
+            Assert.True(actualResult == false, errorMessagePrefix + " " + "Returns true.");
+        }
+
+        [Fact]
+        public async Task CheckIfOrderBelongsToUser_WithInvalidUserId_ExpectedToReturnFalse()
+        {
+            string errorMessagePrefix = "OrderService GetOrderByIdAsync() method does not work properly.";
+
+            var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
+            await SeedSampleOrders(db);
+
+            this.pictureService = new PictureService(db);
+            this.customerReviewService = new CustomerReviewService(db);
+            this.adminService = new AdminService(db, pictureService, customerReviewService);
+
+            this.orderService = new OrderService(db, adminService);
+
+            var testUser = new DaysForGirlsUser
+            {
+                FirstName = "Johnny",
+                LastName = "Johnson",
+                PasswordHash = "123",
+                PhoneNumber = "0888888889",
+                UserName = "UserTwo",
+                Email = "userTwo@userOne.com",
+                Address = "S"
+            };
+
+            db.Users.Add(testUser);
+            await db.SaveChangesAsync();
+
+            var userId = db.Users.First().Id;
+
+            var testOrder = new Order
+            {
+                IssuedOn = DateTime.UtcNow.AddDays(-5),
+                OrderedProducts = new HashSet<OrderedProduct>(),
+                OrderStatus = "Ordered",
+                User = testUser,
+                UserId = userId
+            };
+
+            db.Orders.Add(testOrder);
+            await db.SaveChangesAsync();
+
+            bool actualResult = await this.orderService.CheckIfOrderBelongsToUser(testOrder.Id, "johnny");
+
+            Assert.True(actualResult == false, errorMessagePrefix + " " + "Returns true.");
         }
     }
 }

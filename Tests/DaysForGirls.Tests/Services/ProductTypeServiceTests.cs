@@ -78,13 +78,16 @@
         }
 
         [Fact]
-        public async Task GetById_WithNonexistentId_ExpectedArgumentNullException()
+        public async Task GetById_WithNonexistentId_ExpectedToReturnNull()
         {
+            string errorMessagePrefix = "ProductTypeService DisplayAll() method does not work properly.";
+
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
-            await SeedProductTypes(db);
             this.productTypeService = new ProductTypeService(db);
 
-            await Assert.ThrowsAsync<ArgumentNullException>(() => this.productTypeService.GetProductTypeByIdAsync(8));
+            var actualResult = await this.productTypeService.GetProductTypeByIdAsync(0);
+
+            Assert.True(actualResult == null, errorMessagePrefix + " " + "Returns a product type.");
         }
 
 
@@ -176,11 +179,16 @@
         [Fact]
         public async Task DeleteProductTypeById_WithNonexistentId_ExpectedToThrowArgumentNullException()
         {
+            string errorMessagePrefix = "CategoryService EditAsync() method does not work properly.";
+
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
             await SeedProductTypes(db);
             this.productTypeService = new ProductTypeService(db);
 
-            await Assert.ThrowsAsync<ArgumentNullException>(() => this.productTypeService.DeleteTypeByIdAsync(8));
+            bool actualResult = await this.productTypeService.DeleteTypeByIdAsync(0);
+
+            Assert.True(actualResult == false, errorMessagePrefix + " " + "Returns true.");
+
         }
 
         [Fact]

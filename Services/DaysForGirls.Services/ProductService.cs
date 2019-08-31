@@ -143,7 +143,7 @@
 
         public async Task<bool> AddProductToShoppingCartAsync(int productId, string shoppingCartId)
         {
-            if(productId <=0 || shoppingCartId == null)
+            if(productId <= 0 || shoppingCartId == null)
             {
                 return false;
             }

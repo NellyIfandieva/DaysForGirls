@@ -91,6 +91,11 @@
 
         public async Task<bool> DeleteCategoryByIdAsync(int categoryId)
         {
+            if(categoryId <= 0)
+            {
+                return false;
+            }
+
             var categoryToDelete = await this.db.Categories
                 .SingleOrDefaultAsync(c => c.Id == categoryId);
 

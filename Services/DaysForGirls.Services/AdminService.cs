@@ -313,10 +313,15 @@
 
         public async Task<bool> SetOrderIdToProductsAsync(List<int> productIds, string orderId)
         {
+            if(productIds.Count() < 1 || orderId == null)
+            {
+                return false;
+            }
+
             var productsToAddToOrder = await this.db.Products
                 .Where(p => productIds.Contains(p.Id)).ToListAsync();
 
-            if (productsToAddToOrder.Count() < 1 || orderId == null)
+            if (productsToAddToOrder.Count() < 1)
             {
                 return false;
             }

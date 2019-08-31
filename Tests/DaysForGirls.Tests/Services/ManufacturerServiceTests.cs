@@ -103,13 +103,16 @@ namespace DaysForGirls.Tests.Services
         }
 
         [Fact]
-        public async Task GetById_WithNonexistentId_ShouldThrowInvalidOperationException()
+        public async Task GetById_WithNonexistentId_ShouldReturnNull()
         {
+            string errorMessagePrefix = "ManufacturerService DisplayAll() method does not work properly.";
+
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
-            await SeedSampleManufacturers(db);
             this.manufacturerService = new ManufacturerService(db);
 
-            await Assert.ThrowsAsync<ArgumentNullException>(() => this.manufacturerService.GetManufacturerByIdAsync(8));
+            var actualResult = await this.manufacturerService.GetManufacturerByIdAsync(8);
+
+            Assert.True(actualResult == null, errorMessagePrefix + " " + "Returns a nonexistent manufacturer.");
         }
 
         [Fact]
@@ -229,13 +232,16 @@ namespace DaysForGirls.Tests.Services
         }
 
         [Fact]
-        public async Task DeleteManufacturerById_WithNonexistentId_ExpectedToThrowArgumentNullException()
+        public async Task DeleteManufacturerById_WithNonexistentId_ExpectedToReturnFalse()
         {
+            string errorMessagePrefix = "ManufacturerService DeleteTypeByIdAsync() method does not work properly.";
+
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
-            await SeedSampleManufacturers(db);
             this.manufacturerService = new ManufacturerService(db);
 
-            await Assert.ThrowsAsync<ArgumentNullException>(() => this.manufacturerService.DeleteManufacturerByIdAsync(8));
+            bool actualResult = await this.manufacturerService.DeleteManufacturerByIdAsync(8);
+
+            Assert.True(actualResult == false, errorMessagePrefix + " " + "Returns true");
         }
 
         [Fact]

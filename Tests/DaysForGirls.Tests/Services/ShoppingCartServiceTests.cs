@@ -103,8 +103,10 @@
         }
 
         [Fact]
-        public async Task AddProductToShoppingCart_WithInValidUserId_ExpectedToThrowArgumentNullException()
+        public async Task AddProductToShoppingCart_WithInValidUserId_ExpectedToReturnNull()
         {
+            string errorMessagePrefix = "ShoppingCartService AddItemToCart() method does not work properly.";
+
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
             this.productService = new ProductService(db);
             this.shoppingCartService = new ShoppingCartService(db, productService);
@@ -162,7 +164,9 @@
                 UserId = "8"
             };
 
-            await Assert.ThrowsAsync<ArgumentNullException>(() => this.shoppingCartService.AddItemToCartCartAsync("7", shoppingCartItem));
+            var actualResult = await this.shoppingCartService.AddItemToCartCartAsync(null, shoppingCartItem);
+
+            Assert.True(actualResult == null, errorMessagePrefix + " " + "Does not return null.");
         }
 
         [Fact]
@@ -209,13 +213,17 @@
         }
 
         [Fact]
-        public async Task GetCartByUserId_WithInvalidUserId_ExpectedToThrowArgumentNullException()
+        public async Task GetCartByUserId_WithInvalidUserId_ExpectedToReturnNull()
         {
+            string errorMessagePrefix = "ShoppingCartService RemoveItemFromCartAsync() method does not work properly.";
+
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
             this.productService = new ProductService(db);
             this.shoppingCartService = new ShoppingCartService(db, productService);
 
-            await Assert.ThrowsAsync<ArgumentNullException>(() => this.shoppingCartService.GetCartByUserIdAsync("yes"));
+            var actualResult = await this.shoppingCartService.GetCartByUserIdAsync(null);
+
+            Assert.True(actualResult == null, errorMessagePrefix + " " + "Does not return null.");
         }
 
         [Fact]
@@ -335,8 +343,10 @@
         }
 
         [Fact]
-        public async Task RemoveProductFromCart_WithInvalidUserId_ExpectedToThrowArgumentNullException()
+        public async Task RemoveProductFromCart_WithInvalidUserId_ExpectedToReturnFalse()
         {
+            string errorMessagePrefix = "ShoppingCartService RemoveItemFromCartAsync() method does not work properly.";
+
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
             this.productService = new ProductService(db);
             this.shoppingCartService = new ShoppingCartService(db, productService);
@@ -407,7 +417,9 @@
             db.Update(testCart);
             await db.SaveChangesAsync();
 
-            await Assert.ThrowsAsync<ArgumentNullException>(() => this.shoppingCartService.RemoveItemFromCartAsync("yes", shoppingCartItem.Id));
+            bool actualResult = await this.shoppingCartService.RemoveItemFromCartAsync(null, shoppingCartItem.Id);
+
+            Assert.True(actualResult == false, errorMessagePrefix + " " + "Returns true.");
         }
     }
 }

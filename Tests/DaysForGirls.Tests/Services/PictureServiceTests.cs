@@ -66,14 +66,17 @@ namespace DaysForGirls.Tests.Services
         }
 
         [Fact]
-        public async Task GetById_WithNonexistentId_ShouldThrowArgumentNullException()
+        public async Task GetById_WithNonexistentId_ShouldReturnNull()
         {
+            string errorMessagePrefix = "PictureService GetPicturesOfProductByProductId() method does not work properly.";
+
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
-            await SeedSamplePictures(db);
 
             this.pictureService = new PictureService(db);
 
-            await Assert.ThrowsAsync<ArgumentNullException>(() => this.pictureService.GetPictureByIdAsync(8));
+            var actualResult = await this.pictureService.GetPictureByIdAsync(0);
+
+            Assert.True(actualResult == null, errorMessagePrefix + " " + "Returns nonexistent picture.");
         }
 
         [Fact]
@@ -150,19 +153,18 @@ namespace DaysForGirls.Tests.Services
         }
 
         [Fact]
-        public async Task GetPicsOfProductByProdId_WithNonexistentProductId_ShouldThrowInvalidOperationException()
+        public async Task GetPicsOfProductByProdId_WithNonexistentProductId_ShouldReturnNull()
         {
+            string errorMessagePrefix = "PictureService GetPicturesOfProductByProductId() method does not work properly.";
+
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
             await SeedSamplePictures(db);
 
             this.pictureService = new PictureService(db);
 
-            await Assert.ThrowsAsync<InvalidOperationException>(() => this.pictureService.GetPicturesOfProductByProductId(0)
-            .Select(pic => new PictureServiceModel
-            {
-                Id = pic.Id,
-                PictureUrl = pic.PictureUrl
-            }).ToListAsync());
+            var actualResult = this.pictureService.GetPicturesOfProductByProductId(0);
+
+            Assert.True(actualResult == null, errorMessagePrefix + " " + "Returns pictures of nonexistent product.");
         }
 
         [Fact]
@@ -224,14 +226,18 @@ namespace DaysForGirls.Tests.Services
         }
 
         [Fact]
-        public async Task DeletePicsOfDeletedProductByProdId_WithNonexistentProdId_ShouldThrowInvalidOperationException()
+        public async Task DeletePicsOfDeletedProductByProdId_WithNonexistentProdId_ShouldReturnFalse()
         {
+            string errorMessagePrefix = "PictureService DeletePicturesOfDeletedProductById() method does not work properly.";
+
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
             await SeedSamplePictures(db);
 
             this.pictureService = new PictureService(db);
 
-            await Assert.ThrowsAsync<InvalidOperationException>(() => this.pictureService.DeletePicturesOfDeletedProductAsync(0));
+            bool actualResult = await this.pictureService.DeletePicturesOfDeletedProductAsync(0);
+            Assert.True(actualResult == false, errorMessagePrefix + " " + "Returns true.");
+           // await Assert.ThrowsAsync<InvalidOperationException>(() => this.pictureService.DeletePicturesOfDeletedProductAsync(0));
         }
     }
 }

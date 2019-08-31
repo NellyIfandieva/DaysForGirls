@@ -84,13 +84,17 @@
         }
 
         [Fact]
-        public async Task GetById_WithNonexistentId_ShouldThrowArgumentNullException()
+        public async Task GetById_WithNonexistentId_ShouldReturnNull()
         {
+            string errorMessagePrefix = "CategoryService GetCategoryByIdAsync() method does not work properly.";
+
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
             await SeedSampleCategories(db);
             this.categoryService = new CategoryService(db);
 
-            await Assert.ThrowsAsync<ArgumentNullException>(() => this.categoryService.GetCategoryByIdAsync(8));
+            var actualResult = await this.categoryService.GetCategoryByIdAsync(8);
+
+            Assert.True(actualResult == null, errorMessagePrefix + " " + "Returns a category.");
         }
 
         [Fact]
@@ -191,13 +195,17 @@
         }
 
         [Fact]
-        public async Task DeleteCategoryById_WithNonexistentId_ExpectedToThrowArgumentNullException()
+        public async Task DeleteCategoryById_WithNonexistentId_ExpectedToReturnFalse()
         {
+            string errorMessagePrefix = "CategoryService DeleteByIdAsync() method does not work properly.";
+
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
             await SeedSampleCategories(db);
             this.categoryService = new CategoryService(db);
 
-            await Assert.ThrowsAsync<ArgumentNullException>(() => this.categoryService.DeleteCategoryByIdAsync(8));
+            bool actualResult = await this.categoryService.DeleteCategoryByIdAsync(8);
+
+            Assert.True(actualResult == false, errorMessagePrefix + " " + "Deletes nonexistent category.");
         }
 
         [Fact]
