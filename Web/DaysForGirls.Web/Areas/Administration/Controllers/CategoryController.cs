@@ -33,6 +33,7 @@
             {
                 return View(model);
             }
+
             var categoryServiceModel = new CategoryServiceModel
             {
                 Name = model.Name,
@@ -42,9 +43,15 @@
             int newCategoryId = await this.categoryService
                 .CreateAsync(categoryServiceModel);
 
+            if(newCategoryId <= 0)
+            {
+                return Redirect("/Home/Error");
+            }
+
             return Redirect("/Administration/Category/All");
         }
 
+        [HttpGet("/Administration/Category/All")]
         public async Task<IActionResult> All()
         {
             var allCategories = await this.categoryService
@@ -59,11 +66,6 @@
                 .OrderBy(c => c.Name)
                 .ToListAsync();
 
-            if (allCategories.Count() < 1)
-            {
-                return NotFound();
-            }
-
             return View(allCategories);
         }
 
@@ -72,11 +74,16 @@
         {
             if (categoryId <= 0)
             {
-                return BadRequest();
+                return Redirect("/Home/Error");
             }
 
             var categoryFromDb = await this.categoryService
                 .GetCategoryByIdAsync(categoryId);
+
+            if (categoryFromDb == null)
+            {
+                return Redirect("/Home/Error");
+            }
 
             var categoryToEdit = new CategoryEditInputModel
             {
@@ -89,6 +96,7 @@
         }
 
         [HttpPost("/Administration/Category/Edit/{categoryId}")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int categoryId, CategoryEditInputModel model)
         {
             if (ModelState.IsValid == false)
@@ -114,11 +122,16 @@
         {
             if (categoryId <= 0)
             {
-                return BadRequest();
+                return Redirect("/Home/Error");
             }
 
             bool categoryIsDeleted = await this.categoryService
                 .DeleteCategoryByIdAsync(categoryId);
+
+            if(categoryIsDeleted == false)
+            {
+                return Redirect("/Home/Error");
+            }
 
             return Redirect("/Administration/Category/All");
         }

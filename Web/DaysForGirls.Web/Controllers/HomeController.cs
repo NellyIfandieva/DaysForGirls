@@ -23,8 +23,14 @@ namespace DaysForGirls.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Display(string criteria)
         {
+            if(criteria == null)
+            {
+                return Redirect("/Home/Error");
+            }
+
             await Task.Delay(0);
             return Redirect("/Search/Display/" + criteria);
         }

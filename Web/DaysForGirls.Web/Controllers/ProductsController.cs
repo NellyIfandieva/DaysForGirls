@@ -48,17 +48,28 @@
         {
             if (productId <= 0)
             {
-                return BadRequest();
+                return Redirect("/Home/Error");
             }
 
             var productFromDb = await this.adminService
                 .GetProductByIdAsync(productId);
+
+            if (productFromDb == null)
+            {
+                return Redirect("/Home/Error");
+            }
 
             string saleTitle = null;
 
             if (productFromDb.SaleId != null)
             {
                 var sale = await this.saleService.GetSaleByIdAsync(productFromDb.SaleId);
+
+                if(sale == null)
+                {
+                    return Redirect("/Home/Error");
+                }
+
                 saleTitle = sale.Title;
             }
 

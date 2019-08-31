@@ -35,7 +35,7 @@
         {
             if (productId <= 0)
             {
-                return BadRequest();
+                return Redirect("/Home/Error");
             }
 
             if (this.User.Identity.IsAuthenticated == false)
@@ -46,10 +46,25 @@
             string userId = this.User
                 .FindFirst(ClaimTypes.NameIdentifier).Value;
 
+            if (userId == null)
+            {
+                return Redirect("/Home/Error");
+            }
+
             var product = await this.productService
                 .GetProductByIdAsync(productId);
 
-            await this.productService.CalculateProductPriceAsync(product.Id);
+            if (product == null)
+            {
+                return Redirect("/Home/Error");
+            }
+
+            decimal productPrice = await this.productService.CalculateProductPriceAsync(product.Id);
+
+            if(productPrice == 0.00m)
+            {
+                return Redirect("/Home/Error");
+            }
 
             var item = new ShoppingCartItemServiceModel
             {
@@ -59,6 +74,11 @@
 
             string cartId = await this.shoppingCartService
                 .AddItemToCartCartAsync(userId, item);
+
+            if(cartId == null)
+            {
+                return Redirect("/Home/Error");
+            }
 
             return Redirect("/ShoppingCarts/Display");
         }
@@ -70,12 +90,17 @@
             string userId = this.User
                 .FindFirst(ClaimTypes.NameIdentifier).Value;
 
+            if (userId == null)
+            {
+                return Redirect("/Identity/Account/Login");
+            }
+
             var shoppingCartInDb = await this.shoppingCartService
                 .GetCartByUserIdAsync(userId);
 
             if (shoppingCartInDb == null)
             {
-                return NotFound();
+                return Redirect("/Identity/Account/Login");
             }
 
             var cartToReturn = new ShoppingCartDisplayViewModel
@@ -109,10 +134,25 @@
         [HttpGet("/ShoppingCarts/RemoveItem/{itemId}")]
         public async Task<IActionResult> RemoveItem(int itemId)
         {
+            if(itemId <= 0)
+            {
+                return Redirect("/Home/Error");
+            }
+
             string userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            if(userId == null)
+            {
+                return Redirect("/Identity/Account/Login");
+            }
 
             bool itemIsRemovedFromCart = await this.shoppingCartService
                 .RemoveItemFromCartAsync(userId, itemId);
+
+            if(itemIsRemovedFromCart == false)
+            {
+                return Redirect("/Home/Error");
+            }
 
             return Redirect("/ShoppingCarts/Display");
         }

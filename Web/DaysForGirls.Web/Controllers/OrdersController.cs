@@ -26,18 +26,29 @@
             this.userManager = userManager;
         }
 
+        [Authorize]
         [HttpGet("/Orders/Create/{userId}")]
         public async Task<IActionResult> Create(string userId)
         {
             if (userId == null)
             {
-                return BadRequest();
+                return Redirect("/Home/Error");
             }
 
             var currentUser = await this.userManager.FindByIdAsync(userId);
 
+            if(currentUser == null)
+            {
+                return Redirect("/Identity/Account/Login");
+            }
+
             var order = await this.orderService
                 .CreateAsync(currentUser);
+
+            if (order == null)
+            {
+                return Redirect("/Home/Error");
+            }
 
             var orderToDisplay = new OrderDisplayViewModel
             {
@@ -71,14 +82,22 @@
         {
             if (userName == null)
             {
-                return BadRequest();
+                return Redirect("/Identity/Account/Login");
             }
 
-            string userId = this.User
+            DaysForGirlsUser requestedUser =
+               await this.userManager.FindByNameAsync(userName);
+
+            string currentUserId = this.User
                 .FindFirst(ClaimTypes.NameIdentifier).Value;
 
+            if (requestedUser.Id != currentUserId || currentUserId == null)
+            {
+                return Redirect("/Home/Error");
+            }
+
             var allOrdersOfUser = await this.orderService
-                .DisplayAllOrdersOfUserAsync(userId);
+                .DisplayAllOrdersOfUserAsync(currentUserId);
 
             var ordersToReturn = new List<OrderDisplayAllViewModel>();
 
@@ -163,7 +182,7 @@
         {
             if (orderId == null)
             {
-                return BadRequest();
+                return Redirect("/Home/Error");
             }
 
             if (this.User.Identity.IsAuthenticated == false)
@@ -171,12 +190,23 @@
                 return Redirect("/Identity/Account/Login");
             }
 
+            string currentUserId = this.User
+                .FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            bool orderBelongsToUser = await this.orderService
+                .CheckIfOrderBelongsToUser(orderId, currentUserId);
+
+            if(orderBelongsToUser == false)
+            {
+                return Redirect("/Home/Error");
+            }
+
             var orderInDb = await this.orderService
                 .GetOrderByIdAsync(orderId);
 
             if (orderInDb == null)
             {
-                return NotFound();
+                return Redirect("/Home/Error");
             }
 
             var orderToReturn = new OrderDetailsViewModel
@@ -212,7 +242,7 @@
         {
             if (orderId == null)
             {
-                return BadRequest();
+                return Redirect("/Home/Error");
             }
 
             var orderInDb = await this.orderService
@@ -220,7 +250,7 @@
 
             if (orderInDb == null)
             {
-                return NotFound();
+                return Redirect("/Home/Error");
             }
 
             var orderToEdit = new OrderEditInputModel
@@ -245,7 +275,7 @@
         {
             if (orderId == null)
             {
-                return BadRequest();
+                return Redirect("/Home/Error");
             }
 
             if (ModelState.IsValid == false)
@@ -261,6 +291,11 @@
 
             bool orderIsEdited = await this.orderService
                 .EditOrderStatusAsync(orderToEdit);
+
+            if(orderIsEdited == false)
+            {
+                return Redirect("/Home/Error");
+            }
 
             return Redirect("/Orders/Details/" + orderId);
         }

@@ -46,7 +46,7 @@
 
             if (manufacturer == null)
             {
-                throw new ArgumentNullException(nameof(manufacturer));
+                return null;
             }
 
             var logo = await this.db.Logos
@@ -128,7 +128,7 @@
 
             if (manufacturerInDb == null)
             {
-                throw new ArgumentNullException(nameof(manufacturerInDb));
+                return false;
             }
 
             manufacturerInDb.Name = model.Name;
@@ -137,8 +137,10 @@
 
             this.db.Update(manufacturerInDb);
             int result = await this.db.SaveChangesAsync();
+
             bool manufacturerIsEdited = result > 0;
-            return true;
+
+            return manufacturerIsEdited;
         }
 
         public async Task<bool> DeleteManufacturerByIdAsync(int manufacturerId)
@@ -148,7 +150,7 @@
 
             if (manufacturerToDelete == null)
             {
-                throw new ArgumentNullException(nameof(manufacturerToDelete));
+                return false;
             }
 
             var manufacturerProducts = this.db.Products
@@ -176,6 +178,7 @@
             int result = await this.db.SaveChangesAsync();
 
             bool manufacturerIsDeleted = result > 0;
+
             return manufacturerIsDeleted;
         }
     }

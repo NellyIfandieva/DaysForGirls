@@ -28,12 +28,25 @@
         [HttpGet("/CustomerReviews/Create/{productId}")]
         public async Task<IActionResult> Create(int productId)
         {
-            this.ViewData["productId"] = productId;
+            if(productId <= 0)
+            {
+                return Redirect("/Home/Error");
+            }
 
             if (this.User.Identity.IsAuthenticated == false)
             {
                 return Redirect("/Identity/Account/Login");
             }
+
+            var product = await this.productService
+                .GetProductByIdAsync(productId);
+
+            if(product == null)
+            {
+                return Redirect("/Home/Error");
+            }
+
+            this.ViewData["productName"] = product.Name;
 
             await Task.Delay(0);
             return View();
@@ -43,12 +56,32 @@
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CustomerReviewInputModel model)
         {
+            if(ModelState.IsValid == false)
+            {
+                return View(model);
+            }
+
             string userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            if(userId == null)
+            {
+                return Redirect("/Identity/Account/Login");
+            }
 
             DaysForGirlsUser currentUser =
                await this.userManager.FindByIdAsync(userId);
 
+            if(userId == null || currentUser == null)
+            {
+                return Redirect("/Home/Error");
+            }
+
             var productId = model.ProductId;
+
+            if(productId <= 0)
+            {
+                return Redirect("/Home/Error");
+            }
 
             var newCustomerReview = new CustomerReviewServiceModel
             {
@@ -61,6 +94,11 @@
 
             bool isCreated = await this.customerReviewService
                 .CreateAsync(newCustomerReview, model.ProductId);
+
+            if(isCreated == false)
+            {
+                return Redirect("/Home/Error");
+            }
 
             return Redirect("/Products/Details/" + productId);
         }

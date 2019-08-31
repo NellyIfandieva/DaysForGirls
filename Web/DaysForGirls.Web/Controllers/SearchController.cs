@@ -18,6 +18,11 @@
         [HttpGet("/Search/Display/{criteria}")]
         public async Task<IActionResult> Display(string criteria)
         {
+            if(criteria == null)
+            {
+                return Redirect("/Home/Error");
+            }
+
             var productsFromDb = this.productService
                 .GetAllSearchResultsByCriteria(criteria);
 
@@ -39,6 +44,8 @@
                     ShoppingCartId = p.ShoppingCartId,
                     OrderId = p.OrderId
                 }).ToList();
+
+            await Task.Delay(0);
 
             return View(searchResults);
         }

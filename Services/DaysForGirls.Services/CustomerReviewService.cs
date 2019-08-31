@@ -20,8 +20,10 @@
 
         public async Task<bool> CreateAsync(CustomerReviewServiceModel model, int productId)
         {
-            /*DaysForGirlsUser currentUser = 
-               await this.userManager.FindByNameAsync(model.AuthorUsername);*/
+            if(productId <= 0)
+            {
+                return false;
+            }
 
             CustomerReview productReview = new CustomerReview
             {
@@ -67,7 +69,7 @@
 
             if (reviewToDelete == null)
             {
-                throw new ArgumentNullException(nameof(reviewToDelete));
+                return false;
             }
 
             reviewToDelete.IsDeleted = true;

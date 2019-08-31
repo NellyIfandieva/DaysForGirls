@@ -38,7 +38,7 @@
                 return View(model);
             }
 
-            string imageUrl = await this.cloudinaryService.UploadPictureForProductAsync(
+            string imageUrl = await this.cloudinaryService.UploadLogoForManufacturerAsync(
                 model.Logo, model.Name + "_" + "Logo");
 
             var manufacturerServiceModel = new ManufacturerServiceModel
@@ -53,6 +53,11 @@
 
             int newManufacturerId = await this.manufacturerService
                 .CreateAsync(manufacturerServiceModel);
+
+            if(newManufacturerId <= 0)
+            {
+                return Redirect("/Home/Error");
+            }
 
             return Redirect("/Administration/Manufacturer/All");
         }
@@ -73,11 +78,6 @@
                 .OrderBy(m => m.Name)
                 .ToListAsync();
 
-            if (allManufacturers.Count() < 1)
-            {
-                return NotFound();
-            }
-
             return View(allManufacturers);
         }
 
@@ -86,15 +86,15 @@
         {
             if (manufacturerId <= 0)
             {
-                return BadRequest();
+                return Redirect("/Home/Error");
             }
 
             var manufacturerFromDb = await this.manufacturerService
                 .GetManufacturerByIdAsync(manufacturerId);
 
-            if (manufacturerFromDb == null)
+            if(manufacturerFromDb == null)
             {
-                return NotFound();
+                return Redirect("Home/Error");
             }
 
             var manufacturerToEdit = new ManufacturerEditInputModel
@@ -108,6 +108,7 @@
         }
 
         [HttpPost("/Administration/Manufacturer/Edit/{manufacturerId}")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int manufacturerId, ManufacturerEditInputModel model)
         {
             if (ModelState.IsValid == false)
@@ -133,6 +134,11 @@
             bool manufacturerIsEdited = await this.manufacturerService
                 .EditAsync(manufacturerToEdit);
 
+            if(manufacturerIsEdited == false)
+            {
+                return Redirect("/Home/Error");
+            }
+
             return Redirect("/Administration/Manufacturer/All");
         }
 
@@ -141,11 +147,16 @@
         {
             if (manufacturerId <= 0)
             {
-                return BadRequest();
+                return Redirect("/Home/Error");
             }
 
             bool manufacturerIsDeleted = await this.manufacturerService
                 .DeleteManufacturerByIdAsync(manufacturerId);
+
+            if (manufacturerIsDeleted == false)
+            {
+                return Redirect("/Home/Error");
+            }
 
             return Redirect("/Administration/Manufacturer/All");
         }

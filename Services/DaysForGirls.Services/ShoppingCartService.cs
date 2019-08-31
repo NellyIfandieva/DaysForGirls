@@ -23,6 +23,11 @@
 
         public async Task<string> AddItemToCartCartAsync(string userId, ShoppingCartItemServiceModel model)
         {
+            if(userId == null || model == null)
+            {
+                return null;
+            }
+
             var cart = await this.db.ShoppingCarts
                 .SingleOrDefaultAsync(u => u.UserId == userId);
 
@@ -31,12 +36,7 @@
 
             if (cart == null || product == null)
             {
-                if (cart == null)
-                {
-                    throw new ArgumentNullException(nameof(cart));
-                }
-
-                throw new ArgumentNullException(nameof(product));
+                return null;
             }
 
             ShoppingCartItem shoppingCartItem = new ShoppingCartItem
@@ -64,13 +64,18 @@
 
         public async Task<ShoppingCartServiceModel> GetCartByUserIdAsync(string userId)
         {
+            if(userId == null)
+            {
+                return null;
+            }
+
             var cart = await this.db.ShoppingCarts
                 .Include(c => c.ShoppingCartItems)
                 .SingleOrDefaultAsync(c => c.UserId == userId);
 
             if (cart == null)
             {
-                throw new ArgumentNullException(nameof(cart));
+                return null;
             }
 
             var cartItems = await this.db.ShoppingCartItems
@@ -103,13 +108,18 @@
 
         public async Task<bool> RemoveItemFromCartAsync(string userId, int itemId)
         {
+            if(userId == null || itemId <= 0)
+            {
+                return false;
+            }
+
             var cart = await this.db.ShoppingCarts
                 .Include(sC => sC.ShoppingCartItems)
                 .SingleOrDefaultAsync(sC => sC.UserId == userId);
 
             if (cart == null)
             {
-                throw new ArgumentNullException(nameof(cart));
+                return false;
             }
 
             var cartItemToDelete = await this.db.ShoppingCartItems
@@ -117,10 +127,23 @@
 
             if (cartItemToDelete == null)
             {
-                throw new ArgumentNullException(nameof(cartItemToDelete));
+                return false;
             }
 
             var productId = cartItemToDelete.ProductId;
+
+            if(productId <= 0)
+            {
+                return false;
+            }
+
+            bool productQuantityIsUpdated = await this.productService
+                .RemoveProductFromShoppingCartAsync(productId);
+
+            if (productQuantityIsUpdated == false)
+            {
+                return false;
+            }
 
             cart.ShoppingCartItems.Remove(cartItemToDelete);
 
@@ -129,9 +152,6 @@
             this.db.ShoppingCartItems.Remove(cartItemToDelete);
 
             int result = await this.db.SaveChangesAsync();
-
-            bool productQuantityIsUpdated = await this.productService
-                .RemoveProductFromShoppingCartAsync(productId);
 
             bool itemRemovedFromCart = result > 0;
 

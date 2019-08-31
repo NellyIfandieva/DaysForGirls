@@ -32,7 +32,7 @@
 
             if (productTypeInDb == null)
             {
-                throw new ArgumentNullException(nameof(productTypeInDb));
+                return 0;
             }
 
             Category categoryInDb = this.db.Categories
@@ -40,7 +40,7 @@
 
             if (categoryInDb == null)
             {
-                throw new ArgumentNullException(nameof(categoryInDb));
+                return 0;
             }
 
             Manufacturer manufacturerInDb = this.db.Manufacturers
@@ -48,7 +48,7 @@
 
             if (manufacturerInDb == null)
             {
-                throw new ArgumentNullException(nameof(manufacturerInDb));
+                return 0;
             }
 
             Quantity quantityOfProduct = new Quantity
@@ -145,7 +145,7 @@
 
             if (product == null)
             {
-                throw new ArgumentNullException(nameof(product));
+                return null;
             }
 
             var productPictures = await this.pictureService
@@ -207,7 +207,7 @@
                 || categoryOfProduct == null
                 || manufacturerOfProduct == null)
             {
-                throw new ArgumentNullException(nameof(productTypeOfProduct));
+                return false;
             }
 
             Product productInDb = await this.db.Products
@@ -264,14 +264,7 @@
 
             if (product == null || sale == null)
             {
-                if (product == null)
-                {
-                    throw new ArgumentNullException(nameof(product));
-                }
-                else
-                {
-                    throw new ArgumentNullException(nameof(sale));
-                }
+                return false;
             }
 
             product.SaleId = sale.Id;
@@ -299,6 +292,11 @@
                 .Include(p => p.Quantity)
                 .ToListAsync();
 
+            if(products.Count() < 1)
+            {
+                return true;
+            }
+
             foreach (var product in products)
             {
                 product.Quantity.AvailableItems++;
@@ -318,14 +316,9 @@
             var productsToAddToOrder = await this.db.Products
                 .Where(p => productIds.Contains(p.Id)).ToListAsync();
 
-            if (productsToAddToOrder.Count() < 1)
+            if (productsToAddToOrder.Count() < 1 || orderId == null)
             {
                 return false;
-            }
-
-            if (orderId == null)
-            {
-                throw new ArgumentNullException(nameof(orderId));
             }
 
             foreach (var product in productsToAddToOrder)
@@ -347,12 +340,12 @@
             var productInDb = await this.db.Products
                 .SingleOrDefaultAsync(p => p.Id == productId);
 
+            string outcome = null;
+
             if (productInDb == null)
             {
-                throw new ArgumentNullException(nameof(productInDb));
+                return outcome;
             }
-
-            string outcome = null;
 
             if (productInDb.ShoppingCartId != null || productInDb.OrderId != null)
             {
@@ -387,6 +380,11 @@
 
             bool productPicturesAreDeleted = await this.pictureService
                 .DeletePicturesOfDeletedProductAsync(productId);
+
+            if(productPicturesAreDeleted == false)
+            {
+                return null;
+            }
 
             this.db.Products.Remove(productInDb);
             int result = await this.db.SaveChangesAsync();

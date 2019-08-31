@@ -23,11 +23,16 @@
         {
             if (pictureId <= 0)
             {
-                return BadRequest();
+                return Redirect("/Home/Error");
             }
 
             var picture = await this.pictureService
                 .GetPictureByIdAsync(pictureId);
+
+            if(picture == null)
+            {
+                return Redirect("/Home/Error");
+            }
 
             var pictureToDisplay =
                 new PictureDetailsViewModel

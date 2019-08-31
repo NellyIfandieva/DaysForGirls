@@ -21,6 +21,11 @@
 
         public async Task<ProductAsShoppingCartItem> GetProductByIdAsync(int productId)
         {
+            if(productId <= 0)
+            {
+                return null;
+            }
+
             Product product = await this.db.Products
                 .Include(p => p.Quantity)
                 .Include(p => p.Pictures)
@@ -31,7 +36,7 @@
 
             if (product == null)
             {
-                throw new ArgumentNullException(nameof(product));
+                return null;
             }
 
             var picture = product.Pictures.ElementAt(0).PictureUrl;
@@ -78,6 +83,11 @@
 
         public IQueryable<DisplayAllOfCategoryProductServiceModel> GetAllProductsOfCategory(string categoryName)
         {
+            if(categoryName == null)
+            {
+                return null;
+            }
+
             var allProductsOfCategory = this.db.Products
                 .Where(p => p.Category.Name == categoryName
                 && p.IsDeleted == false)
@@ -101,11 +111,16 @@
             return allProductsOfCategory;
         }
 
-        public IQueryable<DisplayAllOfCategoryAndTypeServiceModel> GetAllProductsOfTypeAndCategory(string productType, string category)
+        public IQueryable<DisplayAllOfCategoryAndTypeServiceModel> GetAllProductsOfTypeAndCategory(string productTypeName, string categoryName)
         {
+            if(productTypeName == null || categoryName == null)
+            {
+                return null;
+            }
+
             var allProductsOfCategoryAndType = this.db.Products
-                .Where(p => p.Category.Name == category
-                && p.ProductType.Name == productType
+                .Where(p => p.Category.Name == categoryName
+                && p.ProductType.Name == productTypeName
                 && p.IsDeleted == false)
                 .Select(p => new DisplayAllOfCategoryAndTypeServiceModel
                 {
@@ -128,12 +143,17 @@
 
         public async Task<bool> AddProductToShoppingCartAsync(int productId, string shoppingCartId)
         {
+            if(productId <=0 || shoppingCartId == null)
+            {
+                return false;
+            }
+
             var product = await this.db.Products
                 .SingleOrDefaultAsync(p => p.Id == productId);
 
             if (product == null)
             {
-                throw new ArgumentNullException(nameof(product));
+                return false;
             }
 
             product.ShoppingCartId = shoppingCartId;
@@ -149,6 +169,11 @@
 
         public async Task<bool> RemoveProductFromShoppingCartAsync(int productId)
         {
+            if(productId <= 0)
+            {
+                return false;
+            }
+
             var product = await this.db.Products
                 .Include(p => p.Quantity)
                 .Include(p => p.ShoppingCart)
@@ -156,7 +181,7 @@
 
             if (product == null)
             {
-                throw new ArgumentNullException(nameof(product));
+                return false;
             }
 
             product.Quantity.AvailableItems++;
@@ -172,6 +197,11 @@
 
         public List<ProductServiceModel> GetAllSearchResultsByCriteria(string criteria)
         {
+            if(criteria == null)
+            {
+                return null;
+            }
+
             decimal priceCriteria;
             bool criteriaIsDecimal = decimal.TryParse(criteria, out priceCriteria);
 
@@ -330,12 +360,17 @@
 
         public async Task<decimal> CalculateProductPriceAsync(int productId)
         {
+            if(productId <= 0)
+            {
+                return 0.00m;
+            }
+
             var product = await this.db.Products
                 .SingleOrDefaultAsync(p => p.Id == productId);
 
             if (product == null)
             {
-                throw new ArgumentNullException(nameof(product));
+                return 0.00m;
             }
 
             if (product.SaleId != null)

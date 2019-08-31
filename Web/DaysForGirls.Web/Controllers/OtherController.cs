@@ -16,6 +16,7 @@
             this.productService = productService;
         }
 
+        [HttpGet("/Other/All")]
         public async Task<IActionResult> All()
         {
             string categoryName = "Other";
@@ -40,6 +41,7 @@
             return View(allOtherProducts);
         }
 
+        [HttpGet("/Other/Dresses")]
         public async Task<IActionResult> Dresses()
         {
             string productTypeName = "Dress";
@@ -64,6 +66,7 @@
             return View(allOtherDresses);
         }
 
+        [HttpGet("/Other/Suits")]
         public async Task<IActionResult> Suits()
         {
             string productTypeName = "Suit";
@@ -88,6 +91,7 @@
             return View(allOtherSuits);
         }
 
+        [HttpGet("/Other/Accessories")]
         public async Task<IActionResult> Accessories()
         {
             string productTypeName = "Accessory";

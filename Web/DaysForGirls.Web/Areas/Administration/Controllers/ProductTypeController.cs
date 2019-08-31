@@ -42,9 +42,15 @@
             bool isCreated = await this.productTypeService
                 .CreateAsync(pTServiceModel);
 
+            if(isCreated == false)
+            {
+                return Redirect("/Home/Error");
+            }
+
             return Redirect("/Administration/ProductType/All");
         }
 
+        [HttpGet("/Administration/ProductType/All")]
         public async Task<IActionResult> All()
         {
             var allProductTypes = await this.productTypeService
@@ -57,11 +63,6 @@
                 .OrderBy(pt => pt.Name)
                 .ToListAsync();
 
-            if (allProductTypes.Count() < 1)
-            {
-                return NotFound();
-            }
-
             return View(allProductTypes);
         }
 
@@ -70,11 +71,16 @@
         {
             if (productTypeId <= 0)
             {
-                return BadRequest();
+                return Redirect("/Home/Error");
             }
 
             var productTypeFromDb = await this.productTypeService
                 .GetProductTypeByIdAsync(productTypeId);
+
+            if(productTypeFromDb == null)
+            {
+                return Redirect("/Home/Error");
+            }
 
             var productTypeToEdit = new ProductTypeEditInputModel
             {
@@ -87,8 +93,14 @@
         }
 
         [HttpPost("/Administration/ProductType/Edit/{productTypeId}")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int productTypeId, ProductTypeEditInputModel model)
         {
+            if(ModelState.IsValid == false)
+            {
+                return View(model);
+            }
+
             var productTypeWithEdits = new ProductTypeServiceModel
             {
                 Id = productTypeId,
@@ -98,6 +110,11 @@
             bool productTypeIsEdited = await this.productTypeService
                 .EditAsync(productTypeWithEdits);
 
+            if(productTypeIsEdited == false)
+            {
+                return Redirect("/Home/Error");
+            }
+
             return Redirect("/Administration/ProductType/All");
         }
 
@@ -106,11 +123,16 @@
         {
             if (productTypeId <= 0)
             {
-                return BadRequest();
+                return Redirect("/Home/Error");
             }
 
             bool productTypeIsDeleted = await this.productTypeService
                 .DeleteTypeByIdAsync(productTypeId);
+
+            if(productTypeIsDeleted == false)
+            {
+                return Redirect("/Home/Error");
+            }
 
             return Redirect("/Administration/ProductType/All");
         }

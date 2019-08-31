@@ -20,15 +20,15 @@
         {
             if (manufacturerId <= 0)
             {
-                return BadRequest();
+                return Redirect("/Home/Error");
             }
 
             var manufacturer = await this.manufacturerService
                 .GetManufacturerByIdAsync(manufacturerId);
 
-            if (manufacturer == null)
+            if(manufacturer == null)
             {
-                return NotFound();
+                return Redirect("/Home/Error");
             }
 
             var manufacturerToReturn = new ManufacturerDetailsViewModel

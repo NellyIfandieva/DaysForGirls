@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DaysForGirls.Web.Areas.Identity.Pages.Account
@@ -32,28 +33,40 @@ namespace DaysForGirls.Web.Areas.Identity.Pages.Account
         {
             string userId = this.signInManager.UserManager.GetUserId(this.User);
 
-            var userShoppingCart = await this.db.ShoppingCarts
+            var userShoppingCarts = await this.db.ShoppingCarts
                 .Include(sC => sC.ShoppingCartItems)
-                .SingleOrDefaultAsync(sC => sC.UserId == userId);
+                .Where(sC => sC.UserId == userId).ToArrayAsync();
 
-            if (userShoppingCart != null)
+            if (userShoppingCarts.Count() > 0)
             {
-                var allItemsInCart = userShoppingCart.ShoppingCartItems;
-
-                List<int> productsInCartIds = new List<int>();
-
-                foreach (var item in allItemsInCart)
+                foreach(var cart in userShoppingCarts)
                 {
-                    productsInCartIds.Add(item.ProductId);
+                    var allItemsInCart = cart.ShoppingCartItems;
+
+                    List<int> productsInCartIds = new List<int>();
+
+                    foreach (var item in allItemsInCart)
+                    {
+                        productsInCartIds.Add(item.ProductId);
+                    }
+
+                    this.db.ShoppingCartItems.RemoveRange(allItemsInCart);
+                    cart.ShoppingCartItems.Clear();
+
+                    bool productsCartIdSetToNull = false;
+
+                    while(productsCartIdSetToNull == false)
+                    {
+                        productsCartIdSetToNull = await this.adminService
+                        .SetProductsCartIdToNullAsync(productsInCartIds);
+
+                        if(productsCartIdSetToNull)
+                        {
+                            break;
+                        }
+                    }
                 }
-
-                this.db.ShoppingCartItems.RemoveRange(allItemsInCart);
-                userShoppingCart.ShoppingCartItems.Clear();
-
-                bool productsCartIdSetToNull = await this.adminService
-                    .SetProductsCartIdToNullAsync(productsInCartIds);
-
-                this.db.ShoppingCarts.Remove(userShoppingCart);
+                this.db.ShoppingCarts.RemoveRange(userShoppingCarts);
                 await this.db.SaveChangesAsync();
             }
 

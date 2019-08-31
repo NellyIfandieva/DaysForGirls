@@ -29,12 +29,8 @@
 
             this.db.Sales.Add(sale);
             int result = await db.SaveChangesAsync();
-            string saleId = null;
 
-            if (result > 0)
-            {
-                saleId = sale.Id;
-            }
+            string saleId = sale.Id;
 
             return saleId;
         }
@@ -90,13 +86,18 @@
 
         public async Task<SaleServiceModel> GetSaleByIdAsync(string saleId)
         {
+            if(saleId == null)
+            {
+                return null;
+            }
+
             var saleWithDetails = await this.db.Sales
                 .Include(s => s.Products)
                 .SingleOrDefaultAsync(sale => sale.Id == saleId);
 
             if (saleWithDetails == null)
             {
-                throw new ArgumentNullException(nameof(saleWithDetails));
+                return null;
             }
 
             var productsInSale = await this.db.Products
@@ -161,13 +162,18 @@
 
         public async Task<SaleServiceModel> GetSaleByTitleAsync(string saleTitle)
         {
+            if(saleTitle == null)
+            {
+                return null;
+            }
+
             var saleWithDetails = await this.db.Sales
                 .Include(s => s.Products)
                 .SingleOrDefaultAsync(sale => sale.Title == saleTitle);
 
             if (saleWithDetails == null)
             {
-                throw new ArgumentNullException(nameof(saleWithDetails));
+                return null;
             }
 
             var productsInSale = await this.db.Products
@@ -228,23 +234,16 @@
 
         public async Task<bool> AddProductToSaleAsync(string saleId, int productId)
         {
+            if(saleId == null || productId <= 0)
+            {
+                return false;
+            }
+
             Sale sale = await this.db.Sales
                 .SingleOrDefaultAsync(s => s.Id == saleId);
 
             Product productToAdd = await this.db.Products
                 .SingleOrDefaultAsync(p => p.Id == productId);
-
-            if (sale == null || productToAdd == null)
-            {
-                if (sale == null)
-                {
-                    throw new ArgumentNullException(nameof(sale));
-                }
-                else
-                {
-                    throw new ArgumentNullException(nameof(productToAdd));
-                }
-            }
 
             sale.Products.Add(productToAdd);
 
@@ -259,12 +258,17 @@
 
         public async Task<bool> EditAsync(SaleServiceModel model)
         {
+            if(model.Id == null)
+            {
+                return false;
+            }
+
             var saleToEdit = await this.db.Sales
                 .SingleOrDefaultAsync(s => s.Id == model.Id);
 
             if (saleToEdit == null)
             {
-                throw new ArgumentNullException(nameof(saleToEdit));
+                return false;
             }
 
             saleToEdit.Title = model.Title;
@@ -281,13 +285,18 @@
 
         public async Task<bool> DeleteSaleById(string saleId)
         {
+            if(saleId == null)
+            {
+                return false;
+            }
+
             Sale saleToDelete = await this.db.Sales
                 .Include(s => s.Products)
                 .SingleOrDefaultAsync(s => s.Id == saleId);
 
             if (saleToDelete == null)
             {
-                throw new ArgumentNullException(nameof(saleToDelete));
+                return false;
             }
 
             HashSet<Product> productsOutOfSale = saleToDelete.Products

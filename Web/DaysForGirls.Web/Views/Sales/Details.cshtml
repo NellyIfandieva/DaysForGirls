@@ -184,14 +184,10 @@ else
                     <a href="/Products/Details/@product.Id"><img src="@product.MainPicture" alt="@product.Name" /></a>
                 }
             }
-            @if (product.ShoppingCartId == null && product.OrderId == null)
-            {
-                <div class="product-info-holder">
-                    <a href="/Products/Details/@product.Id"><h4>@product.Name</h4></a>
-                    <h4 style="margin-top: 1px">&euro;<strike>@product.Price</strike> &euro;@product.SalePrice</h4>
-                </div>
-            }
-
+            <div class="product-info-holder">
+                <a href="/Products/Details/@product.Id"><h4>@product.Name</h4></a>
+                <h4 style="margin-top: 1px">&euro;<strike>@product.Price</strike> &euro;@product.SalePrice</h4>
+            </div>
         </div>
     }
 </div>

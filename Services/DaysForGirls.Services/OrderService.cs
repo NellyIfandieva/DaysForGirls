@@ -26,19 +26,29 @@
         {
             string userId = user.Id;
 
+            if(userId == null)
+            {
+                return null;
+            }
+
             var cart = await this.db.ShoppingCarts
                 .Include(c => c.ShoppingCartItems)
                 .SingleOrDefaultAsync(c => c.UserId == userId);
 
-            if (userId == null || cart == null)
+            if (cart == null)
             {
-                throw new ArgumentNullException(nameof(userId));
+                return null;
             }
 
             var cartItems = await this.db.ShoppingCartItems
                 .Include(sCI => sCI.Product)
                 .Include(sCI => sCI.Product.Pictures)
                 .Where(sCI => sCI.ShoppingCartId == cart.Id).ToListAsync();
+
+            if(cartItems.Count() < 1)
+            {
+                return null;
+            }
 
             var cartItemProductsIds = cartItems.Select(cI => cI.ProductId).ToList();
 
@@ -112,8 +122,13 @@
                     IsDeleted = order.IsDeleted
                 };
 
-                bool productInCartAreAddedToOrder = await this.adminService
+                bool productsInCartAreAddedToOrder = await this.adminService
                     .SetOrderIdToProductsAsync(cartItemProductsIds, orderId);
+
+                if(productsInCartAreAddedToOrder == false)
+                {
+                    return null;
+                }
 
                 this.db.ShoppingCartItems.RemoveRange(cartItems);
                 cart.ShoppingCartItems.Clear();
@@ -125,7 +140,10 @@
 
         public async Task<List<OrderServiceModel>> DisplayAllOrdersOfUserAsync(string userId)
         {
-            //DaysForGirlsUser currentUser = await this.userManager.FindByNameAsync(userName);
+            if(userId == null)
+            {
+                return null;
+            }
 
             var allOrdersOfUser = await this.db.Orders
                 .Where(o => o.UserId == userId)
@@ -203,7 +221,7 @@
 
             if (orderInDb == null)
             {
-                throw new ArgumentNullException(nameof(orderInDb));
+                return null;
             }
 
             var orderToReturn = new OrderServiceModel
@@ -242,7 +260,7 @@
 
             if (orderInDb == null)
             {
-                throw new ArgumentNullException(nameof(orderInDb));
+                return false;
             }
 
             orderInDb.OrderStatus = model.OrderStatus;
@@ -253,6 +271,30 @@
             bool orderStatusIsEdited = result > 0;
 
             return orderStatusIsEdited;
+        }
+
+        public async Task<bool> CheckIfOrderBelongsToUser(string orderId, string currentUserId)
+        {
+            if(orderId == null || currentUserId == null)
+            {
+                return false;
+            }
+
+            var requestedOrder = await this.db.Orders
+                .Include(o => o.User)
+                .SingleOrDefaultAsync(o => o.Id == orderId);
+
+            if(requestedOrder == null)
+            {
+                return false;
+            }
+
+            if(requestedOrder.User.Id != currentUserId)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

@@ -1,7 +1,11 @@
 ﻿@model  CustomerReviewInputModel
 
 <style>
-    .row input[type=submit] {
+    .review-row{
+        margin-top: 50px;
+        margin-left: 400px;
+    }
+    .review-row input[type=submit] {
             width: 20%;
             background-color: #cc0052;
             color: white;
@@ -14,7 +18,8 @@
         }
 </style>
 
-<div class="row" style="margin-top:50px">
+<div class="review-row" style="margin-top:50px">
+    <h2>Add Your Review for @this.ViewData["productName"]</h2>
     <div class="col-md-4">
         <form method="post" enctype="multipart/form-data" asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>

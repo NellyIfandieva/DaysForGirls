@@ -162,6 +162,11 @@
 
             int productId = await this.adminService.CreateAsync(productServiceModel);
 
+            if(productId <= 0)
+            {
+                return Redirect("/Home/Error");
+            }
+
             if (model.SaleTitle != null)
             {
                 bool saleAddedProduct = await this.saleService.AddProductToSaleAsync(productServiceModel.SaleId, productId);
@@ -194,11 +199,6 @@
                 })
                 .ToListAsync();
 
-            if (allProducts == null)
-            {
-                return NotFound();
-            }
-
             return View(allProducts);
         }
 
@@ -207,15 +207,15 @@
         {
             if (productId <= 0)
             {
-                return BadRequest();
+                return Redirect("/Home/Error");
             }
 
             var productInDb = await this.adminService
                 .GetProductByIdAsync(productId);
 
-            if (productInDb == null)
+            if(productInDb == null)
             {
-                return NotFound();
+                return Redirect("/Home/Error");
             }
 
             string saleTitle = null;
@@ -225,7 +225,7 @@
 
                 if (sale == null)
                 {
-                    return NotFound(sale);
+                    return Redirect("/Home/Error");
                 }
 
                 saleTitle = sale.Title;
@@ -277,15 +277,15 @@
         {
             if (productId <= 0)
             {
-                return BadRequest();
+                return Redirect("/Home/Error");
             }
 
             var productWithId =
                 await this.adminService.GetProductByIdAsync(productId);
 
-            if (productWithId == null)
+            if(productWithId == null)
             {
-                return NotFound();
+                return Redirect("/Home/Error");
             }
 
             var productToEdit = new ProductEditInputModel
@@ -432,6 +432,11 @@
             bool productIsEdited = await this.adminService
                 .EditAsync(productToEdit);
 
+            if(productIsEdited == false)
+            {
+                return Redirect("/Home/Error");
+            }
+
             if (model.SaleTitle != null)
             {
                 bool saleAddedProduct = await this.saleService
@@ -446,8 +451,18 @@
         [HttpGet("/Administration/Product/Erase/{productId}")]
         public async Task<IActionResult> Erase(int productId)
         {
+            if(productId <= 0)
+            {
+                return Redirect("/Home/Error");
+            }
+
             string productEraseAttempt = await this.adminService
                 .EraseFromDb(productId);
+
+            if(productEraseAttempt == null)
+            {
+                return Redirect("/Home/Error");
+            }
 
             this.ViewData["productErasedOrNot"] = null;
 

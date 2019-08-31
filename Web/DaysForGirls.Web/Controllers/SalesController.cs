@@ -36,7 +36,17 @@
         [HttpGet("/Sales/Details/{saleId}")]
         public async Task<IActionResult> Details(string saleId)
         {
+            if(saleId == null)
+            {
+                return Redirect("/Home/Error");
+            }
+
             var sale = await this.saleService.GetSaleByIdAsync(saleId);
+
+            if (sale == null)
+            {
+                return Redirect("/Home/Error");
+            }
 
             var saleToDisplay = new SaleDetailsViewModel
             {

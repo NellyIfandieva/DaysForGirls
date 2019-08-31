@@ -58,6 +58,11 @@
             string saleId = await this.saleService
                 .CreateAsync(saleServiceModel);
 
+            if(saleId == null)
+            {
+                return Redirect("/Home/Error");
+            }
+
             return Redirect("/Administration/Sale/All");
         }
 
@@ -77,11 +82,6 @@
                 })
                 .ToListAsync();
 
-            if (allSales.Count() < 1)
-            {
-                return NotFound();
-            }
-
             return View(allSales);
         }
 
@@ -90,15 +90,15 @@
         {
             if (saleId == null)
             {
-                return BadRequest();
+                return Redirect("/Home/Error");
             }
 
             var sale = await this.saleService
                 .GetSaleByIdAsync(saleId);
 
-            if (sale == null)
+            if(sale == null)
             {
-                return NotFound();
+                return Redirect("/Home/Error");
             }
 
             var saleToDisplay = new SaleDetailsAdminViewModel
@@ -155,6 +155,11 @@
             bool saleIsEdited = await this.saleService
                 .EditAsync(saleToEdit);
 
+            if(saleIsEdited == false)
+            {
+                return Redirect("/Home/Error");
+            }
+
             return Redirect("/Sales/Details/" + saleId);
         }
 
@@ -163,11 +168,16 @@
         {
             if (saleId == null)
             {
-                return BadRequest();
+                return Redirect("/Home/Error");
             }
 
-            bool isDeleted = await this.saleService
+            bool saleIsDeleted = await this.saleService
                 .DeleteSaleById(saleId);
+
+            if(saleIsDeleted == false)
+            {
+                return Redirect("/Home/Error");
+            }
 
             return Redirect("/Administration/Sale/All");
         }

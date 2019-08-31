@@ -17,5 +17,7 @@
         Task<OrderServiceModel> GetOrderByIdAsync(string orderId);
 
         Task<bool> EditOrderStatusAsync(OrderServiceModel model);
+
+        Task<bool> CheckIfOrderBelongsToUser(string orderId, string currentUserId);
     }
 }

@@ -54,7 +54,7 @@
 
             if (categoryInDb == null)
             {
-                throw new ArgumentNullException(nameof(categoryInDb));
+                return null;
             }
 
             var categoryToReturn = new CategoryServiceModel
@@ -75,7 +75,7 @@
 
             if (categoryInDb == null)
             {
-                throw new ArgumentNullException(nameof(categoryInDb));
+                return false;
             }
 
             categoryInDb.Name = model.Name;
@@ -96,7 +96,7 @@
 
             if (categoryToDelete == null)
             {
-                throw new ArgumentNullException(nameof(categoryToDelete));
+                return false;
             }
 
             var productsInCategory = this.db.Products
@@ -113,6 +113,7 @@
             }
 
             int result = await this.db.SaveChangesAsync();
+
             bool categoryIsDeleted = result > 0;
 
             return categoryIsDeleted;

@@ -27,7 +27,9 @@
             this.db.ProductTypes.Add(productType);
             int result = await db.SaveChangesAsync();
 
-            return result == 1;
+            bool producTypeIsCreated = result > 0;
+
+            return producTypeIsCreated;
         }
 
         public IQueryable<ProductTypeServiceModel> DisplayAll()
@@ -45,12 +47,17 @@
 
         public async Task<ProductTypeServiceModel> GetProductTypeByIdAsync(int productTypeId)
         {
+            if(productTypeId <= 0)
+            {
+                return null;
+            }
+
             var productTypeInDb = await this.db.ProductTypes
                 .SingleOrDefaultAsync(pT => pT.Id == productTypeId);
 
             if (productTypeInDb == null)
             {
-                throw new ArgumentNullException(nameof(productTypeInDb));
+                return null;
             }
 
             var productTypeToReturn = new ProductTypeServiceModel
@@ -70,7 +77,7 @@
 
             if (productTypeToEdit == null)
             {
-                throw new ArgumentNullException(nameof(productTypeToEdit));
+                return false;
             }
 
             productTypeToEdit.Name = model.Name;
@@ -85,12 +92,17 @@
 
         public async Task<bool> DeleteTypeByIdAsync(int productTypeId)
         {
+            if(productTypeId <= 0)
+            {
+                return false;
+            }
+
             var productTypeToDelete = await this.db.ProductTypes
                 .SingleOrDefaultAsync(pT => pT.Id == productTypeId);
 
             if (productTypeToDelete == null)
             {
-                throw new ArgumentNullException(nameof(productTypeToDelete));
+                return false;
             }
 
             var productsOfType = this.db.Products
@@ -107,7 +119,9 @@
             }
 
             int result = await this.db.SaveChangesAsync();
+
             bool typeIsDeleted = result > 0;
+
             return typeIsDeleted;
         }
     }

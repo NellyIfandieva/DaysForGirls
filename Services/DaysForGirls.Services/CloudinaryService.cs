@@ -68,5 +68,31 @@
 
             return uploadResult?.SecureUri.AbsoluteUri;
         }
+
+        public async Task<string> UploadLogoForManufacturerAsync(IFormFile image, string fileName)
+        {
+            byte[] destinationData;
+
+            using (var ms = new MemoryStream())
+            {
+                await image.CopyToAsync(ms);
+                destinationData = ms.ToArray();
+            }
+
+            UploadResult uploadResult = null;
+
+            using (var ms = new MemoryStream(destinationData))
+            {
+                ImageUploadParams uploadParams = new ImageUploadParams
+                {
+                    Folder = "LogosOfManufacturers",
+                    File = new FileDescription(fileName, ms)
+                };
+
+                uploadResult = this.cloudnaryUtility.Upload(uploadParams);
+            }
+
+            return uploadResult?.SecureUri.AbsoluteUri;
+        }
     }
 }
