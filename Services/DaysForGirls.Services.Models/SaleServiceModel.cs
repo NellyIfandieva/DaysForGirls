@@ -13,7 +13,7 @@ namespace DaysForGirls.Services.Models
 
         public string Picture { get; set; }
 
-        public bool IsActive { get; set; }
+        public bool IsActive => DateTime.UtcNow <= this.EndsOn;
 
         public List<ProductServiceModel> Products { get; set; }
 

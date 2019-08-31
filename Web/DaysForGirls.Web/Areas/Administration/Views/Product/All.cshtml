@@ -115,7 +115,7 @@
                 else if (product.OrderId != null)
                 {
                     <div class="text-over-image">
-                        <img src="@product.Picture" alt="@product.Name" />
+                        <a href="/Products/Details/@product.Id"><img src="@product.Picture" alt="@product.Name" /></a>
                         <div class="text-bottom-right-sold-out">Sold Out</div>
                     </div>
                 }

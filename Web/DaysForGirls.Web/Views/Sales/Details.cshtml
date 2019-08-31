@@ -135,7 +135,7 @@
     
     @*<img id="sale-image" src="@Model.Picture" alt="@Model.Title" width="200" />*@
 
-    <h2>@Model.Title - Ends on: @Model.EndsOn.ToString() - @this.ViewData["Active"]</h2>
+    <h2>@Model.Title - Ends on: @Model.EndsOn.ToString() - @this.ViewData["active"]</h2>
     <div id="sale-admin-actions">
         <a class="sale-action" href="/Administration/Product/Create">Add Product</a>
         <a class="sale-action" href="/Administration/Sale/Edit/@Model.Id">Edit Sale</a>
@@ -169,7 +169,7 @@ else
             else if (product.OrderId != null)
             {
                 <div class="text-over-image">
-                    <img src="@product.MainPicture" alt="@product.Name" />
+                    <a href="/Products/Details/@product.Id"><img src="@product.MainPicture" alt="@product.Name" /></a>
                     <div class="text-bottom-right-sold-out">Sold Out</div>
                 </div>
             }

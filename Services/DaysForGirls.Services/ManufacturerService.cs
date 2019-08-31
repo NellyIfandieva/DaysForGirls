@@ -114,7 +114,6 @@
                         Id = p.Id
                     })
                     .ToList(),
-                    ProductsCount = m.Products.Count()
                 });
 
             return allManufacturers;

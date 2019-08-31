@@ -101,10 +101,10 @@
                     <div class="text-bottom-right-in-a-cart">Currently in a Cart</div>
                 </div>
             }
-            else if (product.AvailableItems < 1)
+            else if (product.OrderId != null && product.AvailableItems < 1)
             {
                 <div class="text-over-image">
-                    <img src="@product.Picture" alt="@product.Name" />
+                    <a href="/Products/Details/@product.Id"><img src="@product.Picture" alt="@product.Name" /></a>
                     <div class="text-bottom-right-sold-out">Sold Out</div>
                 </div>
             }

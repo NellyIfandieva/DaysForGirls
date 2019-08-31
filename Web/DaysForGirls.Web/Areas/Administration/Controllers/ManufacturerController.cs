@@ -73,7 +73,8 @@
                     Name = m.Name,
                     Description = m.Description,
                     Logo = m.Logo.LogoUrl,
-                    IsDeleted = m.IsDeleted
+                    IsDeleted = m.IsDeleted,
+                    ProductsCount = m.ProductsCount
                 })
                 .OrderBy(m => m.Name)
                 .ToListAsync();

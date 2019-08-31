@@ -98,44 +98,44 @@ else
     <div id="all-products-container">
         @foreach (var product in Model)
         {
-        <div class="product-pres">
-            @if (product.ShoppingCartId != null)
-                {
-            <div class="text-over-image">
-                <a href="/Products/Details/@product.Id"><img src="@product.Picture" alt="@product.Name" /></a>
-                <div class="text-bottom-right-in-a-cart">Currently in a Cart</div>
-            </div>
-                }
-                else if (product.AvailableItems < 1)
-                {
-            <div class="text-over-image">
-                <img src="@product.Picture" alt="@product.Name" />
-                <div class="text-bottom-right-sold-out">Sold Out</div>
-            </div>
-                }
-                else if (product.SaleId != null)
-                {
-            <div class="text-over-image">
-                <img src="@product.Picture" alt="@product.Name" />
-                <a href="/Sales/Details/@product.SaleId"><div class="text-bottom-right">In Sale</div></a>
-            </div>
-                }
-                else
-                {
-            <a href="/Products/Details/@product.Id"><img src="@product.Picture" alt="@product.Name" /></a>
-                }
-            <div class="product-info-holder">
-                <a href="/Products/Details/@product.Id"><h4>@product.Name</h4></a>
-                @if (product.SaleId == null)
+            <div class="product-pres">
+                @if (product.ShoppingCartId != null)
                     {
-                <p style="margin-top: 1px">&euro;@product.Price</p>
+                        <div class="text-over-image">
+                            <a href="/Products/Details/@product.Id"><img src="@product.Picture" alt="@product.Name" /></a>
+                            <div class="text-bottom-right-in-a-cart">Currently in a Cart</div>
+                        </div>
+                    }
+                    else if (product.OrderId != null && product.AvailableItems < 1)
+                    {
+                        <div class="text-over-image">
+                            <a href="/Products/Details/@product.Id"><img src="@product.Picture" alt="@product.Name" /></a>
+                            <div class="text-bottom-right-sold-out">Sold Out</div>
+                        </div>
+                    }
+                    else if (product.SaleId != null)
+                    {
+                        <div class="text-over-image">
+                            <img src="@product.Picture" alt="@product.Name" />
+                            <a href="/Sales/Details/@product.SaleId"><div class="text-bottom-right">In Sale</div></a>
+                        </div>
                     }
                     else
                     {
-                <p style="margin-top: 1px">&euro;<strike>@product.Price</strike></p>
+                        <a href="/Products/Details/@product.Id"><img src="@product.Picture" alt="@product.Name" /></a>
                     }
+                    <div class="product-info-holder">
+                        <a href="/Products/Details/@product.Id"><h4>@product.Name</h4></a>
+                        @if (product.SaleId == null)
+                        {
+                            <p style="margin-top: 1px">&euro;@product.Price</p>
+                        }
+                        else
+                        {
+                            <p style="margin-top: 1px">&euro;<strike>@product.Price</strike></p>
+                        }
+                </div>
             </div>
-        </div>
         }
     </div>
 }

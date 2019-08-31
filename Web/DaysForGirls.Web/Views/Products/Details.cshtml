@@ -148,26 +148,34 @@
             <p style="font-size: medium"><span style="font-weight: bold">Size:</span> @Model.Size</p>
             @if (Model.SaleId == null)
             {
-                <p style="font-size: medium"><span style="font-weight: bold">Price:</span> @Model.Price</p>
+                <p style="font-size: medium"><span style="font-weight: bold">Price:</span> &euro;@Model.Price</p>
             }
             else
             {
-                <p style="font-size: medium"><span style="font-weight: bold">Price:</span> <strike>@Model.Price</strike>  &ndash;30%</p>
-            }
-            @if (Model.SaleId != null)
-            {
+                <p style="font-size: medium"><span style="font-weight: bold">Price:</span> <strike>&euro;@Model.Price</strike>  &ndash;30%</p>
                 <p style="font-size: medium"><span style="font-weight: bold">In Sale:</span> <a href="/Sales/Details/@Model.SaleId">@Model.SaleTitle</a></p>
             }
-
-            @if (Model.ShoppingCartId == null)
+            @if (Model.OrderId != null)
             {
-                <p style="font-size: medium"><span style="font-weight: bold">Available Quantity:</span> @Model.AvailableItems</p>
-                <br />
-                <a href="/ShoppingCarts/AddProduct/@Model.Id"><button id="order-button">Order</button></a>
+                <p style="font-size: medium"><span style="font-weight: bold; margin-left: 200px;">SOLD OUT</p>
             }
             else
             {
-                <button id="in-cart-button">Currently In a Cart</button>
+                <p style="font-size: medium"><span style="font-weight: bold">Available quantity:</span> @Model.AvailableItems</p>
+            }
+
+            @if (Model.ShoppingCartId == null && Model.OrderId == null)
+            {
+                @*<p style="font-size: medium"><span style="font-weight: bold">Available Quantity:</span> @Model.AvailableItems</p>
+            <br />*@
+                <a href="/ShoppingCarts/AddProduct/@Model.Id"><button id="order-button">Add to Cart</button></a>
+            }
+            else
+            {
+                if (Model.ShoppingCartId != null && Model.OrderId == null)
+                {
+                    <button id="in-cart-button">Currently In a Cart</button>
+                }
             }
         </div>
     </div>
@@ -184,6 +192,10 @@
                         <hr />
                     </div>
                 }
+            }
+            else
+            {
+                <h5 class="text-center">Be the first to review @Model.Name</h5>
             }
             <a href="/CustomerReviews/Create/@Model.Id"><button>Add Review</button></a>
         </div>

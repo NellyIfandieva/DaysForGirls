@@ -71,7 +71,6 @@
                     Title = s.Title,
                     EndsOn = s.EndsOn,
                     Picture = s.Picture,
-                    IsActive = s.IsActive,
                     Products = s.Products
                     .Where(p => p.SaleId == s.Id)
                     .Select(p => new ProductServiceModel

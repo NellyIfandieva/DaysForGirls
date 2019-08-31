@@ -28,7 +28,7 @@
         [HttpGet("/CustomerReviews/Create/{productId}")]
         public async Task<IActionResult> Create(int productId)
         {
-            if(productId <= 0)
+            if (productId <= 0)
             {
                 return Redirect("/Home/Error");
             }
@@ -41,15 +41,19 @@
             var product = await this.productService
                 .GetProductByIdAsync(productId);
 
-            if(product == null)
+            if (product == null)
             {
                 return Redirect("/Home/Error");
             }
 
             this.ViewData["productName"] = product.Name;
 
-            await Task.Delay(0);
-            return View();
+            CustomerReviewInputModel model = new CustomerReviewInputModel
+            {
+                ProductId = productId
+            };  
+            
+            return View(model);
         }
 
         [HttpPost("/CustomerReviews/Create/{productId}")]
