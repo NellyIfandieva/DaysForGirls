@@ -100,9 +100,10 @@
             return productId;
         }
 
-        public IQueryable<AdminProductAllServiceModel> DisplayAll()
+        public async Task<IEnumerable<AdminProductAllServiceModel>> DisplayAll()
         {
-            var allProducts = this.db.Products
+            var allProducts = await this.db
+                .Products
                 .Select(p => new AdminProductAllServiceModel
                 {
                     Id = p.Id,
@@ -127,80 +128,72 @@
                     SaleId = p.SaleId,
                     ShoppingCartId = p.ShoppingCartId,
                     OrderId = p.OrderId
-                });
+                }).ToListAsync();
 
             return allProducts;
         }
 
         public async Task<ProductServiceModel> GetProductByIdAsync(int productId)
         {
-            var product = await this.db.Products
-                .Include(p => p.Category)
-                .Include(p => p.ProductType)
-                .Include(p => p.Manufacturer)
-                .Include(p => p.Quantity)
-                .Include(p => p.Sale)
-                .Include(p => p.ShoppingCart)
-                .SingleOrDefaultAsync(p => p.Id == productId);
-
-            if (product == null)
-            {
-                return null;
-            }
-
             var productPictures = await this.pictureService
-                .GetPicturesOfProductByProductId(product.Id).ToListAsync();
-
-            var productReviews = await this.customerReviewService
-                .GetAllCommentsOfProductByProductId(product.Id)
+                .GetPicturesOfProductByProductId(productId)
                 .ToListAsync();
 
-            ProductServiceModel productToReturn = new ProductServiceModel
-            {
-                Id = product.Id,
-                Name = product.Name,
-                ProductType = new ProductTypeServiceModel
+            var productReviews = await this.customerReviewService
+                .GetAllCommentsOfProductByProductId(productId)
+                .ToListAsync();
+
+            var productToReturn = await this.db
+                .Products
+                .Select(p => new ProductServiceModel
                 {
-                    Name = product.ProductType.Name
-                },
-                Category = new CategoryServiceModel
-                {
-                    Name = product.Category.Name
-                },
-                Description = product.Description,
-                Pictures = productPictures,
-                Colour = product.Colour,
-                Size = product.Size,
-                Price = product.Price,
-                SalePrice = product.SalePrice,
-                Manufacturer = new ManufacturerServiceModel
-                {
-                    Id = product.Manufacturer.Id,
-                    Name = product.Manufacturer.Name
-                },
-                Quantity = new QuantityServiceModel
-                {
-                    AvailableItems = product.Quantity.AvailableItems
-                },
-                Reviews = productReviews,
-                IsDeleted = product.IsDeleted,
-                SaleId = product.SaleId,
-                ShoppingCartId = product.ShoppingCartId,
-                OrderId = product.OrderId
-            };
+                    Id = p.Id,
+                    Name = p.Name,
+                    ProductType = new ProductTypeServiceModel
+                    {
+                        Name = p.ProductType.Name
+                    },
+                    Category = new CategoryServiceModel
+                    {
+                        Name = p.Category.Name
+                    },
+                    Description = p.Description,
+                    Pictures = productPictures,
+                    Colour = p.Colour,
+                    Size = p.Size,
+                    Price = p.Price,
+                    SalePrice = p.SalePrice,
+                    Manufacturer = new ManufacturerServiceModel
+                    {
+                        Id = p.Manufacturer.Id,
+                        Name = p.Manufacturer.Name
+                    },
+                    Quantity = new QuantityServiceModel
+                    {
+                        AvailableItems = p.Quantity.AvailableItems
+                    },
+                    Reviews = productReviews,
+                    IsDeleted = p.IsDeleted,
+                    SaleId = p.SaleId,
+                    ShoppingCartId = p.ShoppingCartId,
+                    OrderId = p.OrderId
+                }).SingleOrDefaultAsync(p => p.Id == productId);
 
             return productToReturn;
         }
 
         public async Task<bool> EditAsync(ProductServiceModel model)
         {
-            ProductType productTypeOfProduct = await this.db.ProductTypes
+            var productTypeOfProduct = await this.db
+                .ProductTypes
                 .SingleOrDefaultAsync(pT => pT.Name == model.ProductType.Name);
 
-            Category categoryOfProduct = await this.db.Categories
+            var categoryOfProduct = await this.db
+                .Categories
                 .SingleOrDefaultAsync(c => c.Name == model.Category.Name);
 
-            Manufacturer manufacturerOfProduct = await this.db.Manufacturers
+            var manufacturerOfProduct = await this.db
+                .Manufacturers
                 .SingleOrDefaultAsync(m => m.Name == model.Manufacturer.Name);
 
             if (productTypeOfProduct == null
@@ -210,13 +203,18 @@
                 return false;
             }
 
-            Product productInDb = await this.db.Products
-                .Include(p => p.Category)
-                .Include(p => p.ProductType)
-                .Include(p => p.Manufacturer)
-                .Include(p => p.Quantity)
-                .Include(p => p.Sale)
+            var productInDb = await this.db
+                .Products
                 .SingleOrDefaultAsync(p => p.Id == model.Id);
+
+            //var productInDb = await this.db
+            //    .Products
+            //    .Include(p => p.Category)
+            //    .Include(p => p.ProductType)
+            //    .Include(p => p.Manufacturer)
+            //    .Include(p => p.Quantity)
+            //    .Include(p => p.Sale)
+            //    .SingleOrDefaultAsync(p => p.Id == model.Id);
 
             if(productInDb == null)
             {
@@ -244,7 +242,7 @@
 
             foreach (var pic in model.Pictures)
             {
-                Picture picture = new Picture
+                var picture = new Picture
                 {
                     PictureUrl = pic.PictureUrl,
                     ProductId = productInDb.Id,
@@ -285,20 +283,19 @@
             return productIsAddedToSale;
         }
 
-        private IQueryable<Product> GetAllProductsByIds(List<int> productIds)
+        private async Task<IEnumerable<Product>> GetAllProductsByIds(List<int> productIds)
         {
-            var allSearchedProducts = this.db.Products
-                .Where(p => productIds.Contains(p.Id)
-                && p.IsDeleted == false);
+            var allSearchedProducts = await this.db.Products
+                .Where(p => productIds.Contains(p.Id) && 
+                       p.IsDeleted == false)
+                .ToListAsync();
 
             return allSearchedProducts;
         }
 
         public async Task<bool> SetProductsCartIdToNullAsync(List<int> productIds)
         {
-            var products = await GetAllProductsByIds(productIds)
-                .Include(p => p.Quantity)
-                .ToListAsync();
+            var products = await GetAllProductsByIds(productIds);
 
             if(products.Count() < 1)
             {
@@ -319,15 +316,20 @@
             return productsCartIdIsSetToNull;
         }
 
-        public async Task<bool> SetOrderIdToProductsAsync(List<int> productIds, string orderId)
+        public async Task<bool> SetOrderIdToProductsAsync(
+            List<int> productIds, 
+            string orderId)
         {
-            if(productIds.Count() < 1 || orderId == null)
+            if(productIds.Count() < 1 || 
+                orderId == null)
             {
                 return false;
             }
 
-            var productsToAddToOrder = await this.db.Products
-                .Where(p => productIds.Contains(p.Id)).ToListAsync();
+            var productsToAddToOrder = await this.db
+                    .Products
+                    .Where(p => productIds.Contains(p.Id))
+                    .ToListAsync();
 
             if (productsToAddToOrder.Count() < 1)
             {
@@ -350,7 +352,8 @@
 
         public async Task<string> EraseFromDb(int productId)
         {
-            var productInDb = await this.db.Products
+            var productInDb = await this.db
+                .Products
                 .SingleOrDefaultAsync(p => p.Id == productId);
 
             string outcome = null;
