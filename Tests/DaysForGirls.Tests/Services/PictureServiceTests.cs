@@ -74,7 +74,8 @@ namespace DaysForGirls.Tests.Services
 
             this.pictureService = new PictureService(db);
 
-            var actualResult = await this.pictureService.GetPictureByIdAsync(0);
+            var actualResult = await this.pictureService
+                .GetPictureByIdAsync(0);
 
             Assert.True(actualResult == null, errorMessagePrefix + " " + "Returns nonexistent picture.");
         }
@@ -83,7 +84,8 @@ namespace DaysForGirls.Tests.Services
         public async Task GetPicsOfProductByProdId_WithValidData_ShouldReturnProductPictures()
         {
             string errorMessagePrefix = "PictureService GetPicturesOfProductByProductId() method does not work properly.";
-            var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
+            var db = DaysForGirlsDbContextInMemoryFactory
+                .InitializeContext();
 
             var product = new Product
             {

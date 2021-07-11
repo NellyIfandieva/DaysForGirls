@@ -85,6 +85,7 @@
         public IQueryable<CustomerReviewServiceModel> DisplayAll()
         {
             var allReviewsInDb = this.db.CustomerReviews
+                .Include(cR => cR.Author)
                 .Select(cR => new CustomerReviewServiceModel
                 {
                     Id = cR.Id,

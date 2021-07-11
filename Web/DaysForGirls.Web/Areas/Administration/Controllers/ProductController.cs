@@ -82,8 +82,7 @@
                 .ToList();
 
             var allActiveSales = await this.saleService
-                .DisplayAll()
-                .ToListAsync();
+                .DisplayAll();
 
             this.ViewData["sales"] = allActiveSales
                 .Select(s => new ProductCreateSaleViewModel
@@ -157,7 +156,8 @@
                 SaleId = saleId
             };
 
-            productServiceModel.Pictures = imageUrls.Select(image => new PictureServiceModel
+            productServiceModel.Pictures = imageUrls
+                .Select(image => new PictureServiceModel
             {
                 PictureUrl = image
             })
@@ -335,8 +335,7 @@
                 .ToList();
 
             var allActiveSales = await this.saleService
-                .DisplayAll()
-                .ToListAsync();
+                .DisplayAll();
 
             this.ViewData["sales"] = allActiveSales
                 .Select(s => new ProductCreateSaleViewModel
@@ -378,7 +377,7 @@
                 });
 
                 var allActiveSales = await this.saleService
-                .DisplayAll().ToListAsync();
+                    .DisplayAll();
 
                 this.ViewData["sales"] = allActiveSales
                     .Select(s => new ProductCreateSaleViewModel

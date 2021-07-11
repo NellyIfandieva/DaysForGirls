@@ -1,10 +1,9 @@
 ﻿namespace DaysForGirls.Services
 {
-    using DaysForGirls.Data;
-    using DaysForGirls.Data.Models;
-    using DaysForGirls.Services.Models;
+    using Data;
+    using Data.Models;
+    using Services.Models;
     using Microsoft.EntityFrameworkCore;
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -35,12 +34,12 @@
             return saleId;
         }
 
-        public IQueryable<SaleServiceModel> DisplayAll()
+        public async Task<IEnumerable<SaleServiceModel>> DisplayAll()
         {
-            var allSales = this.db.Sales
-                .Include(s => s.Products)
-                .Where(s => s.IsDeleted == false
-                && s.IsActive == true)
+            var allSales = await this.db
+                .Sales
+                .Where(s => s.IsActive && 
+                       s.IsDeleted == false)
                 .Select(s => new SaleServiceModel
                 {
                     Id = s.Id,
@@ -54,7 +53,7 @@
                             Name = p.Name
                         })
                         .ToList()
-                });
+                }).ToListAsync();
 
             return allSales;
         }

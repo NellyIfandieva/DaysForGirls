@@ -1,4 +1,4 @@
-﻿using DaysForGirls.Data.Models;
+using DaysForGirls.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -91,6 +91,7 @@ namespace DaysForGirls.Web.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 bool noUsersInDb = this.userManager.Users.Any() == false;
+
                 var user = new DaysForGirlsUser
                 {
                     UserName = Input.Username,
@@ -111,10 +112,10 @@ namespace DaysForGirls.Web.Areas.Identity.Pages.Account
                     {
                         await this.userManager.AddToRoleAsync(user, "Admin");
                     }
-                    else
-                    {
-                        await this.userManager.AddToRoleAsync(user, "User");
-                    }
+                    // else
+                    // {
+                    //     await this.userManager.AddToRoleAsync(user, "User");
+                    // }
 
                     this.logger.LogInformation("User created a new account with password.");
 

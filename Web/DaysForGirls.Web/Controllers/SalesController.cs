@@ -20,15 +20,16 @@
         public async Task<IActionResult> All()
         {
             var allSales = await this.saleService
-                .DisplayAll()
+                .DisplayAll();
+
+            allSales
                 .Select(sale => new SaleDisplayAllViewModel
                 {
                     Id = sale.Id,
                     Title = sale.Title,
                     Picture = sale.Picture,
                     EndsOn = sale.EndsOn.ToString("dddd, dd MMMM yyyy")
-                })
-                .ToListAsync();
+                });
 
             return View(allSales);
         }

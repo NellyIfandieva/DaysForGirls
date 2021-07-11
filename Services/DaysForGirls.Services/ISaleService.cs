@@ -1,6 +1,7 @@
 ﻿namespace DaysForGirls.Services
 {
     using DaysForGirls.Services.Models;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -10,7 +11,7 @@
 
         IQueryable<SaleServiceModel> DisplayAllAdmin();
 
-        IQueryable<SaleServiceModel> DisplayAll();
+        Task<IEnumerable<SaleServiceModel>> DisplayAll();
 
         Task<SaleServiceModel> GetSaleByIdAsync(string saleId);
 

@@ -5,8 +5,6 @@ using DaysForGirls.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,7 +29,7 @@ namespace DaysForGirls.Web
                     Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddIdentity<DaysForGirlsUser, IdentityRole>()
-                .AddDefaultUI(UIFramework.Bootstrap4)
+                .AddDefaultUI()
                 .AddEntityFrameworkStores<DaysForGirlsDbContext>()
                 .AddDefaultTokenProviders();
 
@@ -68,10 +66,16 @@ namespace DaysForGirls.Web
             services.AddTransient<ISaleService, SaleService>();
             services.AddTransient<IShoppingCartService, ShoppingCartService>();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            //  services.CofigureIdentityOptions();
+
+            services.AddControllersWithViews();
+
+            services
+                .AddRazorPages()
+                .AddRazorRuntimeCompilation();
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
             CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.InvariantCulture;
@@ -102,30 +106,27 @@ namespace DaysForGirls.Web
                 }
             }
             app.UseDeveloperExceptionPage();
-            app.UseDatabaseErrorPage();
-            app.UseHsts();
+            // app.UseDatabaseErrorPage();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            app.UseRouting();
+
             app.UseAuthentication();
+            app.UseAuthorization();
 
-            app.UseMvc(routes =>
+            app.UseEndpoints(endpoints =>
             {
-                routes.MapRoute(
+                endpoints.MapControllerRoute(
                     name: "areas",
-                    template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
-                routes.MapRoute(
+                endpoints.MapControllerRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-            });
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
 
-            //app.UseMvc(routes =>
-            //{
-            //    routes.MapRoute(
-            //        name: "default",
-            //        template: "{controller=Home}/{action=Index}/{id?}");
-            //});
+                endpoints.MapRazorPages();
+            });
         }
     }
 }

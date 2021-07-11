@@ -40,7 +40,7 @@
                 uploadResult = this.cloudnaryUtility.Upload(uploadParams);
             }
 
-            return uploadResult?.SecureUri.AbsoluteUri;
+            return uploadResult?.SecureUrl.AbsoluteUri;
         }
 
         public async Task<string> UploadPictureForSaleAsync(IFormFile image, string fileName)
