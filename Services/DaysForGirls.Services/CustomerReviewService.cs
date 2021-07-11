@@ -1,10 +1,11 @@
 ﻿namespace DaysForGirls.Services
 {
-    using DaysForGirls.Data;
-    using DaysForGirls.Data.Models;
-    using DaysForGirls.Services.Models;
+    using Data;
+    using Data.Models;
     using Microsoft.EntityFrameworkCore;
+    using Models;
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -18,14 +19,16 @@
             this.db = db;
         }
 
-        public async Task<bool> CreateAsync(CustomerReviewServiceModel model, int productId)
+        public async Task<bool> CreateAsync(
+            CustomerReviewServiceModel model, 
+            int productId)
         {
             if(productId <= 0)
             {
                 return false;
             }
 
-            CustomerReview productReview = new CustomerReview
+            var productReview = new CustomerReview
             {
                 Title = model.Title,
                 Text = model.Text,
@@ -42,12 +45,12 @@
             return reviewIsAdded;
         }
 
-        public IQueryable<CustomerReviewServiceModel> GetAllCommentsOfProductByProductId(int productId)
+        public async Task<IEnumerable<CustomerReviewServiceModel>> GetAllCommentsOfProductByProductId(int productId)
         {
-            var allProductComments = this.db.CustomerReviews
-                .Include(cR => cR.Author)
+            var allProductComments = await this.db
+                .CustomerReviews
                 .Where(cR => cR.Product.Id == productId
-                && cR.IsDeleted == false)
+                        && cR.IsDeleted == false)
                 .Select(cR => new CustomerReviewServiceModel
                 {
                     Id = cR.Id,
@@ -57,7 +60,7 @@
                     AuthorId = cR.AuthorId,
                     AuthorUsername = cR.Author.UserName,
                     ProductId = productId
-                });
+                }).ToListAsync();
 
             return allProductComments;
         }
@@ -82,10 +85,10 @@
             return reviewIsDeleted;
         }
 
-        public IQueryable<CustomerReviewServiceModel> DisplayAll()
+        public async Task<IEnumerable<CustomerReviewServiceModel>> DisplayAll()
         {
-            var allReviewsInDb = this.db.CustomerReviews
-                .Include(cR => cR.Author)
+            var allReviewsInDb = await this.db
+                .CustomerReviews
                 .Select(cR => new CustomerReviewServiceModel
                 {
                     Id = cR.Id,
@@ -96,7 +99,8 @@
                     Text = cR.Text,
                     IsDeleted = cR.IsDeleted,
                     ProductId = cR.ProductId
-                });
+                })
+                .ToListAsync();
 
             return allReviewsInDb;
         }

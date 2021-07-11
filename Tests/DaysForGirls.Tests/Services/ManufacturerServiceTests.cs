@@ -15,7 +15,7 @@ namespace DaysForGirls.Tests.Services
     public class ManufacturerServiceTests
     {
         private IManufacturerService manufacturerService;
-        private List<Manufacturer> GetSampleManufacturers()
+        private static List<Manufacturer> GetSampleManufacturers()
         {
             return new List<Manufacturer>()
             {
@@ -40,7 +40,7 @@ namespace DaysForGirls.Tests.Services
             };
         }
 
-        private async Task SeedSampleManufacturers(DaysForGirlsDbContext db)
+        private static async Task SeedSampleManufacturers(DaysForGirlsDbContext db)
         {
             db.AddRange(GetSampleManufacturers());
             await db.SaveChangesAsync();
@@ -54,7 +54,7 @@ namespace DaysForGirls.Tests.Services
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
             this.manufacturerService = new ManufacturerService(db);
 
-            ManufacturerServiceModel testManufacturer = new ManufacturerServiceModel
+            var testManufacturer = new ManufacturerServiceModel
             {
                 Name = "ManufacturerThree",
                 Description = "ManufacturerThree description",
@@ -78,9 +78,9 @@ namespace DaysForGirls.Tests.Services
 
             this.manufacturerService = new ManufacturerService(db);
 
-            Manufacturer expectedData = db.Manufacturers.First();
+            var expectedData = db.Manufacturers.First();
 
-            ManufacturerServiceModel expectedDataServiceModel = new ManufacturerServiceModel
+            var expectedDataServiceModel = new ManufacturerServiceModel
             {
                 Id = expectedData.Id,
                 Name = expectedData.Name,
@@ -93,7 +93,7 @@ namespace DaysForGirls.Tests.Services
                 IsDeleted = expectedData.IsDeleted
             };
 
-            ManufacturerServiceModel actualData = await this.manufacturerService.GetManufacturerByIdAsync(expectedData.Id);
+            var actualData = await this.manufacturerService.GetManufacturerByIdAsync(expectedData.Id);
 
             Assert.True(expectedDataServiceModel.Id == actualData.Id, errorMessagePrefix + " " + "Id is not returned properly.");
             Assert.True(expectedDataServiceModel.Name == actualData.Name, errorMessagePrefix + " " + "Name is not returned properly.");
@@ -124,7 +124,7 @@ namespace DaysForGirls.Tests.Services
             await SeedSampleManufacturers(db);
             this.manufacturerService = new ManufacturerService(db);
 
-            List<ManufacturerServiceModel> expectedResults = GetSampleManufacturers()
+            var expectedResults = GetSampleManufacturers()
                 .Select(m => new ManufacturerServiceModel
                 {
                     Id = m.Id,
@@ -138,13 +138,13 @@ namespace DaysForGirls.Tests.Services
                     }
                 }).ToList();
 
-            List<ManufacturerServiceModel> actualResults = await this.manufacturerService.DisplayAll().ToListAsync();
+            var actualResults = await this.manufacturerService.DisplayAll();
 
 
             for (int i = 0; i < expectedResults.Count; i++)
             {
                 var expectedRecord = expectedResults[i];
-                var actualRecord = actualResults[i];
+                var actualRecord = actualResults.ElementAt(i);
 
                 Assert.True(expectedRecord.Name == actualRecord.Name, errorMessagePrefix + " " + "Name is not returned properly.");
                 Assert.True(expectedRecord.Description == actualRecord.Description, errorMessagePrefix + " " + "Description is not returned properly.");
@@ -162,9 +162,10 @@ namespace DaysForGirls.Tests.Services
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
             this.manufacturerService = new ManufacturerService(db);
 
-            List<ManufacturerServiceModel> actualResults = await this.manufacturerService.DisplayAll().ToListAsync();
+            var actualResults = await this.manufacturerService
+                .DisplayAll();
 
-            Assert.True(actualResults.Count == 0, errorMessagePrefix);
+            Assert.True(actualResults.ToList().Count == 0, errorMessagePrefix);
         }
 
         [Fact]
@@ -176,9 +177,9 @@ namespace DaysForGirls.Tests.Services
             await SeedSampleManufacturers(db);
             this.manufacturerService = new ManufacturerService(db);
 
-            Manufacturer expectedData = db.Manufacturers.First();
+            var expectedData = db.Manufacturers.First();
 
-            ManufacturerServiceModel expectedServiceModel = new ManufacturerServiceModel
+            var expectedServiceModel = new ManufacturerServiceModel
             {
                 Id = expectedData.Id,
                 Name = expectedData.Name,

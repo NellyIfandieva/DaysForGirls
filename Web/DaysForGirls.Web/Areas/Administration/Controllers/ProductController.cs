@@ -56,9 +56,7 @@
                 .ToList();
 
             var allCategories = await this.categoryService
-                .DisplayAll()
-                .Where(c => c.IsDeleted == false)
-                .ToListAsync();
+                .DisplayAll();
 
             this.ViewData["categories"] = allCategories
                 .Select(c => new ProductCreateCategoryViewModel
@@ -69,9 +67,7 @@
                 .ToList();
 
             var allManufacturers = await this.manufacturerService
-                .DisplayAll()
-                .Where(m => m.IsDeleted == false)
-                .ToListAsync();
+                .DisplayAll();
 
             this.ViewData["manufacturers"] = allManufacturers
                 .Select(m => new ProductCreateManufacturerViewModel
@@ -127,7 +123,7 @@
                 saleId = sale.Id;
             }
 
-            List<string> imageUrls = new List<string>();
+            var imageUrls = new List<string>();
 
             int imageNameExtension = 1;
 
@@ -139,7 +135,7 @@
                 imageUrls.Add(imageUrl);
             }
 
-            ProductServiceModel productServiceModel = new ProductServiceModel
+            var productServiceModel = new ProductServiceModel
             {
                 Name = model.Name,
                 ProductType = productType,
@@ -183,7 +179,9 @@
         public async Task<IActionResult> All()
         {
             var allProducts = await this.adminService
-                .DisplayAll()
+                .DisplayAll();
+
+            allProducts
                 .Select(product => new AdminDisplayAllViewModel
                 {
                     Id = product.Id,
@@ -199,8 +197,7 @@
                     SaleId = product.SaleId,
                     ShoppingCartId = product.ShoppingCartId,
                     OrderId = product.OrderId
-                })
-                .ToListAsync();
+                });
 
             return View(allProducts);
         }
@@ -314,8 +311,7 @@
                 }).ToList();
 
             var allCategories = await this.categoryService
-                .DisplayAll()
-                .ToListAsync();
+                .DisplayAll();
 
             this.ViewData["categories"] = allCategories
                 .Select(category => new ProductCreateCategoryViewModel
@@ -324,8 +320,7 @@
                 }).ToList();
 
             var allManufacturers = await this.manufacturerService
-                .DisplayAll()
-                .ToListAsync();
+                .DisplayAll();
 
             this.ViewData["manufacturers"] = allManufacturers
                 .Select(manufacturer => new ProductCreateManufacturerViewModel
@@ -362,14 +357,15 @@
                 })
                 .ToList(); ;
 
-                var categories = await this.categoryService.DisplayAll().ToListAsync();
+                var categories = await this.categoryService.DisplayAll();
 
                 this.ViewData["categories"] = categories.Select(c => new ProductCreateCategoryViewModel
                 {
                     Name = c.Name
                 });
 
-                var manufacturers = await this.manufacturerService.DisplayAll().ToListAsync();
+                var manufacturers = await this.manufacturerService
+                    .DisplayAll();
 
                 this.ViewData["manufacturers"] = manufacturers.Select(m => new ProductCreateManufacturerViewModel
                 {
@@ -399,7 +395,7 @@
                 saleId = sale.Id;
             }
 
-            List<string> imageUrls = new List<string>();
+            var imageUrls = new List<string>();
 
             int imageNameExtension = 1;
 

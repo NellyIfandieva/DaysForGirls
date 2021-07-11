@@ -50,7 +50,7 @@ namespace DaysForGirls.Tests.Services
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
             this.saleService = new SaleService(db);
 
-            SaleServiceModel testCategory = new SaleServiceModel
+            var testCategory = new SaleServiceModel
             {
                 Title = "Sale Three",
                 EndsOn = DateTime.UtcNow.AddDays(35),
@@ -99,7 +99,7 @@ namespace DaysForGirls.Tests.Services
                 Assert.True(expectedRecord.Title == actualRecord.Title, errorMessagePrefix + " " + "Title is not returned properly.");
                 Assert.True(expectedRecord.EndsOn == actualRecord.EndsOn, errorMessagePrefix + " " + "EndsOn is not returned properly.");
                 Assert.True(expectedRecord.Picture == actualRecord.Picture, errorMessagePrefix + " " + "Picture is not returned properly.");
-                Assert.True(expectedRecord.Products.Count() == actualRecord.Products.Count(), errorMessagePrefix + " " + "Products Count does not display correctly");
+                Assert.True(expectedRecord.Products.Count == actualRecord.Products.Count, errorMessagePrefix + " " + "Products Count does not display correctly");
             }
         }
 
@@ -139,7 +139,7 @@ namespace DaysForGirls.Tests.Services
                 Assert.True(expectedRecord.EndsOn == actualRecord.EndsOn, errorMessagePrefix + " " + "EndsOn is not returned properly.");
                 Assert.True(expectedRecord.Picture == actualRecord.Picture, errorMessagePrefix + " " + "Picture is not returned properly.");
                 Assert.True(expectedRecord.IsActive == actualRecord.IsActive, errorMessagePrefix + " " + "IsActive is not returned properly.");
-                Assert.True(expectedRecord.Products.Count() == actualRecord.Products.Count(), errorMessagePrefix + " " + "Products Count does not display correctly");
+                Assert.True(expectedRecord.Products.Count == actualRecord.Products.Count, errorMessagePrefix + " " + "Products Count does not display correctly");
             }
         }
 
@@ -152,9 +152,9 @@ namespace DaysForGirls.Tests.Services
             await SeedSampleSales(db);
             this.saleService = new SaleService(db);
 
-            Sale expectedData = db.Sales.First();
+            var expectedData = db.Sales.First();
 
-            SaleServiceModel expectedDataServiceModel = new SaleServiceModel
+            var expectedDataServiceModel = new SaleServiceModel
             {
                 Id = expectedData.Id,
                 Title = expectedData.Title,
@@ -163,12 +163,12 @@ namespace DaysForGirls.Tests.Services
                 Products = new List<ProductServiceModel>()
             };
 
-            SaleServiceModel actualData = await this.saleService.GetSaleByIdAsync(expectedDataServiceModel.Id);
+            var actualData = await this.saleService.GetSaleByIdAsync(expectedDataServiceModel.Id);
 
             Assert.True(expectedDataServiceModel.Title == actualData.Title, errorMessagePrefix + " " + "Title is not returned properly.");
             Assert.True(expectedDataServiceModel.EndsOn == actualData.EndsOn, errorMessagePrefix + " " + "EndsOn is not returned properly.");
             Assert.True(expectedDataServiceModel.Picture == actualData.Picture, errorMessagePrefix + " " + "Picture is not returned properly");
-            Assert.True(expectedDataServiceModel.Products.Count() == actualData.Products.Count(), errorMessagePrefix + " " + "Products Count is not returned properly.");
+            Assert.True(expectedDataServiceModel.Products.Count == actualData.Products.Count, errorMessagePrefix + " " + "Products Count is not returned properly.");
         }
 
         [Fact]
@@ -193,9 +193,9 @@ namespace DaysForGirls.Tests.Services
             await SeedSampleSales(db);
             this.saleService = new SaleService(db);
 
-            Sale expectedData = db.Sales.First();
+            var expectedData = db.Sales.First();
 
-            SaleServiceModel expectedDataServiceModel = new SaleServiceModel
+            var expectedDataServiceModel = new SaleServiceModel
             {
                 Id = expectedData.Id,
                 Title = expectedData.Title,
@@ -209,7 +209,7 @@ namespace DaysForGirls.Tests.Services
             Assert.True(expectedDataServiceModel.Title == actualData.Title, errorMessagePrefix + " " + "Title is not returned properly.");
             Assert.True(expectedDataServiceModel.EndsOn == actualData.EndsOn, errorMessagePrefix + " " + "EndsOn is not returned properly.");
             Assert.True(expectedDataServiceModel.Picture == actualData.Picture, errorMessagePrefix + " " + "Picture is not returned properly");
-            Assert.True(expectedDataServiceModel.Products.Count() == actualData.Products.Count(), errorMessagePrefix + " " + "Products Count is not returned properly.");
+            Assert.True(expectedDataServiceModel.Products.Count == actualData.Products.Count, errorMessagePrefix + " " + "Products Count is not returned properly.");
         }
 
         [Fact]
@@ -232,7 +232,7 @@ namespace DaysForGirls.Tests.Services
 
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
 
-            Product product = new Product
+            var product = new Product
             {
                 Name = "Product One",
                 Description = "Product One Description",
@@ -286,7 +286,7 @@ namespace DaysForGirls.Tests.Services
 
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
 
-            Product product = new Product
+            var product = new Product
             {
                 Name = "Product One",
                 Description = "Product One Description",
@@ -321,6 +321,7 @@ namespace DaysForGirls.Tests.Services
                 Price = 100.50M,
                 Quantity = new Quantity { AvailableItems = 1 }
             };
+
             db.Products.Add(product);
             await db.SaveChangesAsync();
 
@@ -331,7 +332,6 @@ namespace DaysForGirls.Tests.Services
             bool actualResult = await this.saleService.AddProductToSaleAsync(null, productToAdd.Id);
 
             Assert.True(actualResult == false, errorMessagePrefix + " " + "Returns true.");
-
         }
 
         [Fact]
@@ -356,9 +356,9 @@ namespace DaysForGirls.Tests.Services
             await SeedSampleSales(db);
             this.saleService = new SaleService(db);
 
-            Sale expectedData = db.Sales.First();
+            var expectedData = db.Sales.First();
 
-            SaleServiceModel expectedServiceModel = new SaleServiceModel
+            var expectedServiceModel = new SaleServiceModel
             {
                 Id = expectedData.Id,
                 Title = expectedData.Title,
@@ -371,7 +371,7 @@ namespace DaysForGirls.Tests.Services
 
             await this.saleService.EditAsync(expectedServiceModel);
 
-            Sale actualData = db.Sales.First();
+            var actualData = db.Sales.First();
 
             var actualServiceModel = new SaleServiceModel
             {

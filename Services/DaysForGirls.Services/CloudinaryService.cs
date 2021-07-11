@@ -31,7 +31,7 @@
 
             using (var ms = new MemoryStream(destinationData))
             {
-                ImageUploadParams uploadParams = new ImageUploadParams
+                var uploadParams = new ImageUploadParams
                 {
                     Folder = "ImagesOfProducts",
                     File = new FileDescription(fileName, ms)
@@ -57,7 +57,7 @@
 
             using (var ms = new MemoryStream(destinationData))
             {
-                ImageUploadParams uploadParams = new ImageUploadParams
+                var uploadParams = new ImageUploadParams
                 {
                     Folder = "ImagesForSales",
                     File = new FileDescription(fileName, ms)
@@ -66,7 +66,7 @@
                 uploadResult = this.cloudnaryUtility.Upload(uploadParams);
             }
 
-            return uploadResult?.SecureUri.AbsoluteUri;
+            return uploadResult?.SecureUrl.AbsoluteUri;
         }
 
         public async Task<string> UploadLogoForManufacturerAsync(IFormFile image, string fileName)
@@ -83,7 +83,7 @@
 
             using (var ms = new MemoryStream(destinationData))
             {
-                ImageUploadParams uploadParams = new ImageUploadParams
+                var uploadParams = new ImageUploadParams
                 {
                     Folder = "LogosOfManufacturers",
                     File = new FileDescription(fileName, ms)
@@ -92,7 +92,7 @@
                 uploadResult = this.cloudnaryUtility.Upload(uploadParams);
             }
 
-            return uploadResult?.SecureUri.AbsoluteUri;
+            return uploadResult?.SecureUrl.AbsoluteUri;
         }
     }
 }

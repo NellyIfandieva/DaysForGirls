@@ -1,19 +1,17 @@
 ﻿namespace DaysForGirls.Services
 {
-    using DaysForGirls.Services.Models;
-    using System.Linq;
+    using Models;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     public interface ICustomerReviewService
     {
         Task<bool> CreateAsync(CustomerReviewServiceModel model, int productId);
 
-        IQueryable<CustomerReviewServiceModel> GetAllCommentsOfProductByProductId(int productId);
-
-        //Task<CustomerReviewServiceModel> GetReviewByIdAsync(int reviewId);
+        Task<IEnumerable<CustomerReviewServiceModel>> GetAllCommentsOfProductByProductId(int productId);
 
         Task<bool> DeleteReviewByIdAsync(int reviewId);
 
-        IQueryable<CustomerReviewServiceModel> DisplayAll();
+        Task<IEnumerable<CustomerReviewServiceModel>> DisplayAll();
     }
 }

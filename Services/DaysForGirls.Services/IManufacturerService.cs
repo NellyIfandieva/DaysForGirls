@@ -1,6 +1,7 @@
 ﻿namespace DaysForGirls.Services
 {
     using DaysForGirls.Services.Models;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -8,7 +9,7 @@
     {
         Task<int> CreateAsync(ManufacturerServiceModel manufacturerServiceModel);
 
-        IQueryable<ManufacturerServiceModel> DisplayAll();
+        Task<IEnumerable<ManufacturerServiceModel>> DisplayAll();
 
         Task<bool> EditAsync(ManufacturerServiceModel model);
 

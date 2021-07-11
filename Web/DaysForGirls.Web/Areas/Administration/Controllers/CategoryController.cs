@@ -55,7 +55,9 @@
         public async Task<IActionResult> All()
         {
             var allCategories = await this.categoryService
-                .DisplayAll()
+                .DisplayAll();
+
+            allCategories
                 .Select(c => new CategoryDisplayAllViewModel
                 {
                     Id = c.Id,
@@ -63,8 +65,7 @@
                     Description = c.Description,
                     IsDeleted = c.IsDeleted
                 })
-                .OrderBy(c => c.Name)
-                .ToListAsync();
+                .OrderBy(c => c.Name);
 
             return View(allCategories);
         }

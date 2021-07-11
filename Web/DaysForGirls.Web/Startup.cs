@@ -33,12 +33,12 @@ namespace DaysForGirls.Web
                 .AddEntityFrameworkStores<DaysForGirlsDbContext>()
                 .AddDefaultTokenProviders();
 
-            Account cloudinaryCredentials = new Account(
+            var cloudinaryCredentials = new Account(
                 this.Configuration["Cloudinary:CloudName"],
                 this.Configuration["Cloudinary:ApiKey"],
                 this.Configuration["Cloudinary:ApiSecret"]);
 
-            Cloudinary cloudinaryUtility = new Cloudinary(cloudinaryCredentials);
+            var cloudinaryUtility = new Cloudinary(cloudinaryCredentials);
 
             services.AddSingleton(cloudinaryUtility);
 
@@ -82,7 +82,9 @@ namespace DaysForGirls.Web
 
             using (var serviceScope = app.ApplicationServices.CreateScope())
             {
-                using (var context = serviceScope.ServiceProvider.GetRequiredService<DaysForGirlsDbContext>())
+                using (var context = serviceScope
+                                        .ServiceProvider
+                                        .GetRequiredService<DaysForGirlsDbContext>())
                 {
                     //context.Database.EnsureDeleted();
                     context.Database.EnsureCreated();

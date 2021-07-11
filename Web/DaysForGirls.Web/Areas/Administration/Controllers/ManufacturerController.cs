@@ -66,7 +66,9 @@
         public async Task<IActionResult> All()
         {
             var allManufacturers = await this.manufacturerService
-                .DisplayAll()
+                .DisplayAll();
+
+            allManufacturers
                 .Select(m => new ManufacturerDisplayAllViewModel
                 {
                     Id = m.Id,
@@ -76,8 +78,7 @@
                     IsDeleted = m.IsDeleted,
                     ProductsCount = m.ProductsCount
                 })
-                .OrderBy(m => m.Name)
-                .ToListAsync();
+                .OrderBy(m => m.Name);
 
             return View(allManufacturers);
         }

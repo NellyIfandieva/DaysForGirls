@@ -19,7 +19,7 @@
 
         public async Task<string> CreateAsync(SaleServiceModel saleServiceModel)
         {
-            Sale sale = new Sale
+            var sale = new Sale
             {
                 Title = saleServiceModel.Title,
                 EndsOn = saleServiceModel.EndsOn,
@@ -146,7 +146,7 @@
                 })
                 .ToListAsync();
 
-            SaleServiceModel saleToReturn = new SaleServiceModel
+            var saleToReturn = new SaleServiceModel
             {
                 Id = saleWithDetails.Id,
                 Title = saleWithDetails.Title,
@@ -218,7 +218,7 @@
                 })
                 .ToListAsync();
 
-            SaleServiceModel saleToReturn = new SaleServiceModel
+            var saleToReturn = new SaleServiceModel
             {
                 Id = saleWithDetails.Id,
                 Title = saleWithDetails.Title,
@@ -300,7 +300,7 @@
             HashSet<Product> productsOutOfSale = saleToDelete.Products
                 .ToHashSet();
 
-            if (productsOutOfSale.Count() > 0)
+            if (productsOutOfSale.Count > 0)
             {
                 foreach (var product in productsOutOfSale)
                 {

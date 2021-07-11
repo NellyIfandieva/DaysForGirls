@@ -1,14 +1,14 @@
 ﻿namespace DaysForGirls.Services
 {
-    using DaysForGirls.Services.Models;
-    using System.Linq;
+    using Services.Models;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     public interface ICategoryService
     {
         Task<int> CreateAsync(CategoryServiceModel categoryServiceModel);
 
-        IQueryable<CategoryServiceModel> DisplayAll();
+        Task<IEnumerable<CategoryServiceModel>> DisplayAll();
 
         Task<bool> DeleteCategoryByIdAsync(int categoryId);
 

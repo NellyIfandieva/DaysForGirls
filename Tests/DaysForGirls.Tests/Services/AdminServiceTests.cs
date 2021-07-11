@@ -18,7 +18,7 @@ namespace DaysForGirls.Tests.Services
         private IPictureService pictureService;
         private ICustomerReviewService customerReviewService;
 
-        private List<Product> GetSampleProducts()
+        private static List<Product> GetSampleProducts()
         {
             return new List<Product>()
             {
@@ -95,7 +95,7 @@ namespace DaysForGirls.Tests.Services
             };
         }
 
-        private async Task SeedSampleProducts(DaysForGirlsDbContext db)
+        private static async Task SeedSampleProducts(DaysForGirlsDbContext db)
         {
             db.AddRange(GetSampleProducts());
             await db.SaveChangesAsync();
@@ -111,26 +111,32 @@ namespace DaysForGirls.Tests.Services
             var customerReviewService = new CustomerReviewService(db);
             this.adminService = new AdminService(db, pictureService, customerReviewService);
 
-            ProductType type = new ProductType { Name = "Dress" };
+            var type = new ProductType { Name = "Dress" };
             db.ProductTypes.Add(type);
-            Category category = new Category
+
+            var category = new Category
             {
                 Name = "Wedding",
                 Description = "Wedding description"
             };
+
             db.Categories.Add(category);
-            Manufacturer manufacturer = new Manufacturer
+
+            var manufacturer = new Manufacturer
             {
                 Name = "Manufacturer",
                 Description = "Manufacturer Description",
                 Logo = new Logo { LogoUrl = "Manuf_Logo" }
             };
+
             db.Manufacturers.Add(manufacturer);
-            Quantity quantity = new Quantity { AvailableItems = 1 };
+
+            var quantity = new Quantity { AvailableItems = 1 };
+
             db.Quantities.Add(quantity);
             await db.SaveChangesAsync();
 
-            ProductServiceModel testProduct = new ProductServiceModel
+            var testProduct = new ProductServiceModel
             {
                 Name = "Product Three",
                 Description = "Product Three description",
@@ -176,24 +182,29 @@ namespace DaysForGirls.Tests.Services
             var customerReviewService = new CustomerReviewService(db);
             this.adminService = new AdminService(db, pictureService, customerReviewService);
 
-            Category category = new Category
+            var category = new Category
             {
                 Name = "Wedding",
                 Description = "Wedding description"
             };
+
             db.Categories.Add(category);
-            Manufacturer manufacturer = new Manufacturer
+
+            var manufacturer = new Manufacturer
             {
                 Name = "Manufacturer",
                 Description = "Manufacturer Description",
                 Logo = new Logo { LogoUrl = "Manuf_Logo" }
             };
+
             db.Manufacturers.Add(manufacturer);
-            Quantity quantity = new Quantity { AvailableItems = 1 };
+
+            var quantity = new Quantity { AvailableItems = 1 };
+
             db.Quantities.Add(quantity);
             await db.SaveChangesAsync();
 
-            ProductServiceModel testProduct = new ProductServiceModel
+            var testProduct = new ProductServiceModel
             {
                 Name = "Product Three",
                 Description = "Product Three description",
@@ -270,13 +281,13 @@ namespace DaysForGirls.Tests.Services
                     OrderId = p.OrderId
                 }).ToList();
 
-            List<AdminProductAllServiceModel> actualResults = await this.adminService.DisplayAll().ToListAsync();
+            var actualResults = await this.adminService.DisplayAll();
 
 
             for (int i = 0; i < expectedResults.Count; i++)
             {
                 var expectedRecord = expectedResults[i];
-                var actualRecord = actualResults[i];
+                var actualRecord = actualResults.ElementAt(i);
 
                 Assert.True(expectedRecord.Name == actualRecord.Name, errorMessagePrefix + " " + "Name is not returned properly.");
                 Assert.True(expectedRecord.Category.Name == actualRecord.Category.Name, errorMessagePrefix + " " + "Category Name is not returned properly.");
@@ -302,9 +313,9 @@ namespace DaysForGirls.Tests.Services
             var customerReviewService = new CustomerReviewService(db);
             this.adminService = new AdminService(db, pictureService, customerReviewService);
 
-            List<AdminProductAllServiceModel> actualResults = await this.adminService.DisplayAll().ToListAsync();
+            var actualResults = await this.adminService.DisplayAll();
 
-            Assert.True(actualResults.Count == 0, errorMessagePrefix);
+            Assert.True(actualResults.ToList().Count == 0, errorMessagePrefix);
         }
 
         [Fact]
@@ -322,7 +333,7 @@ namespace DaysForGirls.Tests.Services
 
             Product expectedData = db.Products.First();
 
-            ProductServiceModel expectedDataServiceModel = new ProductServiceModel
+            var expectedDataServiceModel = new ProductServiceModel
             {
                 Id = expectedData.Id,
                 Name = expectedData.Name,
@@ -355,11 +366,11 @@ namespace DaysForGirls.Tests.Services
                 IsDeleted = expectedData.IsDeleted
             };
 
-            ProductServiceModel actualRecord = await this.adminService.GetProductByIdAsync(expectedData.Id);
+            var actualRecord = await this.adminService.GetProductByIdAsync(expectedData.Id);
 
             Assert.True(expectedDataServiceModel.Name == actualRecord.Name, errorMessagePrefix + " " + "Name is not returned properly.");
             Assert.True(expectedDataServiceModel.Category.Name == actualRecord.Category.Name, errorMessagePrefix + " " + "Category Name is not returned properly.");
-            Assert.True(expectedDataServiceModel.Pictures.Count() == actualRecord.Pictures.Count(), errorMessagePrefix + " " + "Picture is not returned properly.");
+            Assert.True(expectedDataServiceModel.Pictures.Count == actualRecord.Pictures.Count, errorMessagePrefix + " " + "Picture is not returned properly.");
             Assert.True(expectedDataServiceModel.Price == actualRecord.Price, errorMessagePrefix + " " + "Price is not returned properly.");
             Assert.True(expectedDataServiceModel.Quantity.AvailableItems == actualRecord.Quantity.AvailableItems, errorMessagePrefix + " " + "Available Items is not returned properly.");
             Assert.True(expectedDataServiceModel.Manufacturer.Name == actualRecord.Manufacturer.Name, errorMessagePrefix + " " + "Manufacturer Name is not returned properly.");
@@ -401,7 +412,7 @@ namespace DaysForGirls.Tests.Services
 
             Product expectedData = db.Products.First();
 
-            ProductServiceModel expectedDataServiceModel = new ProductServiceModel
+            var expectedDataServiceModel = new ProductServiceModel
             {
                 Id = expectedData.Id,
                 Name = expectedData.Name,
@@ -475,7 +486,7 @@ namespace DaysForGirls.Tests.Services
 
             Assert.True(expectedDataServiceModel.Name == actualRecordServiceModel.Name, errorMessagePrefix + " " + "Name is not returned properly.");
             Assert.True(expectedDataServiceModel.Category.Name == actualRecordServiceModel.Category.Name, errorMessagePrefix + " " + "Category Name is not returned properly.");
-            Assert.True(expectedDataServiceModel.Pictures.Count() == actualRecordServiceModel.Pictures.Count(), errorMessagePrefix + " " + "Picture is not returned properly.");
+            Assert.True(expectedDataServiceModel.Pictures.Count == actualRecordServiceModel.Pictures.Count, errorMessagePrefix + " " + "Picture is not returned properly.");
             Assert.True(expectedDataServiceModel.Price == actualRecordServiceModel.Price, errorMessagePrefix + " " + "Price is not returned properly.");
             Assert.True(expectedDataServiceModel.Quantity.AvailableItems == actualRecordServiceModel.Quantity.AvailableItems, errorMessagePrefix + " " + "Available Items is not returned properly.");
             Assert.True(expectedDataServiceModel.Manufacturer.Name == actualRecordServiceModel.Manufacturer.Name, errorMessagePrefix + " " + "Manufacturer Name is not returned properly.");
@@ -515,7 +526,8 @@ namespace DaysForGirls.Tests.Services
             var pictureService = new PictureService(db);
             var customerReviewService = new CustomerReviewService(db);
             this.adminService = new AdminService(db, pictureService, customerReviewService);
-            Sale sale = new Sale
+
+            var sale = new Sale
             {
                 Title = "Sale",
                 EndsOn = DateTime.UtcNow.AddDays(20),
@@ -525,7 +537,7 @@ namespace DaysForGirls.Tests.Services
             db.Sales.Add(sale);
             await db.SaveChangesAsync();
 
-            Product product = new Product
+            var product = new Product
             {
                 Name = "Product One",
                 Category = new Category
@@ -576,7 +588,8 @@ namespace DaysForGirls.Tests.Services
             var pictureService = new PictureService(db);
             var customerReviewService = new CustomerReviewService(db);
             this.adminService = new AdminService(db, pictureService, customerReviewService);
-            Sale sale = new Sale
+
+            var sale = new Sale
             {
                 Title = "Sale",
                 EndsOn = DateTime.UtcNow.AddDays(20),
@@ -586,7 +599,7 @@ namespace DaysForGirls.Tests.Services
             db.Sales.Add(sale);
             await db.SaveChangesAsync();
 
-            Product product = new Product
+            var product = new Product
             {
                 Name = "Product One",
                 Category = new Category
@@ -620,7 +633,7 @@ namespace DaysForGirls.Tests.Services
 
             this.adminService = new AdminService(db, pictureService, customerReviewService);
 
-            Product productToDelete = db.Products.First();
+            var productToDelete = db.Products.First();
 
             string actualResult = await this.adminService.EraseFromDb(product.Id);
             string[] actualResultSplit = actualResult.Split(new[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
@@ -637,7 +650,8 @@ namespace DaysForGirls.Tests.Services
             var pictureService = new PictureService(db);
             var customerReviewService = new CustomerReviewService(db);
             this.adminService = new AdminService(db, pictureService, customerReviewService);
-            Sale sale = new Sale
+
+            var sale = new Sale
             {
                 Title = "Sale",
                 EndsOn = DateTime.UtcNow.AddDays(20),
@@ -647,7 +661,7 @@ namespace DaysForGirls.Tests.Services
             db.Sales.Add(sale);
             await db.SaveChangesAsync();
 
-            Product product = new Product
+            var product = new Product
             {
                 Name = "Product One",
                 Category = new Category
@@ -681,10 +695,11 @@ namespace DaysForGirls.Tests.Services
 
             this.adminService = new AdminService(db, pictureService, customerReviewService);
 
-            Product productToDelete = db.Products.First();
+            var productToDelete = db.Products.First();
 
             string actualResult = await this.adminService.EraseFromDb(product.Id);
             string[] actualResultSplit = actualResult.Split(new[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
+
             Assert.True(actualResultSplit[0] == product.Name, errorMessagePrefix + " " + "Result does not contain the product name.");
             Assert.True(actualResultSplit[1] == "has been purchased and was only set to IsDeleted.", errorMessagePrefix + " " + "Result does not return the expected message.");
             Assert.True(productToDelete.IsDeleted, errorMessagePrefix + " " + "IsDeleted is not set to true");
@@ -700,7 +715,7 @@ namespace DaysForGirls.Tests.Services
             var customerReviewService = new CustomerReviewService(db);
             this.adminService = new AdminService(db, pictureService, customerReviewService);
 
-            Product product = new Product
+            var product = new Product
             {
                 Name = "Product One",
                 Category = new Category
@@ -734,11 +749,11 @@ namespace DaysForGirls.Tests.Services
 
             this.adminService = new AdminService(db, pictureService, customerReviewService);
 
-            List<int> productIds = db.Products
+            var productIds = db.Products
                 .Select(p => p.Id).ToList();
 
-            bool positive = await this.adminService.SetOrderIdToProductsAsync(productIds, "Hi");
-            Product first = db.Products.SingleOrDefault(p => p.Id == 1);
+            var positive = await this.adminService.SetOrderIdToProductsAsync(productIds, "Hi");
+            var first = db.Products.SingleOrDefault(p => p.Id == 1);
 
             Assert.True(positive, errorMessagePrefix + " " + "Products were updated with OrderId");
             Assert.True(first.OrderId == "Hi", errorMessagePrefix + " " + "OrderId not set to given Id.");
@@ -755,7 +770,7 @@ namespace DaysForGirls.Tests.Services
             var customerReviewService = new CustomerReviewService(db);
             this.adminService = new AdminService(db, pictureService, customerReviewService);
 
-            Product product = new Product
+            var product = new Product
             {
                 Name = "Product One",
                 Category = new Category
@@ -789,10 +804,10 @@ namespace DaysForGirls.Tests.Services
 
             this.adminService = new AdminService(db, pictureService, customerReviewService);
 
-            List<int> productIds = new List<int>();
+            var productIds = new List<int>();
 
-            bool positive = await this.adminService.SetOrderIdToProductsAsync(productIds, "Hi");
-            Product first = db.Products.First();
+            var positive = await this.adminService.SetOrderIdToProductsAsync(productIds, "Hi");
+            var first = db.Products.First();
 
             Assert.True(positive == false, errorMessagePrefix + " " + "OrderId not set and cartId remains not null.");
             Assert.True(first.OrderId == null, errorMessagePrefix + " " + "OrderId was set to given Id.");
@@ -809,7 +824,7 @@ namespace DaysForGirls.Tests.Services
             var customerReviewService = new CustomerReviewService(db);
             this.adminService = new AdminService(db, pictureService, customerReviewService);
 
-            Product product = new Product
+            var product = new Product
             {
                 Name = "Product One",
                 Category = new Category
@@ -918,7 +933,8 @@ namespace DaysForGirls.Tests.Services
             var pictureService = new PictureService(db);
             var customerReviewService = new CustomerReviewService(db);
             this.adminService = new AdminService(db, pictureService, customerReviewService);
-            Sale sale = new Sale
+
+            var sale = new Sale
             {
                 Title = "Sale One",
                 EndsOn = DateTime.UtcNow.AddDays(10),
@@ -929,8 +945,8 @@ namespace DaysForGirls.Tests.Services
 
             this.adminService = new AdminService(db, pictureService, customerReviewService);
 
-            Product product = db.Products.First();
-            Sale saleToAddTo = db.Sales.First();
+            var product = db.Products.First();
+            var saleToAddTo = db.Sales.First();
 
             bool productIsAddedToSale = await this.adminService.AddProductToSaleAsync(product.Id, saleToAddTo.Id);
 
@@ -997,7 +1013,8 @@ namespace DaysForGirls.Tests.Services
             var pictureService = new PictureService(db);
             var customerReviewService = new CustomerReviewService(db);
             this.adminService = new AdminService(db, pictureService, customerReviewService);
-            Order order = new Order
+
+            var order = new Order
             {
                 IssuedOn = DateTime.UtcNow,
                 User = new DaysForGirlsUser
@@ -1017,10 +1034,11 @@ namespace DaysForGirls.Tests.Services
 
             this.adminService = new AdminService(db, pictureService, customerReviewService);
 
-            List<int> productIds = db.Products.Select(p => p.Id).ToList();
+            var productIds = db.Products.Select(p => p.Id).ToList();
 
-            bool productsAreAddedToOrder = await this.adminService.SetOrderIdToProductsAsync(productIds, order.Id);
-            Product product = db.Products.First();
+            var productsAreAddedToOrder = await this.adminService.SetOrderIdToProductsAsync(productIds, order.Id);
+
+            var product = db.Products.First();
 
             Assert.True(productsAreAddedToOrder, errorMessagePrefix);
             Assert.True(product.OrderId == order.Id, errorMessagePrefix + " " + "Product OrderId is not set correctly");

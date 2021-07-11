@@ -172,15 +172,15 @@ namespace DaysForGirls.Tests.Services
                     IsDeleted = cR.IsDeleted
                 }).ToList();
 
-            List<CustomerReviewServiceModel> actualResults = await this.customerReviewService
-                .GetAllCommentsOfProductByProductId(productId)
-                .ToListAsync();
+            var actualResults = await this
+                .customerReviewService
+                .GetAllCommentsOfProductByProductId(productId);
 
 
             for (int i = 0; i < expectedResults.Count; i++)
             {
                 var expectedRecord = expectedResults[i];
-                var actualRecord = actualResults[i];
+                var actualRecord = actualResults.ElementAt(i);
 
                 Assert.True(expectedRecord.Title == actualRecord.Title, errorMessagePrefix + " " + "Title is not returned properly.");
                 Assert.True(expectedRecord.Text == actualRecord.Text, errorMessagePrefix + " " + "Text is not returned properly.");

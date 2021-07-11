@@ -5,6 +5,7 @@
     using DaysForGirls.Services.Models;
     using Microsoft.EntityFrameworkCore;
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -81,7 +82,7 @@
                 })
                 .ToListAsync();
 
-            ManufacturerServiceModel manufacturerToReturn = new ManufacturerServiceModel
+            var manufacturerToReturn = new ManufacturerServiceModel
             {
                 Id = manufacturer.Id,
                 Name = manufacturer.Name,
@@ -97,9 +98,9 @@
             return manufacturerToReturn;
         }
 
-        public IQueryable<ManufacturerServiceModel> DisplayAll()
+        public async Task<IEnumerable<ManufacturerServiceModel>> DisplayAll()
         {
-            var allManufacturers = this.db.Manufacturers
+            var allManufacturers = await this.db.Manufacturers
                 .Where(mi => mi.IsDeleted == false)
                 .Include(m => m.Products)
                 .Select(m => new ManufacturerServiceModel
@@ -119,7 +120,8 @@
                         Id = p.Id
                     })
                     .ToList(),
-                });
+                })
+                .ToListAsync();
 
             return allManufacturers;
         }

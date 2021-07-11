@@ -1,10 +1,10 @@
 ﻿namespace DaysForGirls.Services
 {
-    using DaysForGirls.Data;
-    using DaysForGirls.Data.Models;
-    using DaysForGirls.Services.Models;
+    using Data;
+    using Data.Models;
     using Microsoft.EntityFrameworkCore;
-    using System;
+    using Services.Models;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -19,7 +19,7 @@
 
         public async Task<int> CreateAsync(CategoryServiceModel categoryServiceModel)
         {
-            Category category = new Category
+            var category = new Category
             {
                 Name = categoryServiceModel.Name,
                 Description = categoryServiceModel.Description
@@ -33,16 +33,18 @@
             return categoryId;
         }
 
-        public IQueryable<CategoryServiceModel> DisplayAll()
+        public async Task<IEnumerable<CategoryServiceModel>> DisplayAll()
         {
-            var allCategories = this.db.Categories
+            var allCategories = await this.db
+                .Categories
                 .Select(c => new CategoryServiceModel
                 {
                     Id = c.Id,
                     Name = c.Name,
                     Description = c.Description,
                     IsDeleted = c.IsDeleted
-                });
+                })
+                .ToListAsync();
 
             return allCategories;
         }
@@ -96,7 +98,8 @@
                 return false;
             }
 
-            var categoryToDelete = await this.db.Categories
+            var categoryToDelete = await this.db
+                .Categories
                 .SingleOrDefaultAsync(c => c.Id == categoryId);
 
             if (categoryToDelete == null)
@@ -104,10 +107,11 @@
                 return false;
             }
 
-            var productsInCategory = this.db.Products
+            var productsInCategory = this.db
+                .Products
                 .Where(p => p.Category.Name == categoryToDelete.Name);
 
-            if (productsInCategory.Count() > 0)
+            if (productsInCategory.Any() == false)
             {
                 categoryToDelete.IsDeleted = true;
                 this.db.Update(categoryToDelete);

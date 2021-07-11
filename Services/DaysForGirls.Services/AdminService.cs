@@ -51,7 +51,7 @@
                 return 0;
             }
 
-            Quantity quantityOfProduct = new Quantity
+            var quantityOfProduct = new Quantity
             {
                 AvailableItems = productServiceModel.Quantity.AvailableItems
             };
@@ -61,7 +61,7 @@
             int result = await this.db.SaveChangesAsync();
             bool quantityIsAdded = result > 0;
 
-            Product product = new Product
+            var product = new Product
             {
                 Name = productServiceModel.Name,
                 ProductType = productTypeInDb,
@@ -140,8 +140,7 @@
                 .ToListAsync();
 
             var productReviews = await this.customerReviewService
-                .GetAllCommentsOfProductByProductId(productId)
-                .ToListAsync();
+                .GetAllCommentsOfProductByProductId(productId);
 
             var productToReturn = await this.db
                 .Products
@@ -172,12 +171,13 @@
                     {
                         AvailableItems = p.Quantity.AvailableItems
                     },
-                    Reviews = productReviews,
+                    Reviews = productReviews.ToList(),
                     IsDeleted = p.IsDeleted,
                     SaleId = p.SaleId,
                     ShoppingCartId = p.ShoppingCartId,
                     OrderId = p.OrderId
-                }).SingleOrDefaultAsync(p => p.Id == productId);
+                })
+                .SingleOrDefaultAsync(p => p.Id == productId);
 
             return productToReturn;
         }
@@ -297,7 +297,7 @@
         {
             var products = await GetAllProductsByIds(productIds);
 
-            if(products.Count() < 1)
+            if(products.Any() == false)
             {
                 return true;
             }
@@ -320,7 +320,7 @@
             List<int> productIds, 
             string orderId)
         {
-            if(productIds.Count() < 1 || 
+            if(productIds.Count < 1 || 
                 orderId == null)
             {
                 return false;
@@ -331,7 +331,7 @@
                     .Where(p => productIds.Contains(p.Id))
                     .ToListAsync();
 
-            if (productsToAddToOrder.Count() < 1)
+            if (productsToAddToOrder.Count < 1)
             {
                 return false;
             }

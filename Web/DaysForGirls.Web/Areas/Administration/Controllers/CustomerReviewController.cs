@@ -20,7 +20,9 @@
         public async Task<IActionResult> All()
         {
             var allCustomerReviews = await this.customerReviewService
-                .DisplayAll()
+                .DisplayAll();
+
+            allCustomerReviews
                 .Select(cR => new CustomerReviewAdminDisplayAllViewModel
                 {
                     Id = cR.Id,
@@ -31,8 +33,7 @@
                     Text = cR.Text,
                     IsDeleted = cR.IsDeleted,
                     ProductId = cR.ProductId
-                })
-                .ToListAsync();
+                });
 
             return View(allCustomerReviews);
         }

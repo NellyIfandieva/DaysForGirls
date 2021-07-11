@@ -46,7 +46,7 @@
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
             this.categoryService = new CategoryService(db);
 
-            CategoryServiceModel testCategory = new CategoryServiceModel
+            var testCategory = new CategoryServiceModel
             {
                 Name = "Accessory",
                 Description = "Beautiful to the final touch"
@@ -65,9 +65,9 @@
             await SeedSampleCategories(db);
             this.categoryService = new CategoryService(db);
 
-            Category expectedData = db.Categories.First();
+            var expectedData = db.Categories.First();
 
-            CategoryServiceModel expectedDataServiceModel = new CategoryServiceModel
+            var expectedDataServiceModel = new CategoryServiceModel
             {
                 Id = expectedData.Id,
                 Name = expectedData.Name,
@@ -75,7 +75,7 @@
                 IsDeleted = expectedData.IsDeleted
             };
 
-            CategoryServiceModel actualData = await this.categoryService.GetCategoryByIdAsync(expectedDataServiceModel.Id);
+            var actualData = await this.categoryService.GetCategoryByIdAsync(expectedDataServiceModel.Id);
 
             Assert.True(expectedDataServiceModel.Id == actualData.Id, errorMessagePrefix + " " + "Id is not returned properly.");
             Assert.True(expectedDataServiceModel.Name == actualData.Name, errorMessagePrefix + " " + "Name is not returned properly.");
@@ -114,13 +114,13 @@
                     IsDeleted = c.IsDeleted
                 }).ToList();
 
-            List<CategoryServiceModel> actualResults = await this.categoryService.DisplayAll().ToListAsync();
+            var actualResults = await this.categoryService.DisplayAll();
 
 
             for (int i = 0; i < expectedResults.Count; i++)
             {
                 var expectedRecord = expectedResults[i];
-                var actualRecord = actualResults[i];
+                var actualRecord = actualResults.ElementAt(i);
 
                 Assert.True(expectedRecord.Name == actualRecord.Name, errorMessagePrefix + " " + "Name is not returned properly.");
                 Assert.True(expectedRecord.Description == actualRecord.Description, errorMessagePrefix + " " + "Description is not returned properly.");
@@ -136,9 +136,9 @@
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
             this.categoryService = new CategoryService(db);
 
-            List<CategoryServiceModel> actualResults = await this.categoryService.DisplayAll().ToListAsync();
+            var actualResults = await this.categoryService.DisplayAll();
 
-            Assert.True(actualResults.Count == 0, errorMessagePrefix);
+            Assert.True(actualResults.ToList().Count == 0, errorMessagePrefix);
         }
 
         [Fact]
@@ -150,8 +150,9 @@
             await SeedSampleCategories(db);
             this.categoryService = new CategoryService(db);
 
-            Category expectedData = db.Categories.First();
-            CategoryServiceModel expectedServiceModel = new CategoryServiceModel
+            var expectedData = db.Categories.First();
+            
+            var expectedServiceModel = new CategoryServiceModel
             {
                 Id = expectedData.Id,
                 Name = expectedData.Name,
@@ -164,7 +165,7 @@
 
             await this.categoryService.EditAsync(expectedServiceModel);
 
-            Category actualData = db.Categories.First();
+            var actualData = db.Categories.First();
 
             var actualServiceModel = new CategoryServiceModel
             {
