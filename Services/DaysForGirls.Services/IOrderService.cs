@@ -10,9 +10,9 @@
     {
         Task<OrderServiceModel> CreateAsync(DaysForGirlsUser user);
 
-        Task<List<OrderServiceModel>> DisplayAllOrdersOfUserAsync(string userId);
+        Task<IEnumerable<OrderServiceModel>> DisplayAllOrdersOfUserAsync(string userId);
 
-        IQueryable<OrderServiceModel> DisplayAllOrdersToAdmin();
+        Task<IEnumerable<OrderServiceModel>> DisplayAllOrdersToAdmin();
 
         Task<OrderServiceModel> GetOrderByIdAsync(string orderId);
 

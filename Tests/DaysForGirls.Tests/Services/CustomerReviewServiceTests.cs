@@ -93,7 +93,7 @@ namespace DaysForGirls.Tests.Services
 
             string userId = db.Users.First().Id;
 
-            CustomerReviewServiceModel testReview = new CustomerReviewServiceModel
+            var testReview = new CustomerReviewServiceModel
             {
                 Title = "Title",
                 Text = "Text",

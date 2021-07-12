@@ -22,7 +22,7 @@
             var allSales = await this.saleService
                 .DisplayAll();
 
-            allSales
+            var viewModels = allSales
                 .Select(sale => new SaleDisplayAllViewModel
                 {
                     Id = sale.Id,
@@ -31,7 +31,7 @@
                     EndsOn = sale.EndsOn.ToString("dddd, dd MMMM yyyy")
                 });
 
-            return View(allSales);
+            return View(viewModels);
         }
 
         [HttpGet("/Sales/Details/{saleId}")]

@@ -136,8 +136,7 @@
         public async Task<IActionResult> AllAdmin()
         {
             var allOrdersInDb = await this.orderService
-                .DisplayAllOrdersToAdmin()
-                .ToListAsync();
+                .DisplayAllOrdersToAdmin();
 
             var adminOrders = new List<AdminOrdersDisplayAllViewModel>();
 

@@ -235,16 +235,16 @@ namespace DaysForGirls.Tests.Services
 
             var actualResults = await this.orderService.DisplayAllOrdersOfUserAsync(userId);
 
-            Assert.True(expectedResults.Count() == actualResults.Count(), errorMessagePrefix + " " +
+            Assert.True(expectedResults.Count == actualResults.ToList().Count, errorMessagePrefix + " " +
                 "Does not return correct number of records.");
 
-            for (int i = 0; i < expectedResults.Count(); i++)
+            for (int i = 0; i < expectedResults.Count; i++)
             {
                 var expectedRecord = expectedResults[i];
-                var actualRecord = actualResults[i];
+                var actualRecord = actualResults.ElementAt(i);
 
                 Assert.True(expectedRecord.IssuedOn == actualRecord.IssuedOn, errorMessagePrefix + " " + "IssuedOn is not returned properly.");
-                Assert.True(expectedRecord.OrderedProducts.Count() == actualRecord.OrderedProducts.Count(), errorMessagePrefix + " " + "OrderedProducts Count is not returned properly.");
+                Assert.True(expectedRecord.OrderedProducts.Count == actualRecord.OrderedProducts.Count, errorMessagePrefix + " " + "OrderedProducts Count is not returned properly.");
                 Assert.True(expectedRecord.TotalPrice == actualRecord.TotalPrice, errorMessagePrefix + " " + "TotalPrice is not returned properly.");
                 Assert.True(expectedRecord.OrderStatus == actualRecord.OrderStatus, errorMessagePrefix + " " + "LogoId is not returned properly.");
             }
@@ -280,7 +280,7 @@ namespace DaysForGirls.Tests.Services
 
             var actualResults = await this.orderService.DisplayAllOrdersOfUserAsync(userId);
 
-            Assert.True(actualResults.Count() == 0, errorMessagePrefix + " " +
+            Assert.True(actualResults.ToList().Count == 0, errorMessagePrefix + " " +
                 "Does not return correct number of records.");
         }
 
@@ -317,18 +317,17 @@ namespace DaysForGirls.Tests.Services
                     IsDeleted = o.IsDeleted
                 }).ToList();
 
-            List<OrderServiceModel> actualResults = await this.orderService
-                .DisplayAllOrdersToAdmin()
-                .ToListAsync();
+            var actualResults = await this.orderService
+                .DisplayAllOrdersToAdmin();
 
 
             for (int i = 0; i < expectedResults.Count; i++)
             {
                 var expectedRecord = expectedResults[i];
-                var actualRecord = actualResults[i];
+                var actualRecord = actualResults.ElementAt(i);
 
                 Assert.True(expectedRecord.IssuedOn == actualRecord.IssuedOn, errorMessagePrefix + " " + "IssuedOn is not returned properly.");
-                Assert.True(expectedRecord.OrderedProducts.Count() == actualRecord.OrderedProducts.Count(), errorMessagePrefix + " " + "OrderedProducts Count is not returned properly.");
+                Assert.True(expectedRecord.OrderedProducts.Count == actualRecord.OrderedProducts.Count, errorMessagePrefix + " " + "OrderedProducts Count is not returned properly.");
                 Assert.True(expectedRecord.TotalPrice == actualRecord.TotalPrice, errorMessagePrefix + " " + "TotalPrice is not returned properly.");
                 Assert.True(expectedRecord.OrderStatus == actualRecord.OrderStatus, errorMessagePrefix + " " + "LogoId is not returned properly.");
             }
@@ -366,11 +365,12 @@ namespace DaysForGirls.Tests.Services
                     IsDeleted = o.IsDeleted
                 }).ToList();
 
-            List<OrderServiceModel> actualResults = await this.orderService
-                .DisplayAllOrdersToAdmin()
-                .ToListAsync();
+            var actualResults = await this.orderService
+                .DisplayAllOrdersToAdmin();
 
-            Assert.True(expectedResults.Count() == 0 && actualResults.Count() == 0, errorMessagePrefix + " " + "Returned results");
+            Assert.True(expectedResults.Count == 0 && 
+                actualResults.ToList().Count == 0, 
+                errorMessagePrefix + " " + "Returned results");
         }
 
         [Fact]
@@ -406,7 +406,7 @@ namespace DaysForGirls.Tests.Services
             Assert.True(expectedDataServiceModel.DeliveryEarlistDate == actualData.DeliveryEarlistDate, errorMessagePrefix + " " + "Name is not returned properly.");
             Assert.True(expectedDataServiceModel.DeliveryLatestDate == actualData.DeliveryLatestDate, errorMessagePrefix + " " + "Description is not returned properly");
             Assert.True(expectedDataServiceModel.IssuedOn == actualData.IssuedOn, errorMessagePrefix + " " + "LogoId is not returned properly.");
-            Assert.True(expectedDataServiceModel.OrderedProducts.Count() == actualData.OrderedProducts.Count(), errorMessagePrefix + " " + "LogoUrl is not returned properly.");
+            Assert.True(expectedDataServiceModel.OrderedProducts.Count == actualData.OrderedProducts.Count, errorMessagePrefix + " " + "LogoUrl is not returned properly.");
             Assert.True(expectedDataServiceModel.OrderStatus == actualData.OrderStatus, errorMessagePrefix + " " + "LogoUrl is not returned properly.");
             Assert.True(expectedDataServiceModel.TotalPrice == actualData.TotalPrice, errorMessagePrefix + " " + "LogoUrl is not returned properly.");
         }
@@ -460,7 +460,7 @@ namespace DaysForGirls.Tests.Services
 
             var userId = db.Users.First().Id;
 
-            Order testOrder = new Order
+            var testOrder = new Order
             {
                 IssuedOn = DateTime.UtcNow.AddDays(-5),
                 OrderedProducts = new HashSet<OrderedProduct>(),

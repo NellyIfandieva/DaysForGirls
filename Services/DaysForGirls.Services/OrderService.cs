@@ -50,18 +50,18 @@
                 .Include(sCI => sCI.Product.Pictures)
                 .Where(sCI => sCI.ShoppingCartId == cart.Id).ToListAsync();
 
-            if(cartItems.Count() < 1)
+            if(cartItems.Count < 1)
             {
                 return null;
             }
 
             var cartItemProductsIds = cartItems.Select(cI => cI.ProductId).ToList();
 
-            HashSet<OrderedProduct> orderProducts = new HashSet<OrderedProduct>();
+            var orderProducts = new HashSet<OrderedProduct>();
 
             foreach (var item in cartItems)
             {
-                OrderedProduct product = new OrderedProduct
+                var product = new OrderedProduct
                 {
                     ProductId = item.Product.Id,
                     ProductName = item.Product.Name,
@@ -77,7 +77,7 @@
 
             this.db.OrderedProducts.AddRange(orderProducts);
 
-            Order order = new Order
+            var order = new Order
             {
                 OrderedProducts = orderProducts,
                 TotalPrice = orderProducts.Sum(p => p.ProductPrice * p.ProductQuantity),
@@ -148,7 +148,7 @@
             return orderToReturn;
         }
 
-        public async Task<List<OrderServiceModel>> DisplayAllOrdersOfUserAsync(string userId)
+        public async Task<IEnumerable<OrderServiceModel>> DisplayAllOrdersOfUserAsync(string userId)
         {
             if(userId == null)
             {
@@ -183,9 +183,9 @@
             return allOrdersOfUser;
         }
 
-        public IQueryable<OrderServiceModel> DisplayAllOrdersToAdmin()
+        public async Task<IEnumerable<OrderServiceModel>> DisplayAllOrdersToAdmin()
         {
-            var allOrdersInDb = this.db.Orders
+            var allOrdersInDb = await this.db.Orders
                 .Include(o => o.OrderedProducts)
                 .Include(o => o.User)
                 .Select(o => new OrderServiceModel
@@ -217,7 +217,7 @@
                     DeliveryLatestDate = o.DeliveryLatestDate.ToString("dddd, dd MMMM yyyy"),
                     OrderStatus = o.OrderStatus,
                     IsDeleted = o.IsDeleted
-                });
+                }).ToListAsync();
 
             return allOrdersInDb;
         }

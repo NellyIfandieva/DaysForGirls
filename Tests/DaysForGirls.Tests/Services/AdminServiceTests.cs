@@ -15,8 +15,6 @@ namespace DaysForGirls.Tests.Services
     public class AdminServiceTests
     {
         private IAdminService adminService;
-        private IPictureService pictureService;
-        private ICustomerReviewService customerReviewService;
 
         private static List<Product> GetSampleProducts()
         {

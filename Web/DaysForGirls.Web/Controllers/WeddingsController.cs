@@ -1,11 +1,10 @@
 ﻿namespace DaysForGirls.Web.Controllers
 {
-    using DaysForGirls.Services;
-    using DaysForGirls.Web.ViewModels;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
+    using Services;
     using System.Linq;
     using System.Threading.Tasks;
+    using ViewModels;
 
     public class WeddingsController : Controller
     {
@@ -22,7 +21,9 @@
             string categoryName = "Wedding";
 
             var allWeddingProducts = await this.productService
-                .GetAllProductsOfCategory(categoryName)
+                .GetAllProductsOfCategory(categoryName);
+
+            var viewModels = allWeddingProducts
                 .Select(p => new DisplayAllOfCategoryViewModel
                 {
                     Id = p.Id,
@@ -35,10 +36,9 @@
                     SaleId = p.SaleId,
                     ShoppingCartId = p.ShoppingCartId,
                     OrderId = p.OrderId
-                })
-                .ToListAsync();
+                });
 
-            return View(allWeddingProducts);
+            return View(viewModels);
         }
 
 
@@ -49,7 +49,9 @@
             string categoryName = "Wedding";
 
             var allWeddingDresses = await this.productService
-                .GetAllProductsOfTypeAndCategory(productTypeName, categoryName)
+                .GetAllProductsOfTypeAndCategory(productTypeName, categoryName);
+
+            var viewModels = allWeddingDresses
                 .Select(d => new DisplayAllOfCategoryAndTypeViewModel
                 {
                     Id = d.Id,
@@ -61,10 +63,9 @@
                     SaleId = d.SaleId,
                     ShoppingCartId = d.ShoppingCartId,
                     OrderId = d.OrderId
-                })
-                .ToListAsync();
+                });
 
-            return View(allWeddingDresses);
+            return View(viewModels);
         }
 
         [HttpGet("/Weddings/Suits")]
@@ -74,7 +75,9 @@
             string categoryName = "Wedding";
 
             var allWeddingSuits = await this.productService
-                .GetAllProductsOfTypeAndCategory(productTypeName, categoryName)
+                .GetAllProductsOfTypeAndCategory(productTypeName, categoryName);
+
+            var viewModels = allWeddingSuits
                 .Select(s => new DisplayAllOfCategoryAndTypeViewModel
                 {
                     Id = s.Id,
@@ -86,10 +89,9 @@
                     SaleId = s.SaleId,
                     ShoppingCartId = s.ShoppingCartId,
                     OrderId = s.OrderId
-                })
-                .ToListAsync();
+                });
 
-            return View(allWeddingSuits);
+            return View(viewModels);
         }
 
         [HttpGet("/Weddings/Accessories")]
@@ -99,7 +101,9 @@
             string categoryName = "Wedding";
 
             var allWeddingAccessories = await this.productService
-                .GetAllProductsOfTypeAndCategory(productTypeName, categoryName)
+                .GetAllProductsOfTypeAndCategory(productTypeName, categoryName);
+
+            var viewModels = allWeddingAccessories
                 .Select(a => new DisplayAllOfCategoryAndTypeViewModel
                 {
                     Id = a.Id,
@@ -111,10 +115,9 @@
                     SaleId = a.SaleId,
                     ShoppingCartId = a.ShoppingCartId,
                     OrderId = a.OrderId
-                })
-                .ToListAsync();
+                });
 
-            return View(allWeddingAccessories);
+            return View(viewModels);
         }
     }
 }

@@ -7,20 +7,20 @@
 
     public interface IProductService
     {
-        IQueryable<ProductDisplayAllServiceModel> DisplayAll();
+        Task<IEnumerable<ProductDisplayAllServiceModel>> DisplayAll();
 
         Task<ProductAsShoppingCartItem> GetProductByIdAsync(int productId);
 
-        IQueryable<DisplayAllOfCategoryProductServiceModel> GetAllProductsOfCategory(string categoryName);
+        Task<IEnumerable<DisplayAllOfCategoryProductServiceModel>> GetAllProductsOfCategory(string categoryName);
 
-        IQueryable<DisplayAllOfCategoryAndTypeServiceModel> GetAllProductsOfTypeAndCategory(
+        Task<IEnumerable<DisplayAllOfCategoryAndTypeServiceModel>> GetAllProductsOfTypeAndCategory(
             string productTypeName, string categoryName);
 
         Task<bool> AddProductToShoppingCartAsync(int productId, string shoppingCartId);
 
         Task<bool> RemoveProductFromShoppingCartAsync(int productId);
 
-        List<ProductServiceModel> GetAllSearchResultsByCriteria(string criteria);
+        Task<IEnumerable<ProductServiceModel>> GetAllSearchResultsByCriteria(string criteria);
 
         Task<decimal> CalculateProductPriceAsync(int productId);
     }

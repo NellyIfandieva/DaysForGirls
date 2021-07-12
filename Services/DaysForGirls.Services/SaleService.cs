@@ -38,8 +38,7 @@
         {
             var allSales = await this.db
                 .Sales
-                .Where(s => s.IsActive && 
-                       s.IsDeleted == false)
+                .Where(s => s.IsDeleted == false)
                 .Select(s => new SaleServiceModel
                 {
                     Id = s.Id,

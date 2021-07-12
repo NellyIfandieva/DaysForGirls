@@ -1,9 +1,9 @@
 ﻿namespace DaysForGirls.Services
 {
-    using DaysForGirls.Data;
-    using DaysForGirls.Data.Models;
-    using DaysForGirls.Services.Models;
+    using Data;
+    using Data.Models;
     using Microsoft.EntityFrameworkCore;
+    using Models;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -24,7 +24,7 @@
                 return false;
             }
 
-            List<Picture> allPicturesToAddToDb = new List<Picture>();
+            var allPicturesToAddToDb = new List<Picture>();
 
             foreach (var pSm in pictureServiceModels)
             {
@@ -41,7 +41,7 @@
             this.db.Pictures.AddRange(allPicturesToAddToDb);
             int result = await this.db.SaveChangesAsync();
 
-            bool picturesAreCreated = result > 0;
+            var picturesAreCreated = result > 0;
 
             return picturesAreCreated;
         }
@@ -71,14 +71,14 @@
             return pictureToReturn;
         }
 
-        public IQueryable<PictureServiceModel> GetPicturesOfProductByProductId(int productId)
+        public async Task<IEnumerable<PictureServiceModel>> GetPicturesOfProductByProductId(int productId)
         {
             if (productId <= 0)
             {
                 return null;
             }
 
-            var pictures = this.db.Pictures
+            var pictures = await this.db.Pictures
                 .Where(p => p.ProductId == productId
                 && p.IsDeleted == false)
                 .Select(p => new PictureServiceModel
@@ -86,7 +86,7 @@
                     Id = p.Id,
                     PictureUrl = p.PictureUrl,
                     ProductId = productId
-                });
+                }).ToListAsync();
 
             return pictures;
         }

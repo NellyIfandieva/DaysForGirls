@@ -58,9 +58,9 @@
             return productToReturn;
         }
 
-        public IQueryable<ProductDisplayAllServiceModel> DisplayAll()
+        public async Task<IEnumerable<ProductDisplayAllServiceModel>> DisplayAll()
         {
-            var allProducts = this.db.Products
+            var allProducts = await this.db.Products
                 .Where(p => p.IsDeleted == false)
                 .Select(p => new ProductDisplayAllServiceModel
                 {
@@ -76,19 +76,19 @@
                     SaleId = p.SaleId,
                     ShoppingCartId = p.ShoppingCartId,
                     OrderId = p.OrderId
-                });
+                }).ToListAsync();
 
             return allProducts;
         }
 
-        public IQueryable<DisplayAllOfCategoryProductServiceModel> GetAllProductsOfCategory(string categoryName)
+        public async Task<IEnumerable<DisplayAllOfCategoryProductServiceModel>> GetAllProductsOfCategory(string categoryName)
         {
             if(categoryName == null)
             {
                 return null;
             }
 
-            var allProductsOfCategory = this.db.Products
+            var allProductsOfCategory = await this.db.Products
                 .Where(p => p.Category.Name == categoryName
                 && p.IsDeleted == false)
                 .Select(p => new DisplayAllOfCategoryProductServiceModel
@@ -106,19 +106,19 @@
                     SaleId = p.SaleId,
                     ShoppingCartId = p.ShoppingCartId,
                     OrderId = p.OrderId
-                });
+                }).ToListAsync();
 
             return allProductsOfCategory;
         }
 
-        public IQueryable<DisplayAllOfCategoryAndTypeServiceModel> GetAllProductsOfTypeAndCategory(string productTypeName, string categoryName)
+        public async Task<IEnumerable<DisplayAllOfCategoryAndTypeServiceModel>> GetAllProductsOfTypeAndCategory(string productTypeName, string categoryName)
         {
             if(productTypeName == null || categoryName == null)
             {
                 return null;
             }
 
-            var allProductsOfCategoryAndType = this.db.Products
+            var allProductsOfCategoryAndType = await this.db.Products
                 .Where(p => p.Category.Name == categoryName
                 && p.ProductType.Name == productTypeName
                 && p.IsDeleted == false)
@@ -136,7 +136,7 @@
                     SaleId = p.SaleId,
                     ShoppingCartId = p.ShoppingCartId,
                     OrderId = p.OrderId
-                });
+                }).ToListAsync();
 
             return allProductsOfCategoryAndType;
         }
@@ -195,7 +195,7 @@
             return productIsOutOfCart;
         }
 
-        public List<ProductServiceModel> GetAllSearchResultsByCriteria(string criteria)
+        public async Task<IEnumerable<ProductServiceModel>> GetAllSearchResultsByCriteria(string criteria)
         {
             if(criteria == null)
             {
@@ -214,12 +214,7 @@
 
             var allSearchResults = new List<ProductServiceModel>();
 
-            List<ProductServiceModel> searchResultsBatchOne = db.Products
-                .Include(p => p.Category)
-                .Include(p => p.ProductType)
-                .Include(p => p.Pictures)
-                .Include(p => p.Manufacturer)
-                .Include(p => p.Reviews)
+            var searchResultsBatchOne = await db.Products
                 .Where(p => p.Name.ToLower().Contains(criteriaToLower)
                 || p.Description.ToLower().Contains(criteriaToLower)
                 || p.Manufacturer.Name.ToLower().Contains(criteriaToLower)
@@ -278,7 +273,7 @@
                         })
                         .ToList()
                 })
-                .ToList();
+                .ToListAsync();
 
             allSearchResults.AddRange(searchResultsBatchOne);
 
@@ -301,7 +296,7 @@
                     if (review.Title.ToLower().Contains(criteriaToLower)
                         || review.Text.ToLower().Contains(criteriaToLower))
                     {
-                        ProductServiceModel anotherSearchResult = new ProductServiceModel
+                        var anotherSearchResult = new ProductServiceModel
                         {
                             Id = product.Id,
                             Name = product.Name,

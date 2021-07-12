@@ -20,7 +20,7 @@
 
         public async Task<int> CreateAsync(ManufacturerServiceModel manufacturerServiceModel)
         {
-            Manufacturer manufacturer = new Manufacturer
+            var manufacturer = new Manufacturer
             {
                 Name = manufacturerServiceModel.Name,
                 Description = manufacturerServiceModel.Description,
@@ -162,7 +162,7 @@
             var manufacturerProducts = this.db.Products
                 .Where(p => p.Manufacturer.Id == manufacturerId);
 
-            if (manufacturerProducts.Count() > 0)
+            if (manufacturerProducts.Any())
             {
                 manufacturerToDelete.IsDeleted = true;
                 this.db.Update(manufacturerToDelete);
