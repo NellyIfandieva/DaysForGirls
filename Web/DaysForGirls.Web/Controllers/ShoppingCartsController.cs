@@ -12,20 +12,15 @@
 
     public class ShoppingCartsController : Controller
     {
-        private readonly DaysForGirlsDbContext db;
         private readonly IShoppingCartService shoppingCartService;
-        private readonly IAdminService adminService;
         private readonly IProductService productService;
 
         public ShoppingCartsController(
-            DaysForGirlsDbContext db,
             IShoppingCartService shoppingCartService,
             IAdminService adminService,
             IProductService productService)
         {
-            this.db = db;
             this.shoppingCartService = shoppingCartService;
-            this.adminService = adminService;
             this.productService = productService;
         }
 

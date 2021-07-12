@@ -16,35 +16,6 @@ namespace DaysForGirls.Tests.Services
     {
         private ICustomerReviewService customerReviewService;
 
-        private List<CustomerReview> GetSampleReviews()
-        {
-            return new List<CustomerReview>()
-            {
-                new CustomerReview
-                {
-                    Title = "Review One",
-                    Text = "First review text",
-                    AuthorId = "1",
-                    ProductId = 1,
-                    CreatedOn = DateTime.UtcNow
-                },
-                new CustomerReview
-                {
-                    Title = "Review Two",
-                    Text = "Second review text",
-                    AuthorId = "2",
-                    ProductId = 2,
-                    CreatedOn = DateTime.UtcNow
-                }
-            };
-        }
-
-        private async Task SeedSampleReviews(DaysForGirlsDbContext db)
-        {
-            db.AddRange(GetSampleReviews());
-            await db.SaveChangesAsync();
-        }
-
         [Fact]
         public async Task Create_WithCorrectData_ExpectedToCreateAReview()
         {
@@ -89,7 +60,7 @@ namespace DaysForGirls.Tests.Services
 
             db.Products.Add(product);
 
-            int result = await db.SaveChangesAsync();
+            await db.SaveChangesAsync();
 
             string userId = db.Users.First().Id;
 
@@ -220,7 +191,6 @@ namespace DaysForGirls.Tests.Services
             };
 
             db.Products.Add(product);
-            int productAdded = await db.SaveChangesAsync();
 
             var reviewOne = new CustomerReview
             {
@@ -232,7 +202,7 @@ namespace DaysForGirls.Tests.Services
             };
 
             db.CustomerReviews.Add(reviewOne);
-            int reviewAdded = await db.SaveChangesAsync();
+            await db.SaveChangesAsync();
 
             int reviewId = db.CustomerReviews.First().Id;
 

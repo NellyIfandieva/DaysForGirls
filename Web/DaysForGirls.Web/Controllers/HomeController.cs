@@ -8,13 +8,6 @@ namespace DaysForGirls.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ISaleService salesService;
-
-        public HomeController(ISaleService salesService)
-        {
-            this.salesService = salesService;
-        }
-
         [HttpGet("/")]
         public IActionResult Index()
         {

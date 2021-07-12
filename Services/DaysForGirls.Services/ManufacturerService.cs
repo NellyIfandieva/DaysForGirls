@@ -168,7 +168,7 @@
 
                 if (logoToDelete == null)
                 {
-                    throw new ArgumentNullException(nameof(logoToDelete));
+                     return null;
                 }
 
                 this.db.Logos.Remove(logoToDelete);

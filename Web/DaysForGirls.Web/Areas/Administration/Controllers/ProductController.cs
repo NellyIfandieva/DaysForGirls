@@ -18,7 +18,6 @@
         private readonly ICategoryService categoryService;
         private readonly IManufacturerService manufacturerService;
         private readonly ICloudinaryService cloudinaryService;
-        private readonly IPictureService pictureService;
         private readonly ISaleService saleService;
 
         public ProductController(
@@ -27,7 +26,6 @@
             ICategoryService categoryService,
             IManufacturerService manufacturerService,
             ICloudinaryService cloudinaryService,
-            IPictureService pictureService,
             ISaleService saleService)
         {
             this.adminService = adminService;
@@ -35,7 +33,6 @@
             this.categoryService = categoryService;
             this.manufacturerService = manufacturerService;
             this.cloudinaryService = cloudinaryService;
-            this.pictureService = pictureService;
             this.saleService = saleService;
         }
 
@@ -184,7 +181,7 @@
             var allProducts = await this.adminService
                 .DisplayAll();
 
-            allProducts
+            var viewModels = allProducts
                 .Select(product => new AdminDisplayAllViewModel
                 {
                     Id = product.Id,
@@ -202,7 +199,7 @@
                     OrderId = product.OrderId
                 });
 
-            return View(allProducts);
+            return View(viewModels);
         }
 
         [HttpGet("/Administration/Product/Details/{productId}")]

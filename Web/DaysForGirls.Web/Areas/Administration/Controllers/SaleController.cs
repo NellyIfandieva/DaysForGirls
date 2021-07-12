@@ -13,19 +13,13 @@
     public class SaleController : AdminController
     {
         private readonly ISaleService saleService;
-        private readonly IProductService productService;
-        private readonly IAdminService adminService;
         private readonly ICloudinaryService cloudinaryService;
 
         public SaleController(
             ISaleService saleService,
-            IProductService productService,
-            IAdminService adminService,
             ICloudinaryService cloudinaryService)
         {
             this.saleService = saleService;
-            this.productService = productService;
-            this.adminService = adminService;
             this.cloudinaryService = cloudinaryService;
         }
 
@@ -127,9 +121,8 @@
         }
 
         [HttpGet("/Administration/Sale/Edit/{saleId}")]
-        public async Task<IActionResult> Edit(string saleId)
+        public  IActionResult Edit(string saleId)
         {
-            await Task.Delay(0);
             return View();
         }
 

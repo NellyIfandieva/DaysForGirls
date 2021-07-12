@@ -115,6 +115,11 @@
             var editResult = await this.categoryService
                 .EditAsync(categoryToEdit);
 
+            if(editResult == null)
+            {
+                return Redirect("/Home/Error");
+            }
+
             return Redirect("/Administration/Category/All");
         }
 

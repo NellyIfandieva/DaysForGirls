@@ -8,14 +8,11 @@
     public class PicturesController : Controller
     {
         private readonly IPictureService pictureService;
-        private readonly IProductService productService;
 
         public PicturesController(
-            IPictureService pictureService,
-            IProductService productService)
+            IPictureService pictureService)
         {
             this.pictureService = pictureService;
-            this.productService = productService;
         }
 
         [HttpGet("/Pictures/Display/{pictureId}")]

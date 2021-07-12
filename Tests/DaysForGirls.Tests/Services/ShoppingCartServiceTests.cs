@@ -159,11 +159,6 @@
                 Quantity = 1
             };
 
-            var testCart = new ShoppingCart
-            {
-                UserId = "8"
-            };
-
             var actualResult = await this.shoppingCartService.AddItemToCartCartAsync(null, shoppingCartItem);
 
             Assert.True(actualResult == null, errorMessagePrefix + " " + "Does not return null.");
@@ -286,9 +281,6 @@
 
             var productInDb = db.Products.First();
 
-            var productToAdd = await this.productService
-                .GetProductByIdAsync(productInDb.Id);
-
             await this.productService.CalculateProductPriceAsync(productInDb.Id);
 
             string userId = db.Users.First().Id;
@@ -318,7 +310,6 @@
             await db.SaveChangesAsync();
 
 
-            string productShoppingCartId = productInDb.ShoppingCartId;
             int shoppingCartItemsInDbCount = db.ShoppingCartItems.Count();
 
             var shoppingCart = db.ShoppingCarts.First();
@@ -387,9 +378,6 @@
             await db.SaveChangesAsync();
 
             var productInDb = db.Products.First();
-
-            var productToAdd = await this.productService
-                .GetProductByIdAsync(productInDb.Id);
 
             await this.productService.CalculateProductPriceAsync(productInDb.Id);
 

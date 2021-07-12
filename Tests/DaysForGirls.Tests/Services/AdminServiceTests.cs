@@ -568,8 +568,6 @@
 
             this.adminService = new AdminService(db, pictureService, customerReviewService);
 
-            Product productToDelete = db.Products.First();
-
             string actualResult = await this.adminService.EraseFromDb(product.Id);
             string[] actualResultSplit = actualResult.Split(new[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
             Assert.True(actualResultSplit[0] == product.Name, errorMessagePrefix + " " + "Resukt does not contain the product name.");
@@ -629,8 +627,6 @@
             await db.SaveChangesAsync();
 
             this.adminService = new AdminService(db, pictureService, customerReviewService);
-
-            var productToDelete = db.Products.First();
 
             string actualResult = await this.adminService.EraseFromDb(product.Id);
             string[] actualResultSplit = actualResult.Split(new[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
