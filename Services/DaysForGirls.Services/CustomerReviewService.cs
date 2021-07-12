@@ -19,13 +19,13 @@
             this.db = db;
         }
 
-        public async Task<bool> CreateAsync(
+        public async Task<int?> CreateAsync(
             CustomerReviewServiceModel model, 
             int productId)
         {
             if(productId <= 0)
             {
-                return false;
+                return null;
             }
 
             var productReview = new CustomerReview
@@ -38,11 +38,7 @@
             };
 
             this.db.CustomerReviews.Add(productReview);
-            int result = await this.db.SaveChangesAsync();
-
-            bool reviewIsAdded = result > 0;
-
-            return reviewIsAdded;
+            return await this.db.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<CustomerReviewServiceModel>> GetAllCommentsOfProductByProductId(int productId)
@@ -65,24 +61,20 @@
             return allProductComments;
         }
 
-        public async Task<bool> DeleteReviewByIdAsync(int reviewId)
+        public async Task<int?> DeleteReviewByIdAsync(int reviewId)
         {
             var reviewToDelete = await this.db.CustomerReviews
                 .SingleOrDefaultAsync(r => r.Id == reviewId);
 
             if (reviewToDelete == null)
             {
-                return false;
+                return null;
             }
 
             reviewToDelete.IsDeleted = true;
 
             this.db.Update(reviewToDelete);
-            int result = await this.db.SaveChangesAsync();
-
-            bool reviewIsDeleted = result > 0;
-
-            return reviewIsDeleted;
+            return await this.db.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<CustomerReviewServiceModel>> DisplayAll()

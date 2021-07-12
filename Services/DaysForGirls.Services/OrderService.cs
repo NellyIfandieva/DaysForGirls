@@ -4,7 +4,6 @@
     using Data.Models;
     using Microsoft.EntityFrameworkCore;
     using Models;
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -132,10 +131,10 @@
                     IsDeleted = order.IsDeleted
                 };
 
-                bool productsInCartAreAddedToOrder = await this.adminService
+                var productsInCartAddedToOrder = await this.adminService
                     .SetOrderIdToProductsAsync(cartItemProductsIds, orderId);
 
-                if(productsInCartAreAddedToOrder == false)
+                if(productsInCartAddedToOrder == null)
                 {
                     return null;
                 }
@@ -268,24 +267,20 @@
             return orderToReturn;
         }
 
-        public async Task<bool> EditOrderStatusAsync(OrderServiceModel model)
+        public async Task<int?> EditOrderStatusAsync(OrderServiceModel model)
         {
             var orderInDb = await this.db.Orders
                 .SingleOrDefaultAsync(o => o.Id == model.Id);
 
             if (orderInDb == null)
             {
-                return false;
+                return null;
             }
 
             orderInDb.OrderStatus = model.OrderStatus;
 
             this.db.Update(orderInDb);
-            int result = await this.db.SaveChangesAsync();
-
-            bool orderStatusIsEdited = result > 0;
-
-            return orderStatusIsEdited;
+            return await this.db.SaveChangesAsync();
         }
 
         public async Task<bool> CheckIfOrderBelongsToUser(string orderId, string currentUserId)

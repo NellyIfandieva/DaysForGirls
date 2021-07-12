@@ -153,10 +153,10 @@
                 Picture = imageUrl
             };
 
-            bool saleIsEdited = await this.saleService
+            var saleIsEdited = await this.saleService
                 .EditAsync(saleToEdit);
 
-            if(saleIsEdited == false)
+            if(saleIsEdited == null)
             {
                 return Redirect("/Home/Error");
             }
@@ -172,10 +172,10 @@
                 return Redirect("/Home/Error");
             }
 
-            bool saleIsDeleted = await this.saleService
+            var saleIsDeleted = await this.saleService
                 .DeleteSaleById(saleId);
 
-            if(saleIsDeleted == false)
+            if(saleIsDeleted == null)
             {
                 return Redirect("/Home/Error");
             }

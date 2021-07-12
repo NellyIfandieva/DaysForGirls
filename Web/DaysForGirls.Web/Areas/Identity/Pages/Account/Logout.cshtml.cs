@@ -1,17 +1,17 @@
-﻿using DaysForGirls.Data;
-using DaysForGirls.Data.Models;
-using DaysForGirls.Services;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace DaysForGirls.Web.Areas.Identity.Pages.Account
+﻿namespace DaysForGirls.Web.Areas.Identity.Pages.Account
 {
+    using Data;
+    using Data.Models;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.RazorPages;
+    using Microsoft.EntityFrameworkCore;
+    using Services;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+
     [AllowAnonymous]
     public class LogoutModel : PageModel
     {
@@ -37,13 +37,13 @@ namespace DaysForGirls.Web.Areas.Identity.Pages.Account
                 .Include(sC => sC.ShoppingCartItems)
                 .Where(sC => sC.UserId == userId).ToArrayAsync();
 
-            if (userShoppingCarts.Count() > 0)
+            if (userShoppingCarts.Length > 0)
             {
                 foreach(var cart in userShoppingCarts)
                 {
                     var allItemsInCart = cart.ShoppingCartItems;
 
-                    List<int> productsInCartIds = new List<int>();
+                    var productsInCartIds = new List<int>();
 
                     foreach (var item in allItemsInCart)
                     {
@@ -53,14 +53,14 @@ namespace DaysForGirls.Web.Areas.Identity.Pages.Account
                     this.db.ShoppingCartItems.RemoveRange(allItemsInCart);
                     cart.ShoppingCartItems.Clear();
 
-                    bool productsCartIdSetToNull = false;
+                    int? productsCartIdSetToNull = null;
 
-                    while(productsCartIdSetToNull == false)
+                    while(productsCartIdSetToNull == null)
                     {
                         productsCartIdSetToNull = await this.adminService
                         .SetProductsCartIdToNullAsync(productsInCartIds);
 
-                        if(productsCartIdSetToNull)
+                        if(productsCartIdSetToNull != null)
                         {
                             break;
                         }

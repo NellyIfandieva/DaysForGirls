@@ -1,19 +1,19 @@
 ﻿namespace DaysForGirls.Services
 {
-    using DaysForGirls.Services.Models;
-    using System.Linq;
+    using Models;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     public interface IProductTypeService
     {
-        Task<bool> CreateAsync(ProductTypeServiceModel prTServiceModel);
+        Task<int?> CreateAsync(ProductTypeServiceModel prTServiceModel);
 
-        IQueryable<ProductTypeServiceModel> DisplayAll();
+        Task<IEnumerable<ProductTypeServiceModel>> DisplayAll();
 
         Task<ProductTypeServiceModel> GetProductTypeByIdAsync(int productTypeId);
 
-        Task<bool> EditAsync(ProductTypeServiceModel model);
+        Task<int?> EditAsync(ProductTypeServiceModel model);
 
-        Task<bool> DeleteTypeByIdAsync(int productTypeId);
+        Task<int?> DeleteTypeByIdAsync(int productTypeId);
     }
 }

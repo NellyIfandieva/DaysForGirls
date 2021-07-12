@@ -6,14 +6,14 @@
 
     public interface ICategoryService
     {
-        Task<int> CreateAsync(CategoryServiceModel categoryServiceModel);
+        Task<int?> CreateAsync(CategoryServiceModel categoryServiceModel);
 
         Task<IEnumerable<CategoryServiceModel>> DisplayAll();
 
-        Task<bool> DeleteCategoryByIdAsync(int categoryId);
+        Task<int?> DeleteCategoryByIdAsync(int categoryId);
 
         Task<CategoryServiceModel> GetCategoryByIdAsync(int categoryId);
 
-        Task<bool> EditAsync(CategoryServiceModel model);
+        Task<int?> EditAsync(CategoryServiceModel model);
     }
 }

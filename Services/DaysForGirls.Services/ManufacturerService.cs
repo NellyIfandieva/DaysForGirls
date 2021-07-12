@@ -1,9 +1,9 @@
 ﻿namespace DaysForGirls.Services
 {
-    using DaysForGirls.Data;
-    using DaysForGirls.Data.Models;
-    using DaysForGirls.Services.Models;
+    using Data;
+    using Data.Models;
     using Microsoft.EntityFrameworkCore;
+    using Models;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -18,7 +18,7 @@
             this.db = db;
         }
 
-        public async Task<int> CreateAsync(ManufacturerServiceModel manufacturerServiceModel)
+        public async Task<int?> CreateAsync(ManufacturerServiceModel manufacturerServiceModel)
         {
             var manufacturer = new Manufacturer
             {
@@ -31,11 +31,11 @@
             };
 
             this.db.Manufacturers.Add(manufacturer);
-            int result = await this.db.SaveChangesAsync();
+            var createResult = await this.db.SaveChangesAsync();
 
-            int manufacturerId = manufacturer.Id;
-
-            return manufacturerId;
+            return createResult < 1 ?
+                null :
+                manufacturer.Id;
         }
 
         public async Task<ManufacturerServiceModel> GetManufacturerByIdAsync(int manufacturerId)
@@ -82,7 +82,7 @@
                 })
                 .ToListAsync();
 
-            var manufacturerToReturn = new ManufacturerServiceModel
+            return new ManufacturerServiceModel
             {
                 Id = manufacturer.Id,
                 Name = manufacturer.Name,
@@ -94,8 +94,6 @@
                 },
                 Products = manufacturerProducts
             };
-
-            return manufacturerToReturn;
         }
 
         public async Task<IEnumerable<ManufacturerServiceModel>> DisplayAll()
@@ -126,7 +124,7 @@
             return allManufacturers;
         }
 
-        public async Task<bool> EditAsync(ManufacturerServiceModel model)
+        public async Task<int?> EditAsync(ManufacturerServiceModel model)
         {
             var manufacturerInDb = await this.db.Manufacturers
                 .Include(m => m.Logo)
@@ -134,7 +132,7 @@
 
             if (manufacturerInDb == null)
             {
-                return false;
+                return null;
             }
 
             manufacturerInDb.Name = model.Name;
@@ -142,21 +140,17 @@
             manufacturerInDb.Logo.LogoUrl = model.Logo.LogoUrl;
 
             this.db.Update(manufacturerInDb);
-            int result = await this.db.SaveChangesAsync();
-
-            bool manufacturerIsEdited = result > 0;
-
-            return manufacturerIsEdited;
+            return await this.db.SaveChangesAsync();
         }
 
-        public async Task<bool> DeleteManufacturerByIdAsync(int manufacturerId)
+        public async Task<int?> DeleteManufacturerByIdAsync(int manufacturerId)
         {
             var manufacturerToDelete = await this.db.Manufacturers
                 .SingleOrDefaultAsync(m => m.Id == manufacturerId);
 
             if (manufacturerToDelete == null)
             {
-                return false;
+                return null;
             }
 
             var manufacturerProducts = this.db.Products
@@ -181,11 +175,7 @@
                 this.db.Manufacturers.Remove(manufacturerToDelete);
             }
 
-            int result = await this.db.SaveChangesAsync();
-
-            bool manufacturerIsDeleted = result > 0;
-
-            return manufacturerIsDeleted;
+            return await this.db.SaveChangesAsync();
         }
     }
 }

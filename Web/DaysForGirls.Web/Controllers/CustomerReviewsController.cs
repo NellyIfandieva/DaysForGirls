@@ -48,7 +48,7 @@
 
             this.ViewData["productName"] = product.Name;
 
-            CustomerReviewInputModel model = new CustomerReviewInputModel
+            var model = new CustomerReviewInputModel
             {
                 ProductId = productId
             };  
@@ -96,10 +96,10 @@
                 ProductId = model.ProductId
             };
 
-            bool isCreated = await this.customerReviewService
+            var createResult = await this.customerReviewService
                 .CreateAsync(newCustomerReview, model.ProductId);
 
-            if(isCreated == false)
+            if(createResult == null)
             {
                 return Redirect("/Home/Error");
             }

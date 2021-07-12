@@ -275,9 +275,9 @@ namespace DaysForGirls.Tests.Services
             Sale saleToAddTo = db.Sales.First();
             Product productToAddToSale = db.Products.First();
 
-            bool isAdded = await this.saleService.AddProductToSaleAsync(saleToAddTo.Id, productToAddToSale.Id);
+            var isAdded = await this.saleService.AddProductToSaleAsync(saleToAddTo.Id, productToAddToSale.Id);
 
-            Assert.True(isAdded, errorMessagePrefix);
+            Assert.True(isAdded != null, errorMessagePrefix);
         }
 
         [Fact]
@@ -330,9 +330,9 @@ namespace DaysForGirls.Tests.Services
 
             var productToAdd = db.Products.First();
 
-            bool actualResult = await this.saleService.AddProductToSaleAsync(null, productToAdd.Id);
+            var actualResult = await this.saleService.AddProductToSaleAsync(null, productToAdd.Id);
 
-            Assert.True(actualResult == false, errorMessagePrefix + " " + "Returns true.");
+            Assert.True(actualResult == null, errorMessagePrefix + " " + "Returns true.");
         }
 
         [Fact]
@@ -394,9 +394,9 @@ namespace DaysForGirls.Tests.Services
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
             this.saleService = new SaleService(db);
 
-            bool actualResult = await this.saleService.EditAsync(null);
+            var actualResult = await this.saleService.EditAsync(null);
 
-            Assert.True(actualResult == false, errorMessagePrefix + " " + "Edited sale.");
+            Assert.True(actualResult == null, errorMessagePrefix + " " + "Edited sale.");
         }
 
         [Fact]
@@ -410,9 +410,10 @@ namespace DaysForGirls.Tests.Services
 
             var saleToDelete = db.Sales.First();
 
-            bool actualResult = await this.saleService.DeleteSaleById(saleToDelete.Id);
+            var actualResult = await this.saleService
+                .DeleteSaleById(saleToDelete.Id);
 
-            Assert.True(actualResult, errorMessagePrefix + " " + "Sale was not deleted from the db");
+            Assert.True(actualResult != null, errorMessagePrefix + " " + "Sale was not deleted from the db");
         }
 
         [Fact]
@@ -423,9 +424,10 @@ namespace DaysForGirls.Tests.Services
             await SeedSampleSales(db);
             this.saleService = new SaleService(db);
 
-            bool actualResult = await this.saleService.DeleteSaleById(null);
+            var actualResult = await this.saleService
+                .DeleteSaleById(null);
 
-            Assert.True(actualResult == false, errorMessagePrefix + " " + "Returns true.");
+            Assert.True(actualResult == null, errorMessagePrefix + " " + "Returns true.");
         }
     }
 }

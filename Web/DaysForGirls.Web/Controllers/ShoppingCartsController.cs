@@ -152,7 +152,7 @@
             var itemIsRemovedFromCart = await this.shoppingCartService
                 .RemoveItemFromCartAsync(userId, itemId);
 
-            if(itemIsRemovedFromCart == false)
+            if(itemIsRemovedFromCart == null)
             {
                 return Redirect("/Home/Error");
             }

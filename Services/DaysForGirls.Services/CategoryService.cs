@@ -17,7 +17,7 @@
             this.db = db;
         }
 
-        public async Task<int> CreateAsync(CategoryServiceModel categoryServiceModel)
+        public async Task<int?> CreateAsync(CategoryServiceModel categoryServiceModel)
         {
             var category = new Category
             {
@@ -26,11 +26,11 @@
             };
 
             this.db.Categories.Add(category);
-            int result = await db.SaveChangesAsync();
+            var createResult = await db.SaveChangesAsync();
 
-            int categoryId = category.Id;
-
-            return categoryId;
+            return createResult < 1 ?
+                null :
+                category.Id;
         }
 
         public async Task<IEnumerable<CategoryServiceModel>> DisplayAll()
@@ -59,43 +59,37 @@
                 return null;
             }
 
-            var categoryToReturn = new CategoryServiceModel
+            return new CategoryServiceModel
             {
                 Id = categoryInDb.Id,
                 Name = categoryInDb.Name,
                 Description = categoryInDb.Description,
                 IsDeleted = categoryInDb.IsDeleted
             };
-
-            return categoryToReturn;
         }
 
-        public async Task<bool> EditAsync(CategoryServiceModel model)
+        public async Task<int?> EditAsync(CategoryServiceModel model)
         {
             var categoryInDb = await this.db.Categories
                 .SingleOrDefaultAsync(c => c.Id == model.Id);
 
             if (categoryInDb == null)
             {
-                return false;
+                return null;
             }
 
             categoryInDb.Name = model.Name;
             categoryInDb.Description = model.Description;
 
             this.db.Update(categoryInDb);
-            int result = await this.db.SaveChangesAsync();
-
-            bool categoryIsEdited = result > 0;
-
-            return categoryIsEdited;
+            return await this.db.SaveChangesAsync();
         }
 
-        public async Task<bool> DeleteCategoryByIdAsync(int categoryId)
+        public async Task<int?> DeleteCategoryByIdAsync(int categoryId)
         {
             if(categoryId <= 0)
             {
-                return false;
+                return null;
             }
 
             var categoryToDelete = await this.db
@@ -104,7 +98,7 @@
 
             if (categoryToDelete == null)
             {
-                return false;
+                return null;
             }
 
             var productsInCategory = this.db
@@ -121,11 +115,7 @@
                 this.db.Categories.Remove(categoryToDelete);
             }
 
-            int result = await this.db.SaveChangesAsync();
-
-            bool categoryIsDeleted = result > 0;
-
-            return categoryIsDeleted;
+            return await this.db.SaveChangesAsync();
         }
     }
 }

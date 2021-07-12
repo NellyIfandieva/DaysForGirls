@@ -40,10 +40,10 @@
                 Description = model.Description
             };
 
-            int newCategoryId = await this.categoryService
+            var createResult = await this.categoryService
                 .CreateAsync(categoryServiceModel);
 
-            if(newCategoryId <= 0)
+            if(createResult == null)
             {
                 return Redirect("/Home/Error");
             }
@@ -112,7 +112,7 @@
                 Description = model.Description
             };
 
-            bool categoryIsEdited = await this.categoryService
+            var editResult = await this.categoryService
                 .EditAsync(categoryToEdit);
 
             return Redirect("/Administration/Category/All");
@@ -126,10 +126,10 @@
                 return Redirect("/Home/Error");
             }
 
-            bool categoryIsDeleted = await this.categoryService
+            var categoryIsDeleted = await this.categoryService
                 .DeleteCategoryByIdAsync(categoryId);
 
-            if(categoryIsDeleted == false)
+            if(categoryIsDeleted == null)
             {
                 return Redirect("/Home/Error");
             }

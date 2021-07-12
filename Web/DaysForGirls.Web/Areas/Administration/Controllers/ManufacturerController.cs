@@ -50,10 +50,10 @@
                 }
             };
 
-            int newManufacturerId = await this.manufacturerService
+            var createResult = await this.manufacturerService
                 .CreateAsync(manufacturerServiceModel);
 
-            if(newManufacturerId <= 0)
+            if(createResult == null)
             {
                 return Redirect("/Home/Error");
             }
@@ -132,10 +132,10 @@
                 }
             };
 
-            var manufacturerIsEdited = await this.manufacturerService
+            var editResult = await this.manufacturerService
                 .EditAsync(manufacturerToEdit);
 
-            if(manufacturerIsEdited == false)
+            if(editResult == null)
             {
                 return Redirect("/Home/Error");
             }
@@ -151,10 +151,10 @@
                 return Redirect("/Home/Error");
             }
 
-            var manufacturerIsDeleted = await this.manufacturerService
+            var deleteResult = await this.manufacturerService
                 .DeleteManufacturerByIdAsync(manufacturerId);
 
-            if (manufacturerIsDeleted == false)
+            if (deleteResult == null)
             {
                 return Redirect("/Home/Error");
             }

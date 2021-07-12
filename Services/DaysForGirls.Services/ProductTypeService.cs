@@ -1,10 +1,10 @@
 ﻿namespace DaysForGirls.Services
 {
-    using DaysForGirls.Data;
-    using DaysForGirls.Data.Models;
-    using DaysForGirls.Services.Models;
+    using Data;
+    using Data.Models;
     using Microsoft.EntityFrameworkCore;
-    using System;
+    using Models;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -17,30 +17,26 @@
             this.db = db;
         }
 
-        public async Task<bool> CreateAsync(ProductTypeServiceModel prTServiceModel)
+        public async Task<int?> CreateAsync(ProductTypeServiceModel prTServiceModel)
         {
-            ProductType productType = new ProductType
+            var productType = new ProductType
             {
                 Name = prTServiceModel.Name
             };
 
             this.db.ProductTypes.Add(productType);
-            int result = await db.SaveChangesAsync();
-
-            bool producTypeIsCreated = result > 0;
-
-            return producTypeIsCreated;
+            return await db.SaveChangesAsync();
         }
 
-        public IQueryable<ProductTypeServiceModel> DisplayAll()
+        public async Task<IEnumerable<ProductTypeServiceModel>> DisplayAll()
         {
-            var allProductTypes = db.ProductTypes
+            var allProductTypes = await db.ProductTypes
                 .Select(pt => new ProductTypeServiceModel
                 {
                     Id = pt.Id,
                     Name = pt.Name,
                     IsDeleted = pt.IsDeleted
-                });
+                }).ToListAsync();
 
             return allProductTypes;
         }
@@ -60,41 +56,35 @@
                 return null;
             }
 
-            var productTypeToReturn = new ProductTypeServiceModel
+            return new ProductTypeServiceModel
             {
                 Id = productTypeInDb.Id,
                 Name = productTypeInDb.Name,
                 IsDeleted = productTypeInDb.IsDeleted
             };
-
-            return productTypeToReturn;
         }
 
-        public async Task<bool> EditAsync(ProductTypeServiceModel model)
+        public async Task<int?> EditAsync(ProductTypeServiceModel model)
         {
             var productTypeToEdit = await this.db.ProductTypes
                 .SingleOrDefaultAsync(pT => pT.Id == model.Id);
 
             if (productTypeToEdit == null)
             {
-                return false;
+                return null;
             }
 
             productTypeToEdit.Name = model.Name;
 
             this.db.Update(productTypeToEdit);
-            int result = await this.db.SaveChangesAsync();
-
-            bool productTypeIsEdited = result > 0;
-
-            return productTypeIsEdited;
+            return await db.SaveChangesAsync();
         }
 
-        public async Task<bool> DeleteTypeByIdAsync(int productTypeId)
+        public async Task<int?> DeleteTypeByIdAsync(int productTypeId)
         {
             if(productTypeId <= 0)
             {
-                return false;
+                return null;
             }
 
             var productTypeToDelete = await this.db.ProductTypes
@@ -102,13 +92,13 @@
 
             if (productTypeToDelete == null)
             {
-                return false;
+                return null;
             }
 
             var productsOfType = this.db.Products
                 .Where(p => p.ProductTypeId == productTypeToDelete.Id);
 
-            if (productsOfType.Count() > 0)
+            if (productsOfType.Any())
             {
                 productTypeToDelete.IsDeleted = true;
                 this.db.Update(productTypeToDelete);
@@ -118,11 +108,7 @@
                 this.db.ProductTypes.Remove(productTypeToDelete);
             }
 
-            int result = await this.db.SaveChangesAsync();
-
-            bool typeIsDeleted = result > 0;
-
-            return typeIsDeleted;
+            return await db.SaveChangesAsync();
         }
     }
 }

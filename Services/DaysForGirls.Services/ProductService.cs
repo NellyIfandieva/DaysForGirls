@@ -4,7 +4,6 @@
     using Data.Models;
     using Microsoft.EntityFrameworkCore;
     using Models;
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -26,7 +25,7 @@
                 return null;
             }
 
-            Product product = await this.db.Products
+            var product = await this.db.Products
                 .Include(p => p.Quantity)
                 .Include(p => p.Pictures)
                 .Include(p => p.Sale)
@@ -41,7 +40,7 @@
 
             var picture = product.Pictures.ElementAt(0).PictureUrl;
 
-            var productToReturn = new ProductAsShoppingCartItem
+            return new ProductAsShoppingCartItem
             {
                 Id = product.Id,
                 Name = product.Name,
@@ -54,8 +53,6 @@
                 SaleId = product.SaleId,
                 ShoppingCartId = product.ShoppingCartId
             };
-
-            return productToReturn;
         }
 
         public async Task<IEnumerable<ProductDisplayAllServiceModel>> DisplayAll()
@@ -142,11 +139,11 @@
             return allProductsOfCategoryAndType;
         }
 
-        public async Task<bool> AddProductToShoppingCartAsync(int productId, string shoppingCartId)
+        public async Task<int?> AddProductToShoppingCartAsync(int productId, string shoppingCartId)
         {
             if(productId <= 0 || shoppingCartId == null)
             {
-                return false;
+                return null;
             }
 
             var product = await this.db.Products
@@ -154,25 +151,21 @@
 
             if (product == null)
             {
-                return false;
+                return null;
             }
 
             product.ShoppingCartId = shoppingCartId;
             product.Quantity.AvailableItems--;
 
             this.db.Update(product);
-            int result = await this.db.SaveChangesAsync();
-
-            bool productQuantityIsUpdated = result > 0;
-
-            return productQuantityIsUpdated;
+            return await this.db.SaveChangesAsync();
         }
 
-        public async Task<bool> RemoveProductFromShoppingCartAsync(int productId)
+        public async Task<int?> RemoveProductFromShoppingCartAsync(int productId)
         {
             if(productId <= 0)
             {
-                return false;
+                return null;
             }
 
             var product = await this.db.Products
@@ -182,29 +175,25 @@
 
             if (product == null)
             {
-                return false;
+                return null;
             }
 
             product.Quantity.AvailableItems++;
             product.ShoppingCartId = null;
 
             this.db.Update(product);
-            int result = await this.db.SaveChangesAsync();
-
-            bool productIsOutOfCart = result > 0;
-
-            return productIsOutOfCart;
+            return await this.db.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<ProductServiceModel>> GetAllSearchResultsByCriteria(string criteria)
+        public async Task<IEnumerable<ProductServiceModel>> 
+            GetAllSearchResultsByCriteria(string criteria)
         {
             if(criteria == null)
             {
                 return null;
             }
 
-            decimal priceCriteria;
-            bool criteriaIsDecimal = decimal.TryParse(criteria, out priceCriteria);
+            var criteriaIsDecimal = decimal.TryParse(criteria, out decimal priceCriteria);
 
             if (criteriaIsDecimal == false)
             {

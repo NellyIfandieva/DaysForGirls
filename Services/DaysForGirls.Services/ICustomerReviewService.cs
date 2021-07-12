@@ -6,11 +6,11 @@
 
     public interface ICustomerReviewService
     {
-        Task<bool> CreateAsync(CustomerReviewServiceModel model, int productId);
+        Task<int?> CreateAsync(CustomerReviewServiceModel model, int productId);
 
         Task<IEnumerable<CustomerReviewServiceModel>> GetAllCommentsOfProductByProductId(int productId);
 
-        Task<bool> DeleteReviewByIdAsync(int reviewId);
+        Task<int?> DeleteReviewByIdAsync(int reviewId);
 
         Task<IEnumerable<CustomerReviewServiceModel>> DisplayAll();
     }

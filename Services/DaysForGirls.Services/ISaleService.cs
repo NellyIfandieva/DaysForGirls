@@ -1,8 +1,7 @@
 ﻿namespace DaysForGirls.Services
 {
-    using DaysForGirls.Services.Models;
+    using Models;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
 
     public interface ISaleService
@@ -17,10 +16,10 @@
 
         Task<SaleServiceModel> GetSaleByTitleAsync(string saleName);
 
-        Task<bool> AddProductToSaleAsync(string saleId, int productId);
+        Task<int?> AddProductToSaleAsync(string saleId, int productId);
 
-        Task<bool> DeleteSaleById(string saleId);
+        Task<int?> DeleteSaleById(string saleId);
 
-        Task<bool> EditAsync(SaleServiceModel model);
+        Task<int?> EditAsync(SaleServiceModel model);
     }
 }

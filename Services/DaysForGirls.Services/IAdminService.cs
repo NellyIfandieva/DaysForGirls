@@ -6,19 +6,19 @@
 
     public interface IAdminService
     {
-        Task<int> CreateAsync(ProductServiceModel productServiceModel);
+        Task<int?> CreateAsync(ProductServiceModel productServiceModel);
 
         Task<IEnumerable<AdminProductAllServiceModel>> DisplayAll();
 
         Task<ProductServiceModel> GetProductByIdAsync(int productId);
 
-        Task<bool> SetProductsCartIdToNullAsync(List<int> productIds);
+        Task<int?> SetProductsCartIdToNullAsync(List<int> productIds);
 
-        Task<bool> EditAsync(ProductServiceModel model);
+        Task<int?> EditAsync(ProductServiceModel model);
 
-        Task<bool> AddProductToSaleAsync(int productId, string saleId);
+        Task<int?> AddProductToSaleAsync(int productId, string saleId);
 
-        Task<bool> SetOrderIdToProductsAsync(List<int> productIds, string orderId);
+        Task<int?> SetOrderIdToProductsAsync(List<int> productIds, string orderId);
 
         Task<string> EraseFromDb(int productId);
     }

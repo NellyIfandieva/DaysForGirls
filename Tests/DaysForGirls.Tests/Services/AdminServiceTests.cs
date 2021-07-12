@@ -165,7 +165,7 @@
                 }
             };
 
-            int actualResult = await this.adminService.CreateAsync(testProduct);
+            var actualResult = await this.adminService.CreateAsync(testProduct);
             Assert.True(actualResult > 0, errorMessagePrefix);
         }
 
@@ -233,7 +233,7 @@
                 }
             };
 
-            int actualProductId = await this.adminService.CreateAsync(testProduct);
+            var actualProductId = await this.adminService.CreateAsync(testProduct);
             int actualCountOfProductsInDb = db.Products.Count();
 
             Assert.True(actualProductId == 0, errorMessagePrefix + " " + "ProductId not returned correctly");
@@ -752,7 +752,7 @@
             var positive = await this.adminService.SetOrderIdToProductsAsync(productIds, "Hi");
             var first = db.Products.SingleOrDefault(p => p.Id == 1);
 
-            Assert.True(positive, errorMessagePrefix + " " + "Products were updated with OrderId");
+            Assert.True(positive != null, errorMessagePrefix + " " + "Products were updated with OrderId");
             Assert.True(first.OrderId == "Hi", errorMessagePrefix + " " + "OrderId not set to given Id.");
             Assert.True(first.ShoppingCartId == null, errorMessagePrefix + " " + "CartId not set to null");
         }
@@ -806,7 +806,7 @@
             var positive = await this.adminService.SetOrderIdToProductsAsync(productIds, "Hi");
             var first = db.Products.First();
 
-            Assert.True(positive == false, errorMessagePrefix + " " + "OrderId not set and cartId remains not null.");
+            Assert.True(positive == null, errorMessagePrefix + " " + "OrderId not set and cartId remains not null.");
             Assert.True(first.OrderId == null, errorMessagePrefix + " " + "OrderId was set to given Id.");
             Assert.True(first.ShoppingCartId == "yes", errorMessagePrefix + " " + "CartId was set to null");
         }
@@ -858,9 +858,9 @@
             List<int> productIds = db.Products
                 .Select(p => p.Id).ToList();
 
-            bool actualResult = await this.adminService.SetOrderIdToProductsAsync(productIds , null);
+            var actualResult = await this.adminService.SetOrderIdToProductsAsync(productIds , null);
 
-            Assert.True(actualResult == false, errorMessagePrefix + " " + "Returns true.");
+            Assert.True(actualResult == null, errorMessagePrefix + " " + "Returns true.");
             //await Assert.ThrowsAsync<ArgumentNullException>(() => this.adminService.SetOrderIdToProductsAsync(productIds, null));
         }
 
@@ -945,9 +945,9 @@
             var product = db.Products.First();
             var saleToAddTo = db.Sales.First();
 
-            bool productIsAddedToSale = await this.adminService.AddProductToSaleAsync(product.Id, saleToAddTo.Id);
+            var productIsAddedToSale = await this.adminService.AddProductToSaleAsync(product.Id, saleToAddTo.Id);
 
-            Assert.True(productIsAddedToSale, errorMessagePrefix);
+            Assert.True(productIsAddedToSale != null, errorMessagePrefix);
             Assert.True(product.IsInSale, errorMessagePrefix + " " + "IsInSale not set to true.");
             Assert.True(product.SaleId == sale.Id, errorMessagePrefix + " " + "SaleId not set correctly");
         }
@@ -968,9 +968,9 @@
 
             Product product = db.Products.First();
 
-            bool actualResult = await this.adminService.AddProductToSaleAsync(product.Id, "sale");
+            var actualResult = await this.adminService.AddProductToSaleAsync(product.Id, "sale");
 
-            Assert.True(actualResult == false, errorMessagePrefix + " " + "Returns true instead of false.");
+            Assert.True(actualResult == null, errorMessagePrefix + " " + "Returns true instead of false.");
             Assert.True(product.SaleId == null, errorMessagePrefix + " " + "SaleId does not return coreectly");
         }
 
@@ -992,11 +992,11 @@
 
             List<int> productIds = db.Products.Select(p => p.Id).ToList();
 
-            bool productsOutOfShoppingCart = await this.adminService.SetProductsCartIdToNullAsync(productIds);
+            var productsOutOfShoppingCart = await this.adminService.SetProductsCartIdToNullAsync(productIds);
 
-            Product product = db.Products.First();
+            var product = db.Products.First();
 
-            Assert.True(productsOutOfShoppingCart, errorMessagePrefix);
+            Assert.True(productsOutOfShoppingCart != null, errorMessagePrefix);
             Assert.True(product.ShoppingCartId == null, errorMessagePrefix + " " + "Product ShoppingCartId not set to Null");
             Assert.True(product.Quantity.AvailableItems > availableItems, errorMessagePrefix + " " + "Product quantity is not increased back + 1");
         }
@@ -1037,7 +1037,7 @@
 
             var product = db.Products.First();
 
-            Assert.True(productsAreAddedToOrder, errorMessagePrefix);
+            Assert.True(productsAreAddedToOrder != null, errorMessagePrefix);
             Assert.True(product.OrderId == order.Id, errorMessagePrefix + " " + "Product OrderId is not set correctly");
         }
     }

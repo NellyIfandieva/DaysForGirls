@@ -64,8 +64,8 @@ namespace DaysForGirls.Tests.Services
                 }
             };
 
-            int actualResult = await this.manufacturerService.CreateAsync(testManufacturer);
-            Assert.True(actualResult > 0, errorMessagePrefix);
+            var actualResult = await this.manufacturerService.CreateAsync(testManufacturer);
+            Assert.True(actualResult != null, errorMessagePrefix);
         }
 
         [Fact]
@@ -227,9 +227,10 @@ namespace DaysForGirls.Tests.Services
 
             var manufacturerToDelete = db.Manufacturers.First();
 
-            bool actualResult = await this.manufacturerService.DeleteManufacturerByIdAsync(manufacturerToDelete.Id);
+            var actualResult = await this.manufacturerService
+                .DeleteManufacturerByIdAsync(manufacturerToDelete.Id);
 
-            Assert.True(actualResult, errorMessagePrefix + " " + "Manufacturer was not deleted from the db");
+            Assert.True(actualResult != null, errorMessagePrefix + " " + "Manufacturer was not deleted from the db");
         }
 
         [Fact]
@@ -240,9 +241,10 @@ namespace DaysForGirls.Tests.Services
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
             this.manufacturerService = new ManufacturerService(db);
 
-            bool actualResult = await this.manufacturerService.DeleteManufacturerByIdAsync(8);
+            var actualResult = await this.manufacturerService
+                .DeleteManufacturerByIdAsync(8);
 
-            Assert.True(actualResult == false, errorMessagePrefix + " " + "Returns true");
+            Assert.True(actualResult == null, errorMessagePrefix + " " + "Returns true");
         }
 
         [Fact]
@@ -292,10 +294,10 @@ namespace DaysForGirls.Tests.Services
 
             var manufacturerToDelete = db.Manufacturers.First();
 
-            bool manufacturerIsDeletedSetToTrue = await this.manufacturerService
+            var manufacturerIsDeletedSetToTrue = await this.manufacturerService
                 .DeleteManufacturerByIdAsync(manufacturerToDelete.Id);
 
-            Assert.True(manufacturerIsDeletedSetToTrue, errorMessagePrefix + " " + "Service returned false");
+            Assert.True(manufacturerIsDeletedSetToTrue != null, errorMessagePrefix + " " + "Service returned false");
             Assert.True(manufacturerToDelete.IsDeleted, errorMessagePrefix + " " + "Manufacturer IsDeleted not set to True");
         }
     }

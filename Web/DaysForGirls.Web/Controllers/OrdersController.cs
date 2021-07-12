@@ -287,10 +287,10 @@
                 OrderStatus = model.OrderStatus
             };
 
-            bool orderIsEdited = await this.orderService
+            var orderIsEdited = await this.orderService
                 .EditOrderStatusAsync(orderToEdit);
 
-            if(orderIsEdited == false)
+            if(orderIsEdited == null)
             {
                 return Redirect("/Home/Error");
             }

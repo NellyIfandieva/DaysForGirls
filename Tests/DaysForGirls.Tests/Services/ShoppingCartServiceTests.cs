@@ -38,7 +38,7 @@
             db.Users.Add(testUser);
             await db.SaveChangesAsync();
 
-            Product testProduct = new Product
+            var testProduct = new Product
             {
                 Name = "Product Three",
                 Description = "Product Three description",
@@ -111,7 +111,7 @@
             this.productService = new ProductService(db);
             this.shoppingCartService = new ShoppingCartService(db, productService);
 
-            Product testProduct = new Product
+            var testProduct = new Product
             {
                 Name = "Product Three",
                 Description = "Product Three description",
@@ -209,7 +209,7 @@
 
             var actualResult = await this.shoppingCartService.GetCartByUserIdAsync(userId);
 
-            Assert.True(expectedResult.ShoppingCartItems.Count() == actualResult.ShoppingCartItems.Count(), errorMessagePrefix + " " + "Does not return the expected cart items count currently");
+            Assert.True(expectedResult.ShoppingCartItems.Count == actualResult.ShoppingCartItems.Count, errorMessagePrefix + " " + "Does not return the expected cart items count currently");
         }
 
         [Fact]
@@ -249,7 +249,7 @@
             db.Users.Add(testUser);
             await db.SaveChangesAsync();
 
-            Product testProduct = new Product
+            var testProduct = new Product
             {
                 Name = "Product Three",
                 Description = "Product Three description",
@@ -323,12 +323,12 @@
 
             var shoppingCart = db.ShoppingCarts.First();
 
-            int itemsInShoppingCartCount = shoppingCart.ShoppingCartItems.Count();
+            int itemsInShoppingCartCount = shoppingCart.ShoppingCartItems.Count;
 
-            bool productRemovedFromCart = await this.shoppingCartService
+            var productRemovedFromCart = await this.shoppingCartService
                 .RemoveItemFromCartAsync(userId, shoppingCartItem.Id);
 
-            Assert.True(productRemovedFromCart, errorMessagePrefix + " " + "Returned false");
+            Assert.True(productRemovedFromCart != null, errorMessagePrefix + " " + "Returned false");
             Assert.True(productInDb.ShoppingCartId == null, errorMessagePrefix + " " + "CartId of product was not set back to null.");
 
             int countOfItemsInDbAfterRemoval = db.ShoppingCartItems.Count();
@@ -336,7 +336,7 @@
             Assert.True(shoppingCartItemsInDbCount > countOfItemsInDbAfterRemoval, errorMessagePrefix + " " +
                 "Num of shopping cart items in db was not decreased after removal.");
 
-            int itemsInCartNumAfterRemoval = shoppingCart.ShoppingCartItems.Count();
+            int itemsInCartNumAfterRemoval = shoppingCart.ShoppingCartItems.Count;
 
             Assert.True(itemsInShoppingCartCount > itemsInCartNumAfterRemoval, errorMessagePrefix + " " +
                 "Num of items in shopping cart was not decreased.");
@@ -351,7 +351,7 @@
             this.productService = new ProductService(db);
             this.shoppingCartService = new ShoppingCartService(db, productService);
 
-            Product testProduct = new Product
+            var testProduct = new Product
             {
                 Name = "Product Three",
                 Description = "Product Three description",
@@ -417,9 +417,9 @@
             db.Update(testCart);
             await db.SaveChangesAsync();
 
-            bool actualResult = await this.shoppingCartService.RemoveItemFromCartAsync(null, shoppingCartItem.Id);
+            var actualResult = await this.shoppingCartService.RemoveItemFromCartAsync(null, shoppingCartItem.Id);
 
-            Assert.True(actualResult == false, errorMessagePrefix + " " + "Returns true.");
+            Assert.True(actualResult == null, errorMessagePrefix + " " + "Returns true.");
         }
     }
 }

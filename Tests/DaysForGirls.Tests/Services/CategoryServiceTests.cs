@@ -52,8 +52,8 @@
                 Description = "Beautiful to the final touch"
             };
 
-            int actualResult = await this.categoryService.CreateAsync(testCategory);
-            Assert.True(actualResult > 0, errorMessagePrefix);
+            var actualResult = await this.categoryService.CreateAsync(testCategory);
+            Assert.True(actualResult != null, errorMessagePrefix);
         }
 
         [Fact]
@@ -190,9 +190,10 @@
 
             var categoryToDelete = db.Categories.First();
 
-            bool actualResult = await this.categoryService.DeleteCategoryByIdAsync(categoryToDelete.Id);
+            var actualResult = await this.categoryService
+                .DeleteCategoryByIdAsync(categoryToDelete.Id);
 
-            Assert.True(actualResult, errorMessagePrefix + " " + "Category was not deleted from the db");
+            Assert.True(actualResult != null, errorMessagePrefix + " " + "Category was not deleted from the db");
         }
 
         [Fact]
@@ -204,9 +205,10 @@
             await SeedSampleCategories(db);
             this.categoryService = new CategoryService(db);
 
-            bool actualResult = await this.categoryService.DeleteCategoryByIdAsync(8);
+            var actualResult = await this.categoryService
+                .DeleteCategoryByIdAsync(8);
 
-            Assert.True(actualResult == false, errorMessagePrefix + " " + "Deletes nonexistent category.");
+            Assert.True(actualResult == null, errorMessagePrefix + " " + "Deletes nonexistent category.");
         }
 
         [Fact]
@@ -256,10 +258,10 @@
 
             var categoryToDelete = db.Categories.First();
 
-            bool categoryIsDeletedSetToTrue = await this.categoryService
+            var categoryIsDeletedSetToTrue = await this.categoryService
                 .DeleteCategoryByIdAsync(categoryToDelete.Id);
 
-            Assert.True(categoryIsDeletedSetToTrue, errorMessagePrefix + " " + "Service returned false");
+            Assert.True(categoryIsDeletedSetToTrue != null, errorMessagePrefix + " " + "Service returned false");
             Assert.True(categoryToDelete.IsDeleted, errorMessagePrefix + " " + "Category IsDeleted not set to True");
         }
     }

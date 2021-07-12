@@ -24,17 +24,17 @@
             this.customerReviewService = customerReviewService;
         }
 
-        public async Task<int> CreateAsync(ProductServiceModel productServiceModel)
+        public async Task<int?> CreateAsync(ProductServiceModel productServiceModel)
         {
-            ProductType productTypeInDb = db.ProductTypes
+            var productTypeInDb = db.ProductTypes
                 .SingleOrDefault(pT => pT.Name == productServiceModel.ProductType.Name);
 
             if (productTypeInDb == null)
             {
-                return 0;
+                return null;
             }
 
-            Category categoryInDb = this.db.Categories
+            var categoryInDb = this.db.Categories
                 .SingleOrDefault(cat => cat.Name == productServiceModel.Category.Name);
 
             if (categoryInDb == null)
@@ -42,7 +42,7 @@
                 return 0;
             }
 
-            Manufacturer manufacturerInDb = this.db.Manufacturers
+            var manufacturerInDb = this.db.Manufacturers
                 .SingleOrDefault(man => man.Name == productServiceModel.Manufacturer.Name);
 
             if (manufacturerInDb == null)
@@ -92,11 +92,11 @@
                 .ToList();
 
             this.db.Products.Add(product);
-            await db.SaveChangesAsync();
+            int createResult = await db.SaveChangesAsync();
 
-            int productId = product.Id;
-
-            return productId;
+            return createResult < 1 ?
+                null :
+                product.Id;
         }
 
         public async Task<IEnumerable<AdminProductAllServiceModel>> DisplayAll()
@@ -180,7 +180,7 @@
             return productToReturn;
         }
 
-        public async Task<bool> EditAsync(ProductServiceModel model)
+        public async Task<int?> EditAsync(ProductServiceModel model)
         {
             var productTypeOfProduct = await this.db
                 .ProductTypes
@@ -198,7 +198,7 @@
                 || categoryOfProduct == null
                 || manufacturerOfProduct == null)
             {
-                return false;
+                return null;
             }
 
             var productInDb = await this.db
@@ -207,7 +207,7 @@
 
             if(productInDb == null)
             {
-                return false;
+                return null;
             }
 
             productInDb.Name = model.Name;
@@ -242,14 +242,10 @@
             }
 
             this.db.Update(productInDb);
-            int result = await db.SaveChangesAsync();
-
-            bool productIsEdited = result > 0;
-
-            return productIsEdited;
+            return await db.SaveChangesAsync();
         }
 
-        public async Task<bool> AddProductToSaleAsync(int productId, string saleId)
+        public async Task<int?> AddProductToSaleAsync(int productId, string saleId)
         {
             var product = await this.db.Products
                 .SingleOrDefaultAsync(p => p.Id == productId);
@@ -259,17 +255,14 @@
 
             if (product == null || sale == null)
             {
-                return false;
+                return null;
             }
 
             product.SaleId = sale.Id;
             product.IsInSale = true;
 
             this.db.Products.Update(product);
-            int result = await this.db.SaveChangesAsync();
-            bool productIsAddedToSale = result > 0;
-
-            return productIsAddedToSale;
+            return await this.db.SaveChangesAsync();
         }
 
         private async Task<IEnumerable<Product>> GetAllProductsByIds(List<int> productIds)
@@ -282,13 +275,13 @@
             return allSearchedProducts;
         }
 
-        public async Task<bool> SetProductsCartIdToNullAsync(List<int> productIds)
+        public async Task<int?> SetProductsCartIdToNullAsync(List<int> productIds)
         {
             var products = await GetAllProductsByIds(productIds);
 
             if(products.Any() == false)
             {
-                return true;
+                return null;
             }
 
             foreach (var product in products)
@@ -298,21 +291,17 @@
             }
 
             this.db.UpdateRange(products);
-            int result = await this.db.SaveChangesAsync();
-
-            bool productsCartIdIsSetToNull = result > 0;
-
-            return productsCartIdIsSetToNull;
+            return await this.db.SaveChangesAsync();
         }
 
-        public async Task<bool> SetOrderIdToProductsAsync(
+        public async Task<int?> SetOrderIdToProductsAsync(
             List<int> productIds, 
             string orderId)
         {
             if(productIds.Count < 1 || 
                 orderId == null)
             {
-                return false;
+                return null;
             }
 
             var productsToAddToOrder = await this.db
@@ -322,7 +311,7 @@
 
             if (productsToAddToOrder.Count < 1)
             {
-                return false;
+                return null;
             }
 
             foreach (var product in productsToAddToOrder)
@@ -332,11 +321,7 @@
             }
 
             this.db.UpdateRange(productsToAddToOrder);
-            int result = await this.db.SaveChangesAsync();
-
-            bool productsAreAddedToOrder = result > 0;
-
-            return productsAreAddedToOrder;
+            return await this.db.SaveChangesAsync();
         }
 
         public async Task<string> EraseFromDb(int productId)
@@ -383,10 +368,10 @@
                 this.db.Update(sale);
             }
 
-            bool productPicturesAreDeleted = await this.pictureService
+            var productPicturesAreDeleted = await this.pictureService
                 .DeletePicturesOfDeletedProductAsync(productId);
 
-            if(productPicturesAreDeleted == false)
+            if(productPicturesAreDeleted == null)
             {
                 return null;
             }

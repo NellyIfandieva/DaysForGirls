@@ -102,8 +102,8 @@ namespace DaysForGirls.Tests.Services
                 CreatedOn = DateTime.UtcNow.ToString("dddd, dd MMMM yyyy")
             };
 
-            bool actualResult = await this.customerReviewService.CreateAsync(testReview, product.Id);
-            Assert.True(actualResult, errorMessagePrefix);
+            var actualResult = await this.customerReviewService.CreateAsync(testReview, product.Id);
+            Assert.True(actualResult != null, errorMessagePrefix);
         }
 
         [Fact]
@@ -236,9 +236,10 @@ namespace DaysForGirls.Tests.Services
 
             int reviewId = db.CustomerReviews.First().Id;
 
-            bool reviewIsDeleted = await this.customerReviewService.DeleteReviewByIdAsync(reviewId);
+            var reviewIsDeleted = await this.customerReviewService
+                .DeleteReviewByIdAsync(reviewId);
 
-            Assert.True(reviewIsDeleted, errorMessagePrefix);
+            Assert.True(reviewIsDeleted != null, errorMessagePrefix);
             Assert.True(reviewOne.IsDeleted, errorMessagePrefix + " " + "The review IsDeleted is not set to true");
         }
     }

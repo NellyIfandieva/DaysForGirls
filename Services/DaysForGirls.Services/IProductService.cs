@@ -16,9 +16,9 @@
         Task<IEnumerable<DisplayAllOfCategoryAndTypeServiceModel>> GetAllProductsOfTypeAndCategory(
             string productTypeName, string categoryName);
 
-        Task<bool> AddProductToShoppingCartAsync(int productId, string shoppingCartId);
+        Task<int?> AddProductToShoppingCartAsync(int productId, string shoppingCartId);
 
-        Task<bool> RemoveProductFromShoppingCartAsync(int productId);
+        Task<int?> RemoveProductFromShoppingCartAsync(int productId);
 
         Task<IEnumerable<ProductServiceModel>> GetAllSearchResultsByCriteria(string criteria);
 

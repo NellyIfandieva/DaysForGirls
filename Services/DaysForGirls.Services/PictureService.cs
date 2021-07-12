@@ -17,18 +17,18 @@
             this.db = db;
         }
 
-        public async Task<bool> Create(List<PictureServiceModel> pictureServiceModels, int productId)
+        public async Task<int?> Create(List<PictureServiceModel> pictureServiceModels, int productId)
         {
             if(productId <= 0)
             {
-                return false;
+                return null;
             }
 
             var allPicturesToAddToDb = new List<Picture>();
 
             foreach (var pSm in pictureServiceModels)
             {
-                Picture picture = new Picture
+                var picture = new Picture
                 {
                     PictureUrl = pSm.PictureUrl,
                     ProductId = productId
@@ -39,11 +39,7 @@
 
 
             this.db.Pictures.AddRange(allPicturesToAddToDb);
-            int result = await this.db.SaveChangesAsync();
-
-            var picturesAreCreated = result > 0;
-
-            return picturesAreCreated;
+            return await this.db.SaveChangesAsync();
         }
 
         public async Task<PictureServiceModel> GetPictureByIdAsync(int pictureId)
@@ -61,14 +57,12 @@
                 return null;
             }
 
-            var pictureToReturn = new PictureServiceModel
+            return new PictureServiceModel
             {
                 Id = picture.Id,
                 PictureUrl = picture.PictureUrl,
                 ProductId = picture.ProductId
             };
-
-            return pictureToReturn;
         }
 
         public async Task<IEnumerable<PictureServiceModel>> GetPicturesOfProductByProductId(int productId)
@@ -106,21 +100,19 @@
                 return null;
             }
 
-            var pictureToReturn = new PictureServiceModel
+            return new PictureServiceModel
             {
                 Id = picture.Id,
                 PictureUrl = picture.PictureUrl,
                 ProductId = picture.ProductId
             };
-
-            return pictureToReturn;
         }
 
-        public async Task<bool> UpdatePictureInfoAsync(int pictureId, int productId)
+        public async Task<int?> UpdatePictureInfoAsync(int pictureId, int productId)
         {
             if(pictureId <= 0 || productId <= 0)
             {
-                return false;
+                return null;
             }
 
             var picture = this.db.Pictures
@@ -128,7 +120,7 @@
 
             if(picture == null)
             {
-                return false;
+                return null;
             }
 
             var product = this.db.Products
@@ -136,31 +128,27 @@
 
             if(product == null)
             {
-                return false;
+                return null;
             }
 
             this.db.Pictures.Update(picture);
-            int result = await this.db.SaveChangesAsync();
-
-            bool pictureIsUpdated = result > 0;
-
-            return pictureIsUpdated;
+            return await this.db.SaveChangesAsync();
         }
 
-        public async Task<bool> DeletePicturesOfDeletedProductAsync(int productId)
+        public async Task<int?> DeletePicturesOfDeletedProductAsync(int productId)
         {
             if (productId <= 0)
             {
-                return false;
+                return null;
             }
 
             var picturesToDelete = await this.db.Pictures
                 .Where(p => p.ProductId == productId)
                 .ToListAsync();
 
-            if(picturesToDelete.Count() < 1)
+            if(picturesToDelete.Count < 1)
             {
-                return true;
+                return null;
             }
 
             foreach (var picture in picturesToDelete)
@@ -169,11 +157,7 @@
             }
 
             this.db.UpdateRange(picturesToDelete);
-            int result = await this.db.SaveChangesAsync();
-
-            bool picturesAreDeleted = result > 0;
-
-            return picturesAreDeleted;
+            return await db.SaveChangesAsync();
         }
     }
 }

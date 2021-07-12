@@ -9,6 +9,6 @@
 
         Task<ShoppingCartServiceModel> GetCartByUserIdAsync(string userId);
 
-        Task<bool> RemoveItemFromCartAsync(string userId, int itemId);
+        Task<int?> RemoveItemFromCartAsync(string userId, int itemId);
     }
 }

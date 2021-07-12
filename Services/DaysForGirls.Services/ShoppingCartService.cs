@@ -1,10 +1,9 @@
 ﻿namespace DaysForGirls.Services
 {
-    using DaysForGirls.Data;
-    using DaysForGirls.Data.Models;
-    using DaysForGirls.Services.Models;
+    using Data;
+    using Data.Models;
     using Microsoft.EntityFrameworkCore;
-    using System;
+    using Services.Models;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -39,7 +38,7 @@
                 return null;
             }
 
-            ShoppingCartItem shoppingCartItem = new ShoppingCartItem
+            var shoppingCartItem = new ShoppingCartItem
             {
                 Product = product,
                 ProductId = model.Product.Id,
@@ -52,14 +51,21 @@
             cart.ShoppingCartItems.Add(shoppingCartItem);
 
             this.db.Update(cart);
-            int result = await this.db.SaveChangesAsync();
+            int result = await db.SaveChangesAsync();
 
             string shoppinCartId = cart.Id;
 
-            bool productIsInCart = await this.productService
+            var productIsInCart = await this.productService
                 .AddProductToShoppingCartAsync(model.Product.Id, shoppinCartId);
 
-            return shoppinCartId;
+            if(productIsInCart == null)
+            {
+                return null;
+            }
+
+            return productIsInCart == null ?
+                null : 
+                shoppinCartId;
         }
 
         public async Task<ShoppingCartServiceModel> GetCartByUserIdAsync(string userId)
@@ -106,11 +112,11 @@
             return cartToReturn;
         }
 
-        public async Task<bool> RemoveItemFromCartAsync(string userId, int itemId)
+        public async Task<int?> RemoveItemFromCartAsync(string userId, int itemId)
         {
             if(userId == null || itemId <= 0)
             {
-                return false;
+                return null;
             }
 
             var cart = await this.db.ShoppingCarts
@@ -119,7 +125,7 @@
 
             if (cart == null)
             {
-                return false;
+                return null;
             }
 
             var cartItemToDelete = await this.db.ShoppingCartItems
@@ -127,22 +133,22 @@
 
             if (cartItemToDelete == null)
             {
-                return false;
+                return null;
             }
 
             var productId = cartItemToDelete.ProductId;
 
             if(productId <= 0)
             {
-                return false;
+                return null;
             }
 
-            bool productQuantityIsUpdated = await this.productService
+            var productQuantityIsUpdated = await this.productService
                 .RemoveProductFromShoppingCartAsync(productId);
 
-            if (productQuantityIsUpdated == false)
+            if (productQuantityIsUpdated == null)
             {
-                return false;
+                return null;
             }
 
             cart.ShoppingCartItems.Remove(cartItemToDelete);
@@ -151,116 +157,7 @@
 
             this.db.ShoppingCartItems.Remove(cartItemToDelete);
 
-            int result = await this.db.SaveChangesAsync();
-
-            bool itemRemovedFromCart = result > 0;
-
-            return itemRemovedFromCart;
+            return await db.SaveChangesAsync();
         }
-
-
-        //    private readonly DaysForGirlsDbContext db;
-
-        //    public ShoppingCartService(DaysForGirlsDbContext db)
-        //    {
-        //        this.db = db;
-        //    }
-
-        //    public string Id { get; set; }
-
-        //    public ICollection<ShoppingCartItemServiceModel> ShoppingCartItems { get; set; }
-        //}
-
-        //public class ShoppingCartService : IShoppingCartService
-        //{
-        //    private readonly DaysForGirlsDbContext db;
-        //    private readonly IServiceProvider services;
-
-        //    public ShoppingCartService(DaysForGirlsDbContext db,
-        //        IServiceProvider services)
-        //    {
-        //        this.db = db;
-        //        this.services = services;
-        //    }
-
-        //    public async Task<bool> CreateItem(ShoppingCartItemServiceModel model)
-        //    {
-        //        ShoppingCartItem cartItem = new ShoppingCartItem
-        //        {
-        //            ProductId = model.Product.Id,
-        //            Quantity = model.Quantity
-        //        };
-        //    }
-
-        //    public Task<bool> CreateCart(ShoppingCartServiceModel model)
-        //    {
-        //        var currentUse
-
-        //        ShoppingCart cart = new ShoppingCart
-        //        {
-
-        //        }
-        //    }
-
-        //private ShoppingCart GetShoppingCart(IServiceProvider service)
-        //{
-        //    ISession session = this.services.GetRequiredService<IHttpContextAccessor>()?.HttpContext.Session;
-
-        //    var context = this.services.GetService<DaysForGirlsDbContext>();
-        //    string cartId = session.GetString("Id") ?? Guid.NewGuid().ToString();
-
-        //    session.SetString("Id", cartId);
-
-        //    ShoppingCartServiceModel shoppingCartServiceModel = 
-        //        new ShoppingCartServiceModel(context) { Id = cartId };
-
-        //    ShoppingCart shoppingCart = new ShoppingCart
-        //    {
-        //        Id = shoppingCartServiceModel.Id
-        //    };
-
-        //    return shoppingCart;
-        //}
-
-        //public async Task<bool> Add(ShoppingCartItemServiceModel model)
-        //{
-        //    ShoppingCart cart = this.GetShoppingCart(this.services);
-        //    bool isAdded = await this.AddToCart(cart, model);
-
-        //    return isAdded;
-        //}
-
-        //private async Task<bool> AddToCart(
-        //    ShoppingCart cart,
-        //    ShoppingCartItemServiceModel item)
-        //{
-        //    var shoppingCartItem = this.db.ShoppingCartItems
-        //        .SingleOrDefault(s => s.Id == item.Product.Id
-        //        && s.ShoppingCartId == cart.Id);
-
-        //    if(shoppingCartItem == null)
-        //    {
-        //        shoppingCartItem = new ShoppingCartItem
-        //        {
-        //            ProductId = item.Product.Id,
-        //            Quantity = item.Quantity,
-        //            ShoppingCart = cart
-        //        };
-
-        //        this.db.ShoppingCartItems.Add(shoppingCartItem);
-        //    }
-        //    else
-        //    {
-        //        shoppingCartItem.Quantity++;
-        //    }
-
-        //    Product product = this.db.Products.SingleOrDefault(p => p.Id == shoppingCartItem.ProductId);
-        //    product.Quantity.AvailableItems--;
-        //    this.db.Update(product);
-
-        //    int result = await this.db.SaveChangesAsync();
-
-        //    return result == 1;
-        //}
     }
 }

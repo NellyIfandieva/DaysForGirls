@@ -213,10 +213,10 @@ namespace DaysForGirls.Tests.Services
 
             int productId = db.Products.First().Id;
 
-            bool actualResult = await this.pictureService
+            var actualResult = await this.pictureService
                 .DeletePicturesOfDeletedProductAsync(productId);
 
-            Assert.True(actualResult, errorMessagePrefix + " " + "Service method returns false.");
+            Assert.True(actualResult != null, errorMessagePrefix + " " + "Service method returns false.");
 
             var actualPicturesAfterModification = db.Pictures
                 .Where(pic => pic.ProductId == productId).ToList();
@@ -238,8 +238,8 @@ namespace DaysForGirls.Tests.Services
 
             this.pictureService = new PictureService(db);
 
-            bool actualResult = await this.pictureService.DeletePicturesOfDeletedProductAsync(0);
-            Assert.True(actualResult == false, errorMessagePrefix + " " + "Returns true.");
+            var actualResult = await this.pictureService.DeletePicturesOfDeletedProductAsync(0);
+            Assert.True(actualResult == null, errorMessagePrefix + " " + "Returns true.");
         }
     }
 }

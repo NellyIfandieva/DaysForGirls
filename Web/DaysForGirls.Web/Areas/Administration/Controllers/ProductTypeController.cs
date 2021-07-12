@@ -39,10 +39,10 @@
                 Name = model.Name
             };
 
-            bool isCreated = await this.productTypeService
+            var creatResult = await this.productTypeService
                 .CreateAsync(pTServiceModel);
 
-            if(isCreated == false)
+            if(creatResult == null)
             {
                 return Redirect("/Home/Error");
             }
@@ -54,15 +54,16 @@
         public async Task<IActionResult> All()
         {
             var allProductTypes = await this.productTypeService
-                .DisplayAll()
+                .DisplayAll();
+
+            var viewModels = allProductTypes
                 .Select(pT => new ProductTypeDisplayAllViewModel
                 {
                     Id = pT.Id,
                     Name = pT.Name,
                     IsDeleted = pT.IsDeleted
                 })
-                .OrderBy(pt => pt.Name)
-                .ToListAsync();
+                .OrderBy(pt => pt.Name);
 
             return View(allProductTypes);
         }
@@ -108,10 +109,10 @@
                 Name = model.Name
             };
 
-            bool productTypeIsEdited = await this.productTypeService
+            var productTypeIsEdited = await this.productTypeService
                 .EditAsync(productTypeWithEdits);
 
-            if(productTypeIsEdited == false)
+            if(productTypeIsEdited == null)
             {
                 return Redirect("/Home/Error");
             }
@@ -127,10 +128,10 @@
                 return Redirect("/Home/Error");
             }
 
-            bool productTypeIsDeleted = await this.productTypeService
+            var productTypeIsDeleted = await this.productTypeService
                 .DeleteTypeByIdAsync(productTypeId);
 
-            if(productTypeIsDeleted == false)
+            if(productTypeIsDeleted == null)
             {
                 return Redirect("/Home/Error");
             }

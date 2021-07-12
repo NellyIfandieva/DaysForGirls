@@ -3,7 +3,6 @@
     using DaysForGirls.Data.Models;
     using DaysForGirls.Services.Models;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
 
     public interface IOrderService
@@ -16,7 +15,7 @@
 
         Task<OrderServiceModel> GetOrderByIdAsync(string orderId);
 
-        Task<bool> EditOrderStatusAsync(OrderServiceModel model);
+        Task<int?> EditOrderStatusAsync(OrderServiceModel model);
 
         Task<bool> CheckIfOrderBelongsToUser(string orderId, string currentUserId);
     }

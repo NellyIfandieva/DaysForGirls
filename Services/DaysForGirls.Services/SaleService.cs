@@ -29,9 +29,9 @@
             this.db.Sales.Add(sale);
             int result = await db.SaveChangesAsync();
 
-            string saleId = sale.Id;
-
-            return saleId;
+            return result < 1 ?
+                null :
+                sale.Id;
         }
 
         public async Task<IEnumerable<SaleServiceModel>> DisplayAll()
@@ -145,7 +145,7 @@
                 })
                 .ToListAsync();
 
-            var saleToReturn = new SaleServiceModel
+            return new SaleServiceModel
             {
                 Id = saleWithDetails.Id,
                 Title = saleWithDetails.Title,
@@ -153,8 +153,6 @@
                 Picture = saleWithDetails.Picture,
                 Products = productsInSale
             };
-
-            return saleToReturn;
         }
 
         public async Task<SaleServiceModel> GetSaleByTitleAsync(string saleTitle)
@@ -217,7 +215,7 @@
                 })
                 .ToListAsync();
 
-            var saleToReturn = new SaleServiceModel
+            return new SaleServiceModel
             {
                 Id = saleWithDetails.Id,
                 Title = saleWithDetails.Title,
@@ -225,39 +223,33 @@
                 Picture = saleWithDetails.Picture,
                 Products = productsInSale
             };
-
-            return saleToReturn;
         }
 
-        public async Task<bool> AddProductToSaleAsync(string saleId, int productId)
+        public async Task<int?> AddProductToSaleAsync(string saleId, int productId)
         {
             if(saleId == null || productId <= 0)
             {
-                return false;
+                return null;
             }
 
-            Sale sale = await this.db.Sales
+            var sale = await this.db.Sales
                 .SingleOrDefaultAsync(s => s.Id == saleId);
 
-            Product productToAdd = await this.db.Products
+            var productToAdd = await this.db.Products
                 .SingleOrDefaultAsync(p => p.Id == productId);
 
             sale.Products.Add(productToAdd);
 
             this.db.Sales.Update(sale);
 
-            int result = await this.db.SaveChangesAsync();
-
-            bool productAddedToSale = result > 0;
-
-            return productAddedToSale;
+            return await db.SaveChangesAsync();
         }
 
-        public async Task<bool> EditAsync(SaleServiceModel model)
+        public async Task<int?> EditAsync(SaleServiceModel model)
         {
             if(model == null || model.Id == null)
             {
-                return false;
+                return null;
             }
 
             var saleToEdit = await this.db.Sales
@@ -265,7 +257,7 @@
 
             if (saleToEdit == null)
             {
-                return false;
+                return null;
             }
 
             saleToEdit.Title = model.Title;
@@ -273,27 +265,23 @@
             saleToEdit.Picture = model.Picture;
 
             this.db.Update(saleToEdit);
-            int result = await this.db.SaveChangesAsync();
-
-            bool saleIsEdited = result > 0;
-
-            return saleIsEdited;
+            return await db.SaveChangesAsync();
         }
 
-        public async Task<bool> DeleteSaleById(string saleId)
+        public async Task<int?> DeleteSaleById(string saleId)
         {
             if(saleId == null)
             {
-                return false;
+                return null;
             }
 
-            Sale saleToDelete = await this.db.Sales
+            var saleToDelete = await this.db.Sales
                 .Include(s => s.Products)
                 .SingleOrDefaultAsync(s => s.Id == saleId);
 
             if (saleToDelete == null)
             {
-                return false;
+                return null;
             }
 
             var productsOutOfSale = saleToDelete.Products
@@ -310,11 +298,7 @@
             }
 
             this.db.Sales.Remove(saleToDelete);
-            int result = await this.db.SaveChangesAsync();
-
-            bool saleIsDeleted = result > 0;
-
-            return saleIsDeleted;
+            return await db.SaveChangesAsync();
         }
     }
 }

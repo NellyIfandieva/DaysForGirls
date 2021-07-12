@@ -43,9 +43,7 @@
         public async Task<IActionResult> Create()
         {
             var allProductTypes = await this.productTypeService
-                .DisplayAll()
-                .Where(pT => pT.IsDeleted == false)
-                .ToListAsync();
+                .DisplayAll();
 
             this.ViewData["productTypes"] = allProductTypes
                 .Select(pT => new ProductCreateProductTypeViewModel
@@ -159,17 +157,22 @@
             })
             .ToList();
 
-            int productId = await this.adminService.CreateAsync(productServiceModel);
+            var createResult = await this.adminService.CreateAsync(productServiceModel);
 
-            if(productId <= 0)
+            if(createResult == null)
             {
                 return Redirect("/Home/Error");
             }
 
             if (model.SaleTitle != null)
             {
-                bool saleAddedProduct = await this.saleService.AddProductToSaleAsync(productServiceModel.SaleId, productId);
-                bool productIsInSale = await this.adminService.AddProductToSaleAsync(productId, productServiceModel.SaleId);
+                var productId = (int)createResult;
+
+                var saleAddedProduct = await this.saleService
+                    .AddProductToSaleAsync(productServiceModel.SaleId, productId);
+
+                var productIsInSale = await this.adminService
+                    .AddProductToSaleAsync(productId, productServiceModel.SaleId);
             }
 
             return Redirect("/Administration/Product/All");
@@ -301,8 +304,7 @@
 
             var allProductTypes =
                 await this.productTypeService
-                .DisplayAll()
-                .ToListAsync();
+                .DisplayAll();
 
             this.ViewData["types"] = allProductTypes
                 .Select(productType => new ProductCreateProductTypeViewModel
@@ -349,9 +351,10 @@
         {
             if (this.ModelState.IsValid == false)
             {
-                var productTypes = await this.productTypeService.DisplayAll().ToListAsync();
+                var productTypes = await this.productTypeService.DisplayAll();
 
-                this.ViewData["types"] = productTypes.Select(pT => new ProductCreateProductTypeViewModel
+                this.ViewData["types"] = productTypes.Select(pT => 
+                new ProductCreateProductTypeViewModel
                 {
                     Name = pT.Name
                 })
@@ -427,19 +430,20 @@
             })
             .ToList();
 
-            bool productIsEdited = await this.adminService
+            var productIsEdited = await this.adminService
                 .EditAsync(productToEdit);
 
-            if(productIsEdited == false)
+            if(productIsEdited == null)
             {
                 return Redirect("/Home/Error");
             }
 
             if (model.SaleTitle != null)
             {
-                bool saleAddedProduct = await this.saleService
+                var saleAddedProduct = await this.saleService
                     .AddProductToSaleAsync(saleId, productToEdit.Id);
-                bool productIsInSale = await this.adminService
+
+                var productIsInSale = await this.adminService
                     .AddProductToSaleAsync(productToEdit.Id, saleId);
             }
 

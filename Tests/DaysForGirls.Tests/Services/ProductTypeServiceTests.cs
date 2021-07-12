@@ -45,13 +45,13 @@
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
             this.productTypeService = new ProductTypeService(db);
 
-            ProductTypeServiceModel testProductType = new ProductTypeServiceModel
+            var testProductType = new ProductTypeServiceModel
             {
                 Name = "Accessory"
             };
 
-            bool actualResult = await this.productTypeService.CreateAsync(testProductType);
-            Assert.True(actualResult, errorMessagePrefix);
+            var actualResult = await this.productTypeService.CreateAsync(testProductType);
+            Assert.True(actualResult != null, errorMessagePrefix);
         }
 
         [Fact]
@@ -63,14 +63,16 @@
             await SeedProductTypes(db);
             this.productTypeService = new ProductTypeService(db);
 
-            ProductType expectedData = db.ProductTypes.First();
-            ProductTypeServiceModel expectedDataServiceModel = new ProductTypeServiceModel
+            var expectedData = db.ProductTypes.First();
+            var expectedDataServiceModel = new ProductTypeServiceModel
             {
                 Id = expectedData.Id,
                 Name = expectedData.Name,
                 IsDeleted = expectedData.IsDeleted
             };
-            ProductTypeServiceModel actualData = await this.productTypeService.GetProductTypeByIdAsync(expectedDataServiceModel.Id);
+
+            var actualData = await this.productTypeService
+                .GetProductTypeByIdAsync(expectedDataServiceModel.Id);
 
             Assert.True(expectedDataServiceModel.Id == actualData.Id, errorMessagePrefix + " " + "Id is not returned properly.");
             Assert.True(expectedDataServiceModel.Name == actualData.Name, errorMessagePrefix + " " + "Name is not returned properly.");
@@ -100,8 +102,8 @@
             await SeedProductTypes(db);
             this.productTypeService = new ProductTypeService(db);
 
-            List<ProductTypeServiceModel> actualResults = await this.productTypeService.DisplayAll().ToListAsync();
-            List<ProductTypeServiceModel> expectedResults = GetSampleProductTypes()
+            var actualResults = await this.productTypeService.DisplayAll();
+            var expectedResults = GetSampleProductTypes()
                 .Select(pT => new ProductTypeServiceModel
                 {
                     Name = pT.Name
@@ -110,7 +112,7 @@
             for (int i = 0; i < expectedResults.Count; i++)
             {
                 var expectedRecord = expectedResults[i];
-                var actualRecord = actualResults[i];
+                var actualRecord = actualResults.ElementAt(i);
 
                 Assert.True(expectedRecord.Name == actualRecord.Name, errorMessagePrefix + " " + "Name is not returned properly.");
             }
@@ -124,9 +126,9 @@
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
             this.productTypeService = new ProductTypeService(db);
 
-            List<ProductTypeServiceModel> actualResults = await this.productTypeService.DisplayAll().ToListAsync();
+            var actualResults = await this.productTypeService.DisplayAll();
 
-            Assert.True(actualResults.Count == 0, errorMessagePrefix);
+            Assert.True(actualResults.ToList().Count == 0, errorMessagePrefix);
         }
 
         [Fact]
@@ -138,8 +140,8 @@
             await SeedProductTypes(db);
             this.productTypeService = new ProductTypeService(db);
 
-            ProductType expectedData = db.ProductTypes.First();
-            ProductTypeServiceModel expectedServiceModel = new ProductTypeServiceModel
+            var expectedData = db.ProductTypes.First();
+            var expectedServiceModel = new ProductTypeServiceModel
             {
                 Id = expectedData.Id,
                 Name = expectedData.Name
@@ -149,7 +151,7 @@
 
             await this.productTypeService.EditAsync(expectedServiceModel);
 
-            ProductType actualData = db.ProductTypes.First();
+            var actualData = db.ProductTypes.First();
 
             var actualServiceModel = new ProductTypeServiceModel
             {
@@ -171,9 +173,10 @@
 
             var productTypeToDelete = db.ProductTypes.First();
 
-            bool actualResult = await this.productTypeService.DeleteTypeByIdAsync(productTypeToDelete.Id);
+            var actualResult = await this.productTypeService
+                .DeleteTypeByIdAsync(productTypeToDelete.Id);
 
-            Assert.True(actualResult, errorMessagePrefix + " " + "ProductType was not deleted from the db");
+            Assert.True(actualResult != null, errorMessagePrefix + " " + "ProductType was not deleted from the db");
         }
 
         [Fact]
@@ -185,9 +188,9 @@
             await SeedProductTypes(db);
             this.productTypeService = new ProductTypeService(db);
 
-            bool actualResult = await this.productTypeService.DeleteTypeByIdAsync(0);
+            var actualResult = await this.productTypeService.DeleteTypeByIdAsync(0);
 
-            Assert.True(actualResult == false, errorMessagePrefix + " " + "Returns true.");
+            Assert.True(actualResult == null, errorMessagePrefix + " " + "Returns true.");
 
         }
 
@@ -241,10 +244,10 @@
 
             var productTypeToDelete = db.ProductTypes.First();
 
-            bool typeIsDeletedSetToTrue = await this.productTypeService
+            var typeIsDeletedSetToTrue = await this.productTypeService
                 .DeleteTypeByIdAsync(productTypeToDelete.Id);
 
-            Assert.True(typeIsDeletedSetToTrue, errorMessagePrefix + " " + "Service returned false");
+            Assert.True(typeIsDeletedSetToTrue != null, errorMessagePrefix + " " + "Service returned false");
             Assert.True(productTypeToDelete.IsDeleted, errorMessagePrefix + " " + "ProductType IsDeleted not set to True");
         }
     }

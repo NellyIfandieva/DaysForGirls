@@ -45,10 +45,10 @@
                 return Redirect("/Home/Error");
             }
 
-            bool reviewIsDeleted = await this.customerReviewService
+            var deleteResult = await this.customerReviewService
                 .DeleteReviewByIdAsync(reviewId);
 
-            if(reviewIsDeleted == false)
+            if(deleteResult == null)
             {
                 return Redirect("/Home/Error");
             }

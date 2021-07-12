@@ -504,10 +504,10 @@
             int expectedDataAvailableQuantity = expectedData.Quantity.AvailableItems;
             string shoppingCartId = "22021975";
 
-            bool actualResult = await this.productService.AddProductToShoppingCartAsync(expectedData.Id, shoppingCartId);
+            var actualResult = await this.productService.AddProductToShoppingCartAsync(expectedData.Id, shoppingCartId);
             int actualDataAvalailabelQuantity = expectedData.Quantity.AvailableItems;
 
-            Assert.True(actualResult, errorMessagePrefix + " " + "The method returned false");
+            Assert.True(actualResult != null, errorMessagePrefix + " " + "The method returned false");
             Assert.True(expectedData.ShoppingCartId == shoppingCartId, errorMessagePrefix + " " +
                 "ShoppingCartId not set properly.");
             Assert.True(expectedDataAvailableQuantity > actualDataAvalailabelQuantity, errorMessagePrefix + " " +
@@ -523,7 +523,7 @@
 
             var actualResult = await this.productService.AddProductToShoppingCartAsync(0, null);
 
-            Assert.True(actualResult == false, errorMessagePrefix + " " + "Does not return null.");
+            Assert.True(actualResult == null, errorMessagePrefix + " " + "Does not return null.");
         }
 
         [Fact]
@@ -539,10 +539,10 @@
             Product expectedData = db.Products.First();
             int expectedDataAvailableQuantity = expectedData.Quantity.AvailableItems;
 
-            bool actualResult = await this.productService.RemoveProductFromShoppingCartAsync(expectedData.Id);
+            var actualResult = await this.productService.RemoveProductFromShoppingCartAsync(expectedData.Id);
             int actualDataAvalailabelQuantity = expectedData.Quantity.AvailableItems;
 
-            Assert.True(actualResult, errorMessagePrefix + " " + "The method returned false");
+            Assert.True(actualResult != null, errorMessagePrefix + " " + "The method returned false");
             Assert.True(expectedData.ShoppingCartId == null, errorMessagePrefix + " " +
                 "ShoppingCartId not set properly.");
             Assert.True(expectedDataAvailableQuantity < actualDataAvalailabelQuantity, errorMessagePrefix + " " +
@@ -557,9 +557,9 @@
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
             this.productService = new ProductService(db);
 
-            bool actualResult = await this.productService.RemoveProductFromShoppingCartAsync(0);
+            var actualResult = await this.productService.RemoveProductFromShoppingCartAsync(0);
 
-            Assert.True(actualResult == false, errorMessagePrefix + " " + "Returns true.");
+            Assert.True(actualResult == null, errorMessagePrefix + " " + "Returns true.");
 
         }
 
@@ -589,7 +589,7 @@
             var actualResults = await this.productService
                 .GetAllSearchResultsByCriteria(criteriaToLower);
 
-            Assert.True(expectedResults.Count() == actualResults.ToList().Count, errorMessagePrefix + " " + "Count of results does not match");
+            Assert.True(expectedResults.Count == actualResults.ToList().Count, errorMessagePrefix + " " + "Count of results does not match");
 
             //List<ProductServiceModel> productsToReturn = new List<ProductServiceModel>();
 
@@ -656,7 +656,7 @@
 
             this.productService = new ProductService(db);
 
-            Product testProductOne = new Product
+            var testProductOne = new Product
             {
                 Name = "Product One",
                 Category = new Category
@@ -706,7 +706,7 @@
 
             this.productService = new ProductService(db);
 
-            Product testProductTwo = new Product
+            var testProductTwo = new Product
             {
                 Name = "Product Two",
                 Category = new Category
