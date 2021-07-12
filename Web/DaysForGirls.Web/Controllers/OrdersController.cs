@@ -1,11 +1,10 @@
 ﻿namespace DaysForGirls.Web.Controllers
 {
-    using DaysForGirls.Data.Models;
+    using Data.Models;
     using InputModels;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
     using Services;
     using Services.Models;
     using System.Collections.Generic;
@@ -85,7 +84,7 @@
                 return Redirect("/Identity/Account/Login");
             }
 
-            DaysForGirlsUser requestedUser =
+            var requestedUser =
                await this.userManager.FindByNameAsync(userName);
 
             string currentUserId = this.User
@@ -189,10 +188,10 @@
                 return Redirect("/Identity/Account/Login");
             }
 
-            string currentUserId = this.User
+            var currentUserId = this.User
                 .FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            bool orderBelongsToUser = await this.orderService
+            var orderBelongsToUser = await this.orderService
                 .CheckIfOrderBelongsToUser(orderId, currentUserId);
 
             if(orderBelongsToUser == false)

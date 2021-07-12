@@ -1,11 +1,10 @@
 ﻿namespace DaysForGirls.Web.Areas.Administration.Controllers
 {
-    using Services;
-    using DaysForGirls.Web.ViewModels;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
+    using Services;
     using System.Linq;
     using System.Threading.Tasks;
+    using ViewModels;
 
     public class CustomerReviewController : Controller
     {
@@ -22,7 +21,7 @@
             var allCustomerReviews = await this.customerReviewService
                 .DisplayAll();
 
-            allCustomerReviews
+           var viewModels = allCustomerReviews
                 .Select(cR => new CustomerReviewAdminDisplayAllViewModel
                 {
                     Id = cR.Id,
@@ -35,7 +34,7 @@
                     ProductId = cR.ProductId
                 });
 
-            return View(allCustomerReviews);
+            return View(viewModels);
         }
 
         [HttpGet("/Administration/Delete/{reviewId}")]

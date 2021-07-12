@@ -1,18 +1,18 @@
-﻿using CloudinaryDotNet;
-using DaysForGirls.Data;
-using DaysForGirls.Data.Models;
-using DaysForGirls.Services;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using System.Globalization;
-using System.Linq;
-
-namespace DaysForGirls.Web
+﻿namespace DaysForGirls.Web
 {
+    using CloudinaryDotNet;
+    using Data;
+    using Data.Models;
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Services;
+    using System.Globalization;
+    using System.Linq;
+
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -66,8 +66,6 @@ namespace DaysForGirls.Web
             services.AddTransient<ISaleService, SaleService>();
             services.AddTransient<IShoppingCartService, ShoppingCartService>();
 
-            //  services.CofigureIdentityOptions();
-
             services.AddControllersWithViews();
 
             services
@@ -86,8 +84,7 @@ namespace DaysForGirls.Web
                                         .ServiceProvider
                                         .GetRequiredService<DaysForGirlsDbContext>())
                 {
-                    //context.Database.EnsureDeleted();
-                    context.Database.EnsureCreated();
+                    context.Database.Migrate();
 
                     if (!context.Roles.Any())
                     {

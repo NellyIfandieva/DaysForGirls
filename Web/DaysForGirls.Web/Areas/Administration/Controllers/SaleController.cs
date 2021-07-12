@@ -70,7 +70,9 @@
         public async Task<IActionResult> All()
         {
             var allSales = await this.saleService
-                .DisplayAllAdmin()
+                .DisplayAllAdmin();
+
+            var viewModels = allSales
                 .Select(s => new SalesAllDisplayViewModelAdmin
                 {
                     Id = s.Id,
@@ -79,10 +81,9 @@
                     Picture = s.Picture,
                     IsActive = s.IsActive,
                     ProductsCount = s.ProductsCount
-                })
-                .ToListAsync();
+                });
 
-            return View(allSales);
+            return View(viewModels);
         }
 
         [HttpGet("/Administration/Sale/Details/{saleId}")]

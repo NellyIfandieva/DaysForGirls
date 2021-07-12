@@ -1,10 +1,9 @@
 ﻿namespace DaysForGirls.Services
 {
-    using DaysForGirls.Data;
-    using DaysForGirls.Data.Models;
-    using DaysForGirls.Services.Models;
+    using Data;
+    using Data.Models;
     using Microsoft.EntityFrameworkCore;
-    using System;
+    using Models;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -136,8 +135,7 @@
         public async Task<ProductServiceModel> GetProductByIdAsync(int productId)
         {
             var productPictures = await this.pictureService
-                .GetPicturesOfProductByProductId(productId)
-                .ToListAsync();
+                .GetPicturesOfProductByProductId(productId);
 
             var productReviews = await this.customerReviewService
                 .GetAllCommentsOfProductByProductId(productId);
@@ -157,7 +155,7 @@
                         Name = p.Category.Name
                     },
                     Description = p.Description,
-                    Pictures = productPictures,
+                    Pictures = productPictures.ToList(),
                     Colour = p.Colour,
                     Size = p.Size,
                     Price = p.Price,
@@ -206,15 +204,6 @@
             var productInDb = await this.db
                 .Products
                 .SingleOrDefaultAsync(p => p.Id == model.Id);
-
-            //var productInDb = await this.db
-            //    .Products
-            //    .Include(p => p.Category)
-            //    .Include(p => p.ProductType)
-            //    .Include(p => p.Manufacturer)
-            //    .Include(p => p.Quantity)
-            //    .Include(p => p.Sale)
-            //    .SingleOrDefaultAsync(p => p.Id == model.Id);
 
             if(productInDb == null)
             {

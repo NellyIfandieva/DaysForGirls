@@ -2,7 +2,6 @@
 {
     using InputModels;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
     using Services;
     using Services.Models;
     using System.Linq;
@@ -23,9 +22,8 @@
         }
 
         [HttpGet("/Administration/Manufacturer/Create")]
-        public async Task<IActionResult> Create()
+        public IActionResult Create()
         {
-            await Task.Delay(0);
             return View();
         }
 
@@ -38,7 +36,8 @@
                 return View(model);
             }
 
-            string imageUrl = await this.cloudinaryService.UploadLogoForManufacturerAsync(
+            string imageUrl = await this.cloudinaryService
+                .UploadLogoForManufacturerAsync(
                 model.Logo, model.Name + "_" + "Logo");
 
             var manufacturerServiceModel = new ManufacturerServiceModel
@@ -68,7 +67,7 @@
             var allManufacturers = await this.manufacturerService
                 .DisplayAll();
 
-            allManufacturers
+            var viewModels = allManufacturers
                 .Select(m => new ManufacturerDisplayAllViewModel
                 {
                     Id = m.Id,
@@ -80,7 +79,7 @@
                 })
                 .OrderBy(m => m.Name);
 
-            return View(allManufacturers);
+            return View(viewModels);
         }
 
         [HttpGet("/Administration/Manufacturer/Edit/{manufacturerId}")]
@@ -118,7 +117,7 @@
                 return View(model);
             }
 
-            string imageUrl = await this.cloudinaryService
+            var imageUrl = await this.cloudinaryService
                 .UploadPictureForProductAsync(
                 model.Logo, model.Name + "_" + "Logo");
 
@@ -133,7 +132,7 @@
                 }
             };
 
-            bool manufacturerIsEdited = await this.manufacturerService
+            var manufacturerIsEdited = await this.manufacturerService
                 .EditAsync(manufacturerToEdit);
 
             if(manufacturerIsEdited == false)
@@ -152,7 +151,7 @@
                 return Redirect("/Home/Error");
             }
 
-            bool manufacturerIsDeleted = await this.manufacturerService
+            var manufacturerIsDeleted = await this.manufacturerService
                 .DeleteManufacturerByIdAsync(manufacturerId);
 
             if (manufacturerIsDeleted == false)

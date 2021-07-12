@@ -89,8 +89,8 @@
             }
 
             var allProductsOfCategory = await this.db.Products
-                .Where(p => p.Category.Name == categoryName
-                && p.IsDeleted == false)
+                .Where(p => p.Category.Name == categoryName &&
+                            p.IsDeleted == false)
                 .Select(p => new DisplayAllOfCategoryProductServiceModel
                 {
                     Id = p.Id,
@@ -111,7 +111,8 @@
             return allProductsOfCategory;
         }
 
-        public async Task<IEnumerable<DisplayAllOfCategoryAndTypeServiceModel>> GetAllProductsOfTypeAndCategory(string productTypeName, string categoryName)
+        public async Task<IEnumerable<DisplayAllOfCategoryAndTypeServiceModel>> 
+            GetAllProductsOfTypeAndCategory(string productTypeName, string categoryName)
         {
             if(productTypeName == null || categoryName == null)
             {
@@ -119,9 +120,9 @@
             }
 
             var allProductsOfCategoryAndType = await this.db.Products
-                .Where(p => p.Category.Name == categoryName
-                && p.ProductType.Name == productTypeName
-                && p.IsDeleted == false)
+                .Where(p => p.Category.Name == categoryName && 
+                            p.ProductType.Name == productTypeName && 
+                            p.IsDeleted == false)
                 .Select(p => new DisplayAllOfCategoryAndTypeServiceModel
                 {
                     Id = p.Id,

@@ -132,22 +132,23 @@ namespace DaysForGirls.Tests.Services
                 })
                 .ToList();
 
-            var actualPictures = await this.pictureService
-                .GetPicturesOfProductByProductId(productId)
+            var picturesFromDb = await this.pictureService
+                .GetPicturesOfProductByProductId(productId);
+
+            var actualPictures = picturesFromDb
                 .Select(pic => new PictureServiceModel
                 {
                     Id = pic.Id,
                     PictureUrl = pic.PictureUrl
-                })
-                .ToListAsync();
+                });
 
-            Assert.True(expectedPictures.Count() == actualPictures.Count(), errorMessagePrefix +
+            Assert.True(expectedPictures.Count == actualPictures.ToList().Count, errorMessagePrefix +
                 " " + "Lists' Counts are not equal");
 
             for (int i = 0; i < expectedPictures.Count(); i++)
             {
                 var expectedPic = expectedPictures[i];
-                var actualPic = actualPictures[i];
+                var actualPic = actualPictures.ElementAt(i);
 
                 Assert.True(expectedPic.PictureUrl == actualPic.PictureUrl, errorMessagePrefix +
                     " " + "PictureUrl do not return correctly.");
@@ -239,7 +240,6 @@ namespace DaysForGirls.Tests.Services
 
             bool actualResult = await this.pictureService.DeletePicturesOfDeletedProductAsync(0);
             Assert.True(actualResult == false, errorMessagePrefix + " " + "Returns true.");
-           // await Assert.ThrowsAsync<InvalidOperationException>(() => this.pictureService.DeletePicturesOfDeletedProductAsync(0));
         }
     }
 }

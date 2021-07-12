@@ -57,7 +57,7 @@
             var allCategories = await this.categoryService
                 .DisplayAll();
 
-            allCategories
+            var viewModels = allCategories
                 .Select(c => new CategoryDisplayAllViewModel
                 {
                     Id = c.Id,
@@ -67,7 +67,7 @@
                 })
                 .OrderBy(c => c.Name);
 
-            return View(allCategories);
+            return View(viewModels);
         }
 
         [HttpGet("/Administration/Category/Edit/{categoryId}")]

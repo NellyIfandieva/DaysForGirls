@@ -1,17 +1,16 @@
-﻿using DaysForGirls.Data;
-using DaysForGirls.Data.Models;
-using DaysForGirls.Services;
-using DaysForGirls.Services.Models;
-using DaysForGirls.Tests.Common;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Xunit;
-
-namespace DaysForGirls.Tests.Services
+﻿namespace DaysForGirls.Tests.Services
 {
+    using Common;
+    using Data;
+    using Data.Models;
+    using DaysForGirls.Services;
+    using DaysForGirls.Services.Models;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Xunit;
+
     public class AdminServiceTests
     {
         private IAdminService adminService;

@@ -22,7 +22,9 @@
             string categoryName = "Prom";
 
             var allPromProducts = await this.productService
-                .GetAllProductsOfCategory(categoryName)
+                .GetAllProductsOfCategory(categoryName);
+
+            var viewModels = allPromProducts
                 .Select(p => new DisplayAllOfCategoryViewModel
                 {
                     Id = p.Id,
@@ -35,10 +37,9 @@
                     SaleId = p.SaleId,
                     ShoppingCartId = p.ShoppingCartId,
                     OrderId = p.OrderId
-                })
-                .ToListAsync();
+                });
 
-            return View(allPromProducts);
+            return View(viewModels);
         }
 
         [HttpGet("/Proms/Dresses")]
@@ -48,7 +49,9 @@
             string categoryName = "Prom";
 
             var allPromDresses = await this.productService
-                .GetAllProductsOfTypeAndCategory(productTypeName, categoryName)
+                .GetAllProductsOfTypeAndCategory(productTypeName, categoryName);
+
+            var viewModels = allPromDresses
                 .Select(d => new DisplayAllOfCategoryAndTypeViewModel
                 {
                     Id = d.Id,
@@ -60,10 +63,9 @@
                     SaleId = d.SaleId,
                     ShoppingCartId = d.ShoppingCartId,
                     OrderId = d.OrderId
-                })
-                .ToListAsync();
+                });
 
-            return View(allPromDresses);
+            return View(viewModels);
         }
 
         [HttpGet("/Proms/Suits")]
@@ -73,7 +75,9 @@
             string categoryName = "Prom";
 
             var allPromSuits = await this.productService
-                .GetAllProductsOfTypeAndCategory(productTypeName, categoryName)
+                .GetAllProductsOfTypeAndCategory(productTypeName, categoryName);
+
+            var viewModels = allPromSuits
                 .Select(s => new DisplayAllOfCategoryAndTypeViewModel
                 {
                     Id = s.Id,
@@ -85,10 +89,9 @@
                     SaleId = s.SaleId,
                     ShoppingCartId = s.ShoppingCartId,
                     OrderId = s.OrderId
-                })
-                .ToListAsync();
+                });
 
-            return View(allPromSuits);
+            return View(viewModels);
         }
 
         [HttpGet("/Proms/Accessories")]
@@ -98,7 +101,9 @@
             string categoryName = "Prom";
 
             var allPromAccessories = await this.productService
-                .GetAllProductsOfTypeAndCategory(productTypeName, categoryName)
+                .GetAllProductsOfTypeAndCategory(productTypeName, categoryName);
+
+            var viewModels = allPromAccessories
                 .Select(a => new DisplayAllOfCategoryAndTypeViewModel
                 {
                     Id = a.Id,
@@ -110,10 +115,9 @@
                     SaleId = a.SaleId,
                     ShoppingCartId = a.ShoppingCartId,
                     OrderId = a.OrderId
-                })
-                .ToListAsync();
+                });
 
-            return View(allPromAccessories);
+            return View(viewModels);
         }
     }
 }

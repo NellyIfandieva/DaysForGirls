@@ -1,14 +1,14 @@
 ﻿namespace DaysForGirls.Web.Controllers
 {
-    using DaysForGirls.Data;
-    using DaysForGirls.Services;
-    using DaysForGirls.Services.Models;
-    using DaysForGirls.Web.ViewModels;
+    using Data;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using Services;
+    using Services.Models;
     using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
+    using ViewModels;
 
     public class ShoppingCartsController : Controller
     {
@@ -59,7 +59,8 @@
                 return Redirect("/Home/Error");
             }
 
-            decimal productPrice = await this.productService.CalculateProductPriceAsync(product.Id);
+            var productPrice = await this.productService
+                .CalculateProductPriceAsync(product.Id);
 
             if(productPrice == 0.00m)
             {
@@ -72,7 +73,7 @@
                 Quantity = 1
             };
 
-            string cartId = await this.shoppingCartService
+            var cartId = await this.shoppingCartService
                 .AddItemToCartCartAsync(userId, item);
 
             if(cartId == null)
@@ -139,14 +140,16 @@
                 return Redirect("/Home/Error");
             }
 
-            string userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var userId = this.User
+                .FindFirst(ClaimTypes.NameIdentifier)
+                .Value;
 
             if(userId == null)
             {
                 return Redirect("/Identity/Account/Login");
             }
 
-            bool itemIsRemovedFromCart = await this.shoppingCartService
+            var itemIsRemovedFromCart = await this.shoppingCartService
                 .RemoveItemFromCartAsync(userId, itemId);
 
             if(itemIsRemovedFromCart == false)

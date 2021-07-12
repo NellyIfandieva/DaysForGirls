@@ -57,9 +57,9 @@
             return allSales;
         }
 
-        public IQueryable<SaleServiceModel> DisplayAllAdmin()
+        public async Task<IEnumerable<SaleServiceModel>> DisplayAllAdmin()
         {
-            var allSales = this.db.Sales
+            var allSales = await this.db.Sales
                 .OrderBy(s => s.EndsOn)
                 .Include(s => s.Products)
                 .Where(s => s.IsDeleted == false)
@@ -76,7 +76,7 @@
                         Id = p.Id
                     })
                     .ToList()
-                });
+                }).ToListAsync();
 
             return allSales;
         }
@@ -296,7 +296,7 @@
                 return false;
             }
 
-            HashSet<Product> productsOutOfSale = saleToDelete.Products
+            var productsOutOfSale = saleToDelete.Products
                 .ToHashSet();
 
             if (productsOutOfSale.Count > 0)

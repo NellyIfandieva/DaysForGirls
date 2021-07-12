@@ -23,7 +23,7 @@
                 return Redirect("/Home/Error");
             }
 
-            var productsFromDb = this.productService
+            var productsFromDb = await this.productService
                 .GetAllSearchResultsByCriteria(criteria);
 
             var searchResults = productsFromDb
@@ -43,9 +43,7 @@
                     SaleId = p.SaleId,
                     ShoppingCartId = p.ShoppingCartId,
                     OrderId = p.OrderId
-                }).ToList();
-
-            await Task.Delay(0);
+                });
 
             return View(searchResults);
         }

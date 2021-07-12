@@ -27,7 +27,9 @@
         public async Task<IActionResult> All()
         {
             var allProducts = await this.productService
-                .DisplayAll()
+                .DisplayAll();
+
+            var viewModels = allProducts
                 .Select(p => new ProductDisplayAllViewModel
                 {
                     Id = p.Id,
@@ -38,9 +40,9 @@
                     SaleId = p.SaleId,
                     ShoppingCartId = p.ShoppingCartId,
                     OrderId = p.OrderId
-                }).ToListAsync();
+                });
 
-            return View(allProducts);
+            return View(viewModels);
         }
 
         [HttpGet("/Products/Details/{productId}")]

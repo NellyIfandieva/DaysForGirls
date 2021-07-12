@@ -1,7 +1,6 @@
 ﻿namespace DaysForGirls.Web.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
     using Services;
     using System.Linq;
     using System.Threading.Tasks;
@@ -22,7 +21,9 @@
             string categoryName = "Other";
 
             var allOtherProducts = await this.productService
-                .GetAllProductsOfCategory(categoryName)
+                .GetAllProductsOfCategory(categoryName);
+
+            var viewModels = allOtherProducts
                 .Select(p => new DisplayAllOfCategoryViewModel
                 {
                     Id = p.Id,
@@ -35,10 +36,9 @@
                     SaleId = p.SaleId,
                     ShoppingCartId = p.ShoppingCartId,
                     OrderId = p.OrderId
-                })
-                .ToListAsync();
+                });
 
-            return View(allOtherProducts);
+            return View(viewModels);
         }
 
         [HttpGet("/Other/Dresses")]
@@ -48,7 +48,9 @@
             string categoryName = "Other";
 
             var allOtherDresses = await this.productService
-                .GetAllProductsOfTypeAndCategory(productTypeName, categoryName)
+                .GetAllProductsOfTypeAndCategory(productTypeName, categoryName);
+
+            var viewModels = allOtherDresses
                 .Select(d => new DisplayAllOfCategoryAndTypeViewModel
                 {
                     Id = d.Id,
@@ -60,10 +62,9 @@
                     SaleId = d.SaleId,
                     ShoppingCartId = d.ShoppingCartId,
                     OrderId = d.OrderId
-                })
-                .ToListAsync();
+                });
 
-            return View(allOtherDresses);
+            return View(viewModels);
         }
 
         [HttpGet("/Other/Suits")]
@@ -73,7 +74,9 @@
             string categoryName = "Other";
 
             var allOtherSuits = await this.productService
-                .GetAllProductsOfTypeAndCategory(productTypeName, categoryName)
+                .GetAllProductsOfTypeAndCategory(productTypeName, categoryName);
+
+            var viewModels = allOtherSuits
                 .Select(s => new DisplayAllOfCategoryAndTypeViewModel
                 {
                     Id = s.Id,
@@ -85,10 +88,9 @@
                     SaleId = s.SaleId,
                     ShoppingCartId = s.ShoppingCartId,
                     OrderId = s.OrderId
-                })
-                .ToListAsync();
+                });
 
-            return View(allOtherSuits);
+            return View(viewModels);
         }
 
         [HttpGet("/Other/Accessories")]
@@ -98,7 +100,9 @@
             string categoryName = "Other";
 
             var allOtherAccessories = await this.productService
-                .GetAllProductsOfTypeAndCategory(productTypeName, categoryName)
+                .GetAllProductsOfTypeAndCategory(productTypeName, categoryName);
+
+            var viewModels = allOtherAccessories
                 .Select(a => new DisplayAllOfCategoryAndTypeViewModel
                 {
                     Id = a.Id,
@@ -110,10 +114,9 @@
                     SaleId = a.SaleId,
                     ShoppingCartId = a.ShoppingCartId,
                     OrderId = a.OrderId
-                })
-                .ToListAsync();
+                });
 
-            return View(allOtherAccessories);
+            return View(viewModels);
         }
     }
 }

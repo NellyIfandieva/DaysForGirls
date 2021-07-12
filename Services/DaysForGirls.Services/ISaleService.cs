@@ -9,7 +9,7 @@
     {
         Task<string> CreateAsync(SaleServiceModel saleServiceModel);
 
-        IQueryable<SaleServiceModel> DisplayAllAdmin();
+        Task<IEnumerable<SaleServiceModel>> DisplayAllAdmin();
 
         Task<IEnumerable<SaleServiceModel>> DisplayAll();
 

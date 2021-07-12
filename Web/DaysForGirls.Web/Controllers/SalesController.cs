@@ -1,7 +1,6 @@
 ﻿namespace DaysForGirls.Web.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
     using Services;
     using System.Linq;
     using System.Threading.Tasks;
@@ -23,6 +22,7 @@
                 .DisplayAll();
 
             var viewModels = allSales
+                .Where(s => s.IsActive)
                 .Select(sale => new SaleDisplayAllViewModel
                 {
                     Id = sale.Id,
@@ -42,7 +42,8 @@
                 return Redirect("/Home/Error");
             }
 
-            var sale = await this.saleService.GetSaleByIdAsync(saleId);
+            var sale = await this.saleService
+                .GetSaleByIdAsync(saleId);
 
             if (sale == null)
             {

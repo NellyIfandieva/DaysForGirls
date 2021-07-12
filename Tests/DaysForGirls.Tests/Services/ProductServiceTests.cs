@@ -336,13 +336,13 @@
                     OrderId = p.OrderId
                 }).ToList();
 
-            List<ProductDisplayAllServiceModel> actualResults = await this.productService.DisplayAll().ToListAsync();
+            var actualResults = await this.productService.DisplayAll();
 
 
             for (int i = 0; i < expectedResults.Count; i++)
             {
                 var expectedRecord = expectedResults[i];
-                var actualRecord = actualResults[i];
+                var actualRecord = actualResults.ElementAt(i);
 
                 Assert.True(expectedRecord.Name == actualRecord.Name, errorMessagePrefix + " " + "Name is not returned properly.");
                 Assert.True(expectedRecord.Price == actualRecord.Price, errorMessagePrefix + " " + "Description is not returned properly.");
@@ -362,9 +362,9 @@
             var db = DaysForGirlsDbContextInMemoryFactory.InitializeContext();
             this.productService = new ProductService(db);
 
-            List<ProductDisplayAllServiceModel> actualResults = await this.productService.DisplayAll().ToListAsync();
+            var actualResults = await this.productService.DisplayAll();
 
-            Assert.True(actualResults.Count == 0, errorMessagePrefix + " " + "Returns results.");
+            Assert.True(actualResults.ToList().Count == 0, errorMessagePrefix + " " + "Returns results.");
         }
 
         [Fact]
@@ -395,12 +395,13 @@
                     OrderId = p.OrderId
                 }).ToList();
 
-            List<DisplayAllOfCategoryProductServiceModel> actualResults = await this.productService.GetAllProductsOfCategory(categoryName).ToListAsync();
+            var actualResults = await this.productService
+                .GetAllProductsOfCategory(categoryName);
 
             for (int i = 0; i < expectedResults.Count; i++)
             {
                 var expectedRecord = expectedResults[i];
-                var actualRecord = actualResults[i];
+                var actualRecord = actualResults.ElementAt(i);
 
                 Assert.True(expectedRecord.Name == actualRecord.Name, errorMessagePrefix + " " + "Name is not returned properly.");
                 Assert.True(expectedRecord.Price == actualRecord.Price, errorMessagePrefix + " " + "Description is not returned properly.");
@@ -422,9 +423,10 @@
 
             this.productService = new ProductService(db);
 
-            List<DisplayAllOfCategoryProductServiceModel> actualResults = await this.productService.GetAllProductsOfCategory("Haha").ToListAsync();
+            var actualResults = await this.productService
+                .GetAllProductsOfCategory("Haha");
 
-            Assert.True(actualResults.Count == 0, errorMessagePrefix);
+            Assert.True(actualResults.ToList().Count == 0, errorMessagePrefix);
         }
 
         [Fact]
@@ -439,7 +441,7 @@
             string productTypeName = db.Products.First().ProductType.Name;
             string categoryName = db.Products.First().Category.Name;
 
-            List<DisplayAllOfCategoryAndTypeServiceModel> expectedResults = GetSampleProducts()
+            var expectedResults = GetSampleProducts()
                 .Select(p => new DisplayAllOfCategoryAndTypeServiceModel
                 {
                     Id = p.Id,
@@ -455,12 +457,13 @@
                     OrderId = p.OrderId
                 }).ToList();
 
-            List<DisplayAllOfCategoryAndTypeServiceModel> actualResults = await this.productService.GetAllProductsOfTypeAndCategory(productTypeName, categoryName).ToListAsync();
+            var actualResults = await this.productService
+                .GetAllProductsOfTypeAndCategory(productTypeName, categoryName);
 
             for (int i = 0; i < expectedResults.Count; i++)
             {
                 var expectedRecord = expectedResults[i];
-                var actualRecord = actualResults[i];
+                var actualRecord = actualResults.ElementAt(i);
 
                 Assert.True(expectedRecord.Name == actualRecord.Name, errorMessagePrefix + " " + "Name is not returned properly.");
                 Assert.True(expectedRecord.Price == actualRecord.Price, errorMessagePrefix + " " + "Description is not returned properly.");
@@ -481,9 +484,10 @@
 
             this.productService = new ProductService(db);
 
-            List<DisplayAllOfCategoryAndTypeServiceModel> actualResults = await this.productService.GetAllProductsOfTypeAndCategory("a", "b").ToListAsync();
+            var actualResults = await this.productService
+                .GetAllProductsOfTypeAndCategory("a", "b");
 
-            Assert.True(actualResults.Count == 0, errorMessagePrefix);
+            Assert.True(actualResults.ToList().Count == 0, errorMessagePrefix);
         }
 
         [Fact]
@@ -496,7 +500,7 @@
 
             this.productService = new ProductService(db);
 
-            Product expectedData = db.Products.First();
+            var expectedData = db.Products.First();
             int expectedDataAvailableQuantity = expectedData.Quantity.AvailableItems;
             string shoppingCartId = "22021975";
 
@@ -582,9 +586,10 @@
                 || p.Manufacturer.Name.ToLower().Contains(criteriaToLower))
                 .ToList();
 
-            var actualResults = this.productService.GetAllSearchResultsByCriteria(criteriaToLower);
+            var actualResults = await this.productService
+                .GetAllSearchResultsByCriteria(criteriaToLower);
 
-            Assert.True(expectedResults.Count() == actualResults.Count(), errorMessagePrefix + " " + "Count of results does not match");
+            Assert.True(expectedResults.Count() == actualResults.ToList().Count, errorMessagePrefix + " " + "Count of results does not match");
 
             //List<ProductServiceModel> productsToReturn = new List<ProductServiceModel>();
 
