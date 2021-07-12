@@ -1,10 +1,10 @@
 ﻿namespace DaysForGirls.Web.Controllers
 {
-    using DaysForGirls.Services;
-    using DaysForGirls.Web.ViewModels;
     using Microsoft.AspNetCore.Mvc;
+    using Services;
     using System.Linq;
     using System.Threading.Tasks;
+    using ViewModels;
 
     public class SearchController : Controller
     {

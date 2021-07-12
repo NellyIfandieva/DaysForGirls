@@ -67,7 +67,7 @@
                     SalePrice = p.SalePrice,
                     Picture = new PictureServiceModel
                     {
-                        PictureUrl = p.Pictures.ElementAt(0).PictureUrl
+                        PictureUrl = p.Pictures.FirstOrDefault().PictureUrl
                     },
                     AvailableItems = p.Quantity.AvailableItems,
                     SaleId = p.SaleId,
@@ -80,11 +80,6 @@
 
         public async Task<IEnumerable<DisplayAllOfCategoryProductServiceModel>> GetAllProductsOfCategory(string categoryName)
         {
-            if(categoryName == null)
-            {
-                return null;
-            }
-
             var allProductsOfCategory = await this.db.Products
                 .Where(p => p.Category.Name == categoryName &&
                             p.IsDeleted == false)
@@ -96,7 +91,7 @@
                     SalePrice = p.SalePrice,
                     Picture = new PictureServiceModel
                     {
-                        PictureUrl = p.Pictures.ElementAt(0).PictureUrl
+                        PictureUrl = p.Pictures.FirstOrDefault().PictureUrl
                     },
                     AvailableItems = p.Quantity.AvailableItems,
                     IsInSale = p.IsInSale,
@@ -111,11 +106,6 @@
         public async Task<IEnumerable<DisplayAllOfCategoryAndTypeServiceModel>> 
             GetAllProductsOfTypeAndCategory(string productTypeName, string categoryName)
         {
-            if(productTypeName == null || categoryName == null)
-            {
-                return null;
-            }
-
             var allProductsOfCategoryAndType = await this.db.Products
                 .Where(p => p.Category.Name == categoryName && 
                             p.ProductType.Name == productTypeName && 
@@ -126,7 +116,7 @@
                     Name = p.Name,
                     Picture = new PictureServiceModel
                     {
-                        PictureUrl = p.Pictures.ElementAt(0).PictureUrl
+                        PictureUrl = p.Pictures.FirstOrDefault().PictureUrl
                     },
                     Price = p.Price,
                     SalePrice = p.SalePrice,
